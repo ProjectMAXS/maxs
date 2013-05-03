@@ -1,6 +1,9 @@
 .PHONY: all asmack clean eclipse
 
-all: maxs
+all: main
+
+main:
+	echo "compiling main"
 
 asmack:
 	./asmack.sh

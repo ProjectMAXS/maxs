@@ -1,6 +1,9 @@
 .PHONY: all clean eclipse
 
-all: maxs
+all: module
+
+module:
+	echo "compiling module"
 
 eclipse: .settings .classpath .project
 
