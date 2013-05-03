@@ -1,6 +1,9 @@
-.PHONY: all clean eclipse
+.PHONY: all asmack clean eclipse
 
 all: maxs
+
+asmack:
+	./asmack.sh
 
 eclipse: .settings .classpath .project
 
