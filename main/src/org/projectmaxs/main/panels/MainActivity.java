@@ -1,4 +1,4 @@
-package org.projectmaxs.main;
+package org.projectmaxs.main.panels;
 
 import android.app.Activity;
 import android.os.Bundle;
