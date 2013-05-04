@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.util;
+package org.projectmaxs.shared.util;
 
 public class Log {
 
