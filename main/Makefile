@@ -1,9 +1,11 @@
+ANT_BUILD_TARGET?=debug
+
 .PHONY: all asmack clean eclipse
 
 all: main
 
 main:
-	echo "compiling main"
+	ant $(ANT_BUILD_TARGET)
 
 asmack:
 	./asmack.sh

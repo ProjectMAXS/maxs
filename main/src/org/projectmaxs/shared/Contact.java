@@ -17,6 +17,7 @@
 
 package org.projectmaxs.shared;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.os.Parcel;
@@ -26,6 +27,11 @@ public class Contact implements Parcelable {
 	private String mName;
 	private List<Number> mNumbers;
 
+	private Contact(String name, List<Number> numbers) {
+		this.mName = name;
+		this.mNumbers = numbers;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -33,22 +39,25 @@ public class Contact implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
-
+		dest.writeString(mName);
+		Number[] numbers = new Number[mNumbers.size()];
+		mNumbers.toArray(numbers);
+		dest.writeParcelableArray(numbers, flags);
 	}
 
 	public static final Creator<Contact> CREATOR = new Creator<Contact>() {
 
 		@Override
 		public Contact createFromParcel(Parcel source) {
-			// TODO Auto-generated method stub
-			return null;
+			String name = source.readString();
+			Number[] numbers = (Contact.Number[]) source.readParcelableArray(Number.class.getClassLoader());
+			List<Number> numbersList = Arrays.asList(numbers);
+			return new Contact(name, numbersList);
 		}
 
 		@Override
 		public Contact[] newArray(int size) {
-			// TODO Auto-generated method stub
-			return null;
+			return new Contact[size];
 		}
 
 	};
@@ -58,30 +67,37 @@ public class Contact implements Parcelable {
 		NumberType mNumberType;
 		String mNumber;
 
+		public Number(NumberType type, String number) {
+			this.mNumberType = type;
+			this.mNumber = number;
+		}
+
+		private Number(Parcel in) {
+			mNumberType = in.readParcelable(NumberType.class.getClassLoader());
+			mNumber = in.readString();
+		}
+
 		@Override
 		public int describeContents() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
-			// TODO Auto-generated method stub
-
+			dest.writeParcelable(mNumberType, flags);
+			dest.writeString(mNumber);
 		}
 
 		public static final Creator<Number> CREATOR = new Creator<Number>() {
 
 			@Override
 			public Number createFromParcel(Parcel source) {
-				// TODO Auto-generated method stub
-				return null;
+				return new Number(source);
 			}
 
 			@Override
 			public Number[] newArray(int size) {
-				// TODO Auto-generated method stub
-				return null;
+				return new Number[size];
 			}
 
 		};

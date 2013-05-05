@@ -1,11 +1,12 @@
 SHARED_SOURCE=src/org/projectmaxs/shared
+ANT_BUILD_TARGET?=debug
 
 .PHONY: all clean eclipse
 
 all: module
 
 module: $(SHARED_SOURCE)
-	echo "compiling module"
+	ant $(ANT_BUILD_TARGET)
 
 $(SHARED_SOURCE):
 	ln -s ../../../../main/$(SHARED_SOURCE) $(SHARED_SOURCE)
