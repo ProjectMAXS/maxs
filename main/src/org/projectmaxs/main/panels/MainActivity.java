@@ -1,5 +1,7 @@
 package org.projectmaxs.main.panels;
 
+import org.projectmaxs.main.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 
