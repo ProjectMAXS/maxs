@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package org.projectmaxs.shared.xmpp;
 
@@ -24,7 +24,6 @@ public class XMPPMessage implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -33,5 +32,21 @@ public class XMPPMessage implements Parcelable {
 		// TODO Auto-generated method stub
 
 	}
+
+	public static final Creator<XMPPMessage> CREATOR = new Creator<XMPPMessage>() {
+
+		@Override
+		public XMPPMessage createFromParcel(Parcel source) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public XMPPMessage[] newArray(int size) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	};
 
 }

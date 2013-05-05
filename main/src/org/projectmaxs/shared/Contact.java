@@ -28,7 +28,6 @@ public class Contact implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -37,6 +36,22 @@ public class Contact implements Parcelable {
 		// TODO Auto-generated method stub
 
 	}
+
+	public static final Creator<Contact> CREATOR = new Creator<Contact>() {
+
+		@Override
+		public Contact createFromParcel(Parcel source) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Contact[] newArray(int size) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	};
 
 	static class Number implements Parcelable {
 
@@ -54,6 +69,22 @@ public class Contact implements Parcelable {
 			// TODO Auto-generated method stub
 
 		}
+
+		public static final Creator<Number> CREATOR = new Creator<Number>() {
+
+			@Override
+			public Number createFromParcel(Parcel source) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Number[] newArray(int size) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+		};
 
 		enum NumberType implements Parcelable {
 			MOBILE, HOME, WORK;

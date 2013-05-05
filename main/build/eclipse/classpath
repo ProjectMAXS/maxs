@@ -9,5 +9,5 @@
 			<attribute name="javadoc_location" value="http://www.igniterealtime.org/builds/smack/docs/latest/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
