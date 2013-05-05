@@ -13,10 +13,13 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package org.projectmaxs.main.xmpp;
 
 public class XMPPService {
 
+	enum State {
+		Connected, Disconnected, WaitingForNetwork, WaitingForRetry;
+	}
 }
