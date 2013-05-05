@@ -1,4 +1,4 @@
-package org.projectmaxs.shared.aidl
+package org.projectmaxs.shared.aidl;
 
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
