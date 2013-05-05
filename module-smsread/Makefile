@@ -1,9 +1,14 @@
+SHARED_SOURCE=src/org/projectmaxs/shared
+
 .PHONY: all clean eclipse
 
 all: module
 
-module:
+module: $(SHARED_SOURCE)
 	echo "compiling module"
+
+$(SHARED_SOURCE):
+	ln -s ../../../../main/$(SHARED_SOURCE) $(SHARED_SOURCE)
 
 eclipse: .settings .classpath .project
 
