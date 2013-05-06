@@ -15,31 +15,12 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.util;
+package org.projectmaxs.main.util;
 
-public class Log {
+import org.projectmaxs.shared.GlobalConstants;
 
-	static private String sLogTag;
-	static private LogSettings sLogSettings;
-
-	static public void initialize(String logTag, LogSettings settings) {
-		sLogTag = logTag;
-		sLogSettings = settings;
-	}
-
-	public static void w(String msg) {
-		android.util.Log.i(sLogTag, msg);
-	}
-
-	public static void e(String msg) {
-		android.util.Log.e(sLogTag, msg);
-	}
-
-	public static void d(String msg) {
-		if (sLogSettings.debugLog()) android.util.Log.d(sLogTag, msg);
-	}
-
-	static public abstract class LogSettings {
-		public abstract boolean debugLog();
-	}
+public class Constants {
+	public static final String MAIN_PACKAGE = GlobalConstants.PACKAGE + ".main";
+	public static final String ACTION_START_SERVICE = MAIN_PACKAGE + ".START_SERVICE";
+	public static final String ACTION_STOP_SERVICE = MAIN_PACKAGE + ".STOP_SERVICE";
 }

@@ -17,6 +17,8 @@
 
 package org.projectmaxs.main;
 
+import org.projectmaxs.shared.util.Log;
+
 import android.content.Context;
 
 public class Settings {
@@ -31,6 +33,8 @@ public class Settings {
 	}
 
 	private Context ctx;
+
+	private boolean debugLog = true;
 
 	public boolean connectionSettingsObsolete() {
 		// TODO
@@ -68,6 +72,17 @@ public class Settings {
 	public boolean isMasterJID(String jid) {
 		// TODO
 		return true;
+	}
+
+	public Log.LogSettings getLogSettings() {
+		return new Log.LogSettings() {
+
+			@Override
+			public boolean debugLog() {
+				return debugLog;
+			}
+
+		};
 	}
 
 	private Settings(Context ctx) {
