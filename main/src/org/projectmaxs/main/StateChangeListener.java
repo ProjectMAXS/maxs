@@ -18,12 +18,11 @@
 package org.projectmaxs.main;
 
 import org.jivesoftware.smack.Connection;
+import org.projectmaxs.main.xmpp.XMPPService;
 
 public interface StateChangeListener {
 
 	void newConnection(Connection connection);
 
-	void connected();
-
-	void disconnected();
+	void newState(XMPPService.State state);
 }

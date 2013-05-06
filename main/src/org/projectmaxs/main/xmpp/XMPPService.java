@@ -37,8 +37,7 @@ import android.content.Context;
 
 public class XMPPService {
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
-	private State mCurrentState = State.Disconnected;
-	private State mDesiredState = State.Disconnected;
+	private State mState = State.Disconnected;
 	private Settings mSettings;
 	private XMPPConnection mConnection;
 	private ConnectionListener mConnectionListener;
@@ -51,7 +50,7 @@ public class XMPPService {
 	}
 
 	public enum State {
-		Connected, Disconnected, WaitingForNetwork, WaitingForRetry;
+		Connected, Connecting, Disconnecting, Disconnected, WaitingForNetwork, WaitingForRetry;
 	}
 
 	public void connect() {
@@ -62,6 +61,10 @@ public class XMPPService {
 		changeState(XMPPService.State.Disconnected);
 	}
 
+	public State getCurrentState() {
+		return mState;
+	}
+
 	public void addListener(StateChangeListener listener) {
 		mStateChangeListeners.add(listener);
 	}
@@ -70,22 +73,25 @@ public class XMPPService {
 		mStateChangeListeners.remove(listener);
 	}
 
-	private synchronized void changeState(State newState) {
-		if (mDesiredState == newState) return;
+	private void newState(State newState) {
+		for (StateChangeListener l : mStateChangeListeners)
+			l.newState(newState);
+		mState = newState;
+	}
 
-		switch (mCurrentState) {
+	private synchronized void changeState(State newState) {
+		switch (mState) {
 		case Connected:
 			switch (newState) {
 			case Connected:
-				mDesiredState = State.Connected;
 				break;
 			case Disconnected:
 				disconnectConnection();
-				mCurrentState = State.Disconnected;
+				newState(State.Disconnected);
 				break;
 			case WaitingForNetwork:
 				disconnectConnection();
-				mCurrentState = State.WaitingForNetwork;
+				newState(State.WaitingForNetwork);
 				break;
 			default:
 				throw new IllegalStateException();
@@ -97,7 +103,7 @@ public class XMPPService {
 				break;
 			case Disconnected:
 			case WaitingForNetwork:
-				mDesiredState = newState;
+				newState(newState);
 				break;
 			default:
 				throw new IllegalStateException();
@@ -108,10 +114,10 @@ public class XMPPService {
 				tryToConnect();
 				break;
 			case WaitingForNetwork:
-				mDesiredState = State.Connected;
+				newState(State.Connected);
 				break;
 			case Disconnected:
-				mDesiredState = mCurrentState = State.Disconnected;
+				newState(State.Disconnected);
 				break;
 			default:
 				throw new IllegalStateException();
@@ -119,11 +125,11 @@ public class XMPPService {
 		case WaitingForRetry:
 			switch (newState) {
 			case Connected:
-				mDesiredState = State.Connected;
+				newState(State.Connected);
 				break;
 			case Disconnected:
 			case WaitingForNetwork:
-				mDesiredState = newState;
+				newState(newState);
 				break;
 			default:
 				throw new IllegalStateException();
@@ -202,7 +208,6 @@ public class XMPPService {
 
 		for (StateChangeListener l : mStateChangeListeners) {
 			if (newConnection) l.newConnection(mConnection);
-			l.connected();
 		}
 
 		// TODO handle offline messages as StateChangeListener
@@ -222,7 +227,7 @@ public class XMPPService {
 			}
 
 		}, new MessageTypeFilter(Message.Type.chat));
-		mCurrentState = State.Connected;
+		newState(State.Connected);
 	}
 
 	private static XMPPConnection createNewConnection(Settings settings) throws XMPPException {
