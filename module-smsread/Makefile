@@ -11,7 +11,7 @@ module: $(SHARED_SOURCE)
 $(SHARED_SOURCE):
 	ln -s ../../../../main/$(SHARED_SOURCE) $(SHARED_SOURCE)
 
-eclipse: .settings .classpath .project
+eclipse: .settings .classpath .project $(SHARED_SOURCE)
 
 .settings:
 	ln -s ../build/eclipse/settings .settings
