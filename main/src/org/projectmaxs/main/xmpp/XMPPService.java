@@ -29,7 +29,6 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smackx.XHTMLManager;
 import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
@@ -71,8 +70,67 @@ public class XMPPService {
 		mStateChangeListeners.remove(listener);
 	}
 
-	private void changeState(State state) {
+	private synchronized void changeState(State newState) {
+		if (mDesiredState == newState) return;
 
+		switch (mCurrentState) {
+		case Connected:
+			switch (newState) {
+			case Connected:
+				mDesiredState = State.Connected;
+				break;
+			case Disconnected:
+				disconnectConnection();
+				mCurrentState = State.Disconnected;
+				break;
+			case WaitingForNetwork:
+				disconnectConnection();
+				mCurrentState = State.WaitingForNetwork;
+				break;
+			default:
+				throw new IllegalStateException();
+			}
+		case Disconnected:
+			switch (newState) {
+			case Connected:
+				tryToConnect();
+				break;
+			case Disconnected:
+			case WaitingForNetwork:
+				mDesiredState = newState;
+				break;
+			default:
+				throw new IllegalStateException();
+			}
+		case WaitingForNetwork:
+			switch (newState) {
+			case Connected:
+				tryToConnect();
+				break;
+			case WaitingForNetwork:
+				mDesiredState = State.Connected;
+				break;
+			case Disconnected:
+				mDesiredState = mCurrentState = State.Disconnected;
+				break;
+			default:
+				throw new IllegalStateException();
+			}
+		case WaitingForRetry:
+			switch (newState) {
+			case Connected:
+				mDesiredState = State.Connected;
+				break;
+			case Disconnected:
+			case WaitingForNetwork:
+				mDesiredState = newState;
+				break;
+			default:
+				throw new IllegalStateException();
+			}
+		default:
+			throw new IllegalStateException();
+		}
 	}
 
 	private void tryToConnect() {
@@ -106,8 +164,6 @@ public class XMPPService {
 				// TODO
 			}
 		}
-
-		XHTMLManager.setServiceEnabled(con, false);
 
 		mConnection = con;
 
@@ -143,14 +199,15 @@ public class XMPPService {
 
 		};
 		mConnection.addConnectionListener(mConnectionListener);
-		// TODO ping failed listener
 
 		for (StateChangeListener l : mStateChangeListeners) {
 			if (newConnection) l.newConnection(mConnection);
 			l.connected();
 		}
 
-		// TODO handle offline messages
+		// TODO handle offline messages as StateChangeListener
+		// TODO ping failed listener as StateChangeListener
+		// TODO XHMTL disable as StateChangeListener
 
 		mConnection.addPacketListener(new PacketListener() {
 
@@ -165,6 +222,7 @@ public class XMPPService {
 			}
 
 		}, new MessageTypeFilter(Message.Type.chat));
+		mCurrentState = State.Connected;
 	}
 
 	private static XMPPConnection createNewConnection(Settings settings) throws XMPPException {
@@ -233,7 +291,7 @@ public class XMPPService {
 		return new XMPPConnection(conf);
 	}
 
-	private synchronized void cleanupConnection() {
+	private void disconnectConnection() {
 		if (mConnection != null) {
 			mConnection.removePacketListener(mChatPacketListener);
 			mChatPacketListener = null;
@@ -243,7 +301,6 @@ public class XMPPService {
 				// TODO
 				mConnection.disconnect();
 			}
-			mConnection = null;
 		}
 	}
 }
