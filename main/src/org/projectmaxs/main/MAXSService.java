@@ -17,6 +17,8 @@
 
 package org.projectmaxs.main;
 
+import org.jivesoftware.smack.packet.Message;
+import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.aidl.IMAXSService;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
@@ -28,6 +30,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 public class MAXSService extends Service {
+
+	private XMPPService mXMPPService;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -74,8 +78,13 @@ public class MAXSService extends Service {
 	 * Service used for local binding (i.e. within the .apk)
 	 * 
 	 */
-	class LocalService extends Service {
+	public class LocalService extends Service {
 		private final IBinder mBinder = new LocalBinder();
+
+		@Override
+		public IBinder onBind(Intent intent) {
+			return mBinder;
+		}
 
 		public class LocalBinder extends Binder {
 			LocalService getService() {
@@ -83,10 +92,14 @@ public class MAXSService extends Service {
 			}
 		}
 
-		@Override
-		public IBinder onBind(Intent intent) {
-			return mBinder;
+		public XMPPService getXMPPService() {
+			return mXMPPService;
 		}
+
+		public void performCommandFromMessage(Message message) {
+
+		}
+
 	}
 
 }

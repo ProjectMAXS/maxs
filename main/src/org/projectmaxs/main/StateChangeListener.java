@@ -17,9 +17,13 @@
 
 package org.projectmaxs.main;
 
-public class XMPPService {
+import org.jivesoftware.smack.Connection;
 
-	enum State {
-		Connected, Disconnected, WaitingForNetwork, WaitingForRetry;
-	}
+public interface StateChangeListener {
+
+	void newConnection(Connection connection);
+
+	void connected();
+
+	void disconnected();
 }

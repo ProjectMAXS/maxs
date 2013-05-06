@@ -13,10 +13,65 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package org.projectmaxs.main;
 
+import android.content.Context;
+
 public class Settings {
+
+	private static Settings sSettings;
+
+	public static Settings getInstance(Context ctx) {
+		if (sSettings == null) {
+			sSettings = new Settings(ctx);
+		}
+		return sSettings;
+	}
+
+	private Context ctx;
+
+	public boolean connectionSettingsObsolete() {
+		// TODO
+		return true;
+	}
+
+	public void resetConnectionSettingsObsolete() {
+		// TODO
+	}
+
+	public String login() {
+		return "maxs@freakempire.de";
+	}
+
+	public String password() {
+		return "maxs";
+	}
+
+	public boolean manualServerSettings() {
+		return true;
+	}
+
+	public String serverHost() {
+		return "mate.freakempire.de";
+	}
+
+	public int serverPort() {
+		return 5222;
+	}
+
+	public String serviceName() {
+		return "freakempire.de";
+	}
+
+	public boolean isMasterJID(String jid) {
+		// TODO
+		return true;
+	}
+
+	private Settings(Context ctx) {
+		this.ctx = ctx;
+	}
 
 }
