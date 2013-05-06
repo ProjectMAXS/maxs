@@ -13,48 +13,110 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package org.projectmaxs.shared;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ModuleInformation implements Parcelable {
+	String applicationPackage;
 	String mDefaultCommand;
 	String mDefaultCommandWithArgs;
 	Set<Command> mCommands;
 
+	public ModuleInformation(String appPackage, String defaultCommand, String defaultCommandWithArgs,
+			Set<Command> commands) {
+		this.applicationPackage = appPackage;
+		this.mDefaultCommand = defaultCommand;
+		this.mDefaultCommandWithArgs = defaultCommandWithArgs;
+		this.mCommands = commands;
+	}
+
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
-
+		dest.writeString(applicationPackage);
+		dest.writeString(mDefaultCommand);
+		dest.writeString(mDefaultCommandWithArgs);
+		Command[] cmds = new Command[mCommands.size()];
+		mCommands.toArray(cmds);
+		dest.writeParcelableArray(cmds, flags);
 	}
+
+	public static final Creator<ModuleInformation> CREATOR = new Creator<ModuleInformation>() {
+
+		@Override
+		public ModuleInformation createFromParcel(Parcel source) {
+			String appPackage = source.readString();
+			String defCmd = source.readString();
+			String defCmdWArgs = source.readString();
+			Command[] cmds = (Command[]) source.readParcelableArray(Command.class.getClassLoader());
+			Set<Command> cmdSet = new HashSet<Command>(Arrays.asList(cmds));
+			return new ModuleInformation(appPackage, defCmd, defCmdWArgs, cmdSet);
+		}
+
+		@Override
+		public ModuleInformation[] newArray(int size) {
+			return new ModuleInformation[size];
+		}
+
+	};
 
 	static class Command implements Parcelable {
 
 		String mCommand;
 		Set<String> mSubCommands;
 
+		public Command(String command, Set<String> subCommands) {
+			this.mCommand = command;
+			this.mSubCommands = subCommands;
+		}
+
 		@Override
 		public int describeContents() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
-			// TODO Auto-generated method stub
-
+			dest.writeString(mCommand);
+			String[] subCmds = mSubCommands.toArray(new String[mSubCommands.size()]);
+			// TODO describe better what is going on
+			// Bad Bad Android API, we have to encode the length 2 times.
+			// It's actually also encoded in the Array, readStringArray() method
+			// bails out if the given array is to small
+			dest.writeInt(subCmds.length);
+			dest.writeStringArray(subCmds);
 		}
+
+		public static final Creator<Command> CREATOR = new Creator<Command>() {
+
+			@Override
+			public Command createFromParcel(Parcel source) {
+				String cmd = source.readString();
+				int size = source.readInt();
+				String[] subCmdsArray = new String[size];
+				source.readStringArray(subCmdsArray);
+				Set<String> subCmds = new HashSet<String>(Arrays.asList(subCmdsArray));
+				return new Command(cmd, subCmds);
+			}
+
+			@Override
+			public Command[] newArray(int size) {
+				return new Command[size];
+			}
+
+		};
 
 		public int hashCode() {
 			return mCommand.hashCode();
