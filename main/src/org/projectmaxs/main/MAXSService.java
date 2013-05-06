@@ -34,6 +34,7 @@ public class MAXSService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
+		// TODO start local service here?
 		return mBinder;
 	}
 
@@ -73,12 +74,29 @@ public class MAXSService extends Service {
 
 	};
 
+	private void startService() {
+		mXMPPService.connect();
+	}
+
+	private void stopService() {
+		mXMPPService.disconnect();
+		stopSelf();
+	}
+
 	/**
 	 * Service used for local binding (i.e. within the .apk)
 	 * 
 	 */
 	public class LocalService extends Service {
 		private final IBinder mBinder = new LocalBinder();
+
+		public void onCreate() {
+			mXMPPService = new XMPPService(this);
+		}
+
+		public int onStartCommand(Intent intent, int flags, int startId) {
+			return START_STICKY;
+		}
 
 		@Override
 		public IBinder onBind(Intent intent) {
@@ -97,6 +115,14 @@ public class MAXSService extends Service {
 
 		public void performCommandFromMessage(Message message) {
 
+		}
+
+		public void startService() {
+			MAXSService.this.startService();
+		}
+
+		public void stopService() {
+			MAXSService.this.stopService();
 		}
 
 	}

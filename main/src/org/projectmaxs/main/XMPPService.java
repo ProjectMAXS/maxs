@@ -30,8 +30,6 @@ import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
-import android.content.Context;
-
 public class XMPPService {
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
 	private State mState = State.Disconnected;
@@ -41,21 +39,13 @@ public class XMPPService {
 	private PacketListener mChatPacketListener;
 	private MAXSService.LocalService mMAXSLocalService;
 
-	public XMPPService(Context ctx, MAXSService.LocalService maxsLocalService) {
-		mSettings = Settings.getInstance(ctx);
+	public XMPPService(MAXSService.LocalService maxsLocalService) {
+		mSettings = Settings.getInstance(maxsLocalService);
 		mMAXSLocalService = maxsLocalService;
 	}
 
 	public enum State {
 		Connected, Connecting, Disconnecting, Disconnected, WaitingForNetwork, WaitingForRetry;
-	}
-
-	public void connect() {
-		changeState(XMPPService.State.Connected);
-	}
-
-	public void disconnect() {
-		changeState(XMPPService.State.Disconnected);
 	}
 
 	public State getCurrentState() {
@@ -68,6 +58,14 @@ public class XMPPService {
 
 	public void removeListener(StateChangeListener listener) {
 		mStateChangeListeners.remove(listener);
+	}
+
+	protected void connect() {
+		changeState(XMPPService.State.Connected);
+	}
+
+	protected void disconnect() {
+		changeState(XMPPService.State.Disconnected);
 	}
 
 	private void newState(State newState) {
