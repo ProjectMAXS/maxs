@@ -1,6 +1,7 @@
 package org.projectmaxs.shared.aidl;
 
 import org.projectmaxs.shared.Contact;
+import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 interface IMAXSService {
 
@@ -13,5 +14,8 @@ interface IMAXSService {
 
     // xmpp status
     void updateXMPPStatusInformation(String type, String info);
+
+    // xmpp send
+    void sendXMPPMessage(in XMPPMessage msg, int id);
 
 }
