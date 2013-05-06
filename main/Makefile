@@ -4,11 +4,14 @@ ANT_BUILD_TARGET?=debug
 
 all: main
 
-main:
+main: asmack
 	ant $(ANT_BUILD_TARGET)
 
-asmack:
+asmack: libs-sources
 	./asmack.sh
+
+libs-sources:
+	mkdir libs-sources
 
 eclipse: .settings .classpath .project
 
