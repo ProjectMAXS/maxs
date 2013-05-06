@@ -18,7 +18,6 @@
 package org.projectmaxs.main;
 
 import org.jivesoftware.smack.packet.Message;
-import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.aidl.IMAXSService;
 import org.projectmaxs.shared.xmpp.XMPPMessage;

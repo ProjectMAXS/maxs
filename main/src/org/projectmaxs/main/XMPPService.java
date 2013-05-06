@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main.xmpp;
+package org.projectmaxs.main;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +29,6 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.projectmaxs.main.MAXSService;
-import org.projectmaxs.main.Settings;
-import org.projectmaxs.main.StateChangeListener;
 
 import android.content.Context;
 

@@ -13,15 +13,10 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
-package org.projectmaxs.main;
+package org.projectmaxs.shared;
 
-import org.jivesoftware.smack.Connection;
+public class GlobalConstants {
 
-public interface StateChangeListener {
-
-	void newConnection(Connection connection);
-
-	void newState(XMPPService.State state);
 }
