@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main.xmpp;
+package org.projectmaxs.main;
 
 public class XMPPService {
 

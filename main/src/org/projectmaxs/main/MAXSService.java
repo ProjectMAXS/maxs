@@ -13,10 +13,80 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package org.projectmaxs.main;
 
-public class MAXSService {
+import org.projectmaxs.shared.Contact;
+import org.projectmaxs.shared.aidl.IMAXSService;
+import org.projectmaxs.shared.xmpp.XMPPMessage;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+import android.os.RemoteException;
+
+public class MAXSService extends Service {
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
+	}
+
+	/**
+	 * Used for remote binding (i.e. between different processes/.apk)
+	 */
+	private final IMAXSService.Stub mBinder = new IMAXSService.Stub() {
+		@Override
+		public Contact getRecentContact() throws RemoteException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setRecentContact(Contact contact) throws RemoteException {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public Contact getContactFromAlias(String alias) throws RemoteException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void updateXMPPStatusInformation(String type, String info) throws RemoteException {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void sendXMPPMessage(XMPPMessage msg, int id) throws RemoteException {
+			// TODO Auto-generated method stub
+
+		}
+
+	};
+
+	/**
+	 * Service used for local binding (i.e. within the .apk)
+	 * 
+	 */
+	class LocalService extends Service {
+		private final IBinder mBinder = new LocalBinder();
+
+		public class LocalBinder extends Binder {
+			LocalService getService() {
+				return LocalService.this;
+			}
+		}
+
+		@Override
+		public IBinder onBind(Intent intent) {
+			return mBinder;
+		}
+	}
 
 }
