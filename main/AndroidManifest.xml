@@ -3,7 +3,8 @@
       package="org.projectmaxs.main"
       android:versionCode="1"
       android:versionName="1.0">
-     <uses-sdk android:minSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="8"/>
+    <permission android:name="projectmaxs.permission.USE_MAIN"/>
     <application android:label="@string/app_name" >
         <activity android:name="org.projectmaxs.main.panels.MainActivity"
                   android:label="@string/app_name">
@@ -16,6 +17,7 @@
             <intent-filter>
                 <action android:name="org.projectmaxs.main.START_SERVICE"/>
                 <action android:name="org.projectmaxs.main.STOP_SERVICE"/>
+                <action android:name="org.projectmaxs.main.BIND_MAIN_SERVICE"/>
             </intent-filter>
         </service>
     </application>

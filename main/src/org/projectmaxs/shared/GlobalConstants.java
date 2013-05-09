@@ -19,5 +19,9 @@ package org.projectmaxs.shared;
 
 public class GlobalConstants {
 	public static final String PACKAGE = "org.projectmaxs";
+	public static final String MAIN_PACKAGE = PACKAGE + ".main";
+	public static final String ACTION_REGISTER_MODULE = PACKAGE + ".REGISTER_MODULE";
+	public static final String ACTION_BIND_MAIN_SERVICE = MAIN_PACKAGE + ".BIND_MAIN_SERVICE";
+	public static final String PERMISSON_USE_MAIN = "projectmaxs.permission.USE_MAIN";
 
 }

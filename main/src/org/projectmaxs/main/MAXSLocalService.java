@@ -20,6 +20,7 @@ package org.projectmaxs.main;
 import org.jivesoftware.smack.packet.Message;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.Contact;
+import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
@@ -94,6 +95,10 @@ public class MAXSLocalService extends Service {
 		Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
 		mXMPPService.disconnect();
 		startService(intent);
+	}
+
+	public void registerModule(ModuleInformation moduleInformation) {
+
 	}
 
 	public Contact getRecentContact() {

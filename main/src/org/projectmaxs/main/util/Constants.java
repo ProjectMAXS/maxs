@@ -20,7 +20,7 @@ package org.projectmaxs.main.util;
 import org.projectmaxs.shared.GlobalConstants;
 
 public class Constants {
-	public static final String MAIN_PACKAGE = GlobalConstants.PACKAGE + ".main";
+	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
 	public static final String ACTION_START_SERVICE = MAIN_PACKAGE + ".START_SERVICE";
 	public static final String ACTION_STOP_SERVICE = MAIN_PACKAGE + ".STOP_SERVICE";
 }

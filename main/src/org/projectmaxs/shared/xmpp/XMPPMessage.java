@@ -22,29 +22,46 @@ import android.os.Parcelable;
 
 public class XMPPMessage implements Parcelable {
 
+	StringBuilder mS;
+
+	public XMPPMessage() {
+		this(256);
+	}
+
+	public XMPPMessage(int stringBuilderSize) {
+		mS = new StringBuilder(stringBuilderSize);
+	}
+
+	public XMPPMessage(String string) {
+		this(string.length());
+		mS.append(string);
+	}
+
+	public void add(String string) {
+		mS.append(string);
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
 	}
 
 	@Override
-	public void writeToParcel(Parcel arg0, int arg1) {
-		// TODO Auto-generated method stub
-
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeString(mS.toString());
 	}
 
 	public static final Creator<XMPPMessage> CREATOR = new Creator<XMPPMessage>() {
 
 		@Override
 		public XMPPMessage createFromParcel(Parcel source) {
-			// TODO Auto-generated method stub
-			return null;
+			String s = source.readString();
+			return new XMPPMessage(s);
 		}
 
 		@Override
 		public XMPPMessage[] newArray(int size) {
-			// TODO Auto-generated method stub
-			return null;
+			return new XMPPMessage[size];
 		}
 
 	};

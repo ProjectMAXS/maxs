@@ -19,6 +19,7 @@ package org.projectmaxs.main;
 
 import org.projectmaxs.main.MAXSLocalService.LocalBinder;
 import org.projectmaxs.shared.Contact;
+import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.aidl.IMAXSService;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
@@ -67,6 +68,11 @@ public class MAXSService extends Service {
 	};
 
 	private final IMAXSService.Stub mBinder = new IMAXSService.Stub() {
+		@Override
+		public void registerModule(ModuleInformation moduleInformation) {
+			mMAXSLocalService.registerModule(moduleInformation);
+		}
+
 		@Override
 		public Contact getRecentContact() throws RemoteException {
 			return mMAXSLocalService.getRecentContact();

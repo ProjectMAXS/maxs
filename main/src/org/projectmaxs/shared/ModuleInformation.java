@@ -26,15 +26,15 @@ import android.os.Parcelable;
 
 public class ModuleInformation implements Parcelable {
 	String applicationPackage;
-	String mDefaultCommand;
-	String mDefaultCommandWithArgs;
+	String mDefaultSubCommand;
+	String mDefaultSubCommandWithArgs;
 	Set<Command> mCommands;
 
 	public ModuleInformation(String appPackage, String defaultCommand, String defaultCommandWithArgs,
 			Set<Command> commands) {
 		this.applicationPackage = appPackage;
-		this.mDefaultCommand = defaultCommand;
-		this.mDefaultCommandWithArgs = defaultCommandWithArgs;
+		this.mDefaultSubCommand = defaultCommand;
+		this.mDefaultSubCommandWithArgs = defaultCommandWithArgs;
 		this.mCommands = commands;
 	}
 
@@ -46,8 +46,8 @@ public class ModuleInformation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(applicationPackage);
-		dest.writeString(mDefaultCommand);
-		dest.writeString(mDefaultCommandWithArgs);
+		dest.writeString(mDefaultSubCommand);
+		dest.writeString(mDefaultSubCommandWithArgs);
 		Command[] cmds = new Command[mCommands.size()];
 		mCommands.toArray(cmds);
 		dest.writeParcelableArray(cmds, flags);
