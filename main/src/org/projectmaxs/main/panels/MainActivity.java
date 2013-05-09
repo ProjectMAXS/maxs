@@ -34,26 +34,9 @@ public class MainActivity extends Activity {
 
 		// Buttons
 		mConnButton = (Button) findViewById(R.id.connButton);
-		mConnButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mMAXSLocalService != null) {
-					XMPPService.State state = mMAXSLocalService.getXMPPService().getCurrentState();
-					switch (state) {
-					case Connected:
-						mMAXSLocalService.startService();
-						break;
-					case Disconnected:
-						mMAXSLocalService.stopService();
-						break;
-					}
-				}
-			}
-
-		});
-
 		mStatusText = (TextView) findViewById(R.id.statusText);
+
+		mConnButton.setEnabled(false);
 	}
 
 	@Override
@@ -103,13 +86,33 @@ public class MainActivity extends Activity {
 					}
 				});
 				serviceWasNotConnectedBefore = false;
-
 			}
+
+			mConnButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (mMAXSLocalService != null) {
+						XMPPService.State state = mMAXSLocalService.getXMPPService().getCurrentState();
+						switch (state) {
+						case Connected:
+							mMAXSLocalService.startService();
+							break;
+						case Disconnected:
+							mMAXSLocalService.stopService();
+							break;
+						}
+					}
+				}
+
+			});
+			mConnButton.setEnabled(true);
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName arg0) {
 			mMAXSLocalService = null;
+			mConnButton.setEnabled(false);
 		}
 	};
 
