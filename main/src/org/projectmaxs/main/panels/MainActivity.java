@@ -22,6 +22,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
 
+	private boolean serviceWasNotConnectedBefore = true;
 	private MAXSService.LocalService mMAXSLocalService = null;
 	private Button mConnButton;
 	private TextView mStatusText;
@@ -53,28 +54,6 @@ public class MainActivity extends Activity {
 		});
 
 		mStatusText = (TextView) findViewById(R.id.statusText);
-
-		mMAXSLocalService.getXMPPService().addListener(new StateChangeListener() {
-			@Override
-			public void connected(Connection con) {
-				mStatusText.setText("connected");
-			}
-
-			@Override
-			public void disconnected(Connection con) {
-				mStatusText.setText("disconnected");
-			}
-
-			@Override
-			public void connecting() {
-				mStatusText.setText("connecting");
-			}
-
-			@Override
-			public void disconnecting() {
-				mStatusText.setText("disconnecting");
-			}
-		});
 	}
 
 	@Override
@@ -100,6 +79,32 @@ public class MainActivity extends Activity {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
 			mMAXSLocalService = binder.getService();
+
+			if (serviceWasNotConnectedBefore) {
+				mMAXSLocalService.getXMPPService().addListener(new StateChangeListener() {
+					@Override
+					public void connected(Connection con) {
+						mStatusText.setText("connected");
+					}
+
+					@Override
+					public void disconnected(Connection con) {
+						mStatusText.setText("disconnected");
+					}
+
+					@Override
+					public void connecting() {
+						mStatusText.setText("connecting");
+					}
+
+					@Override
+					public void disconnecting() {
+						mStatusText.setText("disconnecting");
+					}
+				});
+				serviceWasNotConnectedBefore = false;
+
+			}
 		}
 
 		@Override
