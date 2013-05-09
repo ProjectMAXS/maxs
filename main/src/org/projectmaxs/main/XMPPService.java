@@ -22,26 +22,26 @@ import java.util.Set;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.MessageTypeFilter;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Presence;
+import org.projectmaxs.main.xmpp.HandleChatPacketListener;
+import org.projectmaxs.main.xmpp.HandleConnectionListener;
+import org.projectmaxs.shared.util.Log;
 
 public class XMPPService {
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
 	private State mState = State.Disconnected;
 	private Settings mSettings;
 	private XMPPConnection mConnection;
-	private ConnectionListener mConnectionListener;
-	private PacketListener mChatPacketListener;
 	private MAXSService.LocalService mMAXSLocalService;
 
 	public XMPPService(MAXSService.LocalService maxsLocalService) {
 		mSettings = Settings.getInstance(maxsLocalService);
 		mMAXSLocalService = maxsLocalService;
+
+		addListener(new HandleChatPacketListener(mMAXSLocalService, mSettings));
+		addListener(new HandleConnectionListener(mMAXSLocalService));
 	}
 
 	public enum State {
@@ -69,12 +69,23 @@ public class XMPPService {
 	}
 
 	private void newState(State newState) {
-		for (StateChangeListener l : mStateChangeListeners)
-			l.newState(newState);
+		for (StateChangeListener l : mStateChangeListeners) {
+			switch (newState) {
+			case Connected:
+				l.connected(mConnection);
+				break;
+			case Disconnected:
+				l.disconnected(mConnection);
+				break;
+			default:
+				break;
+			}
+		}
 		mState = newState;
 	}
 
 	private synchronized void changeState(State newState) {
+		Log.d("XMPPService.changeState(): mState=" + mState + ", newState=" + newState);
 		switch (mState) {
 		case Connected:
 			switch (newState) {
@@ -135,13 +146,14 @@ public class XMPPService {
 	}
 
 	private void tryToConnect() {
+		Log.d("XMPPService.tryToConnect()");
 		XMPPConnection con;
 		boolean newConnection = false;
 		if (mSettings.connectionSettingsObsolete() || mConnection == null) {
 			try {
 				con = createNewConnection(mSettings);
 			} catch (Exception e) {
-				// TODO maybeStartReconnect
+				Log.e("Exception from createNewConnection()", e);
 				return;
 			}
 			mSettings.resetConnectionSettingsObsolete();
@@ -154,7 +166,7 @@ public class XMPPService {
 		try {
 			con.connect();
 		} catch (XMPPException e) {
-			// TODO
+			Log.e("Exception from connect()", e);
 			return;
 		}
 
@@ -166,63 +178,25 @@ public class XMPPService {
 			}
 		}
 
+		// Login Successful
+
 		mConnection = con;
 
-		// TODO maybe only create and add new listener if newConnection
-		mConnectionListener = new ConnectionListener() {
-
-			@Override
-			public void connectionClosed() {
-				// TODO Auto-generated method stub
-
+		if (newConnection) {
+			for (StateChangeListener l : mStateChangeListeners) {
+				l.newConnection(mConnection);
 			}
-
-			@Override
-			public void connectionClosedOnError(Exception arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void reconnectingIn(int arg0) {
-				throw new IllegalStateException("Reconnection Manager is running");
-			}
-
-			@Override
-			public void reconnectionFailed(Exception arg0) {
-				throw new IllegalStateException("Reconnection Manager is running");
-			}
-
-			@Override
-			public void reconnectionSuccessful() {
-				throw new IllegalStateException("Reconnection Manager is running");
-			}
-
-		};
-		mConnection.addConnectionListener(mConnectionListener);
-
-		for (StateChangeListener l : mStateChangeListeners) {
-			if (newConnection) l.newConnection(mConnection);
 		}
 
 		// TODO handle offline messages as StateChangeListener
 		// TODO ping failed listener as StateChangeListener
-		// TODO XHMTL disable as StateChangeListener
 
-		mConnection.addPacketListener(new PacketListener() {
-
-			@Override
-			public void processPacket(Packet packet) {
-				Message msg = (Message) packet;
-				String from = msg.getFrom();
-
-				if (mSettings.isMasterJID(from)) {
-					mMAXSLocalService.performCommandFromMessage(msg);
-				}
-			}
-
-		}, new MessageTypeFilter(Message.Type.chat));
 		newState(State.Connected);
+
+		// Send the first presence *after* all StateChangeListeners have been
+		// called, in order to do their work prior the user's firsts knowledge
+		// of the online/available state
+		mConnection.sendPacket(new Presence(Presence.Type.available));
 	}
 
 	private static XMPPConnection createNewConnection(Settings settings) throws XMPPException {
@@ -288,17 +262,15 @@ public class XMPPService {
 		conf.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
 		conf.setCompressionEnabled(false);
 
+		conf.setSendPresence(false);
+
 		return new XMPPConnection(conf);
 	}
 
 	private void disconnectConnection() {
 		if (mConnection != null) {
-			mConnection.removePacketListener(mChatPacketListener);
-			mChatPacketListener = null;
-			mConnection.removeConnectionListener(mConnectionListener);
-			mConnectionListener = null;
 			if (mConnection.isConnected()) {
-				// TODO
+				// TODO better diconnect handle (e.g. in extra thread)
 				mConnection.disconnect();
 			}
 		}

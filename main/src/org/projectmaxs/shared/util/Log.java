@@ -31,8 +31,16 @@ public class Log {
 		android.util.Log.i(sLogTag, msg);
 	}
 
+	public static void w(String msg, Exception e) {
+		android.util.Log.w(sLogTag, msg, e);
+	}
+
 	public static void e(String msg) {
 		android.util.Log.e(sLogTag, msg);
+	}
+
+	public static void e(String msg, Exception e) {
+		android.util.Log.e(sLogTag, msg, e);
 	}
 
 	public static void d(String msg) {

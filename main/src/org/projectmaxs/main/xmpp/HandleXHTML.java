@@ -15,18 +15,16 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main;
+package org.projectmaxs.main.xmpp;
 
 import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smackx.XHTMLManager;
+import org.projectmaxs.main.StateChangeListener;
 
-public class StateChangeListener {
+public class HandleXHTML extends StateChangeListener {
 
 	public void newConnection(Connection connection) {
-	};
-
-	public void connected(Connection connection) {
-	};
-
-	public void disconnected(Connection connection) {
+		XHTMLManager.setServiceEnabled(connection, false);
 	}
+
 }
