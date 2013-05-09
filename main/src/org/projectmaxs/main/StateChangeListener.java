@@ -28,5 +28,17 @@ public class StateChangeListener {
 	};
 
 	public void disconnected(Connection connection) {
-	}
+	};
+
+	// These callback methods don't get access to the connection instance
+	// because they will be called in the middle of a state change
+
+	public void connecting() {
+
+	};
+
+	public void disconnecting() {
+
+	};
+
 }

@@ -77,6 +77,12 @@ public class XMPPService {
 			case Disconnected:
 				l.disconnected(mConnection);
 				break;
+			case Connecting:
+				l.connecting();
+				break;
+			case Disconnecting:
+				l.disconnecting();
+				break;
 			default:
 				break;
 			}
@@ -147,6 +153,8 @@ public class XMPPService {
 
 	private void tryToConnect() {
 		Log.d("XMPPService.tryToConnect()");
+		newState(State.Connecting);
+
 		XMPPConnection con;
 		boolean newConnection = false;
 		if (mSettings.connectionSettingsObsolete() || mConnection == null) {
@@ -270,6 +278,7 @@ public class XMPPService {
 	private void disconnectConnection() {
 		if (mConnection != null) {
 			if (mConnection.isConnected()) {
+				newState(State.Disconnecting);
 				// TODO better diconnect handle (e.g. in extra thread)
 				mConnection.disconnect();
 			}
