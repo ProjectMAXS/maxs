@@ -1,4 +1,4 @@
-package org.projectmaxs.module.smsread;
+package org.projectmaxs.module.smsread.panel;
 
 import android.app.Activity;
 import android.os.Bundle;
