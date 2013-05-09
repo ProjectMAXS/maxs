@@ -34,9 +34,9 @@ public class XMPPService {
 	private State mState = State.Disconnected;
 	private Settings mSettings;
 	private XMPPConnection mConnection;
-	private MAXSService.LocalService mMAXSLocalService;
+	private MAXSLocalService mMAXSLocalService;
 
-	public XMPPService(MAXSService.LocalService maxsLocalService) {
+	public XMPPService(MAXSLocalService maxsLocalService) {
 		mSettings = Settings.getInstance(maxsLocalService);
 		mMAXSLocalService = maxsLocalService;
 

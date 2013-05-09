@@ -19,15 +19,15 @@ package org.projectmaxs.main.xmpp;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionListener;
-import org.projectmaxs.main.MAXSService;
+import org.projectmaxs.main.MAXSLocalService;
 import org.projectmaxs.main.StateChangeListener;
 
 public class HandleConnectionListener extends StateChangeListener {
 
-	private MAXSService.LocalService mMAXSLocalService;
+	private MAXSLocalService mMAXSLocalService;
 	private ConnectionListener mConnectionListener;
 
-	public HandleConnectionListener(MAXSService.LocalService maxsLocalService) {
+	public HandleConnectionListener(MAXSLocalService maxsLocalService) {
 		this.mMAXSLocalService = maxsLocalService;
 	}
 

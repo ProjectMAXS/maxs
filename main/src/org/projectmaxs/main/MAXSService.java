@@ -17,140 +17,81 @@
 
 package org.projectmaxs.main;
 
-import org.jivesoftware.smack.packet.Message;
-import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.main.MAXSLocalService.LocalBinder;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.aidl.IMAXSService;
-import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.Build;
+import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
 public class MAXSService extends Service {
-
-	private XMPPService mXMPPService;
+	private MAXSLocalService mMAXSLocalService;
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO start local service here?
+	public IBinder onBind(Intent i) {
+		if (mMAXSLocalService == null) {
+			Intent intent = new Intent(this, MAXSLocalService.class);
+			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		}
 		return mBinder;
 	}
 
-	/**
-	 * Used for remote binding (i.e. between different processes/.apk)
-	 */
-	private final IMAXSService.Stub mBinder = new IMAXSService.Stub() {
+	@Override
+	public boolean onUnbind(Intent intent) {
+		if (mMAXSLocalService != null) {
+			unbindService(mConnection);
+			mMAXSLocalService = null;
+		}
+		return false;
+	}
+
+	ServiceConnection mConnection = new ServiceConnection() {
+
 		@Override
-		public Contact getRecentContact() throws RemoteException {
-			// TODO Auto-generated method stub
-			return null;
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			LocalBinder binder = (LocalBinder) service;
+			mMAXSLocalService = binder.getService();
 		}
 
 		@Override
-		public void setRecentContact(Contact contact) throws RemoteException {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public Contact getContactFromAlias(String alias) throws RemoteException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void updateXMPPStatusInformation(String type, String info) throws RemoteException {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void sendXMPPMessage(XMPPMessage msg, int id) throws RemoteException {
-			// TODO Auto-generated method stub
-
+		public void onServiceDisconnected(ComponentName name) {
+			mMAXSLocalService = null;
 		}
 
 	};
 
-	private void startService() {
-		mXMPPService.connect();
-	}
-
-	private void stopService() {
-		mXMPPService.disconnect();
-		stopSelf();
-	}
-
-	/**
-	 * Service used for local binding (i.e. within the .apk)
-	 * 
-	 */
-	public class LocalService extends Service {
-		private final IBinder mBinder = new LocalBinder();
-
-		public void onCreate() {
-			Log.initialize("maxs", Settings.getInstance(this).getLogSettings());
-			mXMPPService = new XMPPService(this);
-		}
-
-		public int onStartCommand(Intent intent, int flags, int startId) {
-			if (intent == null) {
-				// The service has been killed by Android and we try to restart
-				// the connection. This null intent behavior is only for SDK < 9
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-					startService(new Intent(Constants.ACTION_START_SERVICE));
-				}
-				else {
-					Log.w("onStartCommand() null intent with Gingerbread or higher");
-				}
-				return START_STICKY;
-			}
-			String action = intent.getAction();
-			if (action.equals(Constants.ACTION_START_SERVICE)) {
-				MAXSService.this.startService();
-				return START_STICKY;
-			}
-			else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
-				MAXSService.this.stopService();
-				return START_NOT_STICKY;
-			}
-			// TODO everything else
-			return START_STICKY;
+	private final IMAXSService.Stub mBinder = new IMAXSService.Stub() {
+		@Override
+		public Contact getRecentContact() throws RemoteException {
+			return mMAXSLocalService.getRecentContact();
 		}
 
 		@Override
-		public IBinder onBind(Intent intent) {
-			return mBinder;
+		public void setRecentContact(Contact contact) throws RemoteException {
+			mMAXSLocalService.setRecentContact(contact);
 		}
 
-		public class LocalBinder extends Binder {
-			public LocalService getService() {
-				return LocalService.this;
-			}
+		@Override
+		public Contact getContactFromAlias(String alias) throws RemoteException {
+			return mMAXSLocalService.getContactFromAlias(alias);
 		}
 
-		public XMPPService getXMPPService() {
-			return mXMPPService;
+		@Override
+		public void updateXMPPStatusInformation(String type, String info) throws RemoteException {
+			mMAXSLocalService.updateXMPPStatusInformation(type, info);
 		}
 
-		public void performCommandFromMessage(Message message) {
-
+		@Override
+		public void sendXMPPMessage(XMPPMessage msg, int id) throws RemoteException {
+			mMAXSLocalService.sendXMPPMessage(msg, id);
 		}
 
-		public void startService() {
-			Intent intent = new Intent(Constants.ACTION_START_SERVICE);
-			startService(intent);
-		}
-
-		public void stopService() {
-			Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
-			startService(intent);
-		}
-	}
+	};
 
 }

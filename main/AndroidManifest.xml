@@ -12,7 +12,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:exported="false" android:name="org.projectmaxs.main.MAXSService$LocalService">
+        <service android:exported="false" android:name="org.projectmaxs.main.MAXSLocalService">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.START_SERVICE"/>
                 <action android:name="org.projectmaxs.main.STOP_SERVICE"/>

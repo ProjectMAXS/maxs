@@ -36,6 +36,10 @@ public class Settings {
 
 	private boolean debugLog = true;
 
+	private Settings(Context ctx) {
+		this.ctx = ctx;
+	}
+
 	public boolean connectionSettingsObsolete() {
 		// TODO
 		return true;
@@ -83,10 +87,6 @@ public class Settings {
 			}
 
 		};
-	}
-
-	private Settings(Context ctx) {
-		this.ctx = ctx;
 	}
 
 }
