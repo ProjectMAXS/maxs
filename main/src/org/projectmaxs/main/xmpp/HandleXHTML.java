@@ -23,6 +23,7 @@ import org.projectmaxs.main.StateChangeListener;
 
 public class HandleXHTML extends StateChangeListener {
 
+	@Override
 	public void newConnection(Connection connection) {
 		XHTMLManager.setServiceEnabled(connection, false);
 	}

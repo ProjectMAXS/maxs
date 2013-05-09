@@ -37,6 +37,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 		mSettings = settings;
 	}
 
+	@Override
 	public void connected(Connection connection) {
 		mChatPacketListener = new PacketListener() {
 
@@ -54,6 +55,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 		connection.addPacketListener(mChatPacketListener, new MessageTypeFilter(Message.Type.chat));
 	}
 
+	@Override
 	public void disconnected(Connection connection) {
 		connection.removePacketListener(mChatPacketListener);
 		mChatPacketListener = null;
