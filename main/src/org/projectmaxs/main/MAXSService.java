@@ -129,7 +129,7 @@ public class MAXSService extends Service {
 		}
 
 		public class LocalBinder extends Binder {
-			LocalService getService() {
+			public LocalService getService() {
 				return LocalService.this;
 			}
 		}
