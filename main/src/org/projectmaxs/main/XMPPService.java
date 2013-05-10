@@ -111,13 +111,13 @@ public class XMPPService {
 			break;
 		case Disconnected:
 			switch (newState) {
+			case Disconnected:
+				break;
 			case Connected:
 				tryToConnect();
 				break;
 			case WaitingForNetwork:
 				newState(newState);
-				break;
-			case Disconnected:
 				break;
 			default:
 				throw new IllegalStateException();
