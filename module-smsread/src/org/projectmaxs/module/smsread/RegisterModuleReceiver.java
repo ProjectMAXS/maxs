@@ -17,6 +17,9 @@
 
 package org.projectmaxs.module.smsread;
 
+import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.util.Log.LogSettings;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +28,14 @@ public class RegisterModuleReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Log.initialize("module-smsread", new LogSettings() {
+			@Override
+			public boolean debugLog() {
+				return true;
+			}
+
+		});
+		Log.d("RegisterModuleReceiver");
 		Intent service = new Intent(context, RegisterWithMainService.class);
 		context.startService(service);
 	}
