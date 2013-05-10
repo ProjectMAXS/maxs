@@ -26,15 +26,10 @@ import android.os.Parcelable;
 
 public class ModuleInformation implements Parcelable {
 	String applicationPackage;
-	String mDefaultSubCommand;
-	String mDefaultSubCommandWithArgs;
 	Set<Command> mCommands;
 
-	public ModuleInformation(String appPackage, String defaultCommand, String defaultCommandWithArgs,
-			Set<Command> commands) {
+	public ModuleInformation(String appPackage, Set<Command> commands) {
 		this.applicationPackage = appPackage;
-		this.mDefaultSubCommand = defaultCommand;
-		this.mDefaultSubCommandWithArgs = defaultCommandWithArgs;
 		this.mCommands = commands;
 	}
 
@@ -46,8 +41,7 @@ public class ModuleInformation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(applicationPackage);
-		dest.writeString(mDefaultSubCommand);
-		dest.writeString(mDefaultSubCommandWithArgs);
+
 		Command[] cmds = new Command[mCommands.size()];
 		mCommands.toArray(cmds);
 		dest.writeParcelableArray(cmds, flags);
@@ -58,11 +52,9 @@ public class ModuleInformation implements Parcelable {
 		@Override
 		public ModuleInformation createFromParcel(Parcel source) {
 			String appPackage = source.readString();
-			String defCmd = source.readString();
-			String defCmdWArgs = source.readString();
 			Command[] cmds = (Command[]) source.readParcelableArray(Command.class.getClassLoader());
 			Set<Command> cmdSet = new HashSet<Command>(Arrays.asList(cmds));
-			return new ModuleInformation(appPackage, defCmd, defCmdWArgs, cmdSet);
+			return new ModuleInformation(appPackage, cmdSet);
 		}
 
 		@Override
@@ -75,10 +67,15 @@ public class ModuleInformation implements Parcelable {
 	static class Command implements Parcelable {
 
 		String mCommand;
+		String mDefaultSubCommand;
+		String mDefaultSubCommandWithArgs;
 		Set<String> mSubCommands;
 
-		public Command(String command, Set<String> subCommands) {
+		public Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs,
+				Set<String> subCommands) {
 			this.mCommand = command;
+			this.mDefaultSubCommand = defaultSubCommand;
+			this.mDefaultSubCommandWithArgs = defaultSubcommandWithArgs;
 			this.mSubCommands = subCommands;
 		}
 
@@ -90,6 +87,8 @@ public class ModuleInformation implements Parcelable {
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
 			dest.writeString(mCommand);
+			dest.writeString(mDefaultSubCommand);
+			dest.writeString(mDefaultSubCommandWithArgs);
 			String[] subCmds = mSubCommands.toArray(new String[mSubCommands.size()]);
 			// TODO describe better what is going on
 			// Bad Bad Android API, we have to encode the length 2 times.
@@ -104,11 +103,13 @@ public class ModuleInformation implements Parcelable {
 			@Override
 			public Command createFromParcel(Parcel source) {
 				String cmd = source.readString();
+				String defaultSubCommand = source.readString();
+				String defaultSubCommandWithArgs = source.readString();
 				int size = source.readInt();
 				String[] subCmdsArray = new String[size];
 				source.readStringArray(subCmdsArray);
 				Set<String> subCmds = new HashSet<String>(Arrays.asList(subCmdsArray));
-				return new Command(cmd, subCmds);
+				return new Command(cmd, defaultSubCommand, defaultSubCommandWithArgs, subCmds);
 			}
 
 			@Override
