@@ -41,6 +41,8 @@ public class RegisterWithMainService extends Service {
 
 	@Override
 	public void onCreate() {
+		android.os.Debug.waitForDebugger();
+		android.util.Log.d("foo", "bar");
 		Log.initialize("maxs-smsread", new LogSettings() {
 
 			@Override
@@ -49,6 +51,7 @@ public class RegisterWithMainService extends Service {
 			}
 
 		});
+		Log.d("before bindService()");
 		bindService(new Intent(GlobalConstants.ACTION_BIND_MAIN_SERVICE), mConnection, Context.BIND_AUTO_CREATE);
 	}
 

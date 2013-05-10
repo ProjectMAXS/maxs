@@ -19,7 +19,7 @@ package org.projectmaxs.shared.util;
 
 public class Log {
 
-	static private String sLogTag;
+	static private String sLogTag = "unkown";
 	static private LogSettings sLogSettings;
 
 	static public void initialize(String logTag, LogSettings settings) {
@@ -44,7 +44,12 @@ public class Log {
 	}
 
 	public static void d(String msg) {
-		if (sLogSettings.debugLog()) android.util.Log.d(sLogTag, msg);
+		if (sLogSettings != null && sLogSettings.debugLog()) {
+			android.util.Log.d(sLogTag, msg);
+		}
+		else {
+			android.util.Log.d(sLogTag, msg);
+		}
 	}
 
 	static public abstract class LogSettings {
