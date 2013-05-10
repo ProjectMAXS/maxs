@@ -108,25 +108,27 @@ public class XMPPService {
 			default:
 				throw new IllegalStateException();
 			}
+			break;
 		case Disconnected:
 			switch (newState) {
 			case Connected:
 				tryToConnect();
 				break;
-			case Disconnected:
 			case WaitingForNetwork:
 				newState(newState);
+				break;
+			case Disconnected:
 				break;
 			default:
 				throw new IllegalStateException();
 			}
+			break;
 		case WaitingForNetwork:
 			switch (newState) {
+			case WaitingForNetwork:
+				break;
 			case Connected:
 				tryToConnect();
-				break;
-			case WaitingForNetwork:
-				newState(State.Connected);
 				break;
 			case Disconnected:
 				newState(State.Disconnected);
@@ -134,18 +136,21 @@ public class XMPPService {
 			default:
 				throw new IllegalStateException();
 			}
+			break;
 		case WaitingForRetry:
 			switch (newState) {
+			case WaitingForNetwork:
+				break;
 			case Connected:
 				newState(State.Connected);
 				break;
 			case Disconnected:
-			case WaitingForNetwork:
 				newState(newState);
 				break;
 			default:
 				throw new IllegalStateException();
 			}
+			break;
 		default:
 			throw new IllegalStateException();
 		}
