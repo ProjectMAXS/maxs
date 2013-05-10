@@ -17,9 +17,13 @@
 
 package org.projectmaxs.main;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jivesoftware.smack.packet.Message;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.Contact;
+import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
@@ -31,6 +35,8 @@ import android.os.Build;
 import android.os.IBinder;
 
 public class MAXSLocalService extends Service {
+
+	private final Map<String, Map<String, String>> mCommands = new HashMap<String, Map<String, String>>();
 
 	private XMPPService mXMPPService;
 
@@ -55,6 +61,11 @@ public class MAXSLocalService extends Service {
 		}
 		String action = intent.getAction();
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
+			// clear commands before challenging the modules to register
+			synchronized (mCommands) {
+				mCommands.clear();
+			}
+			sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER_MODULE));
 			mXMPPService.connect();
 			return START_STICKY;
 		}
