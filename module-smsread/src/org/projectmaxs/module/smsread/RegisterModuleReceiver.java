@@ -15,15 +15,18 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared;
+package org.projectmaxs.module.smsread;
 
-public class GlobalConstants {
-	public static final String PACKAGE = "org.projectmaxs";
-	public static final String MAIN_PACKAGE = PACKAGE + ".main";
-	public static final String ACTION_REGISTER_MODULE = PACKAGE + ".REGISTER_MODULE";
-	public static final String ACTION_BIND_MAIN_SERVICE = MAIN_PACKAGE + ".BIND_MAIN_SERVICE";
-	public static final String PERMISSON = PACKAGE + ".permission";
-	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";
-	public static final String PERMISSON_CHALLENGE_REGISTER = PERMISSON + ".CHALLENGE_REGISTER";
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
+public class RegisterModuleReceiver extends BroadcastReceiver {
+
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		Intent service = new Intent(context, RegisterWithMainService.class);
+		context.startService(service);
+	}
 
 }

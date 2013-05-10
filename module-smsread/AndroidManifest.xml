@@ -3,7 +3,7 @@
       package="org.projectmaxs.module.smsread"
       android:versionCode="1"
       android:versionName="1.0">
-    <uses-permisson android:name="projectmaxs.permission.USE_MAIN"/>
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <application android:label="@string/app_name" >
         <activity android:name=".panels.MainActivitySmsRead"
                   android:label="@string/app_name">
@@ -12,10 +12,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="org.projectmaxs.module.smsread.RegisterWithMainService">
+        <receiver android:name="RegisterModuleReceiver"
+            android:permission="org.projectmaxs.permission.CHALLENGE_REGISTER">
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER_MODULE"/>
             </intent-filter>
-        </service>
+        </receiver>
     </application>
 </manifest> 
