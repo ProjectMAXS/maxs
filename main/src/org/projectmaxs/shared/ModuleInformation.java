@@ -25,12 +25,32 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ModuleInformation implements Parcelable {
-	String applicationPackage;
+	String mModulePackage;
 	Set<Command> mCommands;
 
-	public ModuleInformation(String appPackage, Set<Command> commands) {
-		this.applicationPackage = appPackage;
+	private ModuleInformation(String modulePackage) {
+		this.mModulePackage = modulePackage;
+	}
+
+	public ModuleInformation(String modulePackage, Set<Command> commands) {
+		this(modulePackage);
 		this.mCommands = commands;
+	}
+
+	public ModuleInformation(String modulePackage, Command... commands) {
+		this(modulePackage);
+		Set<Command> cmds = new HashSet<Command>();
+		for (Command c : commands)
+			cmds.add(c);
+		this.mCommands = cmds;
+	}
+
+	public String getModulePackage() {
+		return mModulePackage;
+	}
+
+	public Set<Command> getCommands() {
+		return mCommands;
 	}
 
 	@Override
@@ -40,7 +60,7 @@ public class ModuleInformation implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(applicationPackage);
+		dest.writeString(mModulePackage);
 
 		Command[] cmds = new Command[mCommands.size()];
 		mCommands.toArray(cmds);
@@ -51,10 +71,10 @@ public class ModuleInformation implements Parcelable {
 
 		@Override
 		public ModuleInformation createFromParcel(Parcel source) {
-			String appPackage = source.readString();
+			String modulePackage = source.readString();
 			Command[] cmds = (Command[]) source.readParcelableArray(Command.class.getClassLoader());
 			Set<Command> cmdSet = new HashSet<Command>(Arrays.asList(cmds));
-			return new ModuleInformation(appPackage, cmdSet);
+			return new ModuleInformation(modulePackage, cmdSet);
 		}
 
 		@Override
@@ -64,19 +84,48 @@ public class ModuleInformation implements Parcelable {
 
 	};
 
-	static class Command implements Parcelable {
+	public static class Command implements Parcelable {
 
-		String mCommand;
-		String mDefaultSubCommand;
-		String mDefaultSubCommandWithArgs;
-		Set<String> mSubCommands;
+		private String mCommand;
+		private String mDefaultSubCommand;
+		private String mDefaultSubCommandWithArgs;
+		private Set<String> mSubCommands;
 
-		public Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs,
-				Set<String> subCommands) {
+		private Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs) {
 			this.mCommand = command;
 			this.mDefaultSubCommand = defaultSubCommand;
 			this.mDefaultSubCommandWithArgs = defaultSubcommandWithArgs;
+		}
+
+		public Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs,
+				Set<String> subCommands) {
+			this(command, defaultSubCommand, defaultSubcommandWithArgs);
 			this.mSubCommands = subCommands;
+		}
+
+		public Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs,
+				String... subCommands) {
+			this(command, defaultSubCommand, defaultSubcommandWithArgs);
+			Set<String> subCmdSet = new HashSet<String>();
+			for (String s : subCommands)
+				subCmdSet.add(s);
+			this.mSubCommands = subCmdSet;
+		}
+
+		public String getCommand() {
+			return mCommand;
+		}
+
+		public String getDefaultSubCommand() {
+			return mDefaultSubCommand;
+		}
+
+		public String getDefaultSubCommandWithArgs() {
+			return mDefaultSubCommandWithArgs;
+		}
+
+		public Set<String> getSubCommands() {
+			return mSubCommands;
 		}
 
 		@Override

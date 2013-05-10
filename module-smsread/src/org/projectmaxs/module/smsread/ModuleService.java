@@ -18,6 +18,7 @@
 package org.projectmaxs.module.smsread;
 
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.ModuleInformation.Command;
 import org.projectmaxs.shared.aidl.IMAXSModuleService;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
@@ -28,10 +29,8 @@ import android.os.RemoteException;
 
 public class ModuleService extends Service {
 
-	// TODO obviously the ModuleInformation API is broken, we may have to move
-	// the default command and defualt command with args to the command class
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.smsread",
-			"read", "read", null);
+			new Command[] { new Command("sms", "read", "read", new String[] { "read" }), });
 
 	@Override
 	public IBinder onBind(Intent intent) {

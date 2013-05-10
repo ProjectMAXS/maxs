@@ -19,12 +19,15 @@ package org.projectmaxs.main;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.jivesoftware.smack.packet.Message;
+import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.ModuleInformation.Command;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
@@ -36,7 +39,7 @@ import android.os.IBinder;
 
 public class MAXSLocalService extends Service {
 
-	private final Map<String, Map<String, String>> mCommands = new HashMap<String, Map<String, String>>();
+	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
 
 	private XMPPService mXMPPService;
 
@@ -111,7 +114,24 @@ public class MAXSLocalService extends Service {
 	}
 
 	public void registerModule(ModuleInformation moduleInformation) {
+		String modulePackage = moduleInformation.getModulePackage();
+		Set<Command> cmds = moduleInformation.getCommands();
+		synchronized (mCommands) {
+			for (Command c : cmds) {
+				String cStr = c.getCommand();
+				CommandInformation ci = mCommands.get(cStr);
+				if (ci == null) {
+					ci = new CommandInformation(cStr);
+					mCommands.put(cStr, ci);
+				}
+				try {
+					ci.addSubAndDefCommands(c, modulePackage);
+				} catch (CommandClashException e) {
+					throw new IllegalStateException(e); // TODO
+				}
+			}
 
+		}
 	}
 
 	public Contact getRecentContact() {
