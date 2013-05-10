@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-permission android:name="org.projectmaxs.permisson.CHALLENGE_REGISTER"/>
+
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <application android:label="@string/app_name" >
         <activity android:name="org.projectmaxs.main.panels.MainActivity"
@@ -17,10 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:exported="false" android:name="org.projectmaxs.main.MAXSLocalService">
+        <service android:exported="false" android:name=".MAXSLocalService">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.START_SERVICE"/>
                 <action android:name="org.projectmaxs.main.STOP_SERVICE"/>
+            </intent-filter>
+        </service>
+        <service android:name=".MAXSService">
+            <intent-filter>
                 <action android:name="org.projectmaxs.main.BIND_MAIN_SERVICE"/>
             </intent-filter>
         </service>
