@@ -61,11 +61,13 @@ public class MAXSLocalService extends Service {
 		}
 		String action = intent.getAction();
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
-			// clear commands before challenging the modules to register
-			synchronized (mCommands) {
+			// let's assume that if the size is zero we have to do an initial
+			// challenge
+			if (mCommands.size() == 0) {
+				// clear commands before challenging the modules to register
 				mCommands.clear();
+				sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER_MODULE));
 			}
-			sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER_MODULE));
 			mXMPPService.connect();
 			return START_STICKY;
 		}
