@@ -19,6 +19,8 @@ package org.projectmaxs.module.smsread;
 
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.aidl.IMAXSService;
+import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.util.Log.LogSettings;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -26,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 public class RegisterWithMainService extends Service {
 
@@ -38,6 +41,14 @@ public class RegisterWithMainService extends Service {
 
 	@Override
 	public void onCreate() {
+		Log.initialize("maxs-smsread", new LogSettings() {
+
+			@Override
+			public boolean debugLog() {
+				return false;
+			}
+
+		});
 		bindService(new Intent(GlobalConstants.ACTION_BIND_MAIN_SERVICE), mConnection, Context.BIND_AUTO_CREATE);
 	}
 
@@ -57,6 +68,11 @@ public class RegisterWithMainService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		try {
+			mMAXSService.registerModule(ModuleService.sMODULE_INFORMATION);
+		} catch (RemoteException e) {
+			Log.e("Error registering module with main", e);
+		}
 		unbindService(mConnection);
 		stopSelf();
 		return START_NOT_STICKY;
