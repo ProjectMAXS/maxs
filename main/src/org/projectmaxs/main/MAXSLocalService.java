@@ -103,13 +103,11 @@ public class MAXSLocalService extends Service {
 
 	public void startService() {
 		Intent intent = new Intent(Constants.ACTION_START_SERVICE);
-		mXMPPService.connect();
 		startService(intent);
 	}
 
 	public void stopService() {
 		Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
-		mXMPPService.disconnect();
 		startService(intent);
 	}
 
