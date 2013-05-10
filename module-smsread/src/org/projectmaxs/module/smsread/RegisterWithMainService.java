@@ -68,6 +68,12 @@ public class RegisterWithMainService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d("onStartCommand");
+
+		if (mMAXSService == null) {
+			startService(intent);
+			return START_NOT_STICKY;
+		}
 		try {
 			mMAXSService.registerModule(ModuleService.sMODULE_INFORMATION);
 		} catch (RemoteException e) {
