@@ -96,10 +96,10 @@ public class MainActivity extends Activity {
 						XMPPService.State state = mMAXSLocalService.getXMPPService().getCurrentState();
 						switch (state) {
 						case Connected:
-							mMAXSLocalService.startService();
+							mMAXSLocalService.stopService();
 							break;
 						case Disconnected:
-							mMAXSLocalService.stopService();
+							mMAXSLocalService.startService();
 							break;
 						}
 					}
