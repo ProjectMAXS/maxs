@@ -189,7 +189,7 @@ public class XMPPService {
 			try {
 				con.login(mSettings.login(), mSettings.password(), "MAXS");
 			} catch (XMPPException e) {
-				// TODO
+				Log.e("tryToConnect() login failed", e);
 			}
 		}
 
