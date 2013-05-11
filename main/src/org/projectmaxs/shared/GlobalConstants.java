@@ -26,4 +26,6 @@ public class GlobalConstants {
 	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";
 	public static final String PERMISSON_CHALLENGE_REGISTER = PERMISSON + ".CHALLENGE_REGISTER";
 
+	public static final String DELIVER_COUNT = PACKAGE + ".INTENT_DELIVER_COUNT";
+
 }

@@ -73,7 +73,15 @@ public class RegisterWithMainService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d("onStartCommand");
 
+		int dc = intent.getIntExtra(GlobalConstants.DELIVER_COUNT, 0);
+		if (dc > 3) {
+			Log.e("RegisterWithMainService failed because MAXSService could not be bound after 3 attempts");
+			return START_NOT_STICKY;
+		}
+
 		if (mMAXSService == null) {
+			dc++;
+			intent.putExtra(GlobalConstants.DELIVER_COUNT, dc);
 			startService(intent);
 			return START_NOT_STICKY;
 		}
@@ -86,5 +94,4 @@ public class RegisterWithMainService extends Service {
 		stopSelf();
 		return START_NOT_STICKY;
 	}
-
 }
