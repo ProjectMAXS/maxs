@@ -33,9 +33,13 @@ public class ModuleService extends Service {
 			new Command[] { new Command("sms", "read", "read", new String[] { "read" }), });
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+	}
+
+	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
+		return mBinder;
 	}
 
 	private final IMAXSModuleService.Stub mBinder = new IMAXSModuleService.Stub() {

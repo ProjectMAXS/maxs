@@ -98,7 +98,23 @@ public class MAXSLocalService extends Service {
 	}
 
 	public void performCommandFromMessage(Message message) {
+		String body = message.getBody();
+		if (body == null) return;
 
+		String[] splitedBody = body.split(" ");
+		String cmd = splitedBody[0];
+		String subCmd = splitedBody[1];
+		CommandInformation ci = mCommands.get(cmd);
+		if (ci == null) return;
+
+		if (subCmd == null) {
+			subCmd = ci.getDefaultSubCommand();
+		}
+		else if (!ci.isKnownSubCommand(subCmd)) {
+			subCmd = ci.getDefaultSubcommandWithArgs();
+		}
+
+		if (subCmd == null) return;
 	}
 
 	public void startService() {

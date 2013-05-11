@@ -33,6 +33,22 @@ public class CommandInformation {
 		this.mCommand = command;
 	}
 
+	public String getDefaultSubCommand() {
+		return mDefaultSubCommand;
+	}
+
+	public String getDefaultSubcommandWithArgs() {
+		return mDefaultSubCommandWithArgs;
+	}
+
+	public String getPackageForSubCommand(String subCommand) {
+		return mSubCommands.get(subCommand);
+	}
+
+	public boolean isKnownSubCommand(String subCommand) {
+		return mSubCommands.containsKey(subCommand);
+	}
+
 	public void addSubAndDefCommands(Command command, String modulePackage) throws CommandClashException {
 		String defSubCmd = command.getDefaultSubCommand();
 		if (mDefaultSubCommand != null && defSubCmd != null) {
