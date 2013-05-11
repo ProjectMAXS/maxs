@@ -61,10 +61,11 @@ public class ModuleInformation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mModulePackage);
-
-		Command[] cmds = new Command[mCommands.size()];
-		mCommands.toArray(cmds);
-		dest.writeParcelableArray(cmds, flags);
+		int cmdCount = mCommands.size();
+		Command[] cmds = new Command[cmdCount];
+		cmds = mCommands.toArray(cmds);
+		dest.writeInt(cmdCount);
+		dest.writeTypedArray(cmds, flags);
 	}
 
 	public static final Creator<ModuleInformation> CREATOR = new Creator<ModuleInformation>() {
@@ -72,7 +73,10 @@ public class ModuleInformation implements Parcelable {
 		@Override
 		public ModuleInformation createFromParcel(Parcel source) {
 			String modulePackage = source.readString();
-			Command[] cmds = (Command[]) source.readParcelableArray(Command.class.getClassLoader());
+
+			int cmdCount = source.readInt();
+			Command[] cmds = new Command[cmdCount];
+			source.readTypedArray(cmds, Command.CREATOR);
 			Set<Command> cmdSet = new HashSet<Command>(Arrays.asList(cmds));
 			return new ModuleInformation(modulePackage, cmdSet);
 		}
