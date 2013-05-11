@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.ModuleInformation.Command;
 
 public class CommandInformation {
 	private String mCommand;
@@ -33,8 +33,7 @@ public class CommandInformation {
 		this.mCommand = command;
 	}
 
-	public void addSubAndDefCommands(ModuleInformation.Command command, String modulePackage)
-			throws CommandClashException {
+	public void addSubAndDefCommands(Command command, String modulePackage) throws CommandClashException {
 		String defSubCmd = command.getDefaultSubCommand();
 		if (mDefaultSubCommand != null && defSubCmd != null) {
 			throw new DefaultCommandAlreadySet();
