@@ -24,10 +24,10 @@ import java.util.Set;
 import org.jivesoftware.smack.packet.Message;
 import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.ModuleInformation.Command;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
@@ -115,6 +115,12 @@ public class MAXSLocalService extends Service {
 		}
 
 		if (subCmd == null) return;
+
+		String modulePackage = ci.getPackageForSubCommand(subCmd);
+		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
+		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(cmd, subCmd, null, -1));
+		intent.setClassName(modulePackage, modulePackage + "ModuleService");
+		startService(intent);
 	}
 
 	public void startService() {
@@ -129,9 +135,9 @@ public class MAXSLocalService extends Service {
 
 	public void registerModule(ModuleInformation moduleInformation) {
 		String modulePackage = moduleInformation.getModulePackage();
-		Set<Command> cmds = moduleInformation.getCommands();
+		Set<ModuleInformation.Command> cmds = moduleInformation.getCommands();
 		synchronized (mCommands) {
-			for (Command c : cmds) {
+			for (ModuleInformation.Command c : cmds) {
 				String cStr = c.getCommand();
 				CommandInformation ci = mCommands.get(cStr);
 				if (ci == null) {

@@ -37,8 +37,9 @@ public class XMPPMessage implements Parcelable {
 		mS.append(string);
 	}
 
-	public void add(String string) {
+	public XMPPMessage add(String string) {
 		mS.append(string);
+		return this;
 	}
 
 	@Override

@@ -20,8 +20,18 @@ package org.projectmaxs.shared;
 public class GlobalConstants {
 	public static final String PACKAGE = "org.projectmaxs";
 	public static final String MAIN_PACKAGE = PACKAGE + ".main";
-	public static final String ACTION_REGISTER_MODULE = PACKAGE + ".REGISTER_MODULE";
+	public static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
+	public static final String ACTION_PERFORM_COMMAND = PACKAGE + ".PERFORM_COMMAND";
 	public static final String ACTION_BIND_MAIN_SERVICE = MAIN_PACKAGE + ".BIND_MAIN_SERVICE";
+	public static final String ACTION_REGISTER_MODULE = MAIN_PACKAGE + ".REGISTER_MODULE";
+	public static final String ACTION_SET_RECENT_CONTACT = MAIN_PACKAGE + ".SET_RECENT_CONTACT";
+	public static final String ACTION_UPDATE_XMPP_STATUS = MAIN_PACKAGE + ".UPDATE_XMPP_STATUS";
+	public static final String ACTION_SEND_XMPP_MESSAGE = MAIN_PACKAGE + ".SEND_XMPP_MESSAGE";
+
+	public static final String EXTRA_MODULE_INFORMATION = PACKAGE + ".MODULE_INFORMATION";
+	public static final String EXTRA_COMMAND = PACKAGE + ".COMMAND";
+	public static final String EXTRA_XMPP_MESSAGE = PACKAGE + ".XMPP_MESSAGE";
+
 	public static final String PERMISSON = PACKAGE + ".permission";
 	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";
 	public static final String PERMISSON_USE_MODULE = PERMISSON + ".USE_MODULE";

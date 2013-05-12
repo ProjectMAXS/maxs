@@ -17,6 +17,7 @@
 
 package org.projectmaxs.module.smsread;
 
+import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.Log.LogSettings;
 
@@ -36,8 +37,9 @@ public class RegisterModuleReceiver extends BroadcastReceiver {
 
 		});
 		Log.d("RegisterModuleReceiver");
-		Intent service = new Intent(context, RegisterWithMainService.class);
-		context.startService(service);
+		Intent replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
+		replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, ModuleService.sMODULE_INFORMATION);
+		context.startService(replyIntent);
 	}
 
 }

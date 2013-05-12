@@ -13,6 +13,11 @@
                 <action android:name="org.projectmaxs.REGISTER_MODULE"/>
             </intent-filter>
         </receiver>
-        <service android:name=".RegisterWithMainService"/>
+        <service android:name=".ModuleService"
+            android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest> 

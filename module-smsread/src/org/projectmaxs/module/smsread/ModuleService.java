@@ -17,17 +17,21 @@
 
 package org.projectmaxs.module.smsread;
 
+import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.ModuleInformation.Command;
-import org.projectmaxs.shared.aidl.IMAXSModuleService;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.RemoteException;
 
-public class ModuleService extends Service {
+public class ModuleService extends IntentService {
+
+	public ModuleService(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.smsread",
 			new Command[] { new Command("sms", "read", "read", new String[] { "read" }), });
@@ -39,18 +43,17 @@ public class ModuleService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return mBinder;
+		return null;
 	}
 
-	private final IMAXSModuleService.Stub mBinder = new IMAXSModuleService.Stub() {
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
-		@Override
-		public XMPPMessage executeCommand(String cmd, String subCmd, String args, int cmdID) throws RemoteException {
-			XMPPMessage msg = new XMPPMessage();
-			msg.add("reply from smsread module");
-			return msg;
-		}
-
-	};
+		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_XMPP_MESSAGE);
+		XMPPMessage msg = new XMPPMessage("Hello from smsread module");
+		replyIntent.putExtra(GlobalConstants.EXTRA_XMPP_MESSAGE, msg);
+		startService(replyIntent);
+	}
 
 }

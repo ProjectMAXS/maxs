@@ -19,11 +19,11 @@ package org.projectmaxs.main;
 
 import org.projectmaxs.main.MAXSLocalService.LocalBinder;
 import org.projectmaxs.shared.Contact;
+import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.aidl.IMAXSService;
-import org.projectmaxs.shared.xmpp.XMPPMessage;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -31,24 +31,33 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-public class MAXSService extends Service {
+public class MAXSService extends IntentService {
+
+	public MAXSService(String name) {
+		super(name);
+	}
+
 	private MAXSLocalService mMAXSLocalService;
 
 	@Override
-	public IBinder onBind(Intent i) {
+	public void onCreate() {
 		if (mMAXSLocalService == null) {
 			Intent intent = new Intent(this, MAXSLocalService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		}
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		if (mMAXSLocalService != null) {
-			unbindService(mConnection);
-			mMAXSLocalService = null;
-		}
+		// if (mMAXSLocalService != null) {
+		// unbindService(mConnection);
+		// mMAXSLocalService = null;
+		// }
 		return false;
 	}
 
@@ -68,10 +77,6 @@ public class MAXSService extends Service {
 	};
 
 	private final IMAXSService.Stub mBinder = new IMAXSService.Stub() {
-		@Override
-		public void registerModule(ModuleInformation moduleInformation) {
-			mMAXSLocalService.registerModule(moduleInformation);
-		}
 
 		@Override
 		public Contact getRecentContact() throws RemoteException {
@@ -79,25 +84,30 @@ public class MAXSService extends Service {
 		}
 
 		@Override
-		public void setRecentContact(Contact contact) throws RemoteException {
-			mMAXSLocalService.setRecentContact(contact);
-		}
-
-		@Override
 		public Contact getContactFromAlias(String alias) throws RemoteException {
 			return mMAXSLocalService.getContactFromAlias(alias);
 		}
 
-		@Override
-		public void updateXMPPStatusInformation(String type, String info) throws RemoteException {
-			mMAXSLocalService.updateXMPPStatusInformation(type, info);
-		}
-
-		@Override
-		public void sendXMPPMessage(XMPPMessage msg, int id) throws RemoteException {
-			mMAXSLocalService.sendXMPPMessage(msg, id);
-		}
-
 	};
 
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		String action = intent.getAction();
+		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
+			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
+			mMAXSLocalService.registerModule(mi);
+		}
+		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
+
+		}
+		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
+
+		}
+		else if (action.equals(GlobalConstants.ACTION_UPDATE_XMPP_STATUS)) {
+
+		}
+		else {
+			throw new IllegalStateException();
+		}
+	}
 }
