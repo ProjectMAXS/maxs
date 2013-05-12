@@ -4,10 +4,10 @@
       android:versionCode="1"
       android:versionName="1.0">
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
-    <permission android:name="org.projectmaxs.permission.CHALLENGE_REGISTER"/>
+    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <application android:label="@string/app_name" >
         <receiver android:name=".RegisterModuleReceiver"
-            android:permission="org.projectmaxs.permission.CHALLENGE_REGISTER"
+            android:permission="org.projectmaxs.permission.USE_MODULE"
             android:label="TODO">
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER_MODULE"/>

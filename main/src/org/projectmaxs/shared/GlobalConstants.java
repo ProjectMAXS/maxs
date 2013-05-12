@@ -24,7 +24,7 @@ public class GlobalConstants {
 	public static final String ACTION_BIND_MAIN_SERVICE = MAIN_PACKAGE + ".BIND_MAIN_SERVICE";
 	public static final String PERMISSON = PACKAGE + ".permission";
 	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";
-	public static final String PERMISSON_CHALLENGE_REGISTER = PERMISSON + ".CHALLENGE_REGISTER";
+	public static final String PERMISSON_USE_MODULE = PERMISSON + ".USE_MODULE";
 
 	public static final String DELIVER_COUNT = PACKAGE + ".INTENT_DELIVER_COUNT";
 
