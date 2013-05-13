@@ -17,6 +17,11 @@
 
 package org.projectmaxs.main;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
@@ -35,6 +40,7 @@ public class Settings {
 	private Context ctx;
 
 	private boolean debugLog = true;
+	private List<String> mMasterJids = new ArrayList<String>(Arrays.asList(new String[] { "flo@freakempire.de" }));
 
 	private Settings(Context ctx) {
 		this.ctx = ctx;
@@ -73,9 +79,16 @@ public class Settings {
 		return "freakempire.de";
 	}
 
+	public List<String> getMasterJids() {
+		return mMasterJids;
+	}
+
 	public boolean isMasterJID(String jid) {
-		// TODO
-		return true;
+		String bareJID = StringUtils.parseBareAddress(jid);
+		for (String s : mMasterJids)
+			if (s.equals(bareJID)) return true;
+
+		return false;
 	}
 
 	public Log.LogSettings getLogSettings() {

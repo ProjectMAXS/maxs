@@ -27,6 +27,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.projectmaxs.main.xmpp.HandleChatPacketListener;
 import org.projectmaxs.main.xmpp.HandleConnectionListener;
+import org.projectmaxs.main.xmpp.XMPPRoster;
 import org.projectmaxs.shared.util.Log;
 
 public class XMPPService {
@@ -42,6 +43,7 @@ public class XMPPService {
 
 		addListener(new HandleChatPacketListener(mMAXSLocalService, mSettings));
 		addListener(new HandleConnectionListener(mMAXSLocalService));
+		addListener(new XMPPRoster(mSettings));
 	}
 
 	public enum State {
