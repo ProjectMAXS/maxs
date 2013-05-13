@@ -19,7 +19,7 @@ package org.projectmaxs.main;
 
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.Contact;
-import org.projectmaxs.shared.aidl.IMAXSService;
+import org.projectmaxs.shared.aidl.IMAXSRemoteService;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -66,7 +66,7 @@ public class MAXSRemoteService extends Service {
 
 	};
 
-	private final IMAXSService.Stub mBinder = new IMAXSRemoteService.Stub() {
+	private final IMAXSRemoteService.Stub mBinder = new IMAXSRemoteService.Stub() {
 
 		@Override
 		public Contact getRecentContact() throws RemoteException {

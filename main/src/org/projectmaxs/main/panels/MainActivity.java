@@ -1,8 +1,8 @@
 package org.projectmaxs.main.panels;
 
 import org.jivesoftware.smack.Connection;
-import org.projectmaxs.main.MAXSLocalService;
-import org.projectmaxs.main.MAXSLocalService.LocalBinder;
+import org.projectmaxs.main.MAXSService;
+import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.main.R;
 import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.XMPPService;
@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
 
 	private boolean serviceWasNotConnectedBefore = true;
-	private MAXSLocalService mMAXSLocalService = null;
+	private MAXSService mMAXSLocalService = null;
 	private Button mConnButton;
 	private TextView mStatusText;
 
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		if (mMAXSLocalService == null) {
-			Intent intent = new Intent(this, MAXSLocalService.class);
+			Intent intent = new Intent(this, MAXSService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		}
 	}

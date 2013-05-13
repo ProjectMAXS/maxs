@@ -18,13 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:exported="false" android:name=".MAXSLocalService">
+        <service android:exported="false" android:name=".MAXSService">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.START_SERVICE"/>
                 <action android:name="org.projectmaxs.main.STOP_SERVICE"/>
             </intent-filter>
         </service>
-        <service android:name=".MAXSService"
+        <service android:name=".MAXSIntentService"
             android:permission="org.projectmaxs.permission.USE_MAIN">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.BIND_MAIN_SERVICE"/>
@@ -32,6 +32,12 @@
                 <action android:name="org.projectmaxs.main.SET_RECENT_CONTACT"/>
                 <action android:name="org.projectmaxs.main.UPDATE_XMPP_STATUS"/>
                 <action android:name="org.projectmaxs.main.SEND_XMPP_MESSAGE"/>
+            </intent-filter>
+        </service>
+        <service android:name=".MAXSRemoteService"
+            android:permission="org.projectmaxs.permission.USE_MAIN">
+            <intent-filter>
+                <action android:name="org.projectmaxs.main.BIND_SERVICE"/>
             </intent-filter>
         </service>
     </application>

@@ -17,11 +17,9 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.main.MAXSLocalService.LocalBinder;
-import org.projectmaxs.shared.Contact;
+import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.aidl.IMAXSService;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -29,41 +27,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.RemoteException;
 
-public class MAXSService extends IntentService {
+public class MAXSIntentService extends IntentService {
 
-	public MAXSService() {
+	public MAXSIntentService() {
 		super("MAXSService");
 	}
 
-	private MAXSLocalService mMAXSLocalService;
+	private MAXSService mMAXSLocalService;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		if (mMAXSLocalService == null) {
-			Intent intent = new Intent(this, MAXSLocalService.class);
+			Intent intent = new Intent(this, MAXSService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		}
-	}
-
-	@Override
-	public IBinder onBind(Intent i) {
-		if (mMAXSLocalService == null) {
-			Intent intent = new Intent(this, MAXSLocalService.class);
-			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		}
-		return mBinder;
-	}
-
-	@Override
-	public boolean onUnbind(Intent intent) {
-		if (mMAXSLocalService != null) {
-			unbindService(mConnection);
-			mMAXSLocalService = null;
-		}
-		return false;
 	}
 
 	@Override
@@ -86,20 +65,6 @@ public class MAXSService extends IntentService {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			mMAXSLocalService = null;
-		}
-
-	};
-
-	private final IMAXSService.Stub mBinder = new IMAXSService.Stub() {
-
-		@Override
-		public Contact getRecentContact() throws RemoteException {
-			return mMAXSLocalService.getRecentContact();
-		}
-
-		@Override
-		public Contact getContactFromAlias(String alias) throws RemoteException {
-			return mMAXSLocalService.getContactFromAlias(alias);
 		}
 
 	};

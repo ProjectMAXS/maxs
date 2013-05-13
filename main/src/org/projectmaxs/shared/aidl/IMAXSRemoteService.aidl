@@ -4,7 +4,7 @@ import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
-interface IMAXSService {
+interface IMAXSRemoteService {
 
     // recent contact
     Contact getRecentContact();

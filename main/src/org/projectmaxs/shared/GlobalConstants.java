@@ -22,7 +22,7 @@ public class GlobalConstants {
 	public static final String MAIN_PACKAGE = PACKAGE + ".main";
 	public static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
 	public static final String ACTION_PERFORM_COMMAND = PACKAGE + ".PERFORM_COMMAND";
-	public static final String ACTION_BIND_MAIN_SERVICE = MAIN_PACKAGE + ".BIND_MAIN_SERVICE";
+	public static final String ACTION_BIND_SERVICE = MAIN_PACKAGE + ".BIND_SERVICE";
 	public static final String ACTION_REGISTER_MODULE = MAIN_PACKAGE + ".REGISTER_MODULE";
 	public static final String ACTION_SET_RECENT_CONTACT = MAIN_PACKAGE + ".SET_RECENT_CONTACT";
 	public static final String ACTION_UPDATE_XMPP_STATUS = MAIN_PACKAGE + ".UPDATE_XMPP_STATUS";

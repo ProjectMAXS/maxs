@@ -37,7 +37,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 
-public class MAXSLocalService extends Service {
+public class MAXSService extends Service {
 
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
 
@@ -89,8 +89,8 @@ public class MAXSLocalService extends Service {
 	}
 
 	public class LocalBinder extends Binder {
-		public MAXSLocalService getService() {
-			return MAXSLocalService.this;
+		public MAXSService getService() {
+			return MAXSService.this;
 		}
 	}
 

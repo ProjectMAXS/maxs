@@ -22,17 +22,17 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.projectmaxs.main.MAXSLocalService;
+import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
 
 public class HandleChatPacketListener extends StateChangeListener {
 
-	private MAXSLocalService mMAXSLocalService;
+	private MAXSService mMAXSLocalService;
 	private PacketListener mChatPacketListener;
 	private Settings mSettings;
 
-	public HandleChatPacketListener(MAXSLocalService maxsLocalService, Settings settings) {
+	public HandleChatPacketListener(MAXSService maxsLocalService, Settings settings) {
 		this.mMAXSLocalService = maxsLocalService;
 		mSettings = settings;
 	}
