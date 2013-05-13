@@ -42,6 +42,10 @@ public class XMPPMessage implements Parcelable {
 		return this;
 	}
 
+	public String getRawContent() {
+		return mS.toString();
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;

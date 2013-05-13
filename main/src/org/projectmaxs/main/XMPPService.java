@@ -18,17 +18,26 @@
 package org.projectmaxs.main;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.MultipleRecipientManager;
 import org.projectmaxs.main.xmpp.HandleChatPacketListener;
 import org.projectmaxs.main.xmpp.HandleConnectionListener;
 import org.projectmaxs.main.xmpp.XMPPRoster;
+import org.projectmaxs.shared.UserMessage;
 import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 public class XMPPService {
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
@@ -44,6 +53,8 @@ public class XMPPService {
 		addListener(new HandleChatPacketListener(mMAXSLocalService, mSettings));
 		addListener(new HandleConnectionListener(mMAXSLocalService));
 		addListener(new XMPPRoster(mSettings));
+
+		SmackAndroid.init(maxsLocalService);
 	}
 
 	public enum State {
@@ -52,6 +63,10 @@ public class XMPPService {
 
 	public State getCurrentState() {
 		return mState;
+	}
+
+	public boolean isConnected() {
+		return (getCurrentState() == State.Connected);
 	}
 
 	public void addListener(StateChangeListener listener) {
@@ -68,6 +83,46 @@ public class XMPPService {
 
 	protected void disconnect() {
 		changeState(XMPPService.State.Disconnected);
+	}
+
+	protected boolean send(UserMessage userMessage) {
+		// TODO ID
+		String to = userMessage.getTo();
+		XMPPMessage msg = userMessage.getXmppMessage();
+
+		Message packet = new Message();
+		packet.setType(Message.Type.chat);
+		packet.setBody(msg.getRawContent());
+
+		if (to == null) {
+			List<String> toList = new LinkedList<String>();
+			for (String masterJid : mSettings.getMasterJids()) {
+				Iterator<Presence> presences = mConnection.getRoster().getPresences(masterJid);
+				while (presences.hasNext()) {
+					Presence p = presences.next();
+					String fullJID = p.getFrom();
+					String resource = StringUtils.parseResource(fullJID);
+					// Don't send messages to GTalk Android devices
+					// It would be nice if there was a better way to detect
+					// an Android gTalk XMPP client, but currently there is none
+					if (resource != null && !resource.equals("") && (!resource.startsWith("android"))) {
+						toList.add(fullJID);
+					}
+				}
+			}
+			try {
+				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
+			} catch (XMPPException e) {
+				Log.w("MultipleRecipientManager exception", e);
+				return false;
+			}
+		}
+		else {
+			packet.setTo(to);
+			mConnection.sendPacket(packet);
+		}
+
+		return true;
 	}
 
 	private void newState(State newState) {

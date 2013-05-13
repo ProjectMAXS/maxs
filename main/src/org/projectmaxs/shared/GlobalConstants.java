@@ -26,11 +26,11 @@ public class GlobalConstants {
 	public static final String ACTION_REGISTER_MODULE = MAIN_PACKAGE + ".REGISTER_MODULE";
 	public static final String ACTION_SET_RECENT_CONTACT = MAIN_PACKAGE + ".SET_RECENT_CONTACT";
 	public static final String ACTION_UPDATE_XMPP_STATUS = MAIN_PACKAGE + ".UPDATE_XMPP_STATUS";
-	public static final String ACTION_SEND_XMPP_MESSAGE = MAIN_PACKAGE + ".SEND_XMPP_MESSAGE";
+	public static final String ACTION_SEND_USER_MESSAGE = MAIN_PACKAGE + ".SEND_USER_MESSAGE";
 
 	public static final String EXTRA_MODULE_INFORMATION = PACKAGE + ".MODULE_INFORMATION";
 	public static final String EXTRA_COMMAND = PACKAGE + ".COMMAND";
-	public static final String EXTRA_XMPP_MESSAGE = PACKAGE + ".XMPP_MESSAGE";
+	public static final String EXTRA_USER_MESSAGE = PACKAGE + ".USER_MESSAGE";
 
 	public static final String PERMISSON = PACKAGE + ".permission";
 	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";

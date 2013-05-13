@@ -28,8 +28,8 @@ import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.UserMessage;
 import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 import android.app.Service;
 import android.content.Intent;
@@ -178,8 +178,12 @@ public class MAXSService extends Service {
 
 	}
 
-	public void sendXMPPMessage(XMPPMessage msg, int id) {
-		// TODO Auto-generated method stub
-
+	public void sendUserMessage(UserMessage userMsg) {
+		if (mXMPPService.isConnected()) {
+			mXMPPService.send(userMsg);
+		}
+		else {
+			// TODO
+		}
 	}
 }

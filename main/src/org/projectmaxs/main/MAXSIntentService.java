@@ -20,6 +20,7 @@ package org.projectmaxs.main;
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.UserMessage;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -76,8 +77,9 @@ public class MAXSIntentService extends IntentService {
 			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
 			mMAXSLocalService.registerModule(mi);
 		}
-		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
-
+		else if (action.equals(GlobalConstants.ACTION_SEND_USER_MESSAGE)) {
+			UserMessage msg = intent.getParcelableExtra(GlobalConstants.EXTRA_USER_MESSAGE);
+			mMAXSLocalService.sendUserMessage(msg);
 		}
 		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
 

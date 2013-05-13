@@ -27,11 +27,10 @@
         <service android:name=".MAXSIntentService"
             android:permission="org.projectmaxs.permission.USE_MAIN">
             <intent-filter>
-                <action android:name="org.projectmaxs.main.BIND_MAIN_SERVICE"/>
                 <action android:name="org.projectmaxs.main.REGISTER_MODULE"/>
                 <action android:name="org.projectmaxs.main.SET_RECENT_CONTACT"/>
                 <action android:name="org.projectmaxs.main.UPDATE_XMPP_STATUS"/>
-                <action android:name="org.projectmaxs.main.SEND_XMPP_MESSAGE"/>
+                <action android:name="org.projectmaxs.main.SEND_USER_MESSAGE"/>
             </intent-filter>
         </service>
         <service android:name=".MAXSRemoteService"
