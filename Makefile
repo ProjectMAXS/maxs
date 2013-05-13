@@ -8,6 +8,9 @@ all: $(ALL)
 eclipse:
 	TARGET=eclipse make $(ALL)
 
+clean:
+	TARGET=clean make $(ALL)
+
 $(ALL):
 	make -C $@ $(TARGET)
 
