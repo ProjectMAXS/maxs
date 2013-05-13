@@ -28,9 +28,8 @@ import android.os.IBinder;
 
 public class ModuleService extends IntentService {
 
-	public ModuleService(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
+	public ModuleService() {
+		super("MAXSModule:smsread");
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.smsread",

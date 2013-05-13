@@ -24,7 +24,8 @@
                 <action android:name="org.projectmaxs.main.STOP_SERVICE"/>
             </intent-filter>
         </service>
-        <service android:name=".MAXSService">
+        <service android:name=".MAXSService"
+            android:permission="org.projectmaxs.permission.USE_MAIN">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.BIND_MAIN_SERVICE"/>
                 <action android:name="org.projectmaxs.main.REGISTER_MODULE"/>
