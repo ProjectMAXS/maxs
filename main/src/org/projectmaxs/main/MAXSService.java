@@ -104,7 +104,10 @@ public class MAXSService extends Service {
 
 		String[] splitedBody = body.split(" ");
 		String cmd = splitedBody[0];
-		String subCmd = splitedBody[1];
+
+		String subCmd = null;
+		if (splitedBody.length > 1) subCmd = splitedBody[1];
+
 		CommandInformation ci = mCommands.get(cmd);
 		if (ci == null) return;
 
@@ -120,7 +123,7 @@ public class MAXSService extends Service {
 		String modulePackage = ci.getPackageForSubCommand(subCmd);
 		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
 		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(cmd, subCmd, null, -1));
-		intent.setClassName(modulePackage, modulePackage + "ModuleService");
+		intent.setClassName(modulePackage, modulePackage + ".ModuleService");
 		startService(intent);
 	}
 

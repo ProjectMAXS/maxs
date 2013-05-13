@@ -20,6 +20,8 @@ package org.projectmaxs.module.smsread;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.ModuleInformation.Command;
+import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.util.Log.LogSettings;
 import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 import android.app.IntentService;
@@ -38,6 +40,12 @@ public class ModuleService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.initialize("module-smsread", new LogSettings() {
+			@Override
+			public boolean debugLog() {
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -47,7 +55,8 @@ public class ModuleService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
+		Log.d("onHandleIntent");
+		Command command = (Command) intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_XMPP_MESSAGE);
 		XMPPMessage msg = new XMPPMessage("Hello from smsread module");
