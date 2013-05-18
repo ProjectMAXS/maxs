@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.smsread;
+package org.projectmaxs.module.sms;
 
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.GlobalConstants;
@@ -32,17 +32,17 @@ import android.os.IBinder;
 public class ModuleService extends IntentService {
 
 	public ModuleService() {
-		super("MAXSModule:smsread");
+		super("MAXSModule:sms");
 	}
 
-	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.smsread",
+	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.sms",
 			new ModuleInformation.Command[] { new ModuleInformation.Command("sms", "s", "read", "read",
 					new String[] { "read" }), });
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.initialize("module-smsread", new LogSettings() {
+		Log.initialize("module-sms", new LogSettings() {
 			@Override
 			public boolean debugLog() {
 				return true;
@@ -63,7 +63,7 @@ public class ModuleService extends IntentService {
 
 		Message msg;
 		if (subCmd.equals("read")) {
-			msg = new Message("Hello from smsread module");
+			msg = new Message("Hello from sms module");
 		}
 		else {
 			msg = new Message("Unkown command");

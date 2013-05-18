@@ -10,7 +10,6 @@ module: $(SHARED_SOURCE)
 
 clean:
 	ant clean
-	rm Makefile
 
 $(SHARED_SOURCE):
 	ln -s ../../../../main/$(SHARED_SOURCE) $(SHARED_SOURCE)

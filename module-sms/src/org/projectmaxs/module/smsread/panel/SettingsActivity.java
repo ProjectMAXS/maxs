@@ -1,6 +1,6 @@
-package org.projectmaxs.module.smsread.panel;
+package org.projectmaxs.module.sms.panel;
 
-import org.projectmaxs.module.smsread.R;
+import org.projectmaxs.module.sms.R;
 
 import android.app.Activity;
 import android.os.Bundle;

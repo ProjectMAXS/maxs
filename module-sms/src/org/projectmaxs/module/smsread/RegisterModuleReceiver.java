@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.smsread;
+package org.projectmaxs.module.sms;
 
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.util.Log;
@@ -29,7 +29,7 @@ public class RegisterModuleReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.initialize("module-smsread", new LogSettings() {
+		Log.initialize("module-sms", new LogSettings() {
 			@Override
 			public boolean debugLog() {
 				return true;
