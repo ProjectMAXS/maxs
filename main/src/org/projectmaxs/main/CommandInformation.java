@@ -24,7 +24,7 @@ import java.util.Set;
 import org.projectmaxs.shared.ModuleInformation.Command;
 
 public class CommandInformation {
-	private String mCommand;
+	private final String mCommand;
 	private String mDefaultSubCommand;
 	private String mDefaultSubCommandWithArgs;
 	private final Map<String, String> mSubCommands = new HashMap<String, String>();

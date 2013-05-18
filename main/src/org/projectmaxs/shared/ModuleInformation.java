@@ -25,8 +25,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ModuleInformation implements Parcelable {
-	String mModulePackage;
-	Set<Command> mCommands;
+	private final String mModulePackage;
+	private Set<Command> mCommands;
 
 	private ModuleInformation(String modulePackage) {
 		this.mModulePackage = modulePackage;
@@ -90,10 +90,10 @@ public class ModuleInformation implements Parcelable {
 
 	public static class Command implements Parcelable {
 
-		private String mCommand;
-		private String mShortCommand;
-		private String mDefaultSubCommand;
-		private String mDefaultSubCommandWithArgs;
+		private final String mCommand;
+		private final String mShortCommand;
+		private final String mDefaultSubCommand;
+		private final String mDefaultSubCommandWithArgs;
 		private Set<String> mSubCommands;
 
 		private Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs) {
