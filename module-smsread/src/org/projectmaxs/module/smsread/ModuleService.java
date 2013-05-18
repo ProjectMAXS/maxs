@@ -19,11 +19,11 @@ package org.projectmaxs.module.smsread;
 
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.GlobalConstants;
+import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.UserMessage;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.Log.LogSettings;
-import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -61,12 +61,12 @@ public class ModuleService extends IntentService {
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 		String subCmd = command.getSubCommand();
 
-		XMPPMessage msg;
+		Message msg;
 		if (subCmd.equals("read")) {
-			msg = new XMPPMessage("Hello from smsread module");
+			msg = new Message("Hello from smsread module");
 		}
 		else {
-			msg = new XMPPMessage("Unkown command");
+			msg = new Message("Unkown command");
 		}
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
 		replyIntent.putExtra(GlobalConstants.EXTRA_USER_MESSAGE, new UserMessage(msg));

@@ -17,8 +17,6 @@
 
 package org.projectmaxs.shared;
 
-import org.projectmaxs.shared.xmpp.XMPPMessage;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,24 +24,24 @@ public class UserMessage implements Parcelable {
 
 	private final int mId;
 	private final String mTo;
-	private final XMPPMessage mXmppMessage;
+	private final Message message;
 
-	public UserMessage(XMPPMessage msg) {
+	public UserMessage(Message msg) {
 		mId = -1;
 		mTo = null;
-		mXmppMessage = msg;
+		message = msg;
 	}
 
-	public UserMessage(XMPPMessage msg, String to) {
+	public UserMessage(Message msg, String to) {
 		this.mId = -1;
 		this.mTo = to;
-		this.mXmppMessage = msg;
+		this.message = msg;
 	}
 
-	public UserMessage(XMPPMessage msg, String to, int id) {
+	public UserMessage(Message msg, String to, int id) {
 		this.mId = id;
 		this.mTo = to;
-		this.mXmppMessage = msg;
+		this.message = msg;
 	}
 
 	public int getId() {
@@ -54,8 +52,8 @@ public class UserMessage implements Parcelable {
 		return mTo;
 	}
 
-	public XMPPMessage getXmppMessage() {
-		return mXmppMessage;
+	public Message geMessage() {
+		return message;
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class UserMessage implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(mId);
 		dest.writeString(mTo);
-		dest.writeParcelable(mXmppMessage, flags);
+		dest.writeParcelable(message, flags);
 	}
 
 	public static final Creator<UserMessage> CREATOR = new Creator<UserMessage>() {
@@ -76,7 +74,7 @@ public class UserMessage implements Parcelable {
 		public UserMessage createFromParcel(Parcel source) {
 			int id = source.readInt();
 			String to = source.readString();
-			XMPPMessage msg = source.readParcelable(XMPPMessage.class.getClassLoader());
+			Message msg = source.readParcelable(Message.class.getClassLoader());
 			return new UserMessage(msg, to, id);
 		}
 

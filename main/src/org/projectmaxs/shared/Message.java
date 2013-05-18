@@ -15,29 +15,29 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.xmpp;
+package org.projectmaxs.shared;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class XMPPMessage implements Parcelable {
+public class Message implements Parcelable {
 
 	StringBuilder mS;
 
-	public XMPPMessage() {
+	public Message() {
 		this(256);
 	}
 
-	public XMPPMessage(int stringBuilderSize) {
+	public Message(int stringBuilderSize) {
 		mS = new StringBuilder(stringBuilderSize);
 	}
 
-	public XMPPMessage(String string) {
+	public Message(String string) {
 		this(string.length());
 		mS.append(string);
 	}
 
-	public XMPPMessage add(String string) {
+	public Message add(String string) {
 		mS.append(string);
 		return this;
 	}
@@ -56,17 +56,17 @@ public class XMPPMessage implements Parcelable {
 		parcel.writeString(mS.toString());
 	}
 
-	public static final Creator<XMPPMessage> CREATOR = new Creator<XMPPMessage>() {
+	public static final Creator<Message> CREATOR = new Creator<Message>() {
 
 		@Override
-		public XMPPMessage createFromParcel(Parcel source) {
+		public Message createFromParcel(Parcel source) {
 			String s = source.readString();
-			return new XMPPMessage(s);
+			return new Message(s);
 		}
 
 		@Override
-		public XMPPMessage[] newArray(int size) {
-			return new XMPPMessage[size];
+		public Message[] newArray(int size) {
+			return new Message[size];
 		}
 
 	};

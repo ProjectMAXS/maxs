@@ -37,7 +37,6 @@ import org.projectmaxs.main.xmpp.HandleConnectionListener;
 import org.projectmaxs.main.xmpp.XMPPRoster;
 import org.projectmaxs.shared.UserMessage;
 import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.xmpp.XMPPMessage;
 
 public class XMPPService {
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
@@ -88,7 +87,7 @@ public class XMPPService {
 	protected boolean send(UserMessage userMessage) {
 		// TODO ID
 		String to = userMessage.getTo();
-		XMPPMessage msg = userMessage.getXmppMessage();
+		org.projectmaxs.shared.Message msg = userMessage.geMessage();
 
 		Message packet = new Message();
 		packet.setType(Message.Type.chat);
