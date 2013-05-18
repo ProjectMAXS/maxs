@@ -36,7 +36,7 @@ public class ModuleService extends IntentService {
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.smsread",
-			new ModuleInformation.Command[] { new ModuleInformation.Command("sms", "read", "read",
+			new ModuleInformation.Command[] { new ModuleInformation.Command("sms", "s", "read", "read",
 					new String[] { "read" }), });
 
 	@Override

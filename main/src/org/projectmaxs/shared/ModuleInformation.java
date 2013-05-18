@@ -91,25 +91,27 @@ public class ModuleInformation implements Parcelable {
 	public static class Command implements Parcelable {
 
 		private String mCommand;
+		private String mShortCommand;
 		private String mDefaultSubCommand;
 		private String mDefaultSubCommandWithArgs;
 		private Set<String> mSubCommands;
 
-		private Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs) {
+		private Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs) {
 			this.mCommand = command;
+			this.mShortCommand = shortCommand;
 			this.mDefaultSubCommand = defaultSubCommand;
 			this.mDefaultSubCommandWithArgs = defaultSubcommandWithArgs;
 		}
 
-		public Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs,
+		public Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs,
 				Set<String> subCommands) {
-			this(command, defaultSubCommand, defaultSubcommandWithArgs);
+			this(command, shortCommand, defaultSubCommand, defaultSubcommandWithArgs);
 			this.mSubCommands = subCommands;
 		}
 
-		public Command(String command, String defaultSubCommand, String defaultSubcommandWithArgs,
+		public Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs,
 				String... subCommands) {
-			this(command, defaultSubCommand, defaultSubcommandWithArgs);
+			this(command, shortCommand, defaultSubCommand, defaultSubcommandWithArgs);
 			Set<String> subCmdSet = new HashSet<String>();
 			for (String s : subCommands)
 				subCmdSet.add(s);
@@ -140,6 +142,7 @@ public class ModuleInformation implements Parcelable {
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
 			dest.writeString(mCommand);
+			dest.writeString(mShortCommand);
 			dest.writeString(mDefaultSubCommand);
 			dest.writeString(mDefaultSubCommandWithArgs);
 			String[] subCmds = mSubCommands.toArray(new String[mSubCommands.size()]);
@@ -156,13 +159,14 @@ public class ModuleInformation implements Parcelable {
 			@Override
 			public Command createFromParcel(Parcel source) {
 				String cmd = source.readString();
+				String shortCommand = source.readString();
 				String defaultSubCommand = source.readString();
 				String defaultSubCommandWithArgs = source.readString();
 				int size = source.readInt();
 				String[] subCmdsArray = new String[size];
 				source.readStringArray(subCmdsArray);
 				Set<String> subCmds = new HashSet<String>(Arrays.asList(subCmdsArray));
-				return new Command(cmd, defaultSubCommand, defaultSubCommandWithArgs, subCmds);
+				return new Command(cmd, shortCommand, defaultSubCommand, defaultSubCommandWithArgs, subCmds);
 			}
 
 			@Override
