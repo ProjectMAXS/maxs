@@ -13,6 +13,9 @@ asmack: libs-sources
 libs-sources:
 	mkdir libs-sources
 
+clean:
+	ant clean
+
 eclipse: .settings .classpath .project
 
 .settings:

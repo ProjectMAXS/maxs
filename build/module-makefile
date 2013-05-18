@@ -8,6 +8,10 @@ all: module
 module: $(SHARED_SOURCE)
 	ant $(ANT_BUILD_TARGET)
 
+clean:
+	ant clean
+	rm Makefile
+
 $(SHARED_SOURCE):
 	ln -s ../../../../main/$(SHARED_SOURCE) $(SHARED_SOURCE)
 
