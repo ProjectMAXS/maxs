@@ -26,18 +26,21 @@ import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.Log.LogSettings;
 
 import android.app.IntentService;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.IBinder;
 
 public class ModuleService extends IntentService {
 
+	private BluetoothAdapter mAdapter;
+
 	public ModuleService() {
 		super("MAXSModule:bluetooth");
 	}
 
-	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.bluetooth",
-			new ModuleInformation.Command[] { new ModuleInformation.Command("bluetooth", "s", "read", "read",
-					new String[] { "read" }), });
+	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
+			"org.projectmaxs.module.bluetooth", new ModuleInformation.Command[] { new ModuleInformation.Command(
+					"bluetooth", "bt", "status", null, new String[] { "status" }), });
 
 	@Override
 	public void onCreate() {
@@ -48,6 +51,7 @@ public class ModuleService extends IntentService {
 				return true;
 			}
 		});
+		mAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	@Override
@@ -62,8 +66,8 @@ public class ModuleService extends IntentService {
 		String subCmd = command.getSubCommand();
 
 		Message msg;
-		if (subCmd.equals("read")) {
-			msg = new Message("Hello from bluetooth module");
+		if (subCmd.equals("status")) {
+			msg = new Message("Bluetooth is enabled: " + mAdapter.isEnabled());
 		}
 		else {
 			msg = new Message("Unkown command");
