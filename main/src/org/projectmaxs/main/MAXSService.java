@@ -20,6 +20,11 @@ package org.projectmaxs.main;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.jivesoftware.smack.packet.Message;
 import org.projectmaxs.main.CommandInformation.CommandClashException;
@@ -39,9 +44,22 @@ import android.os.IBinder;
 
 public class MAXSService extends Service {
 
+	private static final ScheduledExecutorService sExecutor = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+		@Override
+		public Thread newThread(Runnable runnable) {
+			Thread t = new Thread(runnable, "MAXS Executor Service");
+			t.setDaemon(true);
+			return t;
+		}
+	});
+
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
 
 	private XMPPService mXMPPService;
+
+	private final Object mRecentContactLock = new Object();
+	private ScheduledFuture<?> mSetRecentContactFeature;
+	private volatile Contact mRecentContact;
 
 	private final IBinder mBinder = new LocalBinder();
 
@@ -159,12 +177,28 @@ public class MAXSService extends Service {
 	}
 
 	public Contact getRecentContact() {
-		// TODO Auto-generated method stub
-		return null;
+		Contact res = null;
+		synchronized (mRecentContactLock) {
+			res = mRecentContact;
+		}
+		return res;
 	}
 
-	public void setRecentContact(Contact contact) {
-		// TODO Auto-generated method stub
+	public void setRecentContact(final Contact contact) {
+		synchronized (mRecentContactLock) {
+			if (mSetRecentContactFeature != null) {
+				mSetRecentContactFeature.cancel(false);
+				mSetRecentContactFeature = null;
+			}
+			mSetRecentContactFeature = sExecutor.schedule(new Runnable() {
+				@Override
+				public void run() {
+					synchronized (mRecentContactLock) {
+						mRecentContact = contact;
+					}
+				}
+			}, 5, TimeUnit.SECONDS);
+		}
 
 	}
 
