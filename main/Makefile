@@ -7,11 +7,14 @@ all: main
 main: asmack
 	ant $(ANT_BUILD_TARGET)
 
-asmack: libs-sources
+asmack: libs-sources libs
 	./asmack.sh
 
 libs-sources:
-	mkdir libs-sources
+	mkdir $@
+
+libs:
+	mkdir $@
 
 clean:
 	ant clean
