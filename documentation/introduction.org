@@ -1,0 +1,15 @@
+* What is MAXS?
+MAXS is short for *M*odular *A*ndroid *X*MPP *S*ervice. It is an
+Android service that creates an XMPP connection and allows some
+predefined JIDs, called "Master JIDs" to use this service.
+
+It is the successor of GTalkSMS, and hence MAXS shares many ideas with
+GTalkSMS. In fact we hope that MAXS will share the same feature set as
+GTalkSMS at some point.
+
+* Modular!
+MAXS is split into a main app, which we refer to as "main" from now on
+and various modules. It is the job of main to establish a stable XMPP
+connection, forward incoming commands to the modules and send the
+answer message from the modules back to the origin.
+
