@@ -1,5 +1,6 @@
 package org.projectmaxs.main.activities;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import org.jivesoftware.smack.Connection;
@@ -86,16 +87,11 @@ public class MainActivity extends Activity {
 		// configured
 		Set<String> masterJids = mSettings.getMasterJids();
 		if (!masterJids.isEmpty()) {
-			boolean first = true;
-			for (String jid : masterJids) {
-				if (first) {
-					mFirstMasterAddress.setText(jid);
-					first = false;
-				}
-				else {
-					EditText et = addEmptyMasterJidEditText();
-					et.setText(jid);
-				}
+			Iterator<String> it = masterJids.iterator();
+			mFirstMasterAddress.setText(it.next());
+			while (it.hasNext()) {
+				EditText et = addEmptyMasterJidEditText();
+				et.setText(it.next());
 			}
 			addEmptyMasterJidEditText();
 		}
