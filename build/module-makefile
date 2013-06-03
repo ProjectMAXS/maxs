@@ -1,13 +1,24 @@
 SHARED_SOURCE := src/org/projectmaxs/shared
 SHARED_MODULE_SOURCE := src/org/projectmaxs/sharedmodule
+MODULE_NAME := $(shell basename `pwd`)
+DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all clean eclipse shared
+.PHONY: all clean deploy eclipse shared $(DEBUG_APK)
 
 all: module
 
 module: $(SHARED_SOURCE) $(SHARED_MODULE_SOURCE)
 	ant $(ANT_BUILD_TARGET)
+
+deploy: .lastDeployed
+
+$(DEBUG_APK):
+	make module ANT_BUILD_TARGET=debug
+
+.lastDeployed: $(DEBUG_APK)
+	touch $@
+	adb install -r $(DEBUG_APK)
 
 clean:
 	ant clean
