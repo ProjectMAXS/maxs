@@ -51,7 +51,6 @@ public abstract class EditTextWatcher implements OnFocusChangeListener, TextView
 		case EditorInfo.IME_ACTION_DONE:
 		case EditorInfo.IME_ACTION_GO:
 		case EditorInfo.IME_ACTION_NEXT:
-		case EditorInfo.IME_ACTION_PREVIOUS:
 			maybeCallLostFocusOrDone(v);
 			break;
 		default:

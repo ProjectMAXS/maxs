@@ -18,19 +18,13 @@
 package org.projectmaxs.module.bluetooth;
 
 import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.UserMessage;
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.Log.LogSettings;
+import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 
-import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
-import android.os.IBinder;
 
-public class ModuleService extends IntentService {
+public class ModuleService extends MAXSModuleIntentService {
 
 	private BluetoothAdapter mAdapter;
 
@@ -45,36 +39,19 @@ public class ModuleService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.initialize("module-bluetooth", new LogSettings() {
-			@Override
-			public boolean debugLog() {
-				return true;
-			}
-		});
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		Log.d("onHandleIntent");
-		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
-		String subCmd = command.getSubCommand();
-
+	public Message handleCommand(Command command) {
 		Message msg;
-		if (subCmd.equals("status")) {
+		if (command.getSubCommand().equals("status")) {
 			msg = new Message("Bluetooth is enabled: " + mAdapter.isEnabled());
 		}
 		else {
 			msg = new Message("Unkown command");
 		}
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_USER_MESSAGE, new UserMessage(msg));
-		startService(replyIntent);
+		return msg;
 	}
 
 }
