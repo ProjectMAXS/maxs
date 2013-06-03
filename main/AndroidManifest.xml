@@ -11,7 +11,7 @@
 
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <application android:label="@string/app_name" >
-        <activity android:name="org.projectmaxs.main.panels.MainActivity"
+        <activity android:name="org.projectmaxs.main.activities.MainActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

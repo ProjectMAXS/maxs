@@ -1,4 +1,4 @@
-package org.projectmaxs.module.sms.panel;
+package org.projectmaxs.module.sms.activites;
 
 import org.projectmaxs.module.sms.R;
 

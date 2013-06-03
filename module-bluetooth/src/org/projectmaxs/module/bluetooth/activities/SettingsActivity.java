@@ -1,4 +1,4 @@
-package org.projectmaxs.module.bluetooth.panel;
+package org.projectmaxs.module.bluetooth.activities;
 
 import org.projectmaxs.module.bluetooth.R;
 

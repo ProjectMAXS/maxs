@@ -1,4 +1,4 @@
-package org.projectmaxs.main.panels;
+package org.projectmaxs.main.activities;
 
 import org.jivesoftware.smack.Connection;
 import org.projectmaxs.main.MAXSService;
