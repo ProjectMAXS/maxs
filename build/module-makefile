@@ -1,18 +1,22 @@
-SHARED_SOURCE=src/org/projectmaxs/shared
-ANT_BUILD_TARGET?=debug
+SHARED_SOURCE := src/org/projectmaxs/shared
+SHARED_MODULE_SOURCE := src/org/projectmaxs/sharedmodule
+ANT_BUILD_TARGET ?= debug
 
 .PHONY: all clean eclipse
 
 all: module
 
-module: $(SHARED_SOURCE)
+module: $(SHARED_SOURCE) $(SHARED_MODULE_SOURCE)
 	ant $(ANT_BUILD_TARGET)
 
 clean:
 	ant clean
 
 $(SHARED_SOURCE):
-	ln -s ../../../../main/$(SHARED_SOURCE) $(SHARED_SOURCE)
+	ln -s ../../../../main/$@ $@
+
+$(SHARED_MODULE_SOURCE):
+	ln -s ../../../../sharedmodule $@
 
 eclipse: .settings .classpath .project $(SHARED_SOURCE)
 
