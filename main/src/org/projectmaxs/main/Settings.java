@@ -69,7 +69,7 @@ public class Settings {
 	public void setJid(String jid) {
 		SharedPreferences.Editor e = mSharedPreferences.edit();
 		e.putString(JID, jid);
-		e.apply();
+		e.commit();
 	}
 
 	public String getPassword() {
@@ -79,7 +79,7 @@ public class Settings {
 	public void setPassword(String password) {
 		SharedPreferences.Editor e = mSharedPreferences.edit();
 		e.putString(PASSWORD, password);
-		e.apply();
+		e.commit();
 	}
 
 	public boolean manualServerSettings() {
@@ -162,7 +162,7 @@ public class Settings {
 		}
 
 		e.putString(MASTER_JIDS, sb.toString());
-		e.apply();
+		e.commit();
 	}
 
 }
