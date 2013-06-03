@@ -17,16 +17,22 @@
 
 package org.projectmaxs.main;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jivesoftware.smack.util.StringUtils;
+import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class Settings {
+
+	private static final String MASTER_JIDS = "MASTER_JIDS";
+	private static final String JID = "JID";
+	private static final String PASSWORD = "PASSWORD";
 
 	private static Settings sSettings;
 
@@ -37,13 +43,14 @@ public class Settings {
 		return sSettings;
 	}
 
-	private Context ctx;
+	private Context mCtx;
+	private SharedPreferences mSharedPreferences;
 
 	private boolean debugLog = true;
-	private List<String> mMasterJids = new ArrayList<String>(Arrays.asList(new String[] { "flo@freakempire.de" }));
 
 	private Settings(Context ctx) {
-		this.ctx = ctx;
+		this.mCtx = ctx;
+		this.mSharedPreferences = ctx.getSharedPreferences(Constants.MAIN_PACKAGE, Context.MODE_PRIVATE);
 	}
 
 	public boolean connectionSettingsObsolete() {
@@ -55,12 +62,24 @@ public class Settings {
 		// TODO
 	}
 
-	public String login() {
-		return "maxs@freakempire.de";
+	public String getJid() {
+		return mSharedPreferences.getString(JID, "");
 	}
 
-	public String password() {
-		return "maxs";
+	public void setJid(String jid) {
+		SharedPreferences.Editor e = mSharedPreferences.edit();
+		e.putString(JID, jid);
+		e.apply();
+	}
+
+	public String getPassword() {
+		return mSharedPreferences.getString(PASSWORD, "");
+	}
+
+	public void setPassword(String password) {
+		SharedPreferences.Editor e = mSharedPreferences.edit();
+		e.putString(PASSWORD, password);
+		e.apply();
 	}
 
 	public boolean manualServerSettings() {
@@ -79,13 +98,44 @@ public class Settings {
 		return "freakempire.de";
 	}
 
-	public List<String> getMasterJids() {
-		return mMasterJids;
+	/**
+	 * Returns a set of master JID Strings or an empty set if no master JID was
+	 * ever set.
+	 * 
+	 * @return
+	 */
+	public Set<String> getMasterJids() {
+		String s = mSharedPreferences.getString(MASTER_JIDS, "");
+		Set<String> res = new HashSet<String>();
+		if (!s.equals("")) {
+			res.addAll(Arrays.asList(s.split(" ")));
+		}
+		return res;
+	}
+
+	public int getMasterJidCount() {
+		return getMasterJids().size();
+	}
+
+	public void addMasterJid(String jid) {
+		Set<String> masterJids = getMasterJids();
+		masterJids.add(jid);
+		saveMasterJids(masterJids);
+	}
+
+	public boolean removeMasterJid(String jid) {
+		Set<String> masterJids = getMasterJids();
+		if (masterJids.remove(jid)) {
+			saveMasterJids(masterJids);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean isMasterJID(String jid) {
 		String bareJID = StringUtils.parseBareAddress(jid);
-		for (String s : mMasterJids)
+		Set<String> masterJids = getMasterJids();
+		for (String s : masterJids)
 			if (s.equals(bareJID)) return true;
 
 		return false;
@@ -100,6 +150,19 @@ public class Settings {
 			}
 
 		};
+	}
+
+	private void saveMasterJids(Set<String> newMasterJids) {
+		SharedPreferences.Editor e = mSharedPreferences.edit();
+
+		StringBuilder sb = new StringBuilder();
+		for (String s : newMasterJids) {
+			sb.append(s);
+			sb.append(" ");
+		}
+
+		e.putString(MASTER_JIDS, sb.toString());
+		e.apply();
 	}
 
 }

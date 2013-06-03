@@ -243,7 +243,7 @@ public class XMPPService {
 
 		if (!con.isAuthenticated()) {
 			try {
-				con.login(mSettings.login(), mSettings.password(), "MAXS");
+				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
 				Log.e("tryToConnect() login failed", e);
 			}

@@ -18,7 +18,7 @@
 package org.projectmaxs.main.xmpp;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.Roster;
@@ -53,7 +53,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	@Override
 	public void connected(Connection connection) {
-		List<String> masterJids = mSettings.getMasterJids();
+		Set<String> masterJids = mSettings.getMasterJids();
 		for (String jid : masterJids)
 			addJid(jid);
 	}
