@@ -10,7 +10,7 @@ import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.XMPPService;
 import org.projectmaxs.main.util.XMPPUtil;
-import org.projectmaxs.shared.FocusWatcher;
+import org.projectmaxs.shared.EditTextWatcher;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -59,10 +59,10 @@ public class MainActivity extends Activity {
 		mStatusText = (TextView) findViewById(R.id.statusText);
 
 		new MasterAddressCallbacks(mFirstMasterAddress);
-		new FocusWatcher(mJID) {
+		new EditTextWatcher(mJID) {
 
 			@Override
-			public void lostFocus(View v) {
+			public void lostFocusOrDone(View v) {
 				String text = mJID.getText().toString();
 				if (!XMPPUtil.isValidBareJid(text)) {
 					Toast.makeText(MainActivity.this, "This is not a valid bare JID", Toast.LENGTH_LONG).show();
@@ -73,10 +73,10 @@ public class MainActivity extends Activity {
 			}
 
 		};
-		new FocusWatcher(mPassword) {
+		new EditTextWatcher(mPassword) {
 
 			@Override
-			public void lostFocus(View v) {
+			public void lostFocusOrDone(View v) {
 				mSettings.setPassword(mPassword.getText().toString());
 			}
 
@@ -190,13 +190,13 @@ public class MainActivity extends Activity {
 		return newEditText;
 	}
 
-	private final class MasterAddressCallbacks extends FocusWatcher {
+	private final class MasterAddressCallbacks extends EditTextWatcher {
 
 		MasterAddressCallbacks(EditText editText) {
 			super(editText);
 		}
 
-		public void lostFocus(View v) {
+		public void lostFocusOrDone(View v) {
 			String text = mEditText.getText().toString();
 			if (text.equals("") && !mBeforeText.equals("")) {
 				int childCount = mMasterAddresses.getChildCount();
@@ -227,6 +227,7 @@ public class MainActivity extends Activity {
 				mSettings.removeMasterJid(mBeforeText);
 				mSettings.addMasterJid(text);
 			}
+			return;
 		}
 
 	}

@@ -17,17 +17,22 @@
 
 package org.projectmaxs.shared;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
-public abstract class FocusWatcher implements OnFocusChangeListener {
-	protected EditText mEditText;
+public abstract class EditTextWatcher implements OnFocusChangeListener, TextView.OnEditorActionListener {
+	protected final EditText mEditText;
 	protected String mBeforeText;
+	private boolean mInUse = false;
 
-	public FocusWatcher(EditText editText) {
+	public EditTextWatcher(EditText editText) {
 		this.mEditText = editText;
 		editText.setOnFocusChangeListener(this);
+		editText.setOnEditorActionListener(this);
 	}
 
 	@Override
@@ -36,13 +41,35 @@ public abstract class FocusWatcher implements OnFocusChangeListener {
 			inFocus(v);
 		}
 		else {
-			lostFocus(v);
+			maybeCallLostFocusOrDone(v);
 		}
 	}
 
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		switch (actionId) {
+		case EditorInfo.IME_ACTION_DONE:
+		case EditorInfo.IME_ACTION_GO:
+		case EditorInfo.IME_ACTION_NEXT:
+		case EditorInfo.IME_ACTION_PREVIOUS:
+			maybeCallLostFocusOrDone(v);
+			break;
+		default:
+			break;
+		}
+
+		return false;
+	}
+
 	public void inFocus(View v) {
+		mInUse = true;
 		mBeforeText = mEditText.getText().toString();
 	}
 
-	public abstract void lostFocus(View v);
+	public abstract void lostFocusOrDone(View v);
+
+	private void maybeCallLostFocusOrDone(View v) {
+		if (mInUse) lostFocusOrDone(v);
+		mInUse = false;
+	}
 }
