@@ -67,9 +67,7 @@ public class Settings {
 	}
 
 	public void setJid(String jid) {
-		SharedPreferences.Editor e = mSharedPreferences.edit();
-		e.putString(JID, jid);
-		e.commit();
+		mSharedPreferences.edit().putString(JID, jid).commit();
 	}
 
 	public String getPassword() {
@@ -77,9 +75,7 @@ public class Settings {
 	}
 
 	public void setPassword(String password) {
-		SharedPreferences.Editor e = mSharedPreferences.edit();
-		e.putString(PASSWORD, password);
-		e.commit();
+		mSharedPreferences.edit().putString(PASSWORD, password).commit();
 	}
 
 	public boolean manualServerSettings() {
