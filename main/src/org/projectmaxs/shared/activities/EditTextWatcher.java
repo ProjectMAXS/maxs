@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared;
+package org.projectmaxs.shared.activities;
 
 import android.view.KeyEvent;
 import android.view.View;

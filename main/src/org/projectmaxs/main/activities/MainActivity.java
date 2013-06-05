@@ -11,7 +11,7 @@ import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.XMPPService;
 import org.projectmaxs.main.util.XMPPUtil;
-import org.projectmaxs.shared.EditTextWatcher;
+import org.projectmaxs.shared.activities.EditTextWatcher;
 
 import android.app.Activity;
 import android.content.ComponentName;
