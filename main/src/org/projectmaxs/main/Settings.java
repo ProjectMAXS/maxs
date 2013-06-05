@@ -154,13 +154,12 @@ public class Settings {
 		return id;
 	}
 
-	public void setXMPPConnectionState(XMPPService.State state) {
-		mSharedPreferences.edit().putInt(CONNECTION_STATE, state.ordinal()).commit();
+	public void setXMPPConnectionState(boolean active) {
+		mSharedPreferences.edit().putBoolean(CONNECTION_STATE, active).commit();
 	}
 
-	public XMPPService.State getXMPPConnectionState() {
-		int stateInt = mSharedPreferences.getInt(CONNECTION_STATE, XMPPService.State.Disconnected.ordinal());
-		return XMPPService.State.values()[stateInt];
+	public boolean getXMPPConnectionState() {
+		return mSharedPreferences.getBoolean(CONNECTION_STATE, false);
 	}
 
 	public Log.LogSettings getLogSettings() {

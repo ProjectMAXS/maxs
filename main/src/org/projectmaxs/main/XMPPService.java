@@ -45,7 +45,15 @@ public class XMPPService {
 	private XMPPConnection mConnection;
 	private MAXSService mMAXSLocalService;
 
+	/**
+	 * Creates a new XMPPService instance. The XMPP connection will be
+	 * automatically resumed if it was previously established
+	 * 
+	 * @param maxsLocalService
+	 */
 	public XMPPService(MAXSService maxsLocalService) {
+		SmackAndroid.init(maxsLocalService);
+
 		mSettings = Settings.getInstance(maxsLocalService);
 		mMAXSLocalService = maxsLocalService;
 
@@ -53,7 +61,8 @@ public class XMPPService {
 		addListener(new HandleConnectionListener(mMAXSLocalService));
 		addListener(new XMPPRoster(mSettings));
 
-		SmackAndroid.init(maxsLocalService);
+		// Connect if the connection was previously established
+		if (mSettings.getXMPPConnectionState()) connect();
 	}
 
 	public enum State {
@@ -142,6 +151,19 @@ public class XMPPService {
 			default:
 				break;
 			}
+		}
+		switch (newState) {
+		case Connected:
+		case Connecting:
+		case WaitingForNetwork:
+		case WaitingForRetry:
+			mSettings.setXMPPConnectionState(true);
+			break;
+		case Disconnected:
+		case Disconnecting:
+			mSettings.setXMPPConnectionState(false);
+		default:
+			break;
 		}
 		mState = newState;
 	}
