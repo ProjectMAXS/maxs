@@ -33,6 +33,9 @@ public class Settings {
 	private static final String MASTER_JIDS = "MASTER_JIDS";
 	private static final String JID = "JID";
 	private static final String PASSWORD = "PASSWORD";
+	private static final String LAST_RECIPIENT = "LAST_RECIPIENT";
+	private static final String CMD_ID = "CMD_ID";
+	private static final String CONNECTION_STATE = "CONNECTION_STATE";
 
 	private static Settings sSettings;
 
@@ -137,6 +140,29 @@ public class Settings {
 		return false;
 	}
 
+	public void setLastRecipient(String lastRecipient) {
+		mSharedPreferences.edit().putString(LAST_RECIPIENT, lastRecipient).commit();
+	}
+
+	public String getLastRecipient() {
+		return mSharedPreferences.getString(LAST_RECIPIENT, "");
+	}
+
+	public int getNextCommandId() {
+		int id = mSharedPreferences.getInt(CMD_ID, 0);
+		mSharedPreferences.edit().putInt(CMD_ID, id + 1).commit();
+		return id;
+	}
+
+	public void setXMPPConnectionState(XMPPService.State state) {
+		mSharedPreferences.edit().putInt(CONNECTION_STATE, state.ordinal()).commit();
+	}
+
+	public XMPPService.State getXMPPConnectionState() {
+		int stateInt = mSharedPreferences.getInt(CONNECTION_STATE, XMPPService.State.Disconnected.ordinal());
+		return XMPPService.State.values()[stateInt];
+	}
+
 	public Log.LogSettings getLogSettings() {
 		return new Log.LogSettings() {
 
@@ -160,5 +186,4 @@ public class Settings {
 		e.putString(MASTER_JIDS, sb.toString());
 		e.commit();
 	}
-
 }
