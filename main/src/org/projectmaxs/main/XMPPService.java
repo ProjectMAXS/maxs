@@ -210,6 +210,7 @@ public class XMPPService {
 		default:
 			Log.w("XMPPService.changeState(): Unkown state change combination. mState=" + mState + ", newState="
 					+ newState);
+			// TODO enable this
 			// throw new IllegalStateException();
 		}
 	}
