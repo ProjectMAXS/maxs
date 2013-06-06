@@ -22,18 +22,17 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
 
 public class HandleChatPacketListener extends StateChangeListener {
 
-	private MAXSService mMAXSLocalService;
+	private XMPPService mXMPPService;
 	private PacketListener mChatPacketListener;
 	private Settings mSettings;
 
-	public HandleChatPacketListener(MAXSService maxsLocalService, Settings settings) {
-		this.mMAXSLocalService = maxsLocalService;
+	public HandleChatPacketListener(XMPPService xmppService, Settings settings) {
+		this.mXMPPService = xmppService;
 		mSettings = settings;
 	}
 
@@ -43,11 +42,11 @@ public class HandleChatPacketListener extends StateChangeListener {
 
 			@Override
 			public void processPacket(Packet packet) {
-				Message msg = (Message) packet;
-				String from = msg.getFrom();
+				Message message = (Message) packet;
+				String from = message.getFrom();
 
 				if (mSettings.isMasterJID(from)) {
-					mMAXSLocalService.performCommandFromMessage(msg);
+					mXMPPService.newMessageFromMasterJID(message);
 				}
 			}
 

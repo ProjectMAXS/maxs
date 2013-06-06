@@ -9,8 +9,8 @@ import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.main.R;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
-import org.projectmaxs.main.XMPPService;
 import org.projectmaxs.main.util.XMPPUtil;
+import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.activities.EditTextWatcher;
 
 import android.app.Activity;

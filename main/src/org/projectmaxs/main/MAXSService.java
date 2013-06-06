@@ -26,9 +26,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.jivesoftware.smack.packet.Message;
 import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
@@ -67,6 +67,8 @@ public class MAXSService extends Service {
 		super.onCreate();
 		Log.initialize("maxs", Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
+		// Start the service the connection was previously established
+		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -116,31 +118,51 @@ public class MAXSService extends Service {
 		return mXMPPService;
 	}
 
-	public void performCommandFromMessage(Message message) {
-		String body = message.getBody();
-		if (body == null) return;
+	public enum CommandOrigin {
+		XMPP
+	}
 
-		String[] splitedBody = body.split(" ");
-		String cmd = splitedBody[0];
+	/**
+	 * args can be also in the place of subCmd if the default subCmd is wanted
+	 * 
+	 * @param command
+	 * @param subCmd
+	 * @param args
+	 * @param issuer
+	 * @param issuerInformation
+	 */
+	public void performCommand(String command, String subCmd, String args, CommandOrigin origin,
+			String issuerInformation) {
 
-		String subCmd = null;
-		if (splitedBody.length > 1) subCmd = splitedBody[1];
+		int id = Settings.getInstance(this).getNextCommandId();
+		// TODO Database entry of the command goes here
 
-		CommandInformation ci = mCommands.get(cmd);
-		if (ci == null) return;
+		CommandInformation ci = mCommands.get(command);
+		if (ci == null) {
+			sendUserMessage(new UserMessage("Unkown command: " + command, id));
+			return;
+		}
 
 		if (subCmd == null) {
 			subCmd = ci.getDefaultSubCommand();
 		}
 		else if (!ci.isKnownSubCommand(subCmd)) {
+			// If subCmd is not known, then maybe it is not really a sub command
+			// but instead arguments. Therefore we have to lookup the
+			// default sub command when arguments are given, but first assign
+			// args to subCmd
+			args = subCmd;
 			subCmd = ci.getDefaultSubcommandWithArgs();
 		}
 
-		if (subCmd == null) return;
+		if (subCmd == null) {
+			sendUserMessage(new UserMessage("Unknown subCommand: " + subCmd == null ? args : subCmd, id));
+			return;
+		}
 
 		String modulePackage = ci.getPackageForSubCommand(subCmd);
 		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
-		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(cmd, subCmd, null, -1));
+		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
 		intent.setClassName(modulePackage, modulePackage + ".ModuleService");
 		startService(intent);
 	}
@@ -213,11 +235,21 @@ public class MAXSService extends Service {
 	}
 
 	public void sendUserMessage(UserMessage userMsg) {
-		if (mXMPPService.isConnected()) {
-			mXMPPService.send(userMsg);
+		int id = userMsg.getId();
+		String to = null;
+		if (id != UserMessage.NO_ID) {
+			to = null; // TODO
 		}
-		else {
-			// TODO
+
+		CommandOrigin commandOrigin = CommandOrigin.XMPP;
+
+		switch (commandOrigin) {
+		case XMPP:
+			mXMPPService.send(userMsg.geMessage(), to);
+			break;
+		default:
+			break;
 		}
+
 	}
 }

@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main;
+package org.projectmaxs.main.xmpp;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,10 +31,9 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
-import org.projectmaxs.main.xmpp.HandleChatPacketListener;
-import org.projectmaxs.main.xmpp.HandleConnectionListener;
-import org.projectmaxs.main.xmpp.XMPPRoster;
-import org.projectmaxs.shared.UserMessage;
+import org.projectmaxs.main.MAXSService;
+import org.projectmaxs.main.Settings;
+import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.shared.util.Log;
 
 public class XMPPService {
@@ -57,12 +56,9 @@ public class XMPPService {
 		mSettings = Settings.getInstance(maxsLocalService);
 		mMAXSLocalService = maxsLocalService;
 
-		addListener(new HandleChatPacketListener(mMAXSLocalService, mSettings));
+		addListener(new HandleChatPacketListener(this, mSettings));
 		addListener(new HandleConnectionListener(mMAXSLocalService));
 		addListener(new XMPPRoster(mSettings));
-
-		// Connect if the connection was previously established
-		if (mSettings.getXMPPConnectionState()) connect();
 	}
 
 	public enum State {
@@ -85,22 +81,24 @@ public class XMPPService {
 		mStateChangeListeners.remove(listener);
 	}
 
-	protected void connect() {
+	public void connect() {
 		changeState(XMPPService.State.Connected);
 	}
 
-	protected void disconnect() {
+	public void disconnect() {
 		changeState(XMPPService.State.Disconnected);
 	}
 
-	protected boolean send(UserMessage userMessage) {
-		// TODO ID
-		String to = userMessage.getTo();
-		org.projectmaxs.shared.Message msg = userMessage.geMessage();
+	public void send(org.projectmaxs.shared.Message message, String to) {
+		if (mConnection == null || !mConnection.isAuthenticated()) {
+			// TODO add to DB
+			Log.d("foo");
+			return;
+		}
 
 		Message packet = new Message();
 		packet.setType(Message.Type.chat);
-		packet.setBody(msg.getRawContent());
+		packet.setBody(message.getRawContent());
 
 		if (to == null) {
 			List<String> toList = new LinkedList<String>();
@@ -122,7 +120,7 @@ public class XMPPService {
 				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
 			} catch (XMPPException e) {
 				Log.w("MultipleRecipientManager exception", e);
-				return false;
+				return;
 			}
 		}
 		else {
@@ -130,7 +128,27 @@ public class XMPPService {
 			mConnection.sendPacket(packet);
 		}
 
-		return true;
+		return;
+	}
+
+	protected void newMessageFromMasterJID(Message message) {
+		String body = message.getBody();
+		if (body == null) return;
+
+		String[] splitedBody = body.split(" ");
+		String command = splitedBody[0];
+
+		String subCmd = null;
+		if (splitedBody.length > 1) subCmd = splitedBody[1];
+
+		String args = null;
+		if (splitedBody.length > 2) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 2; i < splitedBody.length; i++)
+				sb.append(splitedBody[i]);
+			args = sb.toString();
+		}
+		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP, message.getFrom());
 	}
 
 	private void newState(State newState) {

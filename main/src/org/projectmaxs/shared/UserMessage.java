@@ -21,35 +21,31 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class UserMessage implements Parcelable {
+	public static final int NO_ID = -1;
 
 	private final int mId;
-	private final String mTo;
 	private final Message message;
 
 	public UserMessage(Message msg) {
-		mId = -1;
-		mTo = null;
-		message = msg;
+		this(msg, NO_ID);
 	}
 
-	public UserMessage(Message msg, String to) {
-		this.mId = -1;
-		this.mTo = to;
-		this.message = msg;
-	}
-
-	public UserMessage(Message msg, String to, int id) {
+	public UserMessage(Message msg, int id) {
 		this.mId = id;
-		this.mTo = to;
 		this.message = msg;
+	}
+
+	public UserMessage(String string) {
+		this(string, NO_ID);
+	}
+
+	public UserMessage(String string, int id) {
+		this.mId = id;
+		this.message = new Message(string);
 	}
 
 	public int getId() {
 		return mId;
-	}
-
-	public String getTo() {
-		return mTo;
 	}
 
 	public Message geMessage() {
@@ -64,7 +60,6 @@ public class UserMessage implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(mId);
-		dest.writeString(mTo);
 		dest.writeParcelable(message, flags);
 	}
 
@@ -73,9 +68,8 @@ public class UserMessage implements Parcelable {
 		@Override
 		public UserMessage createFromParcel(Parcel source) {
 			int id = source.readInt();
-			String to = source.readString();
 			Message msg = source.readParcelable(Message.class.getClassLoader());
-			return new UserMessage(msg, to, id);
+			return new UserMessage(msg, id);
 		}
 
 		@Override
