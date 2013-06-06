@@ -7,10 +7,13 @@ ALL := main $(MODULES)
 all: $(ALL)
 
 eclipse:
-	TARGET=eclipse make $(ALL)
+	TARGET=$@ make $(ALL)
 
 clean:
-	TARGET=clean make $(ALL)
+	TARGET=$@ make $(ALL)
+
+deploy:
+	TARGET=$@ make $(ALL)
 
 $(ALL): $(MODULES_MAKEFILE)
 	make -C $@ $(TARGET)

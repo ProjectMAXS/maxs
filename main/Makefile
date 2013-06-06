@@ -1,6 +1,7 @@
 ANT_BUILD_TARGET?=debug
+DEBUG_APK := bin/MAXS-debug.apk
 
-.PHONY: all asmack clean eclipse
+.PHONY: all asmack clean deploy eclipse $(DEBUG_APK)
 
 all: main
 
@@ -15,6 +16,15 @@ libs-sources:
 
 libs:
 	mkdir $@
+
+deploy: .lastDeployed
+
+$(DEBUG_APK):
+	make main ANT_BUILD_TARGET=debug
+
+.lastDeployed: $(DEBUG_APK)
+	touch $@
+	adb install -r $(DEBUG_APK)
 
 clean:
 	ant clean
