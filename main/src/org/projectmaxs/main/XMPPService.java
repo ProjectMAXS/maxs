@@ -62,7 +62,7 @@ public class XMPPService {
 		addListener(new XMPPRoster(mSettings));
 
 		// Connect if the connection was previously established
-		// if (mSettings.getXMPPConnectionState()) connect();
+		if (mSettings.getXMPPConnectionState()) connect();
 	}
 
 	public enum State {

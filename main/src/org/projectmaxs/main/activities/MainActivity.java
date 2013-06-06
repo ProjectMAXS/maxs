@@ -175,7 +175,7 @@ public class MainActivity extends Activity {
 			});
 			mConnButton.setEnabled(true);
 
-//			if (mSettings.connectOnMainScreen()) mMAXSLocalService.startService();
+			if (mSettings.connectOnMainScreen()) mMAXSLocalService.startService();
 		}
 
 		@Override
