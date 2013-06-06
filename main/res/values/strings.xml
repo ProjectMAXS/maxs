@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">MAXS</string>
     <string name="master_addresses">Master Addresses</string>
     <string name="hint_jid">user@server.tld</string>
     <string name="password">Password</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
+    <string name="pref_xmpp_stream_settings">XMPP Stream Settings</string>
+    <string name="pref_xmpp_stream_compression">Stream compression</string>
+    <string name="pref_xmpp_stream_compression_help">Use XMPP stream compression if supported by server</string>
+    <string name="pref_xmpp_stream_encryption">Stream encryption</string>
+    <string name="pref_xmpp_stream_encryption_help">Encrypt the XMPP stream</string>
+    <string name="pref_xmpp_service_settings">XMPP Service Settings</string>
+    <string name="pref_manual_service_settings">Manual service settings</string>
+    <string name="pref_manual_service_settings_help">Allows you to specifiy the XMPP service settings</string>
+    <string name="pref_manual_service_settings_host">Host</string>
+    <string name="pref_manual_service_settings_host_help">The fully qualified domain name (FQDN) of the host providing the XMPP service</string>
+    <string name="pref_manual_service_settings_port">Port</string>
+    <string name="pref_manual_service_settings_port_help">The port of the service</string>
+    <string name="pref_manual_service_settings_service">XMPP Service Name</string>
+    <string name="pref_manual_service_settings_service_help">Usually the domain part of your JID</string>
+    <string name="pref_app_settings">Application Settings</string>
+    <string name="pref_app_debug_log">Debug Log</string>
+    <string name="pref_app_debug_log_help">Enables extensive logging of debug messages. Useful to find bugs.</string>
+    <string name="pref_advanced_settings">Advanced Settings</string>
+    <string name="pref_service_settings">Service Settings</string>
+    <string name="pref_app_connect_on_main_screen">Connect if MAXS is opened</string>
+    <string name="pref_app_connect_on_main_screen_help">Try to establish a connection if MAXS is opened. Mostly useful for developers.</string>
+    <string name="pref_app_xmpp_debug">XMPP Debug</string>
+    <string name="pref_app_xmpp_debug_help">Log all XMPP stanzas</string>
+
 </resources>

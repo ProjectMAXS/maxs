@@ -17,18 +17,26 @@
 
 package org.projectmaxs.main;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jivesoftware.smack.AndroidConnectionConfiguration;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
-import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.main.xmpp.XMPPSocketFactory;
 import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
+import android.preference.PreferenceManager;
 
-public class Settings {
+public class Settings implements OnSharedPreferenceChangeListener {
 
 	private static final String MASTER_JIDS = "MASTER_JIDS";
 	private static final String JID = "JID";
@@ -37,32 +45,56 @@ public class Settings {
 	private static final String CMD_ID = "CMD_ID";
 	private static final String CONNECTION_STATE = "CONNECTION_STATE";
 
+	// XMPP settings
+	private final String MANUAL_SERVICE_SETTINGS;
+	private final String MANUAL_SERVICE_SETTINGS_HOST;
+	private final String MANUAL_SERVICE_SETTINGS_PORT;
+	private final String MANUAL_SERVICE_SETTINGS_SERVICE;
+	private final String XMPP_STREAM_COMPRESSION;
+	private final String XMPP_STREAM_ENCYPTION;
+
+	// App settings
+	private final String DEBUG_LOG;
+	private final String XMPP_DEBUG;
+	private final String CONNECT_ON_MAIN_SCREEN;
+
+	private final Set<String> XMPP_CONNECTION_SETTINGS;
+
 	private static Settings sSettings;
 
-	public static Settings getInstance(Context ctx) {
+	public static Settings getInstance(Context context) {
 		if (sSettings == null) {
-			sSettings = new Settings(ctx);
+			sSettings = new Settings(context);
 		}
 		return sSettings;
 	}
 
-	private Context mCtx;
+	private Context mContext;
 	private SharedPreferences mSharedPreferences;
+	private ConnectionConfiguration mConnectionConfiguration;
 
-	private boolean debugLog = true;
+	private Settings(Context context) {
+		this.mContext = context;
+		// this.mSharedPreferences =
+		// context.getSharedPreferences(Constants.MAIN_PACKAGE,
+		// Context.MODE_PRIVATE);
+		this.mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		MANUAL_SERVICE_SETTINGS = context.getString(R.string.pref_manual_service_settings_key);
+		MANUAL_SERVICE_SETTINGS_HOST = context.getString(R.string.pref_manual_service_settings_host_key);
+		MANUAL_SERVICE_SETTINGS_PORT = context.getString(R.string.pref_manual_service_settings_port_key);
+		MANUAL_SERVICE_SETTINGS_SERVICE = context.getString(R.string.pref_manual_service_settings_service_key);
+		XMPP_STREAM_COMPRESSION = context.getString(R.string.pref_xmpp_stream_compression_key);
+		XMPP_STREAM_ENCYPTION = context.getString(R.string.pref_xmpp_stream_encryption_key);
 
-	private Settings(Context ctx) {
-		this.mCtx = ctx;
-		this.mSharedPreferences = ctx.getSharedPreferences(Constants.MAIN_PACKAGE, Context.MODE_PRIVATE);
-	}
+		XMPP_CONNECTION_SETTINGS = new HashSet<String>(Arrays.asList(new String[] { JID, PASSWORD,
+				MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST, MANUAL_SERVICE_SETTINGS_PORT,
+				MANUAL_SERVICE_SETTINGS_SERVICE, XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION }));
 
-	public boolean connectionSettingsObsolete() {
-		// TODO
-		return true;
-	}
+		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
+		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
+		CONNECT_ON_MAIN_SCREEN = context.getString(R.string.pref_app_connect_on_main_screen_key);
 
-	public void resetConnectionSettingsObsolete() {
-		// TODO
+		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	public String getJid() {
@@ -79,22 +111,6 @@ public class Settings {
 
 	public void setPassword(String password) {
 		mSharedPreferences.edit().putString(PASSWORD, password).commit();
-	}
-
-	public boolean manualServerSettings() {
-		return true;
-	}
-
-	public String serverHost() {
-		return "mate.freakempire.de";
-	}
-
-	public int serverPort() {
-		return 5222;
-	}
-
-	public String serviceName() {
-		return "freakempire.de";
 	}
 
 	/**
@@ -162,15 +178,74 @@ public class Settings {
 		return mSharedPreferences.getBoolean(CONNECTION_STATE, false);
 	}
 
+	public boolean connectOnMainScreen() {
+		return mSharedPreferences.getBoolean(CONNECT_ON_MAIN_SCREEN, false);
+	}
+
 	public Log.LogSettings getLogSettings() {
 		return new Log.LogSettings() {
 
 			@Override
 			public boolean debugLog() {
-				return debugLog;
+				return mSharedPreferences.getBoolean(DEBUG_LOG, false);
 			}
 
 		};
+	}
+
+	public ConnectionConfiguration getConnectionConfiguration() throws XMPPException {
+		if (mConnectionConfiguration == null) {
+			if (mSharedPreferences.getBoolean(MANUAL_SERVICE_SETTINGS, false)) {
+				String host = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_HOST, "");
+				int port = Integer.parseInt(mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_PORT, "5222"));
+				String service = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
+				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
+			}
+			else {
+				String service = StringUtils.parseServer(mSharedPreferences.getString(JID, ""));
+				mConnectionConfiguration = new AndroidConnectionConfiguration(service, 1234);
+			}
+			mConnectionConfiguration.setSocketFactory(XMPPSocketFactory.getInstance());
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+				mConnectionConfiguration.setTruststoreType("AndroidCAStore");
+				mConnectionConfiguration.setTruststorePassword(null);
+				mConnectionConfiguration.setTruststorePath(null);
+			}
+			else {
+				mConnectionConfiguration.setTruststoreType("BKS");
+				String path = System.getProperty("javax.net.ssl.trustStore");
+				if (path == null) {
+					path = System.getProperty("java.home") + File.separator + "etc" + File.separator + "security"
+							+ File.separator + "cacerts.bks";
+				}
+				mConnectionConfiguration.setTruststorePath(path);
+			}
+
+			mConnectionConfiguration.setCompressionEnabled(mSharedPreferences
+					.getBoolean(XMPP_STREAM_COMPRESSION, false));
+
+			ConnectionConfiguration.SecurityMode securityMode;
+			if (mSharedPreferences.getBoolean(XMPP_STREAM_ENCYPTION, false)) {
+				securityMode = ConnectionConfiguration.SecurityMode.required;
+			}
+			else {
+				securityMode = ConnectionConfiguration.SecurityMode.disabled;
+			}
+			mConnectionConfiguration.setSecurityMode(securityMode);
+
+			mConnectionConfiguration.setReconnectionAllowed(false);
+		}
+
+		return mConnectionConfiguration;
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		for (String s : XMPP_CONNECTION_SETTINGS)
+			if (s.equals(key)) mConnectionConfiguration = null;
+
+		if (key.equals(XMPP_DEBUG)) Connection.DEBUG_ENABLED = sharedPreferences.getBoolean(XMPP_DEBUG, false);
 	}
 
 	private void saveMasterJids(Set<String> newMasterJids) {

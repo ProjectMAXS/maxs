@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
@@ -42,6 +41,7 @@ public class XMPPService {
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
 	private State mState = State.Disconnected;
 	private Settings mSettings;
+	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
 	private MAXSService mMAXSLocalService;
 
@@ -62,7 +62,7 @@ public class XMPPService {
 		addListener(new XMPPRoster(mSettings));
 
 		// Connect if the connection was previously established
-		if (mSettings.getXMPPConnectionState()) connect();
+		// if (mSettings.getXMPPConnectionState()) connect();
 	}
 
 	public enum State {
@@ -243,18 +243,19 @@ public class XMPPService {
 
 		XMPPConnection con;
 		boolean newConnection = false;
-		if (mSettings.connectionSettingsObsolete() || mConnection == null) {
-			try {
-				con = createNewConnection(mSettings);
-			} catch (Exception e) {
-				Log.e("Exception from createNewConnection()", e);
-				return;
+
+		try {
+			if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings.getConnectionConfiguration()) {
+				con = new XMPPConnection(mSettings.getConnectionConfiguration());
+				newConnection = true;
 			}
-			mSettings.resetConnectionSettingsObsolete();
-			newConnection = true;
-		}
-		else {
-			con = mConnection;
+			else {
+				con = mConnection;
+			}
+		} catch (XMPPException e) {
+			Log.e("tryToConnect() connection configuration failed", e);
+			// TODO try reconnect
+			return;
 		}
 
 		try {
@@ -269,6 +270,7 @@ public class XMPPService {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
 				Log.e("tryToConnect() login failed", e);
+				return;
 			}
 		}
 
@@ -293,79 +295,11 @@ public class XMPPService {
 		mConnection.sendPacket(new Presence(Presence.Type.available));
 	}
 
-	private static XMPPConnection createNewConnection(Settings settings) throws XMPPException {
-		ConnectionConfiguration conf;
-
-		if (settings.manualServerSettings()) {
-			conf = new ConnectionConfiguration(settings.serverHost(), settings.serverPort(), settings.serviceName());
-		}
-		else {
-			conf = new AndroidConnectionConfiguration(settings.serviceName());
-		}
-
-		// conf.setSocketFactory(new SocketFactory() {
-		//
-		// @Override
-		// public Socket createSocket(String host, int port) throws IOException,
-		// UnknownHostException {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		//
-		// @Override
-		// public Socket createSocket(InetAddress host, int port) throws
-		// IOException {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		//
-		// @Override
-		// public Socket createSocket(String host, int port, InetAddress
-		// localHost, int localPort) throws IOException,
-		// UnknownHostException {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		//
-		// @Override
-		// public Socket createSocket(InetAddress address, int port, InetAddress
-		// localAddress, int localPort)
-		// throws IOException {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		//
-		// });
-
-		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		// {
-		// conf.setTruststoreType("AndroidCAStore");
-		// conf.setTruststorePassword(null);
-		// conf.setTruststorePath(null);
-		// } else {
-		// conf.setTruststoreType("BKS");
-		// String path = System.getProperty("javax.net.ssl.trustStore");
-		// if (path == null) {
-		// path = System.getProperty("java.home") + File.separator + "etc"
-		// + File.separator + "security" + File.separator
-		// + "cacerts.bks";
-		// }
-		// conf.setTruststorePath(path);
-		// }
-
-		conf.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-		conf.setCompressionEnabled(false);
-
-		conf.setSendPresence(false);
-
-		return new XMPPConnection(conf);
-	}
-
 	private void disconnectConnection() {
 		if (mConnection != null) {
 			if (mConnection.isConnected()) {
 				newState(State.Disconnecting);
-				// TODO better diconnect handle (e.g. in extra thread)
+				// TODO better disconnect handle (e.g. in extra thread)
 				mConnection.disconnect();
 			}
 		}

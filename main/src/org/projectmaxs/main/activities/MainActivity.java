@@ -44,6 +44,11 @@ public class MainActivity extends Activity {
 	private Button mConnButton;
 	private TextView mStatusText;
 
+	public void openAdvancedSettings(View view) {
+		Intent intent = new Intent(this, AdvancedSettings.class);
+		startActivity(intent);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,6 +174,8 @@ public class MainActivity extends Activity {
 
 			});
 			mConnButton.setEnabled(true);
+
+//			if (mSettings.connectOnMainScreen()) mMAXSLocalService.startService();
 		}
 
 		@Override
