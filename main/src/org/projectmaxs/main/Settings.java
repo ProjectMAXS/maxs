@@ -182,12 +182,16 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		return mSharedPreferences.getBoolean(CONNECT_ON_MAIN_SCREEN, false);
 	}
 
+	public boolean isDebugLogEnabled() {
+		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
+	}
+
 	public Log.LogSettings getLogSettings() {
 		return new Log.LogSettings() {
 
 			@Override
 			public boolean debugLog() {
-				return mSharedPreferences.getBoolean(DEBUG_LOG, false);
+				return isDebugLogEnabled();
 			}
 
 		};

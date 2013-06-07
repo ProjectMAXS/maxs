@@ -54,6 +54,11 @@ public class MAXSService extends Service {
 	});
 
 	private static Log sLog = Log.getLog();
+	private static boolean sIsRunning = false;
+
+	public static boolean isRunning() {
+		return sIsRunning;
+	}
 
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
 
@@ -65,12 +70,20 @@ public class MAXSService extends Service {
 
 	private final IBinder mBinder = new LocalBinder();
 
+	@Override
 	public void onCreate() {
 		super.onCreate();
 		sLog.initialize(Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
+		sIsRunning = true;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		sIsRunning = false;
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -86,6 +99,8 @@ public class MAXSService extends Service {
 			return START_STICKY;
 		}
 		String action = intent.getAction();
+		sLog.d("onStartCommand(): action=" + action);
+
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			// let's assume that if the size is zero we have to do an initial
 			// challenge
@@ -99,7 +114,13 @@ public class MAXSService extends Service {
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
 			mXMPPService.disconnect();
+			stopSelf(startId);
 			return START_NOT_STICKY;
+		}
+		else if (action.equals(Constants.ACTION_NETWORK_STATUS_CHANGED)) {
+			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
+			boolean networkTypeChanged = intent.getBooleanExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
+			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
 		}
 		// TODO everything else
 		return START_STICKY;

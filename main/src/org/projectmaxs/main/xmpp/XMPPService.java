@@ -133,6 +133,19 @@ public class XMPPService {
 		return;
 	}
 
+	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
+		// first disconnect if the network type changed and we are now connected
+		// with an now unusable network
+		if (networkTypeChanged && isConnected()) {
+			disconnect();
+		}
+
+		// if we have an connected network but we are not connected, connect
+		if (connected && !isConnected()) {
+			connect();
+		}
+	}
+
 	protected void newMessageFromMasterJID(Message message) {
 		String body = message.getBody();
 		if (body == null) return;
@@ -306,6 +319,7 @@ public class XMPPService {
 		// TODO handle offline messages as StateChangeListener
 		// TODO ping failed listener as StateChangeListener
 
+		sLog.d("tryToConnect() successfully connected");
 		newState(State.Connected);
 
 		// Send the first presence *after* all StateChangeListeners have been
@@ -323,4 +337,5 @@ public class XMPPService {
 			}
 		}
 	}
+
 }
