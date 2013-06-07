@@ -29,17 +29,18 @@ import android.content.Intent;
 import android.os.IBinder;
 
 public abstract class MAXSModuleIntentService extends IntentService {
-	private final String mName;
+	private static Log sLog;
 
 	public MAXSModuleIntentService(String name) {
 		super(name);
-		mName = name;
+		sLog = Log.getLog(name);
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.initialize(mName, new LogSettings() {
+		sLog.initialize(new LogSettings() {
+			// TODO add real log settings
 			@Override
 			public boolean debugLog() {
 				return true;
@@ -54,7 +55,7 @@ public abstract class MAXSModuleIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d("onHandleIntent");
+		sLog.d("onHandleIntent");
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
 		Message msg = handleCommand(command);

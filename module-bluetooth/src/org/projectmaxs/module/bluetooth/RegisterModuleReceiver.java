@@ -26,17 +26,19 @@ import android.content.Context;
 import android.content.Intent;
 
 public class RegisterModuleReceiver extends BroadcastReceiver {
+	private static Log sLog = Log.getLog();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.initialize("module-bluetooth", new LogSettings() {
+		sLog.initialize(new LogSettings() {
+			// TODO add real log settings
 			@Override
 			public boolean debugLog() {
 				return true;
 			}
 
 		});
-		Log.d("RegisterModuleReceiver");
+		sLog.d("RegisterModuleReceiver");
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
 		replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, ModuleService.sMODULE_INFORMATION);
 		context.startService(replyIntent);

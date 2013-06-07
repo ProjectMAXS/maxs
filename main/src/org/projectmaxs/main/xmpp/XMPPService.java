@@ -37,6 +37,8 @@ import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.shared.util.Log;
 
 public class XMPPService {
+	private static Log sLog = Log.getLog();
+
 	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
 	private State mState = State.Disconnected;
 	private Settings mSettings;
@@ -92,7 +94,7 @@ public class XMPPService {
 	public void send(org.projectmaxs.shared.Message message, String to) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			// TODO add to DB
-			Log.d("foo");
+			sLog.d("foo");
 			return;
 		}
 
@@ -119,7 +121,7 @@ public class XMPPService {
 			try {
 				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
 			} catch (XMPPException e) {
-				Log.w("MultipleRecipientManager exception", e);
+				sLog.w("MultipleRecipientManager exception", e);
 				return;
 			}
 		}
@@ -187,7 +189,7 @@ public class XMPPService {
 	}
 
 	private synchronized void changeState(State newState) {
-		Log.d("XMPPService.changeState(): mState=" + mState + ", newState=" + newState);
+		sLog.d("changeState(): mState=" + mState + ", newState=" + newState);
 		switch (mState) {
 		case Connected:
 			switch (newState) {
@@ -248,15 +250,14 @@ public class XMPPService {
 			}
 			break;
 		default:
-			Log.w("XMPPService.changeState(): Unkown state change combination. mState=" + mState + ", newState="
-					+ newState);
+			sLog.w("changeState(): Unkown state change combination. mState=" + mState + ", newState=" + newState);
 			// TODO enable this
 			// throw new IllegalStateException();
 		}
 	}
 
 	private void tryToConnect() {
-		Log.d("XMPPService.tryToConnect()");
+		sLog.d("tryToConnect()");
 		newState(State.Connecting);
 
 		XMPPConnection con;
@@ -271,7 +272,7 @@ public class XMPPService {
 				con = mConnection;
 			}
 		} catch (XMPPException e) {
-			Log.e("tryToConnect() connection configuration failed", e);
+			sLog.e("tryToConnect() connection configuration failed", e);
 			// TODO try reconnect
 			return;
 		}
@@ -279,7 +280,7 @@ public class XMPPService {
 		try {
 			con.connect();
 		} catch (XMPPException e) {
-			Log.e("Exception from connect()", e);
+			sLog.e("Exception from connect()", e);
 			return;
 		}
 
@@ -287,7 +288,7 @@ public class XMPPService {
 			try {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
-				Log.e("tryToConnect() login failed", e);
+				sLog.e("tryToConnect() login failed", e);
 				return;
 			}
 		}

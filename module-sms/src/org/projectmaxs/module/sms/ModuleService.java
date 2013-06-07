@@ -25,7 +25,7 @@ import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 public class ModuleService extends MAXSModuleIntentService {
 
 	public ModuleService() {
-		super("MAXSModule:sms");
+		super("maxs-module-sms");
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.sms",

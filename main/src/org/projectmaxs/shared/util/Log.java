@@ -17,42 +17,70 @@
 
 package org.projectmaxs.shared.util;
 
+import android.text.TextUtils;
+
 public class Log {
 
-	static private String sLogTag = "unkown";
-	static private LogSettings sLogSettings;
+	private LogSettings mLogSettings;
+	private final String mLogTag;
 
-	static public void initialize(String logTag, LogSettings settings) {
-		sLogTag = logTag;
-		sLogSettings = settings;
+	public static Log getLog(Class<?> c) {
+		return new Log(shortClassName(c));
 	}
 
-	public static void w(String msg) {
-		android.util.Log.i(sLogTag, msg);
+	public static Log getLog() {
+		StackTraceElement[] s = new RuntimeException().getStackTrace();
+		return getLog(shortClassName(s[1].getClassName()));
 	}
 
-	public static void w(String msg, Exception e) {
-		android.util.Log.w(sLogTag, msg, e);
+	public static Log getLog(String logTag) {
+		return new Log(logTag);
 	}
 
-	public static void e(String msg) {
-		android.util.Log.e(sLogTag, msg);
+	private Log(String logTag) {
+		this.mLogTag = logTag;
 	}
 
-	public static void e(String msg, Exception e) {
-		android.util.Log.e(sLogTag, msg, e);
+	public void initialize(LogSettings settings) {
+		mLogSettings = settings;
 	}
 
-	public static void d(String msg) {
-		if (sLogSettings != null && sLogSettings.debugLog()) {
-			android.util.Log.d(sLogTag, msg);
+	public void w(String msg) {
+		android.util.Log.w(mLogTag, msg);
+	}
+
+	public void w(String msg, Exception e) {
+		android.util.Log.w(mLogTag, msg, e);
+	}
+
+	public void e(String msg) {
+		android.util.Log.e(mLogTag, msg);
+	}
+
+	public void e(String msg, Exception e) {
+		android.util.Log.e(mLogTag, msg, e);
+	}
+
+	public void d(String msg) {
+		if (mLogSettings != null && mLogSettings.debugLog()) {
+			android.util.Log.d(mLogTag, msg);
 		}
 		else {
-			android.util.Log.d(sLogTag, msg);
+			android.util.Log.d(mLogTag, msg);
 		}
 	}
 
 	static public abstract class LogSettings {
 		public abstract boolean debugLog();
+	}
+
+	private static String shortClassName(Class<?> c) {
+		String className = c.getName();
+		return shortClassName(className);
+	}
+
+	private static String shortClassName(String className) {
+		int index = TextUtils.lastIndexOf(className, '.');
+		return className.substring(index + 1);
 	}
 }

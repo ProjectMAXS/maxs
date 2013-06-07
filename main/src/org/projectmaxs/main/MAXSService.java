@@ -53,6 +53,8 @@ public class MAXSService extends Service {
 		}
 	});
 
+	private static Log sLog = Log.getLog();
+
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
 
 	private XMPPService mXMPPService;
@@ -65,7 +67,7 @@ public class MAXSService extends Service {
 
 	public void onCreate() {
 		super.onCreate();
-		Log.initialize("maxs", Settings.getInstance(this).getLogSettings());
+		sLog.initialize(Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
@@ -79,7 +81,7 @@ public class MAXSService extends Service {
 				startService(new Intent(Constants.ACTION_START_SERVICE));
 			}
 			else {
-				Log.w("onStartCommand() null intent with Gingerbread or higher");
+				sLog.w("onStartCommand() null intent with Gingerbread or higher");
 			}
 			return START_STICKY;
 		}
