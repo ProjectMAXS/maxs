@@ -91,13 +91,14 @@ public class XMPPService {
 		changeState(XMPPService.State.Disconnected);
 	}
 
-	public void send(org.projectmaxs.shared.Message message, String to) {
+	public void send(org.projectmaxs.shared.Message message, String originIssuerInfo) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			// TODO add to DB
 			sLog.d("foo");
 			return;
 		}
 
+		String to = originIssuerInfo;
 		Message packet = new Message();
 		packet.setType(Message.Type.chat);
 		packet.setBody(message.getRawContent());
@@ -163,7 +164,8 @@ public class XMPPService {
 				sb.append(splitedBody[i]);
 			args = sb.toString();
 		}
-		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP, message.getFrom());
+		String from = message.getFrom();
+		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP, null, from);
 	}
 
 	private void newState(State newState) {

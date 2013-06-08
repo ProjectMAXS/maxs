@@ -27,6 +27,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.projectmaxs.main.CommandInformation.CommandClashException;
+import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.Command;
@@ -67,6 +68,7 @@ public class MAXSService extends Service {
 	private final Object mRecentContactLock = new Object();
 	private ScheduledFuture<?> mSetRecentContactFeature;
 	private volatile Contact mRecentContact;
+	private CommandTable mCommandTable;
 
 	private final IBinder mBinder = new LocalBinder();
 
@@ -75,6 +77,7 @@ public class MAXSService extends Service {
 		super.onCreate();
 		sLog.initialize(Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
+		mCommandTable = CommandTable.getInstance(this);
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
 		sIsRunning = true;
@@ -154,11 +157,11 @@ public class MAXSService extends Service {
 	 * @param issuer
 	 * @param issuerInformation
 	 */
-	public void performCommand(String command, String subCmd, String args, CommandOrigin origin,
+	public void performCommand(String command, String subCmd, String args, CommandOrigin origin, String originId,
 			String issuerInformation) {
 
 		int id = Settings.getInstance(this).getNextCommandId();
-		// TODO Database entry of the command goes here
+		mCommandTable.addCommand(id, command, subCmd, args, origin, issuerInformation, originId);
 
 		CommandInformation ci = mCommands.get(command);
 		if (ci == null) {
@@ -259,16 +262,17 @@ public class MAXSService extends Service {
 
 	public void sendUserMessage(UserMessage userMsg) {
 		int id = userMsg.getId();
-		String to = null;
+		String originIssuerInfo = null;
 		if (id != UserMessage.NO_ID) {
-			to = null; // TODO
+			CommandTable.Entry entry = mCommandTable.geEntry(id);
+			originIssuerInfo = entry.mOriginIssuerInfo;
 		}
 
 		CommandOrigin commandOrigin = CommandOrigin.XMPP;
 
 		switch (commandOrigin) {
 		case XMPP:
-			mXMPPService.send(userMsg.geMessage(), to);
+			mXMPPService.send(userMsg.geMessage(), originIssuerInfo);
 			break;
 		default:
 			break;
