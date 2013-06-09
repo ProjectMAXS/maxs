@@ -70,13 +70,11 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		return sSettings;
 	}
 
-	private Context mContext;
 	private SharedPreferences mSharedPreferences;
 	private ConnectionConfiguration mConnectionConfiguration;
 	private LogSettings mLogSettings;
 
 	private Settings(Context context) {
-		this.mContext = context;
 		// this.mSharedPreferences =
 		// context.getSharedPreferences(Constants.MAIN_PACKAGE,
 		// Context.MODE_PRIVATE);
