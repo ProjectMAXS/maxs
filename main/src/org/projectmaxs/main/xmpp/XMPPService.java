@@ -59,7 +59,7 @@ public class XMPPService {
 		mMAXSLocalService = maxsLocalService;
 
 		addListener(new HandleChatPacketListener(this, mSettings));
-		addListener(new HandleConnectionListener(mMAXSLocalService));
+		addListener(new HandleConnectionListener(this, mSettings));
 		addListener(new XMPPRoster(mSettings));
 	}
 
@@ -89,6 +89,11 @@ public class XMPPService {
 
 	public void disconnect() {
 		changeState(XMPPService.State.Disconnected);
+	}
+
+	public void reconnect() {
+		disconnect();
+		connect();
 	}
 
 	public void send(org.projectmaxs.shared.Message message, String originIssuerInfo) {
@@ -212,7 +217,6 @@ public class XMPPService {
 				break;
 			case Disconnected:
 				disconnectConnection();
-				newState(State.Disconnected);
 				break;
 			case WaitingForNetwork:
 				disconnectConnection();
@@ -337,6 +341,7 @@ public class XMPPService {
 				// TODO better disconnect handle (e.g. in extra thread)
 				mConnection.disconnect();
 			}
+			newState(State.Disconnected);
 		}
 	}
 

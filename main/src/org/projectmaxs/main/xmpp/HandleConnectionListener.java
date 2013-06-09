@@ -19,16 +19,20 @@ package org.projectmaxs.main.xmpp;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionListener;
-import org.projectmaxs.main.MAXSService;
+import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
+import org.projectmaxs.shared.util.Log;
 
 public class HandleConnectionListener extends StateChangeListener {
 
-	private MAXSService mMAXSLocalService;
+	private static Log sLog = Log.getLog();
+
+	private XMPPService mXMPPService;
 	private ConnectionListener mConnectionListener;
 
-	public HandleConnectionListener(MAXSService maxsLocalService) {
-		this.mMAXSLocalService = maxsLocalService;
+	public HandleConnectionListener(XMPPService xmppService, Settings settings) {
+		this.mXMPPService = xmppService;
+		sLog.initialize(settings.getLogSettings());
 	}
 
 	@Override
@@ -38,14 +42,26 @@ public class HandleConnectionListener extends StateChangeListener {
 
 			@Override
 			public void connectionClosed() {
-				// TODO Auto-generated method stub
 
+				// TODO is this also called when the connection is closed by the
+				// server? in that case -> reconnect, with something like
+				// @formatter:off
+				/*
+				XMPPService.State current = mXMPPService.getCurrentState();
+				switch (current) {
+				case Connected:
+					mXMPPService.reconnect();
+					break;
+				default:
+					break;
+				}
+				*/
+				// @formatter:on
 			}
 
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
-				// TODO Auto-generated method stub
-
+				mXMPPService.reconnect();
 			}
 
 			@Override
