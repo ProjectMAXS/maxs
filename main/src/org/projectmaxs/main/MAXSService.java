@@ -17,23 +17,18 @@
 
 package org.projectmaxs.main;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.UserMessage;
 import org.projectmaxs.shared.util.Log;
 
@@ -61,14 +56,13 @@ public class MAXSService extends Service {
 		return sIsRunning;
 	}
 
-	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
-
 	private XMPPService mXMPPService;
 
 	private final Object mRecentContactLock = new Object();
 	private ScheduledFuture<?> mSetRecentContactFeature;
 	private volatile Contact mRecentContact;
 	private CommandTable mCommandTable;
+	private CommandRegistry mCommandRegistry;
 
 	private final IBinder mBinder = new LocalBinder();
 
@@ -78,6 +72,7 @@ public class MAXSService extends Service {
 		sLog.initialize(Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
 		mCommandTable = CommandTable.getInstance(this);
+		mCommandRegistry = CommandRegistry.getInstance(this);
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
 		sIsRunning = true;
@@ -105,13 +100,7 @@ public class MAXSService extends Service {
 		sLog.d("onStartCommand(): action=" + action);
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
-			// let's assume that if the size is zero we have to do an initial
-			// challenge
-			if (mCommands.size() == 0) {
-				// clear commands before challenging the modules to register
-				mCommands.clear();
-				sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER));
-			}
+			mCommandRegistry.onStartService();
 			mXMPPService.connect();
 			return START_STICKY;
 		}
@@ -163,7 +152,7 @@ public class MAXSService extends Service {
 		int id = Settings.getInstance(this).getNextCommandId();
 		mCommandTable.addCommand(id, command, subCmd, args, origin, issuerInformation, originId);
 
-		CommandInformation ci = mCommands.get(command);
+		CommandInformation ci = mCommandRegistry.get(command);
 		if (ci == null) {
 			sendUserMessage(new UserMessage("Unkown command: " + command, id));
 			return;
@@ -201,27 +190,6 @@ public class MAXSService extends Service {
 	public void stopService() {
 		Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
 		startService(intent);
-	}
-
-	public void registerModule(ModuleInformation moduleInformation) {
-		String modulePackage = moduleInformation.getModulePackage();
-		Set<ModuleInformation.Command> cmds = moduleInformation.getCommands();
-		synchronized (mCommands) {
-			for (ModuleInformation.Command c : cmds) {
-				String cStr = c.getCommand();
-				CommandInformation ci = mCommands.get(cStr);
-				if (ci == null) {
-					ci = new CommandInformation(cStr);
-					mCommands.put(cStr, ci);
-				}
-				try {
-					ci.addSubAndDefCommands(c, modulePackage);
-				} catch (CommandClashException e) {
-					throw new IllegalStateException(e); // TODO
-				}
-			}
-
-		}
 	}
 
 	public Contact getRecentContact() {
