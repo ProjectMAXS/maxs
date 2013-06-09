@@ -29,6 +29,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.main.xmpp.XMPPSocketFactory;
 import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.util.Log.LogSettings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -72,6 +73,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private Context mContext;
 	private SharedPreferences mSharedPreferences;
 	private ConnectionConfiguration mConnectionConfiguration;
+	private LogSettings mLogSettings;
 
 	private Settings(Context context) {
 		this.mContext = context;
@@ -95,6 +97,13 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		CONNECT_ON_MAIN_SCREEN = context.getString(R.string.pref_app_connect_on_main_screen_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+		mLogSettings = new Log.LogSettings() {
+			@Override
+			public boolean debugLog() {
+				return isDebugLogEnabled();
+			}
+		};
 	}
 
 	public String getJid() {
@@ -187,14 +196,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	}
 
 	public Log.LogSettings getLogSettings() {
-		return new Log.LogSettings() {
-
-			@Override
-			public boolean debugLog() {
-				return isDebugLogEnabled();
-			}
-
-		};
+		return mLogSettings;
 	}
 
 	public ConnectionConfiguration getConnectionConfiguration() throws XMPPException {
