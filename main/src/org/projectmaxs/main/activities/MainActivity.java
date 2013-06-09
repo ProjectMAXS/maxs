@@ -168,6 +168,8 @@ public class MainActivity extends Activity {
 						case Disconnected:
 							mMAXSLocalService.startService();
 							break;
+						default:
+							break;
 						}
 					}
 				}
