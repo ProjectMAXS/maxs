@@ -17,31 +17,27 @@
 
 package org.projectmaxs.module.bluetooth;
 
-import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.Log.LogSettings;
+import org.projectmaxs.sharedmodule.MAXSRegisterModuleReceiver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 
-public class RegisterModuleReceiver extends BroadcastReceiver {
+public class RegisterModuleReceiver extends MAXSRegisterModuleReceiver {
 	private static Log sLog = Log.getLog();
 
+	public RegisterModuleReceiver() {
+		super(sLog, ModuleService.sMODULE_INFORMATION);
+	}
+
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	public void initLog(Context ctx) {
 		sLog.initialize(new LogSettings() {
 			// TODO add real log settings
 			@Override
 			public boolean debugLog() {
 				return true;
 			}
-
 		});
-		sLog.d("RegisterModuleReceiver");
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, ModuleService.sMODULE_INFORMATION);
-		context.startService(replyIntent);
 	}
-
 }
