@@ -122,6 +122,10 @@ public class ModuleInformation implements Parcelable {
 			return mCommand;
 		}
 
+		public String getShortCommand() {
+			return mShortCommand;
+		}
+
 		public String getDefaultSubCommand() {
 			return mDefaultSubCommand;
 		}
