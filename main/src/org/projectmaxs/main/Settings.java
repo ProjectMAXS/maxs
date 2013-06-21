@@ -27,6 +27,7 @@ import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
+import org.projectmaxs.main.util.StringUtil;
 import org.projectmaxs.main.xmpp.XMPPSocketFactory;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.Log.LogSettings;
@@ -128,10 +129,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	 */
 	public Set<String> getMasterJids() {
 		String s = mSharedPreferences.getString(MASTER_JIDS, "");
-		Set<String> res = new HashSet<String>();
-		if (!s.equals("")) {
-			res.addAll(Arrays.asList(s.split(" ")));
-		}
+		Set<String> res = StringUtil.stringToSet(s);
 		return res;
 	}
 
@@ -255,13 +253,8 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private void saveMasterJids(Set<String> newMasterJids) {
 		SharedPreferences.Editor e = mSharedPreferences.edit();
 
-		StringBuilder sb = new StringBuilder();
-		for (String s : newMasterJids) {
-			sb.append(s);
-			sb.append(" ");
-		}
-
-		e.putString(MASTER_JIDS, sb.toString());
+		String masterJids = StringUtil.setToString(newMasterJids);
+		e.putString(MASTER_JIDS, masterJids);
 		e.commit();
 	}
 }
