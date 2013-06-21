@@ -31,11 +31,19 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 	public static final String TEXT_TYPE = " TEXT";
 	public static final String TIMESTAMP_TYPE = " TIMESTAMP";
 	public static final String INTEGER_TYPE = " INTEGER";
+	public static final String BLOB_TYPE = " BLOB";
 	public static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
 	public static final String NOT_NULL = " NOT NULL";
 	public static final String COMMA_SEP = ",";
+	public static final String SEMICOLON_SEP = ";";
 
-	private static final String SQL_CREATE_ENTRIES = CommandTable.CREATE_COMMAND_TABLE;
+	// @formatter:off
+	private static final String SQL_CREATE_ENTRIES =
+				CommandTable.CREATE_TABLE + SEMICOLON_SEP
+			+	ModuleRegistryTable.CREATE_TABLE + SEMICOLON_SEP
+			+	XMPPEntityCapsTable.CREATE_TABLE + SEMICOLON_SEP
+			+	XMPPMessageTable.CREATE_TABLE + SEMICOLON_SEP;
+	// @formatter:on
 
 	private static MAXSDatabase sMAXSDatabase;
 
@@ -55,8 +63,14 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL(CommandTable.DELETE_COMMAND_TABLE);
-		db.execSQL(CommandTable.CREATE_COMMAND_TABLE);
+		db.execSQL(CommandTable.DELETE_TABLE);
+		db.execSQL(CommandTable.CREATE_TABLE);
+		db.execSQL(ModuleRegistryTable.DELETE_TABLE);
+		db.execSQL(ModuleRegistryTable.CREATE_TABLE);
+		db.execSQL(XMPPEntityCapsTable.DELETE_TABLE);
+		db.execSQL(XMPPEntityCapsTable.CREATE_TABLE);
+		db.execSQL(XMPPMessageTable.DELETE_TABLE);
+		db.execSQL(XMPPMessageTable.CREATE_TABLE);
 	}
 
 	@Override

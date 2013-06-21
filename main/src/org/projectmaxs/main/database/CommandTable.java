@@ -41,7 +41,7 @@ public class CommandTable {
 	private static final String COLUMN_NAME_ORIGIN_ID = "originId";
 
 	// @formatter:off
-	public static final String CREATE_COMMAND_TABLE =
+	public static final String CREATE_TABLE =
 		"CREATE TABLE " +  TABLE_NAME +
 		" (" +
 		 COLUMN_NAME_COMMAND_ID + MAXSDatabase.INTEGER_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
@@ -55,7 +55,7 @@ public class CommandTable {
 		" )";
 	// @formatter:on
 
-	public static final String DELETE_COMMAND_TABLE = MAXSDatabase.DROP_TABLE + TABLE_NAME;
+	public static final String DELETE_TABLE = MAXSDatabase.DROP_TABLE + TABLE_NAME;
 
 	private static CommandTable sCommandTable;
 
