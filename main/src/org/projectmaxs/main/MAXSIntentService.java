@@ -40,7 +40,7 @@ public class MAXSIntentService extends IntentService {
 	}
 
 	private MAXSService mMAXSLocalService;
-	private CommandRegistry mCommandRegistry;
+	private ModuleRegistry mCommandRegistry;
 
 	private Queue<Intent> mIntentQueue = new LinkedList<Intent>();
 
@@ -48,7 +48,7 @@ public class MAXSIntentService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		bindMAXSService();
-		mCommandRegistry = CommandRegistry.getInstance(this);
+		mCommandRegistry = ModuleRegistry.getInstance(this);
 	}
 
 	@Override

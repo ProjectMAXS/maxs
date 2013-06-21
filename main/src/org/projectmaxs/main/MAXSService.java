@@ -62,7 +62,7 @@ public class MAXSService extends Service {
 	private ScheduledFuture<?> mSetRecentContactFeature;
 	private volatile Contact mRecentContact;
 	private CommandTable mCommandTable;
-	private CommandRegistry mCommandRegistry;
+	private ModuleRegistry mCommandRegistry;
 
 	private final IBinder mBinder = new LocalBinder();
 
@@ -72,7 +72,7 @@ public class MAXSService extends Service {
 		sLog.initialize(Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
 		mCommandTable = CommandTable.getInstance(this);
-		mCommandRegistry = CommandRegistry.getInstance(this);
+		mCommandRegistry = ModuleRegistry.getInstance(this);
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
 		sIsRunning = true;

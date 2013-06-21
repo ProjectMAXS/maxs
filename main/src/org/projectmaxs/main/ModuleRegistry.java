@@ -28,19 +28,19 @@ import org.projectmaxs.shared.ModuleInformation;
 import android.content.Context;
 import android.content.Intent;
 
-public class CommandRegistry {
+public class ModuleRegistry {
 
-	private static CommandRegistry sCommandRegistry;
+	private static ModuleRegistry sCommandRegistry;
 
-	protected static synchronized CommandRegistry getInstance(Context context) {
-		if (sCommandRegistry == null) sCommandRegistry = new CommandRegistry(context);
+	protected static synchronized ModuleRegistry getInstance(Context context) {
+		if (sCommandRegistry == null) sCommandRegistry = new ModuleRegistry(context);
 		return sCommandRegistry;
 	}
 
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
 	private Context mContext;
 
-	private CommandRegistry(Context context) {
+	private ModuleRegistry(Context context) {
 		mContext = context;
 	}
 
