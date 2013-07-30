@@ -18,7 +18,7 @@
 package org.projectmaxs.module.sms;
 
 import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.Message;
+import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 
@@ -38,15 +38,15 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	@Override
-	public Message handleCommand(Command command) {
-		Message msg;
+	public MessageContent handleCommand(Command command) {
+		MessageContent msgContent;
 		if (command.getSubCommand().equals("read")) {
-			msg = new Message("Hello from sms module");
+			msgContent = new MessageContent("Hello from sms module");
 		}
 		else {
-			msg = new Message("Unkown command");
+			msgContent = new MessageContent("Unkown command");
 		}
-		return msg;
+		return msgContent;
 	}
 
 }

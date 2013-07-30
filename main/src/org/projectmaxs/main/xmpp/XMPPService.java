@@ -96,7 +96,7 @@ public class XMPPService {
 		connect();
 	}
 
-	public void send(org.projectmaxs.shared.Message message, String originIssuerInfo) {
+	public void send(org.projectmaxs.shared.MessageContent message, String originIssuerInfo) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			// TODO add to DB
 			sLog.d("foo");

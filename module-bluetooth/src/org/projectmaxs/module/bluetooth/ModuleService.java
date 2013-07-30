@@ -18,7 +18,7 @@
 package org.projectmaxs.module.bluetooth;
 
 import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.Message;
+import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 
@@ -43,13 +43,13 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	@Override
-	public Message handleCommand(Command command) {
-		Message msg;
+	public MessageContent handleCommand(Command command) {
+		MessageContent msg;
 		if (command.getSubCommand().equals("status")) {
-			msg = new Message("Bluetooth is enabled: " + mAdapter.isEnabled());
+			msg = new MessageContent("Bluetooth is enabled: " + mAdapter.isEnabled());
 		}
 		else {
-			msg = new Message("Unkown command");
+			msg = new MessageContent("Unkown command");
 		}
 		return msg;
 	}

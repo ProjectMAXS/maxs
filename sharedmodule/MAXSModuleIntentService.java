@@ -20,7 +20,7 @@ package org.projectmaxs.sharedmodule;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.UserMessage;
+import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.Log.LogSettings;
 
@@ -58,14 +58,14 @@ public abstract class MAXSModuleIntentService extends IntentService {
 		sLog.d("onHandleIntent");
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
-		Message msg = handleCommand(command);
-		if (msg == null) return;
+		MessageContent msgContent = handleCommand(command);
+		if (msgContent == null) return;
 
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_USER_MESSAGE, new UserMessage(msg));
+		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, new Message(msgContent));
 		startService(replyIntent);
 	}
 
-	public abstract Message handleCommand(Command command);
+	public abstract MessageContent handleCommand(Command command);
 
 }

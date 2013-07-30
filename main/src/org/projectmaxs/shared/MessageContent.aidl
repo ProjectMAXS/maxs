@@ -1,3 +1,3 @@
 package org.projectmaxs.shared;
 
-parcelable UserMessage;
+parcelable MessageContent;

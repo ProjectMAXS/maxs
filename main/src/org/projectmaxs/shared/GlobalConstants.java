@@ -30,7 +30,7 @@ public class GlobalConstants {
 
 	public static final String EXTRA_MODULE_INFORMATION = PACKAGE + ".MODULE_INFORMATION";
 	public static final String EXTRA_COMMAND = PACKAGE + ".COMMAND";
-	public static final String EXTRA_USER_MESSAGE = PACKAGE + ".USER_MESSAGE";
+	public static final String EXTRA_MESSAGE = PACKAGE + ".MESSAGE";
 
 	public static final String PERMISSON = PACKAGE + ".permission";
 	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";

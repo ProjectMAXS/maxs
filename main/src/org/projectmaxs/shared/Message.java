@@ -21,29 +21,35 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Message implements Parcelable {
+	public static final int NO_ID = -1;
 
-	StringBuilder mS;
+	private final int mId;
+	private final MessageContent message;
 
-	public Message() {
-		this(256);
+	public Message(MessageContent msg) {
+		this(msg, NO_ID);
 	}
 
-	public Message(int stringBuilderSize) {
-		mS = new StringBuilder(stringBuilderSize);
+	public Message(MessageContent msg, int id) {
+		this.mId = id;
+		this.message = msg;
 	}
 
 	public Message(String string) {
-		this(string.length());
-		mS.append(string);
+		this(string, NO_ID);
 	}
 
-	public Message add(String string) {
-		mS.append(string);
-		return this;
+	public Message(String string, int id) {
+		this.mId = id;
+		this.message = new MessageContent(string);
 	}
 
-	public String getRawContent() {
-		return mS.toString();
+	public int getId() {
+		return mId;
+	}
+
+	public MessageContent geMessage() {
+		return message;
 	}
 
 	@Override
@@ -52,16 +58,18 @@ public class Message implements Parcelable {
 	}
 
 	@Override
-	public void writeToParcel(Parcel parcel, int flags) {
-		parcel.writeString(mS.toString());
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(mId);
+		dest.writeParcelable(message, flags);
 	}
 
 	public static final Creator<Message> CREATOR = new Creator<Message>() {
 
 		@Override
 		public Message createFromParcel(Parcel source) {
-			String s = source.readString();
-			return new Message(s);
+			int id = source.readInt();
+			MessageContent msg = source.readParcelable(MessageContent.class.getClassLoader());
+			return new Message(msg, id);
 		}
 
 		@Override

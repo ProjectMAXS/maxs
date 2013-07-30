@@ -29,7 +29,7 @@ import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.UserMessage;
+import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.util.Log;
 
 import android.app.Service;
@@ -154,7 +154,7 @@ public class MAXSService extends Service {
 
 		CommandInformation ci = mCommandRegistry.get(command);
 		if (ci == null) {
-			sendUserMessage(new UserMessage("Unkown command: " + command, id));
+			sendMessage(new Message("Unkown command: " + command, id));
 			return;
 		}
 
@@ -171,7 +171,7 @@ public class MAXSService extends Service {
 		}
 
 		if (subCmd == null) {
-			sendUserMessage(new UserMessage("Unknown subCommand: " + subCmd == null ? args : subCmd, id));
+			sendMessage(new Message("Unknown subCommand: " + subCmd == null ? args : subCmd, id));
 			return;
 		}
 
@@ -228,10 +228,10 @@ public class MAXSService extends Service {
 
 	}
 
-	public void sendUserMessage(UserMessage userMsg) {
+	public void sendMessage(Message userMsg) {
 		int id = userMsg.getId();
 		String originIssuerInfo = null;
-		if (id != UserMessage.NO_ID) {
+		if (id != Message.NO_ID) {
 			CommandTable.Entry entry = mCommandTable.geEntry(id);
 			originIssuerInfo = entry.mOriginIssuerInfo;
 		}
