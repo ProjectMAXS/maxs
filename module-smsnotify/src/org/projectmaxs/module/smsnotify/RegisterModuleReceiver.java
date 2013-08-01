@@ -15,34 +15,33 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.sharedmodule;
+package org.projectmaxs.module.smsnotify;
 
-import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.util.Log.LogSettings;
+import org.projectmaxs.sharedmodule.MAXSRegisterModuleReceiver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 
-public abstract class MAXSRegisterModuleReceiver extends BroadcastReceiver {
-	private final Log mLog;
-	private final ModuleInformation mModuleInformation;
+public class RegisterModuleReceiver extends MAXSRegisterModuleReceiver {
+	private static Log sLog = Log.getLog();
 
-	public MAXSRegisterModuleReceiver(Log log, ModuleInformation moduleInformation) {
-		mLog = log;
-		mModuleInformation = moduleInformation;
+	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
+			"org.projectmaxs.module.smsnotify", new ModuleInformation.Command[0]);
+
+	public RegisterModuleReceiver() {
+		super(sLog, sMODULE_INFORMATION);
 	}
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		initLog(context);
-		mLog.d("onReceive");
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
-		context.startService(replyIntent);
+	public void initLog(Context ctx) {
+		sLog.initialize(new LogSettings() {
+			// TODO add real log settings
+			@Override
+			public boolean debugLog() {
+				return true;
+			}
+		});
 	}
-
-	public abstract void initLog(Context ctx);
-
 }
