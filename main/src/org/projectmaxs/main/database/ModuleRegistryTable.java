@@ -17,7 +17,12 @@
 
 package org.projectmaxs.main.database;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.projectmaxs.main.util.ParcelableUtil;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.util.Log;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,13 +35,14 @@ public class ModuleRegistryTable {
 	private static final String TABLE_NAME = "moduleRegistry";
 	private static final String COLUMN_NAME_MODULE_PACKAGE = "package";
 	private static final String COLUMN_NAME_MODULE_INFORMATION = "information";
+	private static final Log LOG = Log.getLog();
 
 	// @formatter:off
 	public static final String CREATE_TABLE =
-		"CREATE TABLE " +  TABLE_NAME +
+		"CREATE TABLE " + TABLE_NAME +
 		" (" +
 		 COLUMN_NAME_MODULE_PACKAGE + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_MODULE_INFORMATION + MAXSDatabase.BLOB_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_MODULE_INFORMATION + MAXSDatabase.BLOB_TYPE + MAXSDatabase.NOT_NULL +
 		" )";
 	// @formatter:on
 
@@ -55,33 +61,46 @@ public class ModuleRegistryTable {
 		mDatabase = MAXSDatabase.getInstance(context).getWritableDatabase();
 	}
 
-	public void addModuleInformation(ModuleInformation moduleInformation) {
+	public void insertOrReplace(ModuleInformation moduleInformation) {
 		ContentValues values = new ContentValues();
 		String modulePackage = moduleInformation.getModulePackage();
-		Parcel parcel = Parcel.obtain();
-		moduleInformation.writeToParcel(parcel, 0);
-		byte[] moduleInformationMarshalled = parcel.marshall();
 		values.put(COLUMN_NAME_MODULE_PACKAGE, modulePackage);
-		values.put(COLUMN_NAME_MODULE_INFORMATION, moduleInformationMarshalled);
+		values.put(COLUMN_NAME_MODULE_INFORMATION, ParcelableUtil.marshall(moduleInformation));
 
-		long res = mDatabase.insert(TABLE_NAME, null, values);
-		if (res == -1) throw new IllegalStateException("Could not insert command in database");
+		long res = mDatabase.replace(TABLE_NAME, null, values);
+		if (res == -1) throw new IllegalStateException("Could not insert ModuleInformation in database");
 	}
 
-	public ModuleInformation getModuleInformation(String modulePackage) {
+	public boolean containsModule(String modulePackage) {
 		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_MODULE_PACKAGE + "='" + modulePackage + "'", null,
 				null, null, null);
-		if (!c.moveToFirst()) return null;
-
-		byte[] moduleInformationMarshalled = c.getBlob(c.getColumnIndex(COLUMN_NAME_MODULE_INFORMATION));
-		Parcel parcel = Parcel.obtain();
-		parcel.unmarshall(moduleInformationMarshalled, 0, moduleInformationMarshalled.length);
-		ModuleInformation moduleInformation = ModuleInformation.CREATOR.createFromParcel(parcel);
-
-		return moduleInformation;
+		boolean exists = c.moveToFirst();
+		c.close();
+		return exists;
 	}
 
-	public int deleteModuleInformation(String modulePackage) {
-		return mDatabase.delete(TABLE_NAME, COLUMN_NAME_MODULE_PACKAGE + "='" + modulePackage + "'", null);
+	public List<ModuleInformation> getAll() {
+		List<ModuleInformation> res = new ArrayList<ModuleInformation>();
+		Cursor c = mDatabase.query(TABLE_NAME, null, null, null, null, null, null);
+		if (!c.moveToFirst()) {
+			c.close();
+			return res;
+		}
+
+		do {
+			byte[] moduleInformationMarshalled = c.getBlob(c.getColumnIndex(COLUMN_NAME_MODULE_INFORMATION));
+			Parcel parcel = ParcelableUtil.unmarshall(moduleInformationMarshalled);
+			// ModuleInformation moduleInformation =
+			// ModuleInformation.CREATOR.createFromParcel(parcel);
+			ModuleInformation moduleInformation = new ModuleInformation(parcel);
+			res.add(moduleInformation);
+		} while (c.moveToNext());
+
+		c.close();
+		return res;
+	}
+
+	public int deleteModuleInformation(String packageName) {
+		return mDatabase.delete(TABLE_NAME, COLUMN_NAME_MODULE_PACKAGE + "='" + packageName + "'", null);
 	}
 }

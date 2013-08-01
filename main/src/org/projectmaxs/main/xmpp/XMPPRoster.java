@@ -55,7 +55,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	public void connected(Connection connection) {
 		Set<String> masterJids = mSettings.getMasterJids();
 		for (String jid : masterJids)
-			addJid(jid);
+			friendJid(jid);
 	}
 
 	/*
@@ -86,7 +86,13 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	}
 
-	private void addJid(String userID) {
+	/**
+	 * Subscribe and request subscription with a given JID. Essentially become a
+	 * "friend" of the JID.
+	 * 
+	 * @param userID
+	 */
+	private void friendJid(String userID) {
 		if (!mRoster.contains(userID)) {
 			try {
 				mRoster.createEntry(userID, StringUtils.parseBareAddress(userID), null);

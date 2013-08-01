@@ -36,7 +36,7 @@ public class XMPPEntityCapsTable {
 		"CREATE TABLE " +  TABLE_NAME +
 		" (" +
 		 COLUMN_NAME_NODE + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL +
 		" )";
 	// @formatter:on
 
@@ -56,12 +56,14 @@ public class XMPPEntityCapsTable {
 	}
 
 	public void addDiscoverInfo(String node, String info) {
+		if (containsNode(node)) return;
+
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_NODE, node);
 		values.put(COLUMN_NAME_INFO, info);
 
 		long res = mDatabase.insert(TABLE_NAME, null, values);
-		if (res == -1) throw new IllegalStateException("Could not insert command in database");
+		if (res == -1) throw new IllegalStateException("Could not insert discover info in database");
 	}
 
 	public Map<String, String> getDiscoverInfos() {
@@ -72,9 +74,21 @@ public class XMPPEntityCapsTable {
 		do {
 			String info = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INFO));
 			String node = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_NODE));
-			res.put(info, node);
+			res.put(node, info);
 		} while (c.moveToNext());
 
+		c.close();
 		return res;
+	}
+
+	public boolean containsNode(String node) {
+		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_NODE + "='" + node + "'", null, null, null, null);
+		boolean exists = c.moveToFirst();
+		c.close();
+		return exists;
+	}
+
+	public void emptyTable() {
+		mDatabase.delete(TABLE_NAME, null, null);
 	}
 }

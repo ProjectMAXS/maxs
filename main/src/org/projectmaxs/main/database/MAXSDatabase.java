@@ -38,11 +38,18 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 	public static final String SEMICOLON_SEP = ";";
 
 	// @formatter:off
-	private static final String SQL_CREATE_ENTRIES =
-				CommandTable.CREATE_TABLE + SEMICOLON_SEP
-			+	ModuleRegistryTable.CREATE_TABLE + SEMICOLON_SEP
-			+	XMPPEntityCapsTable.CREATE_TABLE + SEMICOLON_SEP
-			+	XMPPMessageTable.CREATE_TABLE + SEMICOLON_SEP;
+	private static final String[] SQL_CREATE_ENTRIES = new String[] {
+				CommandTable.CREATE_TABLE,
+				ModuleRegistryTable.CREATE_TABLE,
+				XMPPEntityCapsTable.CREATE_TABLE,
+				MessagesTable.CREATE_TABLE
+	};
+	private static final String[] SQL_DELETE_ENTRIES = new String[] {
+		CommandTable.DELETE_TABLE,
+		ModuleRegistryTable.DELETE_TABLE,
+		XMPPEntityCapsTable.DELETE_TABLE,
+		MessagesTable.DELETE_TABLE
+	};
 	// @formatter:on
 
 	private static MAXSDatabase sMAXSDatabase;
@@ -58,19 +65,13 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(SQL_CREATE_ENTRIES);
+		createTables(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL(CommandTable.DELETE_TABLE);
-		db.execSQL(CommandTable.CREATE_TABLE);
-		db.execSQL(ModuleRegistryTable.DELETE_TABLE);
-		db.execSQL(ModuleRegistryTable.CREATE_TABLE);
-		db.execSQL(XMPPEntityCapsTable.DELETE_TABLE);
-		db.execSQL(XMPPEntityCapsTable.CREATE_TABLE);
-		db.execSQL(XMPPMessageTable.DELETE_TABLE);
-		db.execSQL(XMPPMessageTable.CREATE_TABLE);
+		deleteTables(db);
+		createTables(db);
 	}
 
 	@Override
@@ -78,4 +79,15 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 		onUpgrade(db, oldVersion, newVersion);
 	}
 
+	private static void createTables(SQLiteDatabase db) {
+		for (String s : SQL_CREATE_ENTRIES) {
+			db.execSQL(s + SEMICOLON_SEP);
+		}
+	}
+
+	private static void deleteTables(SQLiteDatabase db) {
+		for (String s : SQL_DELETE_ENTRIES) {
+			db.execSQL(s + SEMICOLON_SEP);
+		}
+	}
 }

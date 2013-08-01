@@ -36,7 +36,7 @@ public class CommandTable {
 	private static final String COLUMN_NAME_COMMAND = "command";
 	private static final String COLUMN_NAME_SUBCOMMAND = "subcommand";
 	private static final String COLUMN_NAME_ARGS = "args";
-	private static final String COLUMN_NAME_ORIGN = "orign";
+	private static final String COLUMN_NAME_ORIGIN = "orign";
 	private static final String COLUMN_NAME_ORIGIN_ISSUER_INFO = "originIssuerInfo";
 	private static final String COLUMN_NAME_ORIGIN_ID = "originId";
 
@@ -47,9 +47,9 @@ public class CommandTable {
 		 COLUMN_NAME_COMMAND_ID + MAXSDatabase.INTEGER_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_TIMESTAMP + MAXSDatabase.TIMESTAMP_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_COMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_SUBCOMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_SUBCOMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_ARGS + MAXSDatabase.TEXT_TYPE + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_ORIGN + MAXSDatabase.INTEGER_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_ORIGIN + MAXSDatabase.INTEGER_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_ORIGIN_ISSUER_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_ORIGIN_ID + MAXSDatabase.TEXT_TYPE +
 		" )";
@@ -82,7 +82,7 @@ public class CommandTable {
 		values.put(COLUMN_NAME_COMMAND, command);
 		values.put(COLUMN_NAME_SUBCOMMAND, subCmd);
 		values.put(COLUMN_NAME_ARGS, args);
-		values.put(COLUMN_NAME_ORIGN, origin.ordinal());
+		values.put(COLUMN_NAME_ORIGIN, origin.ordinal());
 		values.put(COLUMN_NAME_ORIGIN_ISSUER_INFO, issuerInformation);
 		values.put(COLUMN_NAME_ORIGIN_ID, originId);
 
@@ -90,40 +90,59 @@ public class CommandTable {
 		if (res == -1) throw new IllegalStateException("Could not insert command in database");
 	}
 
+	public CommandOrigin getOrigin(int id) {
+		final String[] projection = { COLUMN_NAME_ORIGIN };
+		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null,
+				null);
+		if (!c.moveToFirst()) return null;
+		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGIN));
+		return CommandOrigin.values()[originInt];
+	}
+
 	public Entry geEntry(int id) {
+		if (id < 0) return null;
 		// @formatter:off
-		String[] projection = { 
-				COLUMN_NAME_ORIGN,
+		final String[] projection = { 
+				COLUMN_NAME_ORIGIN,
 				COLUMN_NAME_ORIGIN_ISSUER_INFO,
 				COLUMN_NAME_ORIGIN_ID
 				};
 		// @formatter:on
 		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null,
 				null);
-		if (!c.moveToFirst()) return null;
+		if (!c.moveToFirst()) {
+			c.close();
+			return null;
+		}
 
-		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGN));
+		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGIN));
 		String originIssuerInfo = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ISSUER_INFO));
 		String originId = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ID));
-
 		CommandOrigin origin = CommandOrigin.values()[originInt];
+
+		c.close();
 		return new Entry(id, origin, originIssuerInfo, originId);
 	}
 
 	public Entry getFullEntry(int id) {
 		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null, null);
-		if (!c.moveToFirst()) return null;
+		if (!c.moveToFirst()) {
+			c.close();
+			return null;
+		}
 
 		String timestampStr = c.getString(c.getColumnIndex(COLUMN_NAME_TIMESTAMP));
 		String command = c.getString(c.getColumnIndex(COLUMN_NAME_COMMAND));
 		String subCmd = c.getString(c.getColumnIndex(COLUMN_NAME_SUBCOMMAND));
 		String args = c.getString(c.getColumnIndex(COLUMN_NAME_ARGS));
-		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGN));
+		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGIN));
 		String originIssuerInfo = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ISSUER_INFO));
 		String originId = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ID));
 
 		Timestamp timestmap = Timestamp.valueOf(timestampStr);
 		CommandOrigin origin = CommandOrigin.values()[originInt];
+
+		c.close();
 		return new FullEntry(id, timestmap, command, subCmd, args, origin, originIssuerInfo, originId);
 	}
 
@@ -160,7 +179,7 @@ public class CommandTable {
 
 	private void purgeOldEntries() {
 		String oldTimestamp = (new Timestamp(System.currentTimeMillis() - OLD_ENTRIES_AGE)).toString();
-		mDatabase.delete(TABLE_NAME, COLUMN_NAME_TIMESTAMP + " < " + oldTimestamp, null);
+		mDatabase.delete(TABLE_NAME, COLUMN_NAME_TIMESTAMP + " < \"" + oldTimestamp + "\"", null);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {

@@ -45,12 +45,15 @@ public class ModuleInformation implements Parcelable {
 		this.mCommands = cmds;
 	}
 
-	public String getModulePackage() {
-		return mModulePackage;
-	}
+	public ModuleInformation(Parcel in) {
+		mModulePackage = in.readString();
 
-	public Set<Command> getCommands() {
-		return mCommands;
+		byte[] bytes = in.marshall();
+
+		int cmdCount = in.readInt();
+		Command[] cmds = new Command[cmdCount];
+		in.readTypedArray(cmds, Command.CREATOR);
+		mCommands = new HashSet<Command>(Arrays.asList(cmds));
 	}
 
 	@Override
@@ -68,17 +71,23 @@ public class ModuleInformation implements Parcelable {
 		dest.writeTypedArray(cmds, flags);
 	}
 
+	public String getModulePackage() {
+		return mModulePackage;
+	}
+
+	public Set<Command> getCommands() {
+		return mCommands;
+	}
+
+	public String toString() {
+		return "Package: " + mModulePackage;
+	}
+
 	public static final Creator<ModuleInformation> CREATOR = new Creator<ModuleInformation>() {
 
 		@Override
 		public ModuleInformation createFromParcel(Parcel source) {
-			String modulePackage = source.readString();
-
-			int cmdCount = source.readInt();
-			Command[] cmds = new Command[cmdCount];
-			source.readTypedArray(cmds, Command.CREATOR);
-			Set<Command> cmdSet = new HashSet<Command>(Arrays.asList(cmds));
-			return new ModuleInformation(modulePackage, cmdSet);
+			return new ModuleInformation(source);
 		}
 
 		@Override
@@ -118,6 +127,32 @@ public class ModuleInformation implements Parcelable {
 			this.mSubCommands = subCmdSet;
 		}
 
+		public Command(Parcel in) {
+			mCommand = in.readString();
+			mShortCommand = in.readString();
+			mDefaultSubCommand = in.readString();
+			mDefaultSubCommandWithArgs = in.readString();
+			int subCommandsLength = in.readInt();
+			String[] subCmdsArray = new String[subCommandsLength];
+			in.readStringArray(subCmdsArray);
+			mSubCommands = new HashSet<String>(Arrays.asList(subCmdsArray));
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(mCommand);
+			dest.writeString(mShortCommand);
+			dest.writeString(mDefaultSubCommand);
+			dest.writeString(mDefaultSubCommandWithArgs);
+			String[] subCommands = mSubCommands.toArray(new String[mSubCommands.size()]);
+			// TODO describe better what is going on
+			// Bad Bad Android API, we have to encode the length 2 times.
+			// It's actually also encoded in the Array, readStringArray() method
+			// bails out if the given array is to small
+			dest.writeInt(subCommands.length);
+			dest.writeStringArray(subCommands);
+		}
+
 		public String getCommand() {
 			return mCommand;
 		}
@@ -143,34 +178,11 @@ public class ModuleInformation implements Parcelable {
 			return 0;
 		}
 
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeString(mCommand);
-			dest.writeString(mShortCommand);
-			dest.writeString(mDefaultSubCommand);
-			dest.writeString(mDefaultSubCommandWithArgs);
-			String[] subCmds = mSubCommands.toArray(new String[mSubCommands.size()]);
-			// TODO describe better what is going on
-			// Bad Bad Android API, we have to encode the length 2 times.
-			// It's actually also encoded in the Array, readStringArray() method
-			// bails out if the given array is to small
-			dest.writeInt(subCmds.length);
-			dest.writeStringArray(subCmds);
-		}
-
 		public static final Creator<Command> CREATOR = new Creator<Command>() {
 
 			@Override
 			public Command createFromParcel(Parcel source) {
-				String cmd = source.readString();
-				String shortCommand = source.readString();
-				String defaultSubCommand = source.readString();
-				String defaultSubCommandWithArgs = source.readString();
-				int size = source.readInt();
-				String[] subCmdsArray = new String[size];
-				source.readStringArray(subCmdsArray);
-				Set<String> subCmds = new HashSet<String>(Arrays.asList(subCmdsArray));
-				return new Command(cmd, shortCommand, defaultSubCommand, defaultSubCommandWithArgs, subCmds);
+				return new Command(source);
 			}
 
 			@Override

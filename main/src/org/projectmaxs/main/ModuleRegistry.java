@@ -18,12 +18,16 @@
 package org.projectmaxs.main;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.projectmaxs.main.CommandInformation.CommandClashException;
+import org.projectmaxs.main.database.ModuleRegistryTable;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,51 +35,110 @@ import android.content.Intent;
 public class ModuleRegistry {
 
 	private static ModuleRegistry sCommandRegistry;
+	private static final Log LOG = Log.getLog();
 
-	protected static synchronized ModuleRegistry getInstance(Context context) {
+	public static synchronized ModuleRegistry getInstance(Context context) {
 		if (sCommandRegistry == null) sCommandRegistry = new ModuleRegistry(context);
 		return sCommandRegistry;
 	}
 
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
+
+	/**
+	 * Maps a short command to a command
+	 */
+	private final Map<String, String> mShortCommandMap = new HashMap<String, String>();
+
+	/**
+	 * Maps a package to a set of all short commands the package created.
+	 * Although a Command can only have one short command, it is possible for a
+	 * package to create multiple short command. And that multiple packages
+	 * create multiple short commands for a single command (but that would be
+	 * considered bad practice).
+	 */
+	private final Map<String, Set<String>> mPackageShortCommands = new HashMap<String, Set<String>>();
+
 	private Context mContext;
+	private ModuleRegistryTable mModuleRegistryTable;
+	private boolean mLoadedFromDatabase = false;
 
 	private ModuleRegistry(Context context) {
 		mContext = context;
+		mModuleRegistryTable = ModuleRegistryTable.getInstance(context);
 	}
 
-	protected void onStartService() {
-		// let's assume that if the size is zero we have to do an initial
-		// challenge
-		if (mCommands.size() == 0) {
-			// clear commands before challenging the modules to register
-			mCommands.clear();
-			mContext.sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER));
+	protected synchronized void loadFromDatabase() {
+		if (!mLoadedFromDatabase) {
+			Iterator<ModuleInformation> it = mModuleRegistryTable.getAll().iterator();
+			while (it.hasNext())
+				add(it.next());
+			mLoadedFromDatabase = true;
 		}
 	}
 
-	protected CommandInformation get(String command) {
+	protected void challengeAllModulesToRegister() {
+		mContext.sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER));
+	}
+
+	protected synchronized CommandInformation get(String command) {
+		command = mShortCommandMap.containsKey(command) ? mShortCommandMap.get(command) : command;
 		return mCommands.get(command);
 	}
 
-	protected void registerModule(ModuleInformation moduleInformation) {
+	public synchronized void unregisterModule(String modulePackage) {
+		if (!mModuleRegistryTable.containsModule(modulePackage)) return;
+		remove(modulePackage);
+		mModuleRegistryTable.deleteModuleInformation(modulePackage);
+	}
+
+	protected synchronized void registerModule(ModuleInformation moduleInformation) {
+		// first remove all traces of the module
+		remove(moduleInformation.getModulePackage());
+		add(moduleInformation);
+		mModuleRegistryTable.insertOrReplace(moduleInformation);
+	}
+
+	private void add(ModuleInformation moduleInformation) {
 		String modulePackage = moduleInformation.getModulePackage();
 		Set<ModuleInformation.Command> cmds = moduleInformation.getCommands();
-		synchronized (mCommands) {
-			for (ModuleInformation.Command c : cmds) {
-				String cStr = c.getCommand();
-				CommandInformation ci = mCommands.get(cStr);
-				if (ci == null) {
-					ci = new CommandInformation(cStr);
-					mCommands.put(cStr, ci);
-				}
-				try {
-					ci.addSubAndDefCommands(c, modulePackage);
-				} catch (CommandClashException e) {
-					throw new IllegalStateException(e); // TODO
-				}
+		Set<String> packageShortCommands = new HashSet<String>();
+		for (ModuleInformation.Command c : cmds) {
+			String command = c.getCommand();
+			CommandInformation ci = mCommands.get(command);
+			if (ci == null) {
+				ci = new CommandInformation(command);
+				mCommands.put(command, ci);
+			}
+			try {
+				ci.addSubAndDefCommands(c, modulePackage);
+			} catch (CommandClashException e) {
+				throw new IllegalStateException(e); // TODO
 			}
 
+			String shortCommand = c.getShortCommand();
+			mShortCommandMap.put(shortCommand, command);
+			packageShortCommands.add(shortCommand);
+		}
+		mPackageShortCommands.put(modulePackage, packageShortCommands);
+	}
+
+	private void remove(String modulePackage) {
+		Iterator<CommandInformation> it = mCommands.values().iterator();
+		while (it.hasNext()) {
+			CommandInformation ci = it.next();
+			boolean commandIsOrphan = ci.removeAllSubCommandsForPackage(modulePackage);
+			// TODO this hopefully removes the command from the HashMap
+			if (commandIsOrphan) it.remove();
+		}
+
+		Set<String> moduleAliases = mPackageShortCommands.get(modulePackage);
+		if (moduleAliases != null) {
+			Iterator<String> it2 = moduleAliases.iterator();
+			while (it2.hasNext()) {
+				String alias = it2.next();
+				mShortCommandMap.remove(alias);
+			}
+			mPackageShortCommands.remove(modulePackage);
 		}
 	}
 }

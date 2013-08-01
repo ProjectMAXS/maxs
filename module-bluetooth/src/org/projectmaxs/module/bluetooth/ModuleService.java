@@ -29,7 +29,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	private BluetoothAdapter mAdapter;
 
 	public ModuleService() {
-		super("maxs-module-sms");
+		super("maxs-module-bluetoothemove ");
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
@@ -44,6 +44,9 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	@Override
 	public MessageContent handleCommand(Command command) {
+		if (mAdapter == null)
+			return new MessageContent("BT Adapter is null. Maybe this devices does not support bluetooth?");
+
 		MessageContent msg;
 		if (command.getSubCommand().equals("status")) {
 			msg = new MessageContent("Bluetooth is enabled: " + mAdapter.isEnabled());
@@ -53,5 +56,4 @@ public class ModuleService extends MAXSModuleIntentService {
 		}
 		return msg;
 	}
-
 }

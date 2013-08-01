@@ -40,7 +40,7 @@ public class MAXSIntentService extends IntentService {
 	}
 
 	private MAXSService mMAXSLocalService;
-	private ModuleRegistry mCommandRegistry;
+	private ModuleRegistry mModuleRegistry;
 
 	private Queue<Intent> mIntentQueue = new LinkedList<Intent>();
 
@@ -48,7 +48,7 @@ public class MAXSIntentService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		bindMAXSService();
-		mCommandRegistry = ModuleRegistry.getInstance(this);
+		mModuleRegistry = ModuleRegistry.getInstance(this);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class MAXSIntentService extends IntentService {
 		String action = intent.getAction();
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
 			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
-			mCommandRegistry.registerModule(mi);
+			mModuleRegistry.registerModule(mi);
 		}
 		else if (action.equals(GlobalConstants.ACTION_SEND_USER_MESSAGE)) {
 			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);

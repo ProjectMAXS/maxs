@@ -32,19 +32,24 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
 import org.projectmaxs.main.MAXSService;
+import org.projectmaxs.main.MAXSService.CommandOrigin;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
+import org.projectmaxs.main.database.MessagesTable;
+import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;
 
 public class XMPPService {
-	private static Log sLog = Log.getLog();
+	private static final Log LOG = Log.getLog();
 
-	private Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
+	private final Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
+	private final Settings mSettings;
+	private final MAXSService mMAXSLocalService;
+	private final MessagesTable mMessagesTable;
+
 	private State mState = State.Disconnected;
-	private Settings mSettings;
 	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
-	private MAXSService mMAXSLocalService;
 
 	/**
 	 * Creates a new XMPPService instance. The XMPP connection will be
@@ -55,11 +60,15 @@ public class XMPPService {
 	public XMPPService(MAXSService maxsLocalService) {
 		SmackAndroid.init(maxsLocalService);
 
+		XMPPEntityCapsCache.initialize(maxsLocalService);
+
 		mSettings = Settings.getInstance(maxsLocalService);
 		mMAXSLocalService = maxsLocalService;
+		mMessagesTable = MessagesTable.getInstance(maxsLocalService);
 
 		addListener(new HandleChatPacketListener(this, mSettings));
 		addListener(new HandleConnectionListener(this, mSettings));
+		addListener(new HandleMessagesListener(this, maxsLocalService));
 		addListener(new XMPPRoster(mSettings));
 	}
 
@@ -96,17 +105,19 @@ public class XMPPService {
 		connect();
 	}
 
-	public void send(org.projectmaxs.shared.MessageContent message, String originIssuerInfo) {
+	public void sendAsMessage(org.projectmaxs.shared.Message message, String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
-			// TODO add to DB
-			sLog.d("foo");
+			LOG.w("send(): Not connected, adding message to DB");
+			mMessagesTable.addMessage(message, CommandOrigin.XMPP_MESSAGE);
 			return;
 		}
 
+		MessageContent messageContent = message.geMessage();
 		String to = originIssuerInfo;
 		Message packet = new Message();
 		packet.setType(Message.Type.chat);
-		packet.setBody(message.getRawContent());
+		packet.setBody(messageContent.getRawContent());
+		packet.setThread(originId);
 
 		if (to == null) {
 			List<String> toList = new LinkedList<String>();
@@ -127,7 +138,7 @@ public class XMPPService {
 			try {
 				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
 			} catch (XMPPException e) {
-				sLog.w("MultipleRecipientManager exception", e);
+				LOG.w("MultipleRecipientManager exception", e);
 				return;
 			}
 		}
@@ -137,6 +148,10 @@ public class XMPPService {
 		}
 
 		return;
+	}
+
+	public void sendAsIQ(org.projectmaxs.shared.Message message, String originIssuerInfo, String issuerId) {
+		// TODO
 	}
 
 	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
@@ -170,7 +185,7 @@ public class XMPPService {
 			args = sb.toString();
 		}
 		String from = message.getFrom();
-		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP, null, from);
+		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP_MESSAGE, null, from);
 	}
 
 	private void newState(State newState) {
@@ -209,7 +224,7 @@ public class XMPPService {
 	}
 
 	private synchronized void changeState(State newState) {
-		sLog.d("changeState(): mState=" + mState + ", newState=" + newState);
+		LOG.d("changeState(): mState=" + mState + ", newState=" + newState);
 		switch (mState) {
 		case Connected:
 			switch (newState) {
@@ -269,14 +284,14 @@ public class XMPPService {
 			}
 			break;
 		default:
-			sLog.w("changeState(): Unkown state change combination. mState=" + mState + ", newState=" + newState);
+			LOG.w("changeState(): Unkown state change combination. mState=" + mState + ", newState=" + newState);
 			// TODO enable this
 			// throw new IllegalStateException();
 		}
 	}
 
 	private void tryToConnect() {
-		sLog.d("tryToConnect()");
+		LOG.d("tryToConnect()");
 		newState(State.Connecting);
 
 		XMPPConnection con;
@@ -291,7 +306,7 @@ public class XMPPService {
 				con = mConnection;
 			}
 		} catch (XMPPException e) {
-			sLog.e("tryToConnect() connection configuration failed", e);
+			LOG.e("tryToConnect() connection configuration failed", e);
 			// TODO try reconnect
 			return;
 		}
@@ -299,7 +314,7 @@ public class XMPPService {
 		try {
 			con.connect();
 		} catch (XMPPException e) {
-			sLog.e("Exception from connect()", e);
+			LOG.e("Exception from connect()", e);
 			return;
 		}
 
@@ -307,7 +322,7 @@ public class XMPPService {
 			try {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
-				sLog.e("tryToConnect() login failed", e);
+				LOG.e("tryToConnect() login failed", e);
 				return;
 			}
 		}
@@ -325,7 +340,7 @@ public class XMPPService {
 		// TODO handle offline messages as StateChangeListener
 		// TODO ping failed listener as StateChangeListener
 
-		sLog.d("tryToConnect() successfully connected");
+		LOG.d("tryToConnect() successfully connected");
 		newState(State.Connected);
 
 		// Send the first presence *after* all StateChangeListeners have been

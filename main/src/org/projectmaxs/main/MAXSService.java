@@ -100,7 +100,7 @@ public class MAXSService extends Service {
 		sLog.d("onStartCommand(): action=" + action);
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
-			mCommandRegistry.onStartService();
+			mCommandRegistry.loadFromDatabase();
 			mXMPPService.connect();
 			return START_STICKY;
 		}
@@ -134,7 +134,11 @@ public class MAXSService extends Service {
 	}
 
 	public enum CommandOrigin {
-		XMPP
+		// @formatter:off
+		UNKOWN, // If message is not created as response of a command
+		XMPP_MESSAGE,
+		XMPP_IQ
+		// @formatter:on
 	}
 
 	/**
@@ -143,8 +147,14 @@ public class MAXSService extends Service {
 	 * @param command
 	 * @param subCmd
 	 * @param args
-	 * @param issuer
+	 * @param origin
+	 *            the transport protocol the command arrived with
+	 * @param originId
+	 *            the id the command arrived with, e.g. in case of XMPP IQ
+	 *            commands, the IQ ID
 	 * @param issuerInformation
+	 *            information to identify the issuer, e.g. in case of XMPP the
+	 *            issuers (full) JID
 	 */
 	public void performCommand(String command, String subCmd, String args, CommandOrigin origin, String originId,
 			String issuerInformation) {
@@ -228,21 +238,28 @@ public class MAXSService extends Service {
 
 	}
 
-	public void sendMessage(Message userMsg) {
-		int id = userMsg.getId();
+	public void sendMessage(Message message) {
+		final int id = message.getId();
 		String originIssuerInfo = null;
+		String originId = null;
+		CommandOrigin commandOrigin = CommandOrigin.UNKOWN;
 		if (id != Message.NO_ID) {
 			CommandTable.Entry entry = mCommandTable.geEntry(id);
 			originIssuerInfo = entry.mOriginIssuerInfo;
+			commandOrigin = entry.mOrigin;
+			originId = entry.mOriginId;
 		}
 
-		CommandOrigin commandOrigin = CommandOrigin.XMPP;
-
 		switch (commandOrigin) {
-		case XMPP:
-			mXMPPService.send(userMsg.geMessage(), originIssuerInfo);
+		case XMPP_MESSAGE:
+			mXMPPService.sendAsMessage(message, originIssuerInfo, originId);
+			break;
+		case XMPP_IQ:
+			mXMPPService.sendAsIQ(message, originIssuerInfo, originId);
 			break;
 		default:
+			// if we could not determine the command origin, broadcast to all
+			mXMPPService.sendAsMessage(message, null, null);
 			break;
 		}
 
