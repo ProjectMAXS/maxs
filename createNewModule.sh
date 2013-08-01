@@ -11,6 +11,11 @@ if [ -d $DEST_MODULE ]; then
     exit 1
 fi
 
+if [[ $DEST_NAME =~ .*-.* ]]; then
+    echo Module name must not contain '-'
+    exit 1
+fi
+
 # First clean the source module
 pushd .
 cd $SRC_MODULE
