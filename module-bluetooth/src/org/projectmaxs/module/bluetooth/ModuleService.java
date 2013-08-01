@@ -29,7 +29,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	private BluetoothAdapter mAdapter;
 
 	public ModuleService() {
-		super("maxs-module-bluetoothemove ");
+		super("maxs-module-bluetooth");
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
