@@ -7,15 +7,14 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <uses-sdk android:minSdkVersion="8"/>
-    <application android:label="@string/app_name"
-        android:permission="org.projectmaxs.permission.USE_MODULE">
+    <application android:label="@string/app_name">
         <receiver android:name=".RegisterModuleReceiver"
-            android:label="TODO">
+            android:label="TODO" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER"/>
             </intent-filter>
         </receiver>
-        <service android:name=".ModuleService">
+        <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
             </intent-filter>
