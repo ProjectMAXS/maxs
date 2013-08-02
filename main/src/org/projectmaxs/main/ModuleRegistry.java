@@ -17,6 +17,8 @@
 
 package org.projectmaxs.main;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,6 +45,11 @@ public class ModuleRegistry {
 	}
 
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();
+
+	/**
+	 * Maps a package to a set of all commands the package provides.
+	 */
+	private final Map<String, Set<String>> mPackageCommands = new HashMap<String, Set<String>>();
 
 	/**
 	 * Maps a short command to a command
@@ -80,6 +87,10 @@ public class ModuleRegistry {
 		mContext.sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER));
 	}
 
+	protected synchronized Collection<Set<String>> getAllModules() {
+		return Collections.unmodifiableCollection(mPackageCommands.values());
+	}
+
 	protected synchronized CommandInformation get(String command) {
 		command = mShortCommandMap.containsKey(command) ? mShortCommandMap.get(command) : command;
 		return mCommands.get(command);
@@ -101,6 +112,7 @@ public class ModuleRegistry {
 	private void add(ModuleInformation moduleInformation) {
 		String modulePackage = moduleInformation.getModulePackage();
 		Set<ModuleInformation.Command> cmds = moduleInformation.getCommands();
+		Set<String> packageCommands = new HashSet<String>();
 		Set<String> packageShortCommands = new HashSet<String>();
 		for (ModuleInformation.Command c : cmds) {
 			String command = c.getCommand();
@@ -118,7 +130,10 @@ public class ModuleRegistry {
 			String shortCommand = c.getShortCommand();
 			mShortCommandMap.put(shortCommand, command);
 			packageShortCommands.add(shortCommand);
+
+			packageCommands.add(command);
 		}
+		mPackageCommands.put(modulePackage, packageCommands);
 		mPackageShortCommands.put(modulePackage, packageShortCommands);
 	}
 
@@ -140,5 +155,7 @@ public class ModuleRegistry {
 			}
 			mPackageShortCommands.remove(modulePackage);
 		}
+
+		mPackageCommands.remove(modulePackage);
 	}
 }
