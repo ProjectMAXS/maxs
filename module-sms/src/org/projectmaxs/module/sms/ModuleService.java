@@ -20,12 +20,16 @@ package org.projectmaxs.module.sms;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 
+import android.content.Context;
+
 public class ModuleService extends MAXSModuleIntentService {
+	private final static Log LOG = Log.getLog();
 
 	public ModuleService() {
-		super("maxs-module-sms");
+		super(LOG, "maxs-module-sms");
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation("org.projectmaxs.module.sms",
@@ -47,6 +51,11 @@ public class ModuleService extends MAXSModuleIntentService {
 			msgContent = new MessageContent("Unkown command");
 		}
 		return msgContent;
+	}
+
+	@Override
+	public void initLog(Context context) {
+		LOG.initialize(Settings.getInstance(context).getLogSettings());
 	}
 
 }

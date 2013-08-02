@@ -19,29 +19,22 @@ package org.projectmaxs.module.smsnotify;
 
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.Log.LogSettings;
 import org.projectmaxs.sharedmodule.MAXSRegisterModuleReceiver;
 
 import android.content.Context;
 
 public class RegisterModuleReceiver extends MAXSRegisterModuleReceiver {
-	private static Log sLog = Log.getLog();
+	private final static Log LOG = Log.getLog();
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.smsnotify", new ModuleInformation.Command[0]);
 
 	public RegisterModuleReceiver() {
-		super(sLog, sMODULE_INFORMATION);
+		super(LOG, sMODULE_INFORMATION);
 	}
 
 	@Override
-	public void initLog(Context ctx) {
-		sLog.initialize(new LogSettings() {
-			// TODO add real log settings
-			@Override
-			public boolean debugLog() {
-				return true;
-			}
-		});
+	public void initLog(Context context) {
+		LOG.initialize(Settings.getInstance(context).getLogSettings());
 	}
 }

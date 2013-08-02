@@ -22,30 +22,35 @@ import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.Log.LogSettings;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+/**
+ * MAXSModuleIntentService is meant for modules to handle their PERFORM_COMMAND
+ * intents. This is done in {@link #handleCommand(Command)}, which must be
+ * implemented by the modules service.
+ * 
+ * Extends IntentService, which does a stopSelf() if there are no more remaining
+ * intents. Therefore stopSelf() is not needed in this class.
+ * 
+ * @author Florian Schmaus flo@freakempire.de
+ * 
+ */
 public abstract class MAXSModuleIntentService extends IntentService {
-	private static Log sLog;
+	private final Log mLog;
 
-	public MAXSModuleIntentService(String name) {
+	public MAXSModuleIntentService(Log log, String name) {
 		super(name);
-		sLog = Log.getLog(name);
+		mLog = log;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		sLog.initialize(new LogSettings() {
-			// TODO add real log settings
-			@Override
-			public boolean debugLog() {
-				return true;
-			}
-		});
+		initLog(this);
 	}
 
 	@Override
@@ -55,7 +60,7 @@ public abstract class MAXSModuleIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		sLog.d("onHandleIntent");
+		mLog.d("onHandleIntent");
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
 		MessageContent msgContent = handleCommand(command);
@@ -67,5 +72,7 @@ public abstract class MAXSModuleIntentService extends IntentService {
 	}
 
 	public abstract MessageContent handleCommand(Command command);
+
+	public abstract void initLog(Context context);
 
 }

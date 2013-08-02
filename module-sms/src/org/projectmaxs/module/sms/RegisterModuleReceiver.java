@@ -18,26 +18,19 @@
 package org.projectmaxs.module.sms;
 
 import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.Log.LogSettings;
 import org.projectmaxs.sharedmodule.MAXSRegisterModuleReceiver;
 
 import android.content.Context;
 
 public class RegisterModuleReceiver extends MAXSRegisterModuleReceiver {
-	private static Log sLog = Log.getLog();
+	private final static Log LOG = Log.getLog();
 
 	public RegisterModuleReceiver() {
-		super(sLog, ModuleService.sMODULE_INFORMATION);
+		super(LOG, ModuleService.sMODULE_INFORMATION);
 	}
 
 	@Override
-	public void initLog(Context ctx) {
-		sLog.initialize(new LogSettings() {
-			// TODO add real log settings
-			@Override
-			public boolean debugLog() {
-				return true;
-			}
-		});
+	public void initLog(Context context) {
+		LOG.initialize(Settings.getInstance(context).getLogSettings());
 	}
 }

@@ -20,16 +20,19 @@ package org.projectmaxs.module.bluetooth;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 
 public class ModuleService extends MAXSModuleIntentService {
+	private final static Log LOG = Log.getLog();
 
 	private BluetoothAdapter mAdapter;
 
 	public ModuleService() {
-		super("maxs-module-bluetooth");
+		super(LOG, "maxs-module-bluetooth");
 	}
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
@@ -55,5 +58,10 @@ public class ModuleService extends MAXSModuleIntentService {
 			msg = new MessageContent("Unkown command");
 		}
 		return msg;
+	}
+
+	@Override
+	public void initLog(Context context) {
+		LOG.initialize(Settings.getInstance(context).getLogSettings());
 	}
 }

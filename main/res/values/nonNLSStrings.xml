@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="pref_xmpp_stream_compression_key">XMPP_STREAM_COMPRESSION</string>
     <string name="pref_xmpp_stream_encryption_key">XMPP_STREAM_ENCRYPTION</string>
     <string name="pref_manual_service_settings_key">MANUAL_SERVICE_SETTINGS</string>
@@ -10,5 +9,4 @@
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
     <string name="pref_app_connect_on_main_screen_key">CONNECT_ON_MAIN_SCREEN</string>
     <string name="pref_app_xmpp_debug_key">XMPP_DEBUG</string>
-    
 </resources>
