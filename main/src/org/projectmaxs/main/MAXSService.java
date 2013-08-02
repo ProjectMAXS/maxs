@@ -100,7 +100,6 @@ public class MAXSService extends Service {
 		sLog.d("onStartCommand(): action=" + action);
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
-			mCommandRegistry.loadFromDatabase();
 			mXMPPService.connect();
 			return START_STICKY;
 		}

@@ -19,6 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.AdvancedSettings"></activity>
+        <activity android:name=".activities.Modules"></activity>
         <service android:exported="false" android:name=".MAXSService">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.START_SERVICE"/>
@@ -41,7 +43,6 @@
                 <action android:name="org.projectmaxs.main.BIND_SERVICE"/>
             </intent-filter>
         </service>
-        <activity android:name=".activities.AdvancedSettings"></activity>
         <receiver android:name=".receivers.NetworkConnectivityReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

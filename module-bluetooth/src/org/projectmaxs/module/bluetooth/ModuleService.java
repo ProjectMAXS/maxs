@@ -35,9 +35,19 @@ public class ModuleService extends MAXSModuleIntentService {
 		super(LOG, "maxs-module-bluetooth");
 	}
 
+	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
-			"org.projectmaxs.module.bluetooth", new ModuleInformation.Command[] { new ModuleInformation.Command(
-					"bluetooth", "bt", "status", null, new String[] { "status" }), });
+			"org.projectmaxs.module.bluetooth",      // Package of the Module
+			"bluetooth",                             // Name of the Module (if omitted, last substring after '.' is used)
+			new ModuleInformation.Command[] {        // Array of commands provided by the module
+					new ModuleInformation.Command(
+							"bluetooth",             // Command name
+							"bt",                    // Short command name
+							"status",                // Default subcommand without arguments
+							null,                    // Default subcommand with arguments
+							new String[] { "status" }),  // Array of provided subcommands 
+			});
+	// @formatter:on
 
 	@Override
 	public void onCreate() {

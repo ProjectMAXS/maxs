@@ -17,11 +17,12 @@
 
 package org.projectmaxs.main;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class ModuleRegistry {
 	/**
 	 * Maps a package to a set of all commands the package provides.
 	 */
-	private final Map<String, Set<String>> mPackageCommands = new HashMap<String, Set<String>>();
+	private final Map<String, ModuleInformation> mPackageCommands = new HashMap<String, ModuleInformation>();
 
 	/**
 	 * Maps a short command to a command
@@ -65,30 +66,43 @@ public class ModuleRegistry {
 	 */
 	private final Map<String, Set<String>> mPackageShortCommands = new HashMap<String, Set<String>>();
 
+	private final Set<ChangeListener> mChangeListeners = new HashSet<ChangeListener>();
+
 	private Context mContext;
 	private ModuleRegistryTable mModuleRegistryTable;
-	private boolean mLoadedFromDatabase = false;
 
+	/**
+	 * Constructor for ModuleRegistry. Loads the ModuleInformation from database
+	 * into memory.
+	 * 
+	 * This constructor is synchronized guarded by getInstance().
+	 * 
+	 * @param context
+	 */
 	private ModuleRegistry(Context context) {
 		mContext = context;
 		mModuleRegistryTable = ModuleRegistryTable.getInstance(context);
+
+		// Load the module information from the database
+		Iterator<ModuleInformation> it = mModuleRegistryTable.getAll().iterator();
+		while (it.hasNext())
+			add(it.next());
 	}
 
-	protected synchronized void loadFromDatabase() {
-		if (!mLoadedFromDatabase) {
-			Iterator<ModuleInformation> it = mModuleRegistryTable.getAll().iterator();
-			while (it.hasNext())
-				add(it.next());
-			mLoadedFromDatabase = true;
-		}
+	public synchronized void addChangeListener(ChangeListener listener) {
+		mChangeListeners.add(listener);
+	}
+
+	public synchronized boolean removeChangeListener(ChangeListener listener) {
+		return mChangeListeners.remove(listener);
 	}
 
 	protected void challengeAllModulesToRegister() {
 		mContext.sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER));
 	}
 
-	protected synchronized Collection<Set<String>> getAllModules() {
-		return Collections.unmodifiableCollection(mPackageCommands.values());
+	public synchronized List<ModuleInformation> getAllModules() {
+		return new ArrayList<ModuleInformation>(Collections.unmodifiableCollection(mPackageCommands.values()));
 	}
 
 	protected synchronized CommandInformation get(String command) {
@@ -100,6 +114,7 @@ public class ModuleRegistry {
 		if (!mModuleRegistryTable.containsModule(modulePackage)) return;
 		remove(modulePackage);
 		mModuleRegistryTable.deleteModuleInformation(modulePackage);
+		notifyChangeListner();
 	}
 
 	protected synchronized void registerModule(ModuleInformation moduleInformation) {
@@ -107,6 +122,7 @@ public class ModuleRegistry {
 		remove(moduleInformation.getModulePackage());
 		add(moduleInformation);
 		mModuleRegistryTable.insertOrReplace(moduleInformation);
+		notifyChangeListner();
 	}
 
 	private void add(ModuleInformation moduleInformation) {
@@ -133,7 +149,7 @@ public class ModuleRegistry {
 
 			packageCommands.add(command);
 		}
-		mPackageCommands.put(modulePackage, packageCommands);
+		mPackageCommands.put(modulePackage, moduleInformation);
 		mPackageShortCommands.put(modulePackage, packageShortCommands);
 	}
 
@@ -157,5 +173,15 @@ public class ModuleRegistry {
 		}
 
 		mPackageCommands.remove(modulePackage);
+	}
+
+	private void notifyChangeListner() {
+		for (ChangeListener cl : mChangeListeners) {
+			cl.dataChanged();
+		}
+	}
+
+	public interface ChangeListener {
+		public void dataChanged();
 	}
 }

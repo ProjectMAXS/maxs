@@ -45,8 +45,11 @@ public class MainActivity extends Activity {
 	private TextView mStatusText;
 
 	public void openAdvancedSettings(View view) {
-		Intent intent = new Intent(this, AdvancedSettings.class);
-		startActivity(intent);
+		startActivity(new Intent(this, AdvancedSettings.class));
+	}
+
+	public void openModules(View view) {
+		startActivity(new Intent(this, Modules.class));
 	}
 
 	@Override
@@ -66,7 +69,6 @@ public class MainActivity extends Activity {
 
 		new MasterAddressCallbacks(mFirstMasterAddress);
 		new EditTextWatcher(mJID) {
-
 			@Override
 			public void lostFocusOrDone(View v) {
 				String text = mJID.getText().toString();
@@ -77,15 +79,12 @@ public class MainActivity extends Activity {
 				}
 				mSettings.setJid(text);
 			}
-
 		};
 		new EditTextWatcher(mPassword) {
-
 			@Override
 			public void lostFocusOrDone(View v) {
 				mSettings.setPassword(mPassword.getText().toString());
 			}
-
 		};
 
 		// initialize the master jid linear layout if there are already some

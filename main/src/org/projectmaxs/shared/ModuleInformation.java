@@ -26,19 +26,39 @@ import android.os.Parcelable;
 
 public class ModuleInformation implements Parcelable {
 	private final String mModulePackage;
-	private Set<Command> mCommands;
+	private final String mModuleName;
+	private final Set<Command> mCommands;
 
-	private ModuleInformation(String modulePackage) {
+	public ModuleInformation(String modulePackage, String moduleName) {
 		this.mModulePackage = modulePackage;
+		this.mModuleName = moduleName;
+		this.mCommands = new HashSet<Command>();
 	}
 
 	public ModuleInformation(String modulePackage, Set<Command> commands) {
-		this(modulePackage);
+		this.mModulePackage = modulePackage;
+		this.mModuleName = modulePackage; // TODO use substring after . in modulePackage
 		this.mCommands = commands;
 	}
 
 	public ModuleInformation(String modulePackage, Command... commands) {
-		this(modulePackage);
+		this.mModulePackage = modulePackage;
+		this.mModuleName = modulePackage;
+		Set<Command> cmds = new HashSet<Command>();
+		for (Command c : commands)
+			cmds.add(c);
+		this.mCommands = cmds;
+	}
+
+	public ModuleInformation(String modulePackage, String moduleName, Set<Command> commands) {
+		this.mModulePackage = modulePackage;
+		this.mModuleName = moduleName;
+		this.mCommands = commands;
+	}
+
+	public ModuleInformation(String modulePackage, String moduleName, Command... commands) {
+		this.mModulePackage = modulePackage;
+		this.mModuleName = moduleName;
 		Set<Command> cmds = new HashSet<Command>();
 		for (Command c : commands)
 			cmds.add(c);
@@ -47,8 +67,7 @@ public class ModuleInformation implements Parcelable {
 
 	public ModuleInformation(Parcel in) {
 		mModulePackage = in.readString();
-
-		byte[] bytes = in.marshall();
+		mModuleName = in.readString();
 
 		int cmdCount = in.readInt();
 		Command[] cmds = new Command[cmdCount];
@@ -64,6 +83,7 @@ public class ModuleInformation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mModulePackage);
+		dest.writeString(mModuleName);
 		int cmdCount = mCommands.size();
 		Command[] cmds = new Command[cmdCount];
 		cmds = mCommands.toArray(cmds);
@@ -73,6 +93,10 @@ public class ModuleInformation implements Parcelable {
 
 	public String getModulePackage() {
 		return mModulePackage;
+	}
+
+	public String getModuleName() {
+		return mModuleName;
 	}
 
 	public Set<Command> getCommands() {

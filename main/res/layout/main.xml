@@ -71,5 +71,12 @@
     android:onClick="openAdvancedSettings"
     android:text="@string/pref_advanced_settings" />
 
+<Button
+    android:id="@+id/buttonModules"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:onClick="openModules"
+    android:text="Modules" />
+
 </LinearLayout>
 
