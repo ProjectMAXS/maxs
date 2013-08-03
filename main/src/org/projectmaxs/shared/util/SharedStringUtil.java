@@ -19,6 +19,6 @@ package org.projectmaxs.shared.util;
 
 public class SharedStringUtil {
 	public static String getSubstringAfter(String s, char c) {
-		return s.substring(s.lastIndexOf(c)).trim();
+		return s.substring(s.lastIndexOf(c) + 1).trim();
 	}
 }
