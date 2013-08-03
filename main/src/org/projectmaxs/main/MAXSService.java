@@ -49,7 +49,7 @@ public class MAXSService extends Service {
 		}
 	});
 
-	private static Log sLog = Log.getLog();
+	private static final Log LOG = Log.getLog();
 	private static boolean sIsRunning = false;
 
 	public static boolean isRunning() {
@@ -69,7 +69,7 @@ public class MAXSService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		sLog.initialize(Settings.getInstance(this).getLogSettings());
+		LOG.initialize(Settings.getInstance(this).getLogSettings());
 		mXMPPService = new XMPPService(this);
 		mCommandTable = CommandTable.getInstance(this);
 		mCommandRegistry = ModuleRegistry.getInstance(this);
@@ -92,12 +92,12 @@ public class MAXSService extends Service {
 				startService(new Intent(Constants.ACTION_START_SERVICE));
 			}
 			else {
-				sLog.w("onStartCommand() null intent with Gingerbread or higher");
+				LOG.w("onStartCommand() null intent with Gingerbread or higher");
 			}
 			return START_STICKY;
 		}
 		String action = intent.getAction();
-		sLog.d("onStartCommand(): action=" + action);
+		LOG.d("onStartCommand(): action=" + action);
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			mXMPPService.connect();
@@ -249,6 +249,8 @@ public class MAXSService extends Service {
 			originId = entry.mOriginId;
 		}
 
+		LOG.d("sendMessage() commandOrigin=" + commandOrigin + " originIssuerInfo=" + originIssuerInfo + " originId="
+				+ originId + " message=" + message);
 		switch (commandOrigin) {
 		case XMPP_MESSAGE:
 			mXMPPService.sendAsMessage(message, originIssuerInfo, originId);

@@ -25,6 +25,7 @@ import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.util.Log;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -34,6 +35,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 public class MAXSIntentService extends IntentService {
+
+	private static final Log LOG = Log.getLog();
 
 	public MAXSIntentService() {
 		super("MAXSService");
@@ -97,6 +100,7 @@ public class MAXSIntentService extends IntentService {
 
 	private void handleIntent(Intent intent) {
 		String action = intent.getAction();
+		LOG.d("handleIntent() Action: " + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
 			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
 			mModuleRegistry.registerModule(mi);

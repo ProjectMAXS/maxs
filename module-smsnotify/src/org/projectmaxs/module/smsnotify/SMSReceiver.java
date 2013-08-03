@@ -45,10 +45,9 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 
 		List<MessageContent> messages = new ArrayList<MessageContent>(msg.size());
 		for (String sender : msg.keySet()) {
-			MessageContent message = new MessageContent();
 			String shortMessage = msg.get(sender);
 			LOG.d("Received sms from " + sender + ": " + shortMessage);
-			message.add("SMS from " + sender + ": " + shortMessage);
+			messages.add(new MessageContent("SMS from " + sender + ": " + shortMessage));
 		}
 		return messages;
 	}

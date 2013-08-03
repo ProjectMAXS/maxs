@@ -58,7 +58,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	@Override
 	public MessageContent handleCommand(Command command) {
 		if (mAdapter == null)
-			return new MessageContent("BT Adapter is null. Maybe this devices does not support bluetooth?");
+			return new MessageContent("BT Adapter is null. Maybe this device does not support bluetooth?");
 
 		MessageContent msg;
 		if (command.getSubCommand().equals("status")) {
