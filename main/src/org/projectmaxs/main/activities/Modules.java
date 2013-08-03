@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 public class Modules extends Activity {
 
-	ListView mModulesList;
-	ModuleRegistry.ChangeListener mChangeListener = new ModuleRegistry.ChangeListener() {
+	private ListView mModulesList;
+	private final ModuleRegistry.ChangeListener mChangeListener = new ModuleRegistry.ChangeListener() {
 		@Override
 		public void dataChanged() {
 			buildList();

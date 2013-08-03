@@ -23,7 +23,6 @@
     <string name="pref_app_debug_log">Debug Log</string>
     <string name="pref_app_debug_log_help">Enables extensive logging of debug messages. Useful to find bugs.</string>
     <string name="pref_advanced_settings">Advanced Settings</string>
-    <string name="pref_service_settings">Service Settings</string>
     <string name="pref_app_connect_on_main_screen">Connect if MAXS is opened</string>
     <string name="pref_app_connect_on_main_screen_help">Try to establish a connection if MAXS is opened. Mostly useful for developers.</string>
     <string name="pref_app_xmpp_debug">XMPP Debug</string>
