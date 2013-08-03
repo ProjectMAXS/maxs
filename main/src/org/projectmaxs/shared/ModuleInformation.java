@@ -26,7 +26,7 @@ import org.projectmaxs.shared.util.SharedStringUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ModuleInformation implements Parcelable {
+public class ModuleInformation implements Parcelable, Comparable<ModuleInformation> {
 	private final String mModulePackage;
 	private final String mModuleName;
 	private final Set<Command> mCommands;
@@ -122,6 +122,14 @@ public class ModuleInformation implements Parcelable {
 		}
 
 	};
+
+	@Override
+	public int compareTo(ModuleInformation another) {
+		final int nameCompare = this.mModuleName.compareTo(another.mModuleName);
+		if (nameCompare != 0) return nameCompare;
+
+		return this.mModulePackage.compareTo(another.mModulePackage);
+	}
 
 	public static class Command implements Parcelable {
 

@@ -1,5 +1,6 @@
 package org.projectmaxs.main.activities;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.projectmaxs.main.ModuleRegistry;
@@ -46,6 +47,7 @@ public class Modules extends Activity {
 
 	private void buildList() {
 		List<ModuleInformation> moduleInformationList = ModuleRegistry.getInstance(this).getAllModules();
+		Collections.sort(moduleInformationList);
 		ModuleInformationAdapter adapter = new ModuleInformationAdapter(this, R.id.modulesList, moduleInformationList);
 		mModulesList.setAdapter(adapter);
 	}
