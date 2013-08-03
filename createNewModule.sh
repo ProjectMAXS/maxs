@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-SRC_NAME=sms
+SRC_NAME=bluetooth
 SRC_MODULE=module-${SRC_NAME}
 DEST_NAME=$1
 DEST_MODULE=module-${DEST_NAME}
