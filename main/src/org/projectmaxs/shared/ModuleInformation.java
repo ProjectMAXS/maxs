@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.projectmaxs.shared.util.SharedStringUtil;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -37,13 +39,13 @@ public class ModuleInformation implements Parcelable {
 
 	public ModuleInformation(String modulePackage, Set<Command> commands) {
 		this.mModulePackage = modulePackage;
-		this.mModuleName = modulePackage; // TODO use substring after . in modulePackage
+		this.mModuleName = SharedStringUtil.getSubstringAfter(modulePackage, '.');
 		this.mCommands = commands;
 	}
 
 	public ModuleInformation(String modulePackage, Command... commands) {
 		this.mModulePackage = modulePackage;
-		this.mModuleName = modulePackage;
+		this.mModuleName = SharedStringUtil.getSubstringAfter(modulePackage, '.');
 		Set<Command> cmds = new HashSet<Command>();
 		for (Command c : commands)
 			cmds.add(c);
