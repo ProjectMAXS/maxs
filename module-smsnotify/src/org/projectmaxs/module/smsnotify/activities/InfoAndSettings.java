@@ -1,4 +1,4 @@
-package org.projectmaxs.module.smsnotify.activites;
+package org.projectmaxs.module.smsnotify.activities;
 
 import org.projectmaxs.module.smsnotify.R;
 
