@@ -173,8 +173,8 @@ public class ModuleInformation implements Parcelable {
 			String[] subCommands = mSubCommands.toArray(new String[mSubCommands.size()]);
 			// TODO describe better what is going on
 			// Bad Bad Android API, we have to encode the length 2 times.
-			// It's actually also encoded in the Array, readStringArray() method
-			// bails out if the given array is to small
+			// It's actually also encoded in the Array, but readStringArray()
+			// method bails out if the given array is to small
 			dest.writeInt(subCommands.length);
 			dest.writeStringArray(subCommands);
 		}
