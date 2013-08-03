@@ -2,14 +2,14 @@ package org.projectmaxs.module.sms.activites;
 
 import org.projectmaxs.module.sms.R;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-public class InfoAndSettings extends Activity {
+public class InfoAndSettings extends PreferenceActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.infoandsettings);
+		addPreferencesFromResource(R.xml.infoandsettings);
 	}
 }

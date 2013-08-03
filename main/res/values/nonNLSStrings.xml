@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">MAXS</string>
     <string name="pref_xmpp_stream_compression_key">XMPP_STREAM_COMPRESSION</string>
     <string name="pref_xmpp_stream_encryption_key">XMPP_STREAM_ENCRYPTION</string>
     <string name="pref_manual_service_settings_key">MANUAL_SERVICE_SETTINGS</string>
