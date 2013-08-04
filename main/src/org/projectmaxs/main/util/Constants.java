@@ -17,9 +17,14 @@
 
 package org.projectmaxs.main.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.projectmaxs.shared.GlobalConstants;
 
 public class Constants {
+	public static final DateFormat ISO8601_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+
 	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
 	public static final String ACTION_START_SERVICE = MAIN_PACKAGE + ".START_SERVICE";
 	public static final String ACTION_STOP_SERVICE = MAIN_PACKAGE + ".STOP_SERVICE";

@@ -78,5 +78,12 @@
     android:onClick="openModules"
     android:text="Modules" />
 
+<Button
+    android:id="@+id/buttonImportExportSettings"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:onClick="openImportExportSettings"
+    android:text="Import/Export Settings" />
+
 </LinearLayout>
 

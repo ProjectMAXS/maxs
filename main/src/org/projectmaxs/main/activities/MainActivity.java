@@ -52,6 +52,10 @@ public class MainActivity extends Activity {
 		startActivity(new Intent(this, Modules.class));
 	}
 
+	public void openImportExportSettings(View view) {
+		startActivity(new Intent(this, ImportExportSettings.class));
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

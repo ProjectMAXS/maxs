@@ -47,6 +47,15 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private static final String CMD_ID = "CMD_ID";
 	private static final String CONNECTION_STATE = "CONNECTION_STATE";
 
+	/**
+	 * A set of keys that should not get exported
+	 */
+	// @formatter:off
+	public static final Set<String> DO_NOT_EXPORT = new HashSet<String>(Arrays.asList(new String[] { 
+			PASSWORD
+			}));
+	// @formatter:on
+
 	// XMPP settings
 	private final String MANUAL_SERVICE_SETTINGS;
 	private final String MANUAL_SERVICE_SETTINGS_HOST;
@@ -240,6 +249,10 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		}
 
 		return mConnectionConfiguration;
+	}
+
+	public SharedPreferences getSharedPreferences() {
+		return mSharedPreferences;
 	}
 
 	@Override
