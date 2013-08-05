@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings
+.lastDeployed
+Makefile
+bin/
+gen/
+libs/
