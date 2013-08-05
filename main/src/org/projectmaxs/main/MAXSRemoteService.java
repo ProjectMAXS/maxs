@@ -31,11 +31,11 @@ import android.os.RemoteException;
 
 public class MAXSRemoteService extends Service {
 
-	private MAXSService mMAXSLocalService;
+	private MAXSService mMAXSService;
 
 	@Override
 	public IBinder onBind(Intent i) {
-		if (mMAXSLocalService == null) {
+		if (mMAXSService == null) {
 			Intent intent = new Intent(this, MAXSService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		}
@@ -44,9 +44,9 @@ public class MAXSRemoteService extends Service {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		if (mMAXSLocalService != null) {
+		if (mMAXSService != null) {
 			unbindService(mConnection);
-			mMAXSLocalService = null;
+			mMAXSService = null;
 		}
 		return false;
 	}
@@ -56,12 +56,12 @@ public class MAXSRemoteService extends Service {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
-			mMAXSLocalService = binder.getService();
+			mMAXSService = binder.getService();
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			mMAXSLocalService = null;
+			mMAXSService = null;
 		}
 
 	};
@@ -70,12 +70,12 @@ public class MAXSRemoteService extends Service {
 
 		@Override
 		public Contact getRecentContact() throws RemoteException {
-			return mMAXSLocalService.getRecentContact();
+			return mMAXSService.getRecentContact();
 		}
 
 		@Override
 		public Contact getContactFromAlias(String alias) throws RemoteException {
-			return mMAXSLocalService.getContactFromAlias(alias);
+			return mMAXSService.getContactFromAlias(alias);
 		}
 
 	};
