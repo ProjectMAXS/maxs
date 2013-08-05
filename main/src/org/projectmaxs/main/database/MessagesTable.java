@@ -78,10 +78,10 @@ public class MessagesTable {
 		if (!c.moveToFirst()) return messageList;
 
 		do {
-			byte[] messageBytes = c.getBlob(c.getColumnIndex(COLUMN_NAME_MESSAGE));
+			byte[] messageBytes = c.getBlob(c.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE));
 			Message message = Message.CREATOR.createFromParcel(ParcelableUtil.unmarshall(messageBytes));
 			messageList.add(message);
-		} while (!c.moveToNext());
+		} while (c.moveToNext());
 
 		// Delete all rows with the given origin after we have read out the
 		// values
