@@ -116,7 +116,7 @@ public class XMPPService {
 
 	public void sendAsMessage(org.projectmaxs.shared.Message message, String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
-			LOG.w("send(): Not connected, adding message to DB");
+			LOG.w("sendAsMessage: Not connected, adding message to DB");
 			mMessagesTable.addMessage(message, CommandOrigin.XMPP_MESSAGE);
 			return;
 		}
@@ -147,7 +147,7 @@ public class XMPPService {
 			try {
 				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
 			} catch (XMPPException e) {
-				LOG.w("MultipleRecipientManager exception", e);
+				LOG.w("sendAsMessage: MultipleRecipientManager exception", e);
 				return;
 			}
 		}
@@ -287,7 +287,7 @@ public class XMPPService {
 	}
 
 	private void tryToConnect() {
-		LOG.d("tryToConnect()");
+		LOG.d("tryToConnect");
 		newState(State.Connecting);
 
 		XMPPConnection con;
@@ -311,7 +311,7 @@ public class XMPPService {
 		try {
 			con.connect();
 		} catch (XMPPException e) {
-			LOG.e("Exception from connect()", e);
+			LOG.e("tryToConnect: Exception from connect()", e);
 			newState(State.Disconnected);
 			return;
 		}
@@ -339,7 +339,7 @@ public class XMPPService {
 		// TODO handle offline messages as StateChangeListener
 		// TODO ping failed listener as StateChangeListener
 
-		LOG.d("tryToConnect() successfully connected");
+		LOG.d("tryToConnect: successfully connected \\o/");
 		newState(State.Connected);
 
 		// Send the first presence *after* all StateChangeListeners have been
