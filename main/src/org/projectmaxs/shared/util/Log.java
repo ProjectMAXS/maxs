@@ -21,7 +21,7 @@ import android.text.TextUtils;
 
 public class Log {
 
-	private LogSettings mLogSettings;
+	private static LogSettings sLogSettings;
 	private final String mLogTag;
 
 	public static Log getLog(Class<?> c) {
@@ -42,7 +42,7 @@ public class Log {
 	}
 
 	public void initialize(LogSettings settings) {
-		mLogSettings = settings;
+		sLogSettings = settings;
 	}
 
 	public void w(String msg) {
@@ -62,7 +62,7 @@ public class Log {
 	}
 
 	public void d(String msg) {
-		if (mLogSettings != null && mLogSettings.debugLog()) {
+		if (sLogSettings != null && sLogSettings.debugLog()) {
 			android.util.Log.d(mLogTag, msg);
 		}
 		else {
