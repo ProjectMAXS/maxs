@@ -72,4 +72,8 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	}
 
+	public SharedPreferences getSharedPreferences() {
+		return mSharedPreferences;
+	}
+
 }

@@ -18,19 +18,25 @@
 package org.projectmaxs.module.sms;
 
 import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.sharedmodule.MAXSRegisterModuleReceiver;
+import org.projectmaxs.sharedmodule.MAXSModuleReceiver;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
-public class RegisterModuleReceiver extends MAXSRegisterModuleReceiver {
+public class ModuleReceiver extends MAXSModuleReceiver {
 	private final static Log LOG = Log.getLog();
 
-	public RegisterModuleReceiver() {
+	public ModuleReceiver() {
 		super(LOG, ModuleService.sMODULE_INFORMATION);
 	}
 
 	@Override
 	public void initLog(Context context) {
 		LOG.initialize(Settings.getInstance(context).getLogSettings());
+	}
+
+	@Override
+	public SharedPreferences getSharedPreferences(Context context) {
+		return Settings.getInstance(context).getSharedPreferences();
 	}
 }

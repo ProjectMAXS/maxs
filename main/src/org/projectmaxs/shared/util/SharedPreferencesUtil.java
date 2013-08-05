@@ -55,7 +55,8 @@ public class SharedPreferencesUtil {
 	 * @param sharedPreferences
 	 * @param outDirectory
 	 * @param doNotExport
-	 *            a set of keys that should not get exported (passwords, etc.)
+	 *            a set of keys that should not get exported (passwords, etc.),
+	 *            may be null
 	 */
 	public static void export(SharedPreferences sharedPreferences, Writer writer, Set<String> doNotExport)
 			throws IOException {
@@ -66,7 +67,7 @@ public class SharedPreferencesUtil {
 		serializer.startTag("", PREFERENCES);
 		for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
 			String key = entry.getKey();
-			if (doNotExport.contains(key)) continue;
+			if (doNotExport != null && doNotExport.contains(key)) continue;
 
 			Object valueObject = entry.getValue();
 			String valueType = valueObject.getClass().getSimpleName();
@@ -82,17 +83,18 @@ public class SharedPreferencesUtil {
 		writer.close();
 	}
 
-	public static void importFromFile(SharedPreferences sharedPreferences, File inFile) throws Exception {
-		importFromReader(sharedPreferences, new FileReader(inFile));
+	public static boolean importFromFile(SharedPreferences sharedPreferences, File inFile) throws Exception {
+		return importFromReader(sharedPreferences, new FileReader(inFile));
 	}
 
 	/**
 	 * 
 	 * @param sharedPreferences
-	 * @param inFile
+	 * @param in
+	 * @return
 	 * @throws Exception
 	 */
-	public static void importFromReader(SharedPreferences sharedPreferences, Reader in) throws Exception {
+	public static boolean importFromReader(SharedPreferences sharedPreferences, Reader in) throws Exception {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		XmlPullParser parser = Xml.newPullParser();
 		parser.setInput(in);
@@ -134,6 +136,6 @@ public class SharedPreferencesUtil {
 			}
 			eventType = parser.next();
 		}
-		editor.apply();
+		return editor.commit();
 	}
 }

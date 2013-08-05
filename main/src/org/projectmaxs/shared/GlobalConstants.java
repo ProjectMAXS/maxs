@@ -31,7 +31,8 @@ public class GlobalConstants {
 	public static final String ACTION_SET_RECENT_CONTACT = MAIN_PACKAGE + ".SET_RECENT_CONTACT";
 	public static final String ACTION_UPDATE_XMPP_STATUS = MAIN_PACKAGE + ".UPDATE_XMPP_STATUS";
 	public static final String ACTION_SEND_USER_MESSAGE = MAIN_PACKAGE + ".SEND_USER_MESSAGE";
-	public static final String ACTION_TO_SAVE_FILE = MAIN_PACKAGE + ".SAVE_FILE";
+	public static final String ACTION_SAVE_TO_FILE = MAIN_PACKAGE + ".SAVE_TO_FILE";
+	public static final String ACTION_IMPORT_EXPORT_STATUS = MAIN_PACKAGE + ".IMPORT_EXPORT_STATUS";
 
 	public static final String EXTRA_MODULE_INFORMATION = PACKAGE + ".MODULE_INFORMATION";
 	public static final String EXTRA_COMMAND = PACKAGE + ".COMMAND";

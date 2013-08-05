@@ -67,6 +67,10 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		return mLogSettings;
 	}
 
+	public SharedPreferences getSharedPreferences() {
+		return mSharedPreferences;
+	}
+
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 

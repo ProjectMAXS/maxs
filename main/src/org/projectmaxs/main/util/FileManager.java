@@ -18,14 +18,18 @@
 package org.projectmaxs.main.util;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
+
+import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
 import android.os.Environment;
 
 public class FileManager {
 
+	private static final Log LOG = Log.getLog();
 	private static FileManager sFileManager = null;
 
 	private final Context mContext;
@@ -41,6 +45,34 @@ public class FileManager {
 		return sFileManager;
 	}
 
+	public static File createFile(String file) throws IOException {
+		File res = new File(file);
+		if (res.exists()) {
+			if (!res.delete()) throw new IOException("Can not delete " + res.getAbsolutePath());
+		}
+		if (!res.createNewFile()) throw new IOException("Can not create file " + res.getAbsolutePath());
+		return res;
+	}
+
+	public static void saveToFile(String file, String content) {
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(file);
+			writer.write(content);
+		} catch (IOException e) {
+			LOG.w("saveToFile", e);
+		}
+		finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					LOG.w("saveToFile", e);
+				}
+			}
+		}
+	}
+
 	public File getTimestampedSettingsExportDir() throws IOException {
 		String dateString = Constants.ISO8601_DATE_FORMAT.format(new Date());
 		dateString = dateString.replace(':', '-');
@@ -50,7 +82,7 @@ public class FileManager {
 		return timestampedDir;
 	}
 
-	private void checkCreateDir(File dir) throws IOException {
+	private static void checkCreateDir(File dir) throws IOException {
 		if (!dir.exists()) dir.mkdirs();
 
 		if (!dir.isDirectory()) throw new IOException(dir.getAbsolutePath() + " is not a directory");

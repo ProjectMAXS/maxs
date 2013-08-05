@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import org.projectmaxs.main.MAXSService.LocalBinder;
+import org.projectmaxs.main.activities.ImportExportSettings;
+import org.projectmaxs.main.util.FileManager;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
@@ -115,8 +117,20 @@ public class MAXSIntentService extends IntentService {
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_XMPP_STATUS)) {
 
 		}
+		else if (action.equals(GlobalConstants.ACTION_SAVE_TO_FILE)) {
+			String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
+			String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			if (file == null || content == null) return;
+			FileManager.saveToFile(file, content);
+		}
+		else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
+			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);
+			if (status == null) return;
+			ImportExportSettings.appendStatus(status);
+		}
 		else {
 			// throw new IllegalStateException();
 		}
 	}
+
 }
