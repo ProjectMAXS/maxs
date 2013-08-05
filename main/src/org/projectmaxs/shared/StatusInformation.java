@@ -17,7 +17,6 @@
 
 package org.projectmaxs.shared;
 
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -34,7 +33,9 @@ public class StatusInformation implements Parcelable {
 		return mStatusValue;
 	}
 
-	private StatusInformation(String statusKey, String statusValue) {
+	public StatusInformation(String statusKey, String statusValue) {
+		if (statusKey.contains(" "))
+			throw new IllegalStateException("StatusInformation key='" + statusKey + "' must not contain whitespace");
 		this.mStatusKey = statusKey;
 		this.mStatusValue = statusValue;
 	}
@@ -68,22 +69,4 @@ public class StatusInformation implements Parcelable {
 		}
 
 	};
-
-	public static class StatusInformationFactory {
-		private final String mStatusKey;
-
-		public StatusInformationFactory(String statusKey) {
-			if (statusKey.contains(" "))
-				throw new IllegalStateException("StatusInformation key='" + statusKey + "' must not contain whitespace");
-			this.mStatusKey = statusKey;
-		}
-
-		public Intent statusIntent(String status) {
-			final String statusValue = status.trim();
-			StatusInformation info = new StatusInformation(mStatusKey, statusValue);
-			final Intent intent = new Intent(GlobalConstants.ACTION_UPDATE_STATUS);
-			intent.putExtra(GlobalConstants.EXTRA_CONTENT, info);
-			return intent;
-		}
-	}
 }
