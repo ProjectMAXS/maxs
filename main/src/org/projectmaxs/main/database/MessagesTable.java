@@ -23,7 +23,6 @@ import java.util.List;
 import org.projectmaxs.main.MAXSService.CommandOrigin;
 import org.projectmaxs.main.util.ParcelableUtil;
 import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.util.Log;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,8 +30,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class MessagesTable {
-
-	private static final Log LOG = Log.getLog();
 
 	private static final String TABLE_NAME = "messages";
 	private static final String COLUMN_NAME_MESSAGE = "message";
