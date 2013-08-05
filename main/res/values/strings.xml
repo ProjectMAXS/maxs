@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="master_addresses">Master Addresses</string>
+    <string name="device_account">Device Account</string>
     <string name="hint_jid">user@server.tld</string>
     <string name="password">Password</string>
     <string name="connect">Connect</string>

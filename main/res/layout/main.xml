@@ -32,6 +32,13 @@
         android:layout_height="3dp"
         android:background="@android:color/darker_gray" />
 
+    <TextView
+       android:id="@+id/textDeviceAccount"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="@string/device_account"
+       android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <EditText
         android:id="@+id/jid"
         android:layout_width="match_parent"
