@@ -20,8 +20,7 @@ package org.projectmaxs.sharedmodule;
 import java.util.List;
 
 import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.MessageContent;
+import org.projectmaxs.shared.StatusInformation;
 import org.projectmaxs.shared.util.Log;
 
 import android.content.BroadcastReceiver;
@@ -34,26 +33,23 @@ public abstract class MAXSStatusBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		android.os.Debug.waitForDebugger();
-		List<MessageContent> messages = onReceiveReturnMessages(context, intent);
-		if (messages == null) {
-			LOG.e("onReceive: messages was null");
+		List<StatusInformation> infos = onReceiveReturnStatusInformation(context, intent);
+		if (infos == null) {
+			LOG.e("onReceive: infos was null");
 			return;
 		}
-		if (messages.isEmpty()) {
-			LOG.e("onReceive: messages is empty");
+		if (infos.isEmpty()) {
+			LOG.e("onReceive: infos is empty");
 			return;
 		}
 
-		for (MessageContent mc : messages) {
-			Message message = new Message(mc);
-
-			Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
-			replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
+		for (StatusInformation info : infos) {
+			Intent replyIntent = new Intent(GlobalConstants.ACTION_UPDATE_STATUS);
+			replyIntent.putExtra(GlobalConstants.EXTRA_CONTENT, info);
 			context.startService(replyIntent);
 		}
 	}
 
-	public abstract List<MessageContent> onReceiveReturnMessages(Context context, Intent intent);
+	public abstract List<StatusInformation> onReceiveReturnStatusInformation(Context context, Intent intent);
 
 }

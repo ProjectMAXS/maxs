@@ -17,6 +17,8 @@
 
 package org.projectmaxs.main;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.main.xmpp.XMPPService;
+import org.projectmaxs.module.battery.MAXSBatteryManager;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
@@ -33,6 +36,7 @@ import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.util.Log;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
@@ -51,9 +55,14 @@ public class MAXSService extends Service {
 
 	private static final Log LOG = Log.getLog();
 	private static boolean sIsRunning = false;
+	private static final List<StartStopListener> sStartStopListeners = new LinkedList<StartStopListener>();
 
 	public static boolean isRunning() {
 		return sIsRunning;
+	}
+
+	public static void addStartStopListener(StartStopListener listener) {
+		sStartStopListeners.add(listener);
 	}
 
 	private XMPPService mXMPPService;
@@ -73,6 +82,9 @@ public class MAXSService extends Service {
 		mXMPPService = new XMPPService(this);
 		mCommandTable = CommandTable.getInstance(this);
 		mCommandRegistry = ModuleRegistry.getInstance(this);
+
+		MAXSBatteryManager.init(this);
+
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getConnectionState()) startService();
 		sIsRunning = true;
@@ -102,11 +114,15 @@ public class MAXSService extends Service {
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			mXMPPService.connect();
 			Settings.getInstance(this).setConnectionState(true);
+			for (StartStopListener listener : sStartStopListeners)
+				listener.onServiceStart(this);
 			return START_STICKY;
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
 			mXMPPService.disconnect();
 			Settings.getInstance(this).setConnectionState(false);
+			for (StartStopListener listener : sStartStopListeners)
+				listener.onServiceStop(this);
 			stopSelf(startId);
 			return START_NOT_STICKY;
 		}
@@ -270,5 +286,13 @@ public class MAXSService extends Service {
 
 	public void setStatus(String status) {
 		mXMPPService.setStatus(status);
+	}
+
+	public static abstract class StartStopListener {
+		public void onServiceStart(Context context) {
+		}
+
+		public void onServiceStop(Context context) {
+		}
 	}
 }
