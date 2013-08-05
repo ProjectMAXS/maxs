@@ -71,9 +71,9 @@ public class StatusTable {
 		if (!c.moveToFirst()) return res;
 
 		do {
-			String info = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_KEY));
-			String node = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_STATUS));
-			res.put(node, info);
+			String key = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_KEY));
+			String status = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_STATUS));
+			res.put(key, status);
 		} while (c.moveToNext());
 
 		c.close();

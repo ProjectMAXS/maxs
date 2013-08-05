@@ -36,7 +36,6 @@ import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.util.Log;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
@@ -84,6 +83,7 @@ public class MAXSService extends Service {
 		mCommandRegistry = ModuleRegistry.getInstance(this);
 
 		MAXSBatteryManager.init(this);
+		StatusRegistry.getInstanceAndInit(this);
 
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getConnectionState()) startService();
@@ -289,10 +289,10 @@ public class MAXSService extends Service {
 	}
 
 	public static abstract class StartStopListener {
-		public void onServiceStart(Context context) {
+		public void onServiceStart(MAXSService service) {
 		}
 
-		public void onServiceStop(Context context) {
+		public void onServiceStop(MAXSService service) {
 		}
 	}
 }

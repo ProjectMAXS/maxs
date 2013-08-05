@@ -59,12 +59,12 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 	}
 
 	@Override
-	public void onServiceStart(Context context) {
+	public void onServiceStart(MAXSService service) {
 		mContext.registerReceiver(mBatteryBroadcastReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 	}
 
 	@Override
-	public void onServiceStop(Context context) {
+	public void onServiceStop(MAXSService service) {
 		mContext.unregisterReceiver(mBatteryBroadcastReceiver);
 	}
 
@@ -82,8 +82,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 		float batteryPct = level / (float) scale;
 
-		String batteryPctStr = maybeIntToRange((int) batteryPct, isCharging);
-		String lastBatteryPctStr = maybeIntToRange((int) mLastBatteryPct, isCharging);
+		String batteryPctStr = maybeFloatToRange(batteryPct, isCharging);
+		String lastBatteryPctStr = maybeFloatToRange(mLastBatteryPct, isCharging);
 
 		if (plugged == mLastPlugged && batteryPctStr.equals(lastBatteryPctStr)) return;
 
@@ -123,7 +123,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		return powerSource;
 	}
 
-	private static String maybeIntToRange(int in, boolean isCharging) {
+	private static String maybeFloatToRange(float f, boolean isCharging) {
+		int in = (int) (f * 100);
 		if (isCharging) return Integer.toString(in);
 
 		int lowerBound = (in / 5) * STEP;

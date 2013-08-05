@@ -19,6 +19,7 @@ package org.projectmaxs.main;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.projectmaxs.main.database.StatusTable;
 import org.projectmaxs.shared.StatusInformation;
@@ -26,13 +27,13 @@ import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
 
-public class StatusRegistry {
+public class StatusRegistry extends MAXSService.StartStopListener {
 
 	private static final Log LOG = Log.getLog();
 
 	private static StatusRegistry sStatusRegistry;
 
-	public synchronized static StatusRegistry getInstance(Context context) {
+	public synchronized static StatusRegistry getInstanceAndInit(Context context) {
 		if (sStatusRegistry == null) sStatusRegistry = new StatusRegistry(context);
 		return sStatusRegistry;
 	}
@@ -46,8 +47,16 @@ public class StatusRegistry {
 	private StatusRegistry(Context context) {
 		this.mContext = context;
 		this.mStatusTable = StatusTable.getInstance(context);
+		this.mStatusInformation = mStatusTable.getAll();
 
-		mStatusInformation = mStatusTable.getAll();
+		MAXSService.addStartStopListener(this);
+	}
+
+	@Override
+	public void onServiceStart(MAXSService service) {
+		String status = updateStatus();
+		if (status == null) return;
+		service.setStatus(status);
 	}
 
 	public String add(StatusInformation info) {
@@ -63,14 +72,17 @@ public class StatusRegistry {
 	}
 
 	private String updateStatus() {
-		Iterator<String> it = mStatusInformation.values().iterator();
-		if (!it.hasNext()) return null;
+		if (mStatusInformation.isEmpty()) return null;
+
+		Iterator<Entry<String, String>> it = mStatusInformation.entrySet().iterator();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(it.next());
+		String value = it.next().getValue();
+		sb.append(value);
 		while (it.hasNext()) {
 			sb.append(" - ");
-			sb.append(it.next());
+			value = it.next().getValue();
+			sb.append(value);
 		}
 		return sb.toString();
 	}

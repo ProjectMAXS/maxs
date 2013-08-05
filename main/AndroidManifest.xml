@@ -6,6 +6,7 @@
     <uses-sdk android:minSdkVersion="8"/>
 
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

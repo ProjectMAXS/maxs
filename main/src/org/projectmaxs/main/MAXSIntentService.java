@@ -117,7 +117,7 @@ public class MAXSIntentService extends IntentService {
 		}
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
-			String status = StatusRegistry.getInstance(this).add(info);
+			String status = StatusRegistry.getInstanceAndInit(this).add(info);
 			if (status != null) mMAXSLocalService.setStatus(status);
 		}
 		else if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {

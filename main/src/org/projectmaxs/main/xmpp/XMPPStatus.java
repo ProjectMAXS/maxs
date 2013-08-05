@@ -24,16 +24,18 @@ import org.projectmaxs.main.xmpp.XMPPRoster.MasterJidListener;
 
 public class XMPPStatus extends StateChangeListener {
 
+	private final XMPPRoster mXMPPRoster;
+
 	private Connection mConnection;
-	private XMPPRoster mXMPPRoster;
 	private String mActiveStatus = "";
 	private String mDesiredStatus = "";
 
 	protected XMPPStatus(XMPPRoster xmppRoster) {
+		mXMPPRoster = xmppRoster;
 		xmppRoster.addMasterJidListener(new MasterJidListener() {
 			@Override
 			public void masterJidAvailable() {
-				masterJidAvailable();
+				super.masterJidAvailable();
 			}
 		});
 	}
