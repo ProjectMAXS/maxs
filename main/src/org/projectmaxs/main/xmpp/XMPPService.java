@@ -220,7 +220,7 @@ public class XMPPService {
 	}
 
 	private synchronized void changeState(State newState) {
-		LOG.d("changeState(): mState=" + mState + ", newState=" + newState);
+		LOG.d("changeState: mState=" + mState + ", newState=" + newState);
 		switch (mState) {
 		case Connected:
 			switch (newState) {
@@ -280,7 +280,7 @@ public class XMPPService {
 			}
 			break;
 		default:
-			LOG.w("changeState(): Unkown state change combination. mState=" + mState + ", newState=" + newState);
+			LOG.w("changeState: Unkown state change combination. mState=" + mState + ", newState=" + newState);
 			// TODO enable this
 			// throw new IllegalStateException();
 		}
@@ -302,8 +302,9 @@ public class XMPPService {
 				con = mConnection;
 			}
 		} catch (XMPPException e) {
-			LOG.e("tryToConnect() connection configuration failed", e);
+			LOG.e("tryToConnect: connection configuration failed", e);
 			// TODO try reconnect
+			newState(State.Disconnected);
 			return;
 		}
 
@@ -311,6 +312,7 @@ public class XMPPService {
 			con.connect();
 		} catch (XMPPException e) {
 			LOG.e("Exception from connect()", e);
+			newState(State.Disconnected);
 			return;
 		}
 
@@ -318,7 +320,8 @@ public class XMPPService {
 			try {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
-				LOG.e("tryToConnect() login failed", e);
+				LOG.e("tryToConnect: login failed", e);
+				newState(State.Disconnected);
 				return;
 			}
 		}

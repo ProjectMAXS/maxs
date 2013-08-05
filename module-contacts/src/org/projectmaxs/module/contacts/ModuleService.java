@@ -17,13 +17,19 @@
 
 package org.projectmaxs.module.contacts;
 
+import java.util.List;
+
 import org.projectmaxs.shared.Command;
+import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.aidl.IContactsModuleService;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
 
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
@@ -47,6 +53,11 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:on
 
 	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
+	}
+
+	@Override
 	public void onCreate() {
 		super.onCreate();
 	}
@@ -67,4 +78,32 @@ public class ModuleService extends MAXSModuleIntentService {
 	public void initLog(Context context) {
 		LOG.initialize(Settings.getInstance(context).getLogSettings());
 	}
+
+	private List<Contact> lookupContact(String lookupInfo) {
+		return null;
+	}
+
+	private List<Contact> lookupContactFromNumber(String number) {
+		return null;
+	}
+
+	private final IContactsModuleService.Stub mBinder = new IContactsModuleService.Stub() {
+
+		@Override
+		public List<Contact> lookupContact(String lookupInfo) {
+			return ModuleService.this.lookupContact(lookupInfo);
+		}
+
+		@Override
+		public List<Contact> lookupContactFromNumber(String number) {
+			return ModuleService.this.lookupContactFromNumber(number);
+		}
+
+		@Override
+		public Contact lookupOneContactFromNumber(String number) {
+			List<Contact> contacts = ModuleService.this.lookupContactFromNumber(number);
+			if (contacts == null) return null;
+			return contacts.get(0);
+		}
+	};
 }

@@ -66,8 +66,16 @@ public abstract class MAXSModuleIntentService extends IntentService {
 		MessageContent msgContent = handleCommand(command);
 		if (msgContent == null) return;
 
+		sendMessage(msgContent, command.getId());
+	}
+
+	public void sendMessage(MessageContent msgContent) {
+		sendMessage(msgContent, Message.NO_ID);
+	}
+
+	public void sendMessage(MessageContent msgContent, int commandId) {
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, new Message(msgContent));
+		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, new Message(msgContent, commandId));
 		startService(replyIntent);
 	}
 

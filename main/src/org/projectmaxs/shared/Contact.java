@@ -25,11 +25,19 @@ import android.os.Parcelable;
 
 public class Contact implements Parcelable {
 	private String mName;
-	private List<Number> mNumbers;
+	private List<ContactNumber> mNumbers;
 
-	private Contact(String name, List<Number> numbers) {
+	private Contact(String name, List<ContactNumber> numbers) {
 		this.mName = name;
 		this.mNumbers = numbers;
+	}
+
+	private Contact(Parcel in) {
+		String name = in.readString();
+		ContactNumber[] numbers = (ContactNumber[]) in.readParcelableArray(ContactNumber.class.getClassLoader());
+		List<ContactNumber> numbersList = Arrays.asList(numbers);
+		this.mName = name;
+		this.mNumbers = numbersList;
 	}
 
 	@Override
@@ -40,7 +48,7 @@ public class Contact implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mName);
-		Number[] numbers = new Number[mNumbers.size()];
+		ContactNumber[] numbers = new ContactNumber[mNumbers.size()];
 		mNumbers.toArray(numbers);
 		dest.writeParcelableArray(numbers, flags);
 	}
@@ -49,10 +57,7 @@ public class Contact implements Parcelable {
 
 		@Override
 		public Contact createFromParcel(Parcel source) {
-			String name = source.readString();
-			Number[] numbers = (Contact.Number[]) source.readParcelableArray(Number.class.getClassLoader());
-			List<Number> numbersList = Arrays.asList(numbers);
-			return new Contact(name, numbersList);
+			return new Contact(source);
 		}
 
 		@Override
@@ -61,75 +66,5 @@ public class Contact implements Parcelable {
 		}
 
 	};
-
-	static class Number implements Parcelable {
-
-		NumberType mNumberType;
-		String mNumber;
-
-		public Number(NumberType type, String number) {
-			this.mNumberType = type;
-			this.mNumber = number;
-		}
-
-		private Number(Parcel in) {
-			mNumberType = in.readParcelable(NumberType.class.getClassLoader());
-			mNumber = in.readString();
-		}
-
-		@Override
-		public int describeContents() {
-			return 0;
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeParcelable(mNumberType, flags);
-			dest.writeString(mNumber);
-		}
-
-		public static final Creator<Number> CREATOR = new Creator<Number>() {
-
-			@Override
-			public Number createFromParcel(Parcel source) {
-				return new Number(source);
-			}
-
-			@Override
-			public Number[] newArray(int size) {
-				return new Number[size];
-			}
-
-		};
-
-		enum NumberType implements Parcelable {
-			MOBILE, HOME, WORK;
-
-			@Override
-			public int describeContents() {
-				return 0;
-			}
-
-			@Override
-			public void writeToParcel(Parcel dest, int flags) {
-				dest.writeInt(ordinal());
-			}
-
-			public static final Creator<NumberType> CREATOR = new Creator<NumberType>() {
-
-				@Override
-				public NumberType createFromParcel(Parcel source) {
-					return NumberType.values()[source.readInt()];
-				}
-
-				@Override
-				public NumberType[] newArray(int size) {
-					return new NumberType[size];
-				}
-
-			};
-		}
-
-	}
 
 }
