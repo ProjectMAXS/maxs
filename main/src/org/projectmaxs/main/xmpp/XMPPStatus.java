@@ -58,13 +58,17 @@ public class XMPPStatus extends StateChangeListener {
 		mConnection = connection;
 	}
 
-	// @Override
-	// public void connected(Connection connection) {
-	// masterJidAvailable();
-	// }
+	@Override
+	public void connected(Connection connection) {
+		masterJidAvailable();
+	}
 
 	@Override
 	public void disconnected(Connection connection) {
 	}
 
+	private void masterJidAvailable() {
+		if (mDesiredStatus.equals(mActiveStatus)) return;
+		setStatus(mDesiredStatus);
+	}
 }
