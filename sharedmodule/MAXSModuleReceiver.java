@@ -59,7 +59,10 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
 		}
-		if (replyIntent != null) context.startService(replyIntent);
+		if (replyIntent != null) {
+			mLog.d("onReceive: replying with action=" + replyIntent.getAction());
+			context.startService(replyIntent);
+		}
 	}
 
 	public abstract void initLog(Context context);

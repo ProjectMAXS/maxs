@@ -19,13 +19,17 @@ package org.projectmaxs.main.receivers;
 
 import org.projectmaxs.main.ModuleRegistry;
 import org.projectmaxs.shared.GlobalConstants;
+import org.projectmaxs.shared.util.Log;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
 public class PackageReceiver extends BroadcastReceiver {
+
+	private static final Log LOG = Log.getLog();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -42,12 +46,14 @@ public class PackageReceiver extends BroadcastReceiver {
 	}
 
 	private void onInstalledOrReplaced(Context context, String packageName) {
+		LOG.d("onInstalledOrReplaced: packageName=" + packageName + " intent=" + GlobalConstants.ACTION_REGISTER);
 		Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
 		intent.setComponent(new ComponentName(packageName, packageName + ".ModuleReceiver"));
 		context.sendBroadcast(intent);
 	}
 
 	private void onRemoved(Context context, String packageName) {
+		LOG.d("onRemoved: packageName=" + packageName);
 		ModuleRegistry.getInstance(context).unregisterModule(packageName);
 	}
 
