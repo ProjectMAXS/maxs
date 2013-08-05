@@ -18,6 +18,8 @@
 package org.projectmaxs.main.xmpp;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.Connection;
@@ -33,9 +35,12 @@ import org.projectmaxs.main.StateChangeListener;
 
 public class XMPPRoster extends StateChangeListener implements RosterListener {
 
+	private final List<MasterJidListener> mMasterJidListeners = new LinkedList<MasterJidListener>();
+
 	private Settings mSettings;
 	private Roster mRoster;
 	private Connection mConnection;
+	private boolean mMasterJidAvailable;
 
 	public XMPPRoster(Settings settings) {
 		mSettings = settings;
@@ -49,13 +54,20 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	public void newConnection(Connection connection) {
 		mConnection = connection;
 		mRoster = connection.getRoster();
-	};
+	}
 
 	@Override
 	public void connected(Connection connection) {
 		Set<String> masterJids = mSettings.getMasterJids();
 		for (String jid : masterJids)
 			friendJid(jid);
+
+		checkMasterJids();
+	}
+
+	@Override
+	public void disconnected(Connection connection) {
+		mMasterJidAvailable = false;
 	}
 
 	/*
@@ -81,9 +93,39 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	}
 
 	@Override
-	public void presenceChanged(Presence arg0) {
-		// TODO Auto-generated method stub
+	public void presenceChanged(Presence presence) {
+		checkMasterJids();
+	}
 
+	protected boolean isMasterJidAvailable() {
+		return mMasterJidAvailable;
+	}
+
+	protected void addMasterJidListener(MasterJidListener listener) {
+		mMasterJidListeners.add(listener);
+	}
+
+	protected void removeMasterJidListener(MasterJidListener listener) {
+		mMasterJidListeners.remove(listener);
+	}
+
+	private void checkMasterJids() {
+		boolean masterJidAvailable = false;
+		for (String jid : mSettings.getMasterJids()) {
+			Presence presence = mRoster.getPresence(jid);
+			if (presence.isAvailable()) {
+				masterJidAvailable = true;
+				// we found at least one available master JID, break here
+				break;
+			}
+		}
+
+		if (mMasterJidAvailable == false && masterJidAvailable == true) {
+			for (MasterJidListener listener : mMasterJidListeners)
+				listener.masterJidAvailable();
+		}
+
+		mMasterJidAvailable = masterJidAvailable;
 	}
 
 	/**
@@ -151,5 +193,10 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	private static void sendPresenceTo(String to, Presence presence, Connection connection) {
 		presence.setTo(to);
 		connection.sendPacket(presence);
+	}
+
+	public static class MasterJidListener {
+		public void masterJidAvailable() {
+		}
 	}
 }

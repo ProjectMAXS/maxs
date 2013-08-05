@@ -74,7 +74,7 @@ public class MAXSService extends Service {
 		mCommandTable = CommandTable.getInstance(this);
 		mCommandRegistry = ModuleRegistry.getInstance(this);
 		// Start the service the connection was previously established
-		if (Settings.getInstance(this).getXMPPConnectionState()) startService();
+		if (Settings.getInstance(this).getConnectionState()) startService();
 		sIsRunning = true;
 	}
 
@@ -101,10 +101,12 @@ public class MAXSService extends Service {
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			mXMPPService.connect();
+			Settings.getInstance(this).setConnectionState(true);
 			return START_STICKY;
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
 			mXMPPService.disconnect();
+			Settings.getInstance(this).setConnectionState(false);
 			stopSelf(startId);
 			return START_NOT_STICKY;
 		}
@@ -264,5 +266,9 @@ public class MAXSService extends Service {
 			break;
 		}
 
+	}
+
+	public void setStatus(String status) {
+		mXMPPService.setStatus(status);
 	}
 }

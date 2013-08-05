@@ -37,12 +37,12 @@ import android.content.Intent;
 
 public class ModuleRegistry {
 
-	private static ModuleRegistry sCommandRegistry;
+	private static ModuleRegistry sModuleRegistry;
 	private static final Log LOG = Log.getLog();
 
 	public static synchronized ModuleRegistry getInstance(Context context) {
-		if (sCommandRegistry == null) sCommandRegistry = new ModuleRegistry(context);
-		return sCommandRegistry;
+		if (sModuleRegistry == null) sModuleRegistry = new ModuleRegistry(context);
+		return sModuleRegistry;
 	}
 
 	private final Map<String, CommandInformation> mCommands = new HashMap<String, CommandInformation>();

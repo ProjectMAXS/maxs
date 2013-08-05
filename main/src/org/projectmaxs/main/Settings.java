@@ -184,11 +184,11 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		return id;
 	}
 
-	public void setXMPPConnectionState(boolean active) {
+	public void setConnectionState(boolean active) {
 		mSharedPreferences.edit().putBoolean(CONNECTION_STATE, active).commit();
 	}
 
-	public boolean getXMPPConnectionState() {
+	public boolean getConnectionState() {
 		return mSharedPreferences.getBoolean(CONNECTION_STATE, false);
 	}
 

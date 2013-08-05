@@ -27,6 +27,7 @@ import org.projectmaxs.main.util.FileManager;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.StatusInformation;
 import org.projectmaxs.shared.util.Log;
 
 import android.app.IntentService;
@@ -114,8 +115,10 @@ public class MAXSIntentService extends IntentService {
 		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
 
 		}
-		else if (action.equals(GlobalConstants.ACTION_UPDATE_XMPP_STATUS)) {
-
+		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
+			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
+			String status = StatusRegistry.getInstance(this).add(info);
+			if (status != null) mMAXSLocalService.setStatus(status);
 		}
 		else if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
 			String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
@@ -135,5 +138,4 @@ public class MAXSIntentService extends IntentService {
 			// throw new IllegalStateException();
 		}
 	}
-
 }

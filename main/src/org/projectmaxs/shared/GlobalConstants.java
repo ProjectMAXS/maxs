@@ -29,7 +29,7 @@ public class GlobalConstants {
 	public static final String ACTION_BIND_SERVICE = MAIN_PACKAGE + ".BIND_SERVICE";
 	public static final String ACTION_REGISTER_MODULE = MAIN_PACKAGE + ".REGISTER_MODULE";
 	public static final String ACTION_SET_RECENT_CONTACT = MAIN_PACKAGE + ".SET_RECENT_CONTACT";
-	public static final String ACTION_UPDATE_XMPP_STATUS = MAIN_PACKAGE + ".UPDATE_XMPP_STATUS";
+	public static final String ACTION_UPDATE_STATUS = MAIN_PACKAGE + ".UPDATE_STATUS";
 	public static final String ACTION_SEND_USER_MESSAGE = MAIN_PACKAGE + ".SEND_USER_MESSAGE";
 	public static final String ACTION_EXPORT_TO_FILE = MAIN_PACKAGE + ".EXPORT_TO_FILE";
 	public static final String ACTION_IMPORT_EXPORT_STATUS = MAIN_PACKAGE + ".IMPORT_EXPORT_STATUS";

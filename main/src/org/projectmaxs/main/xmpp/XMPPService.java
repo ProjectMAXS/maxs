@@ -46,6 +46,7 @@ public class XMPPService {
 	private final Settings mSettings;
 	private final MAXSService mMAXSLocalService;
 	private final MessagesTable mMessagesTable;
+	private final XMPPStatus mXMPPStatus;
 
 	private State mState = State.Disconnected;
 	private ConnectionConfiguration mConnectionConfiguration;
@@ -69,7 +70,11 @@ public class XMPPService {
 		addListener(new HandleChatPacketListener(this, mSettings));
 		addListener(new HandleConnectionListener(this, mSettings));
 		addListener(new HandleMessagesListener(this, maxsLocalService));
-		addListener(new XMPPRoster(mSettings));
+
+		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
+		addListener(xmppRoster);
+		mXMPPStatus = new XMPPStatus(xmppRoster);
+		addListener(mXMPPStatus);
 	}
 
 	public enum State {
@@ -103,6 +108,10 @@ public class XMPPService {
 	public void reconnect() {
 		disconnect();
 		connect();
+	}
+
+	public void setStatus(String status) {
+		mXMPPStatus.setStatus(status);
 	}
 
 	public void sendAsMessage(org.projectmaxs.shared.Message message, String originIssuerInfo, String originId) {
@@ -206,19 +215,6 @@ public class XMPPService {
 			default:
 				break;
 			}
-		}
-		switch (newState) {
-		case Connected:
-		case Connecting:
-		case WaitingForNetwork:
-		case WaitingForRetry:
-			mSettings.setXMPPConnectionState(true);
-			break;
-		case Disconnected:
-		case Disconnecting:
-			mSettings.setXMPPConnectionState(false);
-		default:
-			break;
 		}
 		mState = newState;
 	}

@@ -20,6 +20,8 @@ package org.projectmaxs.main.database;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.projectmaxs.shared.StatusInformation;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -54,10 +56,10 @@ public class StatusTable {
 		mDatabase = MAXSDatabase.getInstance(context).getWritableDatabase();
 	}
 
-	public void addStatus(String key, String status) {
+	public void addStatus(StatusInformation info) {
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_NAME_KEY, key);
-		values.put(COLUMN_NAME_STATUS, status);
+		values.put(COLUMN_NAME_KEY, info.getKey());
+		values.put(COLUMN_NAME_STATUS, info.getValue());
 
 		long res = mDatabase.replace(TABLE_NAME, null, values);
 		if (res == -1) throw new IllegalStateException("Could not insert status info in database");
