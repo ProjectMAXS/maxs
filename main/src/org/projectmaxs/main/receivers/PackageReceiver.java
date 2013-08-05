@@ -43,7 +43,7 @@ public class PackageReceiver extends BroadcastReceiver {
 
 	private void onInstalledOrReplaced(Context context, String packageName) {
 		Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
-		intent.setPackage(packageName);
+		intent.setComponent(new ComponentName(packageName, packageName + ".ModuleReceiver"));
 		context.sendBroadcast(intent);
 	}
 
