@@ -61,20 +61,23 @@ public class ImportExportSettings extends Activity {
 		sImportExportStatus.setText("");
 
 		File mainOutFile = null;
+		File exportDir = null;
 		try {
-			File exportDir = FileManager.getInstance(this).getTimestampedSettingsExportDir();
-			appendStatus("exportAll: set export directory to " + exportDir.getCanonicalPath());
+			exportDir = FileManager.getInstance(this).getTimestampedSettingsExportDir();
+			appendStatus("set export directory to " + exportDir.getCanonicalPath());
 			mainOutFile = new File(exportDir, Constants.MAIN_PACKAGE + ".xml");
 			SharedPreferencesUtil.exportToFile(Settings.getInstance(this).getSharedPreferences(), mainOutFile,
 					Settings.DO_NOT_EXPORT);
 		} catch (Exception e) {
 			LOG.e("exportAll: exception", e);
-			appendStatus("exportAll: exception " + e.getMessage());
+			appendStatus("exception " + e.getMessage());
+			// only abort if the export dir is also null
+			if (exportDir == null) return;
 		}
-		appendStatus("exportAll: exported main settings to " + mainOutFile.toString());
+		appendStatus("exported main settings to " + mainOutFile.toString());
 
 		final Intent intent = new Intent(GlobalConstants.ACTION_EXPORT_SETTINGS);
-		intent.putExtra(GlobalConstants.EXTRA_FILE, mainOutFile.getAbsolutePath());
+		intent.putExtra(GlobalConstants.EXTRA_FILE, exportDir.getAbsolutePath());
 		sendBroadcast(intent);
 	}
 }

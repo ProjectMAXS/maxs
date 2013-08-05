@@ -74,8 +74,8 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 			mLog.e("exportSettings", e);
 			return importExportStatus(e.getMessage());
 		}
-		Intent intent = new Intent(GlobalConstants.ACTION_SAVE_TO_FILE);
-		intent.putExtra(GlobalConstants.EXTRA_FILE, directory + mModuleInformation.getModulePackage() + ".xml");
+		Intent intent = new Intent(GlobalConstants.ACTION_EXPORT_TO_FILE);
+		intent.putExtra(GlobalConstants.EXTRA_FILE, directory + "/" + mModuleInformation.getModulePackage() + ".xml");
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, writer.toString());
 		return intent;
 	}

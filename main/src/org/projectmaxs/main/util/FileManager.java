@@ -54,13 +54,15 @@ public class FileManager {
 		return res;
 	}
 
-	public static void saveToFile(String file, String content) {
+	public static boolean saveToFile(String file, String content) {
+		boolean success = true;
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(file);
 			writer.write(content);
 		} catch (IOException e) {
 			LOG.w("saveToFile", e);
+			success = false;
 		}
 		finally {
 			if (writer != null) {
@@ -68,9 +70,11 @@ public class FileManager {
 					writer.close();
 				} catch (IOException e) {
 					LOG.w("saveToFile", e);
+					success = false;
 				}
 			}
 		}
+		return success;
 	}
 
 	public File getTimestampedSettingsExportDir() throws IOException {

@@ -117,11 +117,14 @@ public class MAXSIntentService extends IntentService {
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_XMPP_STATUS)) {
 
 		}
-		else if (action.equals(GlobalConstants.ACTION_SAVE_TO_FILE)) {
+		else if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
 			String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			if (file == null || content == null) return;
-			FileManager.saveToFile(file, content);
+			boolean saved = FileManager.saveToFile(file, content);
+			if (saved) {
+				ImportExportSettings.appendStatus("exported settings to " + file);
+			}
 		}
 		else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);
