@@ -23,13 +23,10 @@ import java.util.Map.Entry;
 
 import org.projectmaxs.main.database.StatusTable;
 import org.projectmaxs.shared.StatusInformation;
-import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
 
 public class StatusRegistry extends MAXSService.StartStopListener {
-
-	private static final Log LOG = Log.getLog();
 
 	private static StatusRegistry sStatusRegistry;
 
@@ -38,14 +35,11 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 		return sStatusRegistry;
 	}
 
-	private final Context mContext;
-
 	private final Map<String, String> mStatusInformation;
 
 	private final StatusTable mStatusTable;
 
 	private StatusRegistry(Context context) {
-		this.mContext = context;
 		this.mStatusTable = StatusTable.getInstance(context);
 		this.mStatusInformation = mStatusTable.getAll();
 

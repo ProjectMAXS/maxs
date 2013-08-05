@@ -30,7 +30,6 @@ import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.database.ModuleRegistryTable;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.util.Log;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +37,6 @@ import android.content.Intent;
 public class ModuleRegistry {
 
 	private static ModuleRegistry sModuleRegistry;
-	private static final Log LOG = Log.getLog();
 
 	public static synchronized ModuleRegistry getInstance(Context context) {
 		if (sModuleRegistry == null) sModuleRegistry = new ModuleRegistry(context);

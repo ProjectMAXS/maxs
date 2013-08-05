@@ -67,8 +67,4 @@ public class XMPPStatus extends StateChangeListener {
 	public void disconnected(Connection connection) {
 	}
 
-	private void masterJidAvailable() {
-		if (mDesiredStatus.equals(mActiveStatus)) return;
-		setStatus(mDesiredStatus);
-	}
 }

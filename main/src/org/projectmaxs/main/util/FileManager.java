@@ -18,8 +18,9 @@
 package org.projectmaxs.main.util;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.projectmaxs.shared.util.Log;
@@ -55,19 +56,23 @@ public class FileManager {
 	}
 
 	public static boolean saveToFile(String file, String content) {
+		return saveToFile(file, content.getBytes());
+	}
+
+	public static boolean saveToFile(String file, byte[] content) {
 		boolean success = true;
-		FileWriter writer = null;
+		OutputStream os = null;
 		try {
-			writer = new FileWriter(file);
-			writer.write(content);
+			os = new FileOutputStream(file);
+			os.write(content);
 		} catch (IOException e) {
 			LOG.w("saveToFile", e);
 			success = false;
 		}
 		finally {
-			if (writer != null) {
+			if (os != null) {
 				try {
-					writer.close();
+					os.close();
 				} catch (IOException e) {
 					LOG.w("saveToFile", e);
 					success = false;

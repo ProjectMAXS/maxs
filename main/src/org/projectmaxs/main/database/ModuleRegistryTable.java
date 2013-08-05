@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.projectmaxs.main.util.ParcelableUtil;
 import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.util.Log;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,7 +34,6 @@ public class ModuleRegistryTable {
 	private static final String TABLE_NAME = "moduleRegistry";
 	private static final String COLUMN_NAME_MODULE_PACKAGE = "package";
 	private static final String COLUMN_NAME_MODULE_INFORMATION = "information";
-	private static final Log LOG = Log.getLog();
 
 	// @formatter:off
 	public static final String CREATE_TABLE =
