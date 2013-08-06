@@ -194,6 +194,16 @@ public class MainActivity extends Activity {
 							mMAXSLocalService.stopService();
 							break;
 						case Disconnected:
+							String failureReason = null;
+							if (mSettings.getPassword().length() == 0) failureReason = "Password not set or empty";
+							if (mSettings.getJid().length() == 0) failureReason = "JID not set or empty";
+							if (mSettings.getMasterJidCount() == 0) failureReason = "Master JID(s) not configured";
+
+							if (failureReason != null) {
+								mStatusText.setText("Can not connect: " + failureReason);
+								return;
+							}
+
 							LOG.d("onClick: connection button clicked, calling startService");
 							mMAXSLocalService.startService();
 							break;
