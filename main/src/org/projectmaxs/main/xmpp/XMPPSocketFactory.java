@@ -69,7 +69,7 @@ public class XMPPSocketFactory extends SocketFactory {
 		socket.setKeepAlive(false);
 		// Set socket timeout to2 hours, should be more then the ping interval
 		// to avoid Exceptions on read()
-		socket.setSoTimeout(120 * 60 * 100);
+		socket.setSoTimeout(120 * 60 * 1000);
 		socket.setTcpNoDelay(false);
 	}
 }
