@@ -42,15 +42,11 @@ public class XMPPStatus extends StateChangeListener {
 
 	protected void setStatus(String status) {
 		mDesiredStatus = status;
-
-		if (mConnection == null || !mConnection.isAuthenticated() || !mXMPPRoster.isMasterJidAvailable()) return;
-
-		Presence presence = new Presence(Presence.Type.available);
-		presence.setStatus(status);
-		presence.setPriority(24);
-		mConnection.sendPacket(presence);
-
-		mActiveStatus = status;
+		// prevent status form being send, when there is no active connection or
+		// if the status message hasn't changed
+		if (mConnection == null || !mConnection.isAuthenticated() || !mXMPPRoster.isMasterJidAvailable()
+				|| mActiveStatus.equals(mDesiredStatus)) return;
+		sendStatus();
 	}
 
 	@Override
@@ -60,15 +56,18 @@ public class XMPPStatus extends StateChangeListener {
 
 	@Override
 	public void connected(Connection connection) {
-		masterJidAvailable();
+		sendStatus();
 	}
 
 	@Override
 	public void disconnected(Connection connection) {
 	}
 
-	private void masterJidAvailable() {
-		if (mDesiredStatus.equals(mActiveStatus)) return;
-		setStatus(mDesiredStatus);
+	private void sendStatus() {
+		Presence presence = new Presence(Presence.Type.available);
+		presence.setStatus(mDesiredStatus);
+		presence.setPriority(24);
+		mConnection.sendPacket(presence);
+		mActiveStatus = mDesiredStatus;
 	}
 }
