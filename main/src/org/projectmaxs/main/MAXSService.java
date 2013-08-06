@@ -73,14 +73,10 @@ public class MAXSService extends Service {
 		StatusRegistry.getInstanceAndInit(this);
 
 		// Start the service the connection was previously established
-		if (Settings.getInstance(this).getConnectionState()) startService();
-		sIsRunning = true;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		sIsRunning = false;
+		if (Settings.getInstance(this).getServiceState()) {
+			LOG.d("onCreate: previous connectin state was running, calling startService");
+			startService();
+		}
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -99,18 +95,20 @@ public class MAXSService extends Service {
 		LOG.d("onStartCommand(): action=" + action);
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
+			sIsRunning = true;
 			mXMPPService.connect();
-			Settings.getInstance(this).setConnectionState(true);
+			Settings.getInstance(this).setServiceState(true);
 			for (StartStopListener listener : sStartStopListeners)
 				listener.onServiceStart(this);
 			return START_STICKY;
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
 			mXMPPService.disconnect();
-			Settings.getInstance(this).setConnectionState(false);
+			Settings.getInstance(this).setServiceState(false);
 			for (StartStopListener listener : sStartStopListeners)
 				listener.onServiceStop(this);
 			stopSelf(startId);
+			sIsRunning = false;
 			return START_NOT_STICKY;
 		}
 		else if (action.equals(Constants.ACTION_NETWORK_STATUS_CHANGED)) {

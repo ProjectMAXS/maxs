@@ -13,6 +13,7 @@ import org.projectmaxs.main.util.XMPPUtil;
 import org.projectmaxs.main.xmpp.XMPPService;
 import org.projectmaxs.main.xmpp.XMPPService.State;
 import org.projectmaxs.shared.activities.EditTextWatcher;
+import org.projectmaxs.shared.util.Log;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -30,7 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	/** Called when the activity is first created. */
+
+	private static final Log LOG = Log.getLog();
 
 	private boolean serviceWasNotConnectedBefore = true;
 	private MAXSService mMAXSLocalService = null;
@@ -192,6 +194,7 @@ public class MainActivity extends Activity {
 							mMAXSLocalService.stopService();
 							break;
 						case Disconnected:
+							LOG.d("onClick: connection button clicked, calling startService");
 							mMAXSLocalService.startService();
 							break;
 						default:
@@ -203,7 +206,10 @@ public class MainActivity extends Activity {
 			});
 			mConnButton.setEnabled(true);
 
-			if (mSettings.connectOnMainScreen()) mMAXSLocalService.startService();
+			if (mSettings.connectOnMainScreen() && MAXSService.isRunning()) {
+				LOG.d("connectOnMainScreen enabled and service not running, calling startService");
+				mMAXSLocalService.startService();
+			}
 		}
 
 		@Override
