@@ -249,6 +249,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 			mConnectionConfiguration.setSecurityMode(securityMode);
 
 			mConnectionConfiguration.setReconnectionAllowed(false);
+			mConnectionConfiguration.setSendPresence(false);
 		}
 
 		return mConnectionConfiguration;
