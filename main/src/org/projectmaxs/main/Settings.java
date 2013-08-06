@@ -67,7 +67,9 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	// App settings
 	private final String DEBUG_LOG;
 	private final String XMPP_DEBUG;
+	private final String DEBUG_NETWORK;
 	private final String CONNECT_ON_MAIN_SCREEN;
+	private final String LAST_ACTIVE_NETWORK;
 
 	private final Set<String> XMPP_CONNECTION_SETTINGS;
 
@@ -95,6 +97,8 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		MANUAL_SERVICE_SETTINGS_SERVICE = context.getString(R.string.pref_manual_service_settings_service_key);
 		XMPP_STREAM_COMPRESSION = context.getString(R.string.pref_xmpp_stream_compression_key);
 		XMPP_STREAM_ENCYPTION = context.getString(R.string.pref_xmpp_stream_encryption_key);
+		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
+		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
 
 		XMPP_CONNECTION_SETTINGS = new HashSet<String>(Arrays.asList(new String[] { JID, PASSWORD,
 				MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST, MANUAL_SERVICE_SETTINGS_PORT,
@@ -198,6 +202,18 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	public boolean isDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
+	}
+
+	public void setLastActiveNetwork(String network) {
+		mSharedPreferences.edit().putString(LAST_ACTIVE_NETWORK, network).commit();
+	}
+
+	public String getLastActiveNetwork() {
+		return mSharedPreferences.getString(LAST_ACTIVE_NETWORK, "");
+	}
+
+	public boolean isNetworkDebugLogEnabled() {
+		return mSharedPreferences.getBoolean(DEBUG_NETWORK, false);
 	}
 
 	public Log.LogSettings getLogSettings() {

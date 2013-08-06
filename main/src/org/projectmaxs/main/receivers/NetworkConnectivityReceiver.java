@@ -32,16 +32,13 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 	private static final Log LOG = Log.getLog();
 
-	private static String sLastActiveNetworkType = null;
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Settings settings = Settings.getInstance(context);
 
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-		// TODO networkDebugLogs
-		if (settings.isDebugLogEnabled() && false) {
+		if (settings.isNetworkDebugLogEnabled()) {
 			for (NetworkInfo networkInfo : cm.getAllNetworkInfo())
 				log(networkInfo);
 		}
@@ -56,27 +53,28 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 		boolean networkTypeChanged;
 
 		if (MAXSService.isRunning()) {
+			String lastActiveNetworkType = settings.getLastActiveNetwork();
 			if (activeNetworkInfo != null) {
 				// we have an active data connection
 				String networkTypeName = activeNetworkInfo.getTypeName();
 				connected = true;
 				networkTypeChanged = false;
-				if (!networkTypeName.equals(sLastActiveNetworkType)) {
-					LOG.d("networkTypeChanged current=" + networkTypeName + " last=" + sLastActiveNetworkType);
-					sLastActiveNetworkType = networkTypeName;
+				if (!networkTypeName.equals(lastActiveNetworkType)) {
+					LOG.d("networkTypeChanged current=" + networkTypeName + " last=" + lastActiveNetworkType);
+					settings.setLastActiveNetwork(networkTypeName);
 					networkTypeChanged = true;
 				}
 			}
 			else {
 				// we have *no* active data connection
 				connected = false;
-				if (sLastActiveNetworkType != null) {
+				if (lastActiveNetworkType.length() != 0) {
 					networkTypeChanged = true;
 				}
 				else {
 					networkTypeChanged = false;
 				}
-				sLastActiveNetworkType = null;
+				settings.setLastActiveNetwork("");
 			}
 			LOG.d("Broadcasting NETWORK_STATUS_CHANGED connected=" + connected + " changed=" + networkTypeChanged);
 			Intent i = new Intent(Constants.ACTION_NETWORK_STATUS_CHANGED);

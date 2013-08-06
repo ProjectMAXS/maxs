@@ -42,8 +42,10 @@
             android:key="@string/pref_app_debug_log_key"
             android:summary="@string/pref_app_debug_log_help"
             android:title="@string/pref_app_debug_log" />
-        <CheckBoxPreference android:key="@string/pref_app_xmpp_debug_key" android:summary="@string/pref_app_xmpp_debug_help" android:title="@string/pref_app_xmpp_debug" /><CheckBoxPreference android:key="@string/pref_app_connect_on_main_screen_key" android:summary="@string/pref_app_connect_on_main_screen_help" android:title="@string/pref_app_connect_on_main_screen" android:defaultValue="false"/>
-        
+        <CheckBoxPreference android:key="@string/pref_app_xmpp_debug_key" android:summary="@string/pref_app_xmpp_debug_help" android:title="@string/pref_app_xmpp_debug" />
+        <CheckBoxPreference android:key="@string/pref_app_connect_on_main_screen_key" android:summary="@string/pref_app_connect_on_main_screen_help" android:title="@string/pref_app_connect_on_main_screen" android:defaultValue="false"/>
+        <CheckBoxPreference android:key="@string/pref_app_debug_network_key" android:title="@string/pref_app_debug_network" android:summary="@string/pref_app_debug_network_help"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
