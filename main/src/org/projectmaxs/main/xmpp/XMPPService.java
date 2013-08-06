@@ -204,6 +204,12 @@ public class XMPPService {
 		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP_MESSAGE, null, from);
 	}
 
+	/**
+	 * Notifies the StateChangeListeners about the new state and sets mState to
+	 * newState. Does not add a log message.
+	 * 
+	 * @param newState
+	 */
 	private void newState(State newState) {
 		switch (newState) {
 		case Connected:
@@ -373,10 +379,12 @@ public class XMPPService {
 
 	private void scheduleReconnect() {
 		newState(State.WaitingForRetry);
+		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
 		mHandler.removeCallbacks(mReconnectRunnable);
 		mReconnectRunnable = new Runnable() {
 			@Override
 			public void run() {
+				LOG.d("scheduleReconnect: calling tryToConnect");
 				tryToConnect();
 			}
 		};
