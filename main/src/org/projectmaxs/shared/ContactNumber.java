@@ -17,22 +17,35 @@
 
 package org.projectmaxs.shared;
 
+import java.util.List;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ContactNumber implements Parcelable {
 
-	NumberType mNumberType;
-	String mNumber;
+	final String mNumber;
+	final NumberType mNumberType;
+	final boolean mIsPrimary;
+
+	public ContactNumber(String number) {
+		this(NumberType.UNKOWN, number);
+	}
 
 	public ContactNumber(NumberType type, String number) {
-		this.mNumberType = type;
-		this.mNumber = number;
+		mIsPrimary = false;
+		mNumberType = type;
+		mNumber = number;
 	}
 
 	private ContactNumber(Parcel in) {
 		mNumberType = in.readParcelable(NumberType.class.getClassLoader());
 		mNumber = in.readString();
+		mIsPrimary = in.readByte() != 0;
+	}
+
+	public boolean isPrimary() {
+		return mIsPrimary;
 	}
 
 	@Override
@@ -44,6 +57,7 @@ public class ContactNumber implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(mNumberType, flags);
 		dest.writeString(mNumber);
+		dest.writeByte((byte) (mIsPrimary ? 1 : 0));
 	}
 
 	public static final Creator<ContactNumber> CREATOR = new Creator<ContactNumber>() {
@@ -61,7 +75,7 @@ public class ContactNumber implements Parcelable {
 	};
 
 	static enum NumberType implements Parcelable {
-		MOBILE, HOME, WORK;
+		MOBILE, HOME, WORK, UNKOWN;
 
 		@Override
 		public int describeContents() {
@@ -86,5 +100,23 @@ public class ContactNumber implements Parcelable {
 			}
 
 		};
+	}
+
+	@Override
+	public String toString() {
+		return "ContactNumber number=" + mNumber + " type=" + mNumberType + " primary=" + mIsPrimary;
+	}
+
+	/**
+	 * 
+	 * @param numbers
+	 * @return the best number, or null if none found
+	 */
+	public static ContactNumber getBest(List<ContactNumber> numbers) {
+		if (numbers.isEmpty()) return null;
+		for (ContactNumber number : numbers)
+			if (number.isPrimary()) return number;
+
+		return numbers.get(0);
 	}
 }

@@ -17,6 +17,7 @@
 
 package org.projectmaxs.shared;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,8 +25,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Contact implements Parcelable {
-	private String mName;
-	private List<ContactNumber> mNumbers;
+	private final String mName;
+	private final List<ContactNumber> mNumbers;
+
+	public Contact(String contactNumber) {
+		mName = "";
+		List<ContactNumber> numbers = new ArrayList<ContactNumber>(1);
+		numbers.add(new ContactNumber(contactNumber));
+		mNumbers = numbers;
+	}
 
 	private Contact(String name, List<ContactNumber> numbers) {
 		this.mName = name;
@@ -67,4 +75,15 @@ public class Contact implements Parcelable {
 
 	};
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Contact ");
+		sb.append("name=" + (mName.equals("") ? "noName" : mName));
+
+		ContactNumber number = ContactNumber.getBest(mNumbers);
+		if (number != null) sb.append(" bestNumber='" + number.toString() + "'");
+
+		return sb.toString();
+	}
 }

@@ -208,7 +208,13 @@ public class MAXSService extends Service {
 		return mRecentContact;
 	}
 
+	public void setRecentContact(final String contactNumber) {
+		// TODO lookup number in contacts service
+		setRecentContact(new Contact(contactNumber));
+	}
+
 	public synchronized void setRecentContact(final Contact contact) {
+		LOG.d("setRecentContact: contact=" + contact);
 		if (mRecentContactRunnable != null) {
 			mHandler.removeCallbacks(mRecentContactRunnable);
 			mRecentContactRunnable = null;
@@ -217,6 +223,7 @@ public class MAXSService extends Service {
 			@Override
 			public void run() {
 				mRecentContact = contact;
+				sendMessage(new Message("Recent contact is " + contact));
 			}
 		};
 		mHandler.postDelayed(mRecentContactRunnable, 5000);

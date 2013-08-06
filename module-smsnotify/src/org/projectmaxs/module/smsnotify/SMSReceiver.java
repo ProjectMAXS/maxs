@@ -49,6 +49,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			LOG.d("Received sms from " + sender + ": " + shortMessage);
 			messages.add(new MessageContent("SMS from " + sender + ": " + shortMessage));
 		}
+		setRecentContact(context, msg.keySet().iterator().next());
 		return messages;
 	}
 

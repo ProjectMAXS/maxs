@@ -56,4 +56,14 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 
 	public abstract List<MessageContent> onReceiveReturnMessages(Context context, Intent intent);
 
+	public void setRecentContact(Context context, String contactNumber) {
+		if (contactNumber == null) {
+			LOG.e("setRecentContact: contactNumber was null");
+			return;
+		}
+		final Intent intent = new Intent(GlobalConstants.ACTION_SET_RECENT_CONTACT);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, contactNumber);
+		context.startService(intent);
+	}
+
 }

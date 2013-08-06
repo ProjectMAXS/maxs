@@ -113,7 +113,8 @@ public class MAXSIntentService extends IntentService {
 			mMAXSLocalService.sendMessage(msg);
 		}
 		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
-
+			String contactNumber = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			mMAXSLocalService.setRecentContact(contactNumber);
 		}
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
