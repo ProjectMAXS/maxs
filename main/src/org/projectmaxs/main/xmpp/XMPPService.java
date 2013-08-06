@@ -214,24 +214,20 @@ public class XMPPService {
 	private void newState(State newState) {
 		switch (newState) {
 		case Connected:
-			for (StateChangeListener l : mStateChangeListeners) {
+			for (StateChangeListener l : mStateChangeListeners)
 				l.connected(mConnection);
-			}
 			break;
 		case Disconnected:
-			for (StateChangeListener l : mStateChangeListeners) {
+			for (StateChangeListener l : mStateChangeListeners)
 				l.disconnected(mConnection);
-			}
 			break;
 		case Connecting:
-			for (StateChangeListener l : mStateChangeListeners) {
+			for (StateChangeListener l : mStateChangeListeners)
 				l.connecting();
-			}
 			break;
 		case Disconnecting:
-			for (StateChangeListener l : mStateChangeListeners) {
+			for (StateChangeListener l : mStateChangeListeners)
 				l.disconnecting();
-			}
 			break;
 		default:
 			break;
@@ -323,7 +319,7 @@ public class XMPPService {
 			}
 		} catch (XMPPException e) {
 			LOG.e("tryToConnect: connection configuration failed", e);
-			newState(State.Disconnected);
+			mState = State.Disconnected;
 			return;
 		}
 
@@ -340,7 +336,7 @@ public class XMPPService {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
 				LOG.e("tryToConnect: login failed", e);
-				newState(State.Disconnected);
+				mState = State.Disconnected;
 				return;
 			}
 		}

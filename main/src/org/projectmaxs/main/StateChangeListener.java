@@ -27,6 +27,13 @@ public class StateChangeListener {
 	public void connected(Connection connection) {
 	}
 
+	/**
+	 * Called when we got disconnected or when a connection attempt failed. If
+	 * there has never been any established connection, connection will be null.
+	 * 
+	 * @param connection
+	 *            the connection that got disconnected, may be null
+	 */
 	public void disconnected(Connection connection) {
 	}
 
