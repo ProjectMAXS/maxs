@@ -19,11 +19,6 @@ package org.projectmaxs.main;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.util.Constants;
@@ -39,18 +34,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 
 public class MAXSService extends Service {
-
-	private static final ScheduledExecutorService sExecutor = Executors.newScheduledThreadPool(1, new ThreadFactory() {
-		@Override
-		public Thread newThread(Runnable runnable) {
-			Thread t = new Thread(runnable, "MAXS Executor Service");
-			t.setDaemon(true);
-			return t;
-		}
-	});
 
 	private static final Log LOG = Log.getLog();
 	private static boolean sIsRunning = false;
@@ -64,11 +51,11 @@ public class MAXSService extends Service {
 		sStartStopListeners.add(listener);
 	}
 
+	private final Handler mHandler = new Handler();
 	private XMPPService mXMPPService;
 
-	private final Object mRecentContactLock = new Object();
-	private ScheduledFuture<?> mSetRecentContactFeature;
-	private volatile Contact mRecentContact;
+	private Contact mRecentContact;
+	private Runnable mRecentContactRunnable;
 	private CommandTable mCommandTable;
 	private ModuleRegistry mCommandRegistry;
 
@@ -220,29 +207,21 @@ public class MAXSService extends Service {
 	}
 
 	public Contact getRecentContact() {
-		Contact res = null;
-		synchronized (mRecentContactLock) {
-			res = mRecentContact;
-		}
-		return res;
+		return mRecentContact;
 	}
 
-	public void setRecentContact(final Contact contact) {
-		synchronized (mRecentContactLock) {
-			if (mSetRecentContactFeature != null) {
-				mSetRecentContactFeature.cancel(false);
-				mSetRecentContactFeature = null;
-			}
-			mSetRecentContactFeature = sExecutor.schedule(new Runnable() {
-				@Override
-				public void run() {
-					synchronized (mRecentContactLock) {
-						mRecentContact = contact;
-					}
-				}
-			}, 5, TimeUnit.SECONDS);
+	public synchronized void setRecentContact(final Contact contact) {
+		if (mRecentContactRunnable != null) {
+			mHandler.removeCallbacks(mRecentContactRunnable);
+			mRecentContactRunnable = null;
 		}
-
+		mRecentContactRunnable = new Runnable() {
+			@Override
+			public void run() {
+				mRecentContact = contact;
+			}
+		};
+		mHandler.postDelayed(mRecentContactRunnable, 5000);
 	}
 
 	public Contact getContactFromAlias(String alias) {
