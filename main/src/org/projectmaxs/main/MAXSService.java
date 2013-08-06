@@ -229,11 +229,6 @@ public class MAXSService extends Service {
 		return null;
 	}
 
-	public void updateXMPPStatusInformation(String type, String info) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void sendMessage(Message message) {
 		final int id = message.getId();
 		String originIssuerInfo = null;
