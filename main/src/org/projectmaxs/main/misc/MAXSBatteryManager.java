@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.battery;
+package org.projectmaxs.main.misc;
 
 import java.util.ArrayList;
 import java.util.List;

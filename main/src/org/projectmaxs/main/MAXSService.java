@@ -21,9 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.projectmaxs.main.database.CommandTable;
+import org.projectmaxs.main.misc.MAXSBatteryManager;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.main.xmpp.XMPPService;
-import org.projectmaxs.module.battery.MAXSBatteryManager;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
 import org.projectmaxs.shared.GlobalConstants;
