@@ -34,7 +34,7 @@ public class XMPPStatus extends StateChangeListener {
 		xmppRoster.addMasterJidListener(new MasterJidListener() {
 			@Override
 			public void masterJidAvailable() {
-				super.masterJidAvailable();
+				sendStatus();
 			}
 		});
 	}
@@ -43,8 +43,8 @@ public class XMPPStatus extends StateChangeListener {
 		mDesiredStatus = status;
 		// prevent status form being send, when there is no active connection or
 		// if the status message hasn't changed
-		if (mConnection == null || !mConnection.isAuthenticated() || !mXMPPRoster.isMasterJidAvailable()
-				|| (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus))) return;
+		if (!mXMPPRoster.isMasterJidAvailable() || (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus)))
+			return;
 		sendStatus();
 	}
 
@@ -63,6 +63,7 @@ public class XMPPStatus extends StateChangeListener {
 	}
 
 	private void sendStatus() {
+		if (mConnection == null || !mConnection.isAuthenticated()) return;
 		Presence presence = new Presence(Presence.Type.available);
 		presence.setStatus(mDesiredStatus);
 		presence.setPriority(24);
