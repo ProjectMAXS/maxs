@@ -44,7 +44,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 	private final Context mContext;
 	private final BroadcastReceiver mBatteryBroadcastReceiver;
-	private float mLastBatteryPct = -1;
+	private String mLastBatteryPct = "";
 	private int mLastPlugged = -1;
 
 	private MAXSBatteryManager(Context context) {
@@ -80,16 +80,14 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		// intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
 		int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 		int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-		float batteryPct = level / (float) scale;
 
-		String batteryPctStr = maybeFloatToRange(batteryPct, isCharging);
-		String lastBatteryPctStr = maybeFloatToRange(mLastBatteryPct, isCharging);
+		String batteryPct = maybeFloatToRange(level / (float) scale, isCharging);
 
-		if (plugged == mLastPlugged && batteryPctStr.equals(lastBatteryPctStr)) return;
+		if (plugged == mLastPlugged && batteryPct.equals(mLastBatteryPct)) return;
 
 		List<StatusInformation> infos = new ArrayList<StatusInformation>(2);
 		if (plugged != mLastPlugged) infos.add(new StatusInformation("BAT_PLUGGED", getPowerSource(status, plugged)));
-		if (!batteryPctStr.equals(lastBatteryPctStr)) infos.add(new StatusInformation("BAT_PCT", batteryPctStr + '%'));
+		if (!batteryPct.equals(mLastBatteryPct)) infos.add(new StatusInformation("BAT_PCT", batteryPct + '%'));
 
 		mLastBatteryPct = batteryPct;
 		mLastPlugged = plugged;
