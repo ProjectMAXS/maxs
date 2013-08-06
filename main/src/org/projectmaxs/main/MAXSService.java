@@ -143,6 +143,16 @@ public class MAXSService extends Service {
 		// @formatter:on
 	}
 
+	public void startService() {
+		Intent intent = new Intent(Constants.ACTION_START_SERVICE);
+		startService(intent);
+	}
+
+	public void stopService() {
+		Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
+		startService(intent);
+	}
+
 	/**
 	 * args can be also in the place of subCmd if the default subCmd is wanted
 	 * 
@@ -194,26 +204,16 @@ public class MAXSService extends Service {
 		startService(intent);
 	}
 
-	public void startService() {
-		Intent intent = new Intent(Constants.ACTION_START_SERVICE);
-		startService(intent);
-	}
-
-	public void stopService() {
-		Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
-		startService(intent);
-	}
-
-	public Contact getRecentContact() {
+	protected Contact getRecentContact() {
 		return mRecentContact;
 	}
 
-	public void setRecentContact(final String contactNumber) {
+	protected void setRecentContact(final String contactNumber) {
 		// TODO lookup number in contacts service
 		setRecentContact(new Contact(contactNumber));
 	}
 
-	public synchronized void setRecentContact(final Contact contact) {
+	protected synchronized void setRecentContact(final Contact contact) {
 		LOG.d("setRecentContact: contact=" + contact);
 		if (mRecentContactRunnable != null) {
 			mHandler.removeCallbacks(mRecentContactRunnable);
@@ -229,12 +229,12 @@ public class MAXSService extends Service {
 		mHandler.postDelayed(mRecentContactRunnable, 5000);
 	}
 
-	public Contact getContactFromAlias(String alias) {
+	protected Contact getContactFromAlias(String alias) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void sendMessage(Message message) {
+	protected void sendMessage(Message message) {
 		final int id = message.getId();
 		String originIssuerInfo = null;
 		String originId = null;
@@ -263,7 +263,7 @@ public class MAXSService extends Service {
 
 	}
 
-	public void setStatus(String status) {
+	protected void setStatus(String status) {
 		mXMPPService.setStatus(status);
 	}
 
