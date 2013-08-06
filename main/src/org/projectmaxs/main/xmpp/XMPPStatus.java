@@ -28,7 +28,7 @@ public class XMPPStatus extends StateChangeListener {
 
 	private Connection mConnection;
 	private String mActiveStatus = "";
-	private String mDesiredStatus = "";
+	private String mDesiredStatus = null;
 
 	protected XMPPStatus(XMPPRoster xmppRoster) {
 		mXMPPRoster = xmppRoster;
@@ -64,6 +64,8 @@ public class XMPPStatus extends StateChangeListener {
 	}
 
 	private void sendStatus() {
+		if (mDesiredStatus == null) return;
+
 		Presence presence = new Presence(Presence.Type.available);
 		presence.setStatus(mDesiredStatus);
 		presence.setPriority(24);

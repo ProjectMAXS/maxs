@@ -54,6 +54,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	public void newConnection(Connection connection) {
 		mConnection = connection;
 		mRoster = connection.getRoster();
+		mRoster.addRosterListener(this);
 	}
 
 	@Override
