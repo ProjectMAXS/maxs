@@ -30,8 +30,9 @@ import android.net.NetworkInfo;
 
 public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
+	private static final Log LOG = Log.getLog();
+
 	private static String sLastActiveNetworkType = null;
-	private static Log sLog = Log.getLog();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -46,7 +47,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 		NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
 		if (activeNetworkInfo != null) {
-			sLog.d("ActiveNetworkInfo follows:");
+			LOG.d("ActiveNetworkInfo follows:");
 			log(activeNetworkInfo);
 		}
 
@@ -60,6 +61,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 				connected = true;
 				networkTypeChanged = false;
 				if (!networkTypeName.equals(sLastActiveNetworkType)) {
+					LOG.d("networkTypeChanged current=" + networkTypeName + " last=" + sLastActiveNetworkType);
 					sLastActiveNetworkType = networkTypeName;
 					networkTypeChanged = true;
 				}
@@ -75,6 +77,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 				}
 				sLastActiveNetworkType = null;
 			}
+			LOG.d("Broadcasting NETWORK_STATUS_CHANGED connected=" + connected + "changed=" + networkTypeChanged);
 			Intent i = new Intent(Constants.ACTION_NETWORK_STATUS_CHANGED);
 			i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
 			i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);
@@ -84,7 +87,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 	private static void log(NetworkInfo networkInfo) {
 		// @formatter:off
-		sLog.d("networkName=" + networkInfo.getTypeName() 
+		LOG.d("networkName=" + networkInfo.getTypeName()
 				+ " available=" + networkInfo.isAvailable()
 				+ ", connected=" + networkInfo.isConnected()
 				+ ", connectedOrConnecting=" + networkInfo.isConnectedOrConnecting()
