@@ -30,7 +30,7 @@ public abstract class EditTextWatcher implements OnFocusChangeListener, TextView
 	private boolean mInUse = false;
 
 	public EditTextWatcher(EditText editText) {
-		this.mEditText = editText;
+		mEditText = editText;
 		editText.setOnFocusChangeListener(this);
 		editText.setOnEditorActionListener(this);
 	}

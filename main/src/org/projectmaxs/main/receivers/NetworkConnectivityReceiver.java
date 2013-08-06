@@ -40,7 +40,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-		if (settings.isDebugLogEnabled()) {
+		// TODO networkDebugLogs
+		if (settings.isDebugLogEnabled() && false) {
 			for (NetworkInfo networkInfo : cm.getAllNetworkInfo())
 				log(networkInfo);
 		}

@@ -31,7 +31,10 @@ import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.util.Log;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -52,6 +55,8 @@ public class MAXSService extends Service {
 	}
 
 	private final Handler mHandler = new Handler();
+	private ConnectivityManager mConnectivityManager;
+
 	private XMPPService mXMPPService;
 
 	private Contact mRecentContact;
@@ -68,6 +73,7 @@ public class MAXSService extends Service {
 		mXMPPService = new XMPPService(this);
 		mCommandTable = CommandTable.getInstance(this);
 		mCommandRegistry = ModuleRegistry.getInstance(this);
+		mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		MAXSBatteryManager.init(this);
 		StatusRegistry.getInstanceAndInit(this);
@@ -202,6 +208,12 @@ public class MAXSService extends Service {
 		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
 		intent.setClassName(modulePackage, modulePackage + ".ModuleService");
 		startService(intent);
+	}
+
+	public boolean dataConnectionAvailable() {
+		NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
+		if (activeNetwork == null) return false;
+		return activeNetwork.isConnected();
 	}
 
 	protected Contact getRecentContact() {

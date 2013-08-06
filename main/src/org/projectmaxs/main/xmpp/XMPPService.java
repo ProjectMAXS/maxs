@@ -234,11 +234,11 @@ public class XMPPService {
 		mState = newState;
 	}
 
-	private synchronized void changeState(State newState) {
-		LOG.d("changeState: mState=" + mState + ", newState=" + newState);
+	private synchronized void changeState(State desiredState) {
+		LOG.d("changeState: mState=" + mState + ", desiredState=" + desiredState);
 		switch (mState) {
 		case Connected:
-			switch (newState) {
+			switch (desiredState) {
 			case Connected:
 				break;
 			case Disconnected:
@@ -253,21 +253,21 @@ public class XMPPService {
 			}
 			break;
 		case Disconnected:
-			switch (newState) {
+			switch (desiredState) {
 			case Disconnected:
 				break;
 			case Connected:
 				tryToConnect();
 				break;
 			case WaitingForNetwork:
-				newState(newState);
+				newState(State.WaitingForNetwork);
 				break;
 			default:
 				throw new IllegalStateException();
 			}
 			break;
 		case WaitingForNetwork:
-			switch (newState) {
+			switch (desiredState) {
 			case WaitingForNetwork:
 				break;
 			case Connected:
@@ -281,28 +281,39 @@ public class XMPPService {
 			}
 			break;
 		case WaitingForRetry:
-			switch (newState) {
+			switch (desiredState) {
 			case WaitingForNetwork:
+				newState(State.WaitingForNetwork);
 				break;
 			case Connected:
-				newState(State.Connected);
+				tryToConnect();
 				break;
 			case Disconnected:
-				newState(newState);
+				newState(State.Disconnected);
 				break;
 			default:
 				throw new IllegalStateException();
 			}
 			break;
 		default:
-			LOG.w("changeState: Unkown state change combination. mState=" + mState + ", newState=" + newState);
+			LOG.w("changeState: Unkown state change combination. mState=" + mState + ", desiredState=" + desiredState);
 			// TODO enable this
 			// throw new IllegalStateException();
 		}
 	}
 
-	private void tryToConnect() {
+	private synchronized void tryToConnect() {
 		LOG.d("tryToConnect");
+		if (isConnected()) {
+			LOG.d("tryToConnect: already connected, nothing to do here");
+			return;
+		}
+		if (!mMAXSLocalService.dataConnectionAvailable()) {
+			LOG.d("tryToConnect: no data connection available");
+			newState(State.WaitingForNetwork);
+			return;
+		}
+
 		newState(State.Connecting);
 
 		XMPPConnection con;
@@ -354,19 +365,16 @@ public class XMPPService {
 
 		LOG.d("tryToConnect: successfully connected \\o/");
 		newState(State.Connected);
-
-		// Send the first presence *after* all StateChangeListeners have been
-		// called, in order to do their work prior the user's firsts knowledge
-		// of the online/available state
-		mConnection.sendPacket(new Presence(Presence.Type.available));
 	}
 
-	private void disconnectConnection() {
+	private synchronized void disconnectConnection() {
 		if (mConnection != null) {
 			if (mConnection.isConnected()) {
 				newState(State.Disconnecting);
 				// TODO better disconnect handle (e.g. in extra thread)
+				LOG.d("disconnectConnection: disconnect start");
 				mConnection.disconnect();
+				LOG.d("disconnectConnection: disconnect stop");
 			}
 			newState(State.Disconnected);
 		}

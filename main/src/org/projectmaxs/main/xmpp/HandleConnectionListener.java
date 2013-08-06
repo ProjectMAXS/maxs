@@ -24,14 +24,13 @@ import org.projectmaxs.shared.util.Log;
 
 public class HandleConnectionListener extends StateChangeListener {
 
-	private static Log sLog = Log.getLog();
+	private static final Log LOG = Log.getLog();
 
 	private XMPPService mXMPPService;
 	private ConnectionListener mConnectionListener;
 
 	public HandleConnectionListener(XMPPService xmppService, Settings settings) {
 		this.mXMPPService = xmppService;
-		sLog.initialize(settings.getLogSettings());
 	}
 
 	@Override
@@ -60,6 +59,7 @@ public class HandleConnectionListener extends StateChangeListener {
 
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
+				LOG.w("connectionClosedOnError");
 				mXMPPService.reconnect();
 			}
 
