@@ -35,7 +35,7 @@ public class Contact implements Parcelable {
 		mNumbers = numbers;
 	}
 
-	private Contact(String name, List<ContactNumber> numbers) {
+	public Contact(String name, List<ContactNumber> numbers) {
 		this.mName = name;
 		this.mNumbers = numbers;
 	}
