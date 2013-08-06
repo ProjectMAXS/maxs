@@ -138,23 +138,33 @@ public class MainActivity extends Activity {
 				StateChangeListener listener = new StateChangeListener() {
 					@Override
 					public void connected(Connection con) {
-						mStatusText.setText("connected");
+						status("connected");
 					}
 
 					@Override
 					public void disconnected(Connection con) {
-						mStatusText.setText("disconnected");
+						status("disconnected");
 					}
 
 					@Override
 					public void connecting() {
-						mStatusText.setText("connecting");
+						status("connecting");
 					}
 
 					@Override
 					public void disconnecting() {
-						mStatusText.setText("disconnecting");
+						status("disconnecting");
 					}
+
+					private void status(final String status) {
+						MainActivity.this.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								mStatusText.setText(status);
+							}
+						});
+					}
+
 				};
 				mMAXSLocalService.getXMPPService().addListener(listener);
 				State state = mMAXSLocalService.getXMPPService().getCurrentState();
