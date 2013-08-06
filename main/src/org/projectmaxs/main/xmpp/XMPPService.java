@@ -74,6 +74,7 @@ public class XMPPService {
 		addListener(new HandleChatPacketListener(this, mSettings));
 		addListener(new HandleConnectionListener(this, mSettings));
 		addListener(new HandleMessagesListener(this, maxsLocalService));
+		addListener(new XMPPPingManager(this));
 
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
@@ -355,7 +356,6 @@ public class XMPPService {
 		}
 
 		// TODO handle offline messages as StateChangeListener
-		// TODO ping failed listener as StateChangeListener
 
 		LOG.d("tryToConnect: successfully connected \\o/");
 		newState(State.Connected);
