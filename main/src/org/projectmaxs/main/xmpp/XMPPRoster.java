@@ -31,7 +31,6 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.main.Settings;
-import org.projectmaxs.main.StateChangeListener;
 
 public class XMPPRoster extends StateChangeListener implements RosterListener {
 

@@ -34,7 +34,6 @@ import org.jivesoftware.smackx.MultipleRecipientManager;
 import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.main.MAXSService.CommandOrigin;
 import org.projectmaxs.main.Settings;
-import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.database.MessagesTable;
 import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;

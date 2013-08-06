@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main;
+package org.projectmaxs.main.xmpp;
 
 import org.jivesoftware.smack.Connection;
 

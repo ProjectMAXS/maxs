@@ -20,7 +20,6 @@ package org.projectmaxs.main.xmpp;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
-import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.shared.util.Log;
 
 public class XMPPPingManager extends StateChangeListener implements PingFailedListener {

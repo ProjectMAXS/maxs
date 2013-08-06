@@ -19,7 +19,6 @@ package org.projectmaxs.main.xmpp;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smackx.XHTMLManager;
-import org.projectmaxs.main.StateChangeListener;
 
 public class HandleXHTML extends StateChangeListener {
 

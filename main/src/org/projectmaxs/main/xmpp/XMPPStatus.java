@@ -19,7 +19,6 @@ package org.projectmaxs.main.xmpp;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.packet.Presence;
-import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.xmpp.XMPPRoster.MasterJidListener;
 
 public class XMPPStatus extends StateChangeListener {

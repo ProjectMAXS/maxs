@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.jivesoftware.smack.Connection;
 import org.projectmaxs.main.MAXSService.CommandOrigin;
-import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.database.CommandTable.Entry;
 import org.projectmaxs.main.database.MessagesTable;

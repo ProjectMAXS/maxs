@@ -23,7 +23,6 @@ import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.projectmaxs.main.Settings;
-import org.projectmaxs.main.StateChangeListener;
 
 public class HandleChatPacketListener extends StateChangeListener {
 

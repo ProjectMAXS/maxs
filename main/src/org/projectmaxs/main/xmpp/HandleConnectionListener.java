@@ -20,7 +20,6 @@ package org.projectmaxs.main.xmpp;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionListener;
 import org.projectmaxs.main.Settings;
-import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.shared.util.Log;
 
 public class HandleConnectionListener extends StateChangeListener {
