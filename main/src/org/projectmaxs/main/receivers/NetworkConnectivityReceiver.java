@@ -66,13 +66,13 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			}
 			else {
 				// we have *no* active data connection
+				connected = false;
 				if (sLastActiveNetworkType != null) {
 					networkTypeChanged = true;
 				}
 				else {
 					networkTypeChanged = false;
 				}
-				connected = false;
 				sLastActiveNetworkType = null;
 			}
 			Intent i = new Intent(Constants.ACTION_NETWORK_STATUS_CHANGED);

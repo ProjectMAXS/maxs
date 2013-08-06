@@ -39,10 +39,13 @@ import org.projectmaxs.main.database.MessagesTable;
 import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;
 
+import android.os.Handler;
+
 public class XMPPService {
 	private static final Log LOG = Log.getLog();
 
 	private final Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
+	private final Handler mHandler = new Handler();
 	private final Settings mSettings;
 	private final MAXSService mMAXSLocalService;
 	private final MessagesTable mMessagesTable;
@@ -51,6 +54,7 @@ public class XMPPService {
 	private State mState = State.Disconnected;
 	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
+	private Runnable mReconnectRunnable;
 
 	/**
 	 * Creates a new XMPPService instance. The XMPP connection will be
@@ -166,13 +170,16 @@ public class XMPPService {
 	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
 		// first disconnect if the network type changed and we are now connected
 		// with an now unusable network
-		if (networkTypeChanged && isConnected()) {
+		if ((networkTypeChanged && isConnected()) || !connected) {
 			disconnect();
 		}
 
 		// if we have an connected network but we are not connected, connect
 		if (connected && !isConnected()) {
 			connect();
+		}
+		else if (!connected) {
+			newState(State.WaitingForNetwork);
 		}
 	}
 
@@ -198,23 +205,29 @@ public class XMPPService {
 	}
 
 	private void newState(State newState) {
-		for (StateChangeListener l : mStateChangeListeners) {
-			switch (newState) {
-			case Connected:
+		switch (newState) {
+		case Connected:
+			for (StateChangeListener l : mStateChangeListeners) {
 				l.connected(mConnection);
-				break;
-			case Disconnected:
-				l.disconnected(mConnection);
-				break;
-			case Connecting:
-				l.connecting();
-				break;
-			case Disconnecting:
-				l.disconnecting();
-				break;
-			default:
-				break;
 			}
+			break;
+		case Disconnected:
+			for (StateChangeListener l : mStateChangeListeners) {
+				l.disconnected(mConnection);
+			}
+			break;
+		case Connecting:
+			for (StateChangeListener l : mStateChangeListeners) {
+				l.connecting();
+			}
+			break;
+		case Disconnecting:
+			for (StateChangeListener l : mStateChangeListeners) {
+				l.disconnecting();
+			}
+			break;
+		default:
+			break;
 		}
 		mState = newState;
 	}
@@ -303,7 +316,6 @@ public class XMPPService {
 			}
 		} catch (XMPPException e) {
 			LOG.e("tryToConnect: connection configuration failed", e);
-			// TODO try reconnect
 			newState(State.Disconnected);
 			return;
 		}
@@ -312,7 +324,7 @@ public class XMPPService {
 			con.connect();
 		} catch (XMPPException e) {
 			LOG.e("tryToConnect: Exception from connect()", e);
-			newState(State.Disconnected);
+			scheduleReconnect();
 			return;
 		}
 
@@ -357,6 +369,18 @@ public class XMPPService {
 			}
 			newState(State.Disconnected);
 		}
+	}
+
+	private void scheduleReconnect() {
+		newState(State.WaitingForRetry);
+		mHandler.removeCallbacks(mReconnectRunnable);
+		mReconnectRunnable = new Runnable() {
+			@Override
+			public void run() {
+				tryToConnect();
+			}
+		};
+		mHandler.postDelayed(mReconnectRunnable, 10000);
 	}
 
 }
