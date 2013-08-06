@@ -11,6 +11,7 @@ import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.StateChangeListener;
 import org.projectmaxs.main.util.XMPPUtil;
 import org.projectmaxs.main.xmpp.XMPPService;
+import org.projectmaxs.main.xmpp.XMPPService.State;
 import org.projectmaxs.shared.activities.EditTextWatcher;
 
 import android.app.Activity;
@@ -134,7 +135,7 @@ public class MainActivity extends Activity {
 			mMAXSLocalService = binder.getService();
 
 			if (serviceWasNotConnectedBefore) {
-				mMAXSLocalService.getXMPPService().addListener(new StateChangeListener() {
+				StateChangeListener listener = new StateChangeListener() {
 					@Override
 					public void connected(Connection con) {
 						mStatusText.setText("connected");
@@ -154,7 +155,19 @@ public class MainActivity extends Activity {
 					public void disconnecting() {
 						mStatusText.setText("disconnecting");
 					}
-				});
+				};
+				mMAXSLocalService.getXMPPService().addListener(listener);
+				State state = mMAXSLocalService.getXMPPService().getCurrentState();
+				switch (state) {
+				case Connected:
+					listener.connected(null);
+					break;
+				case Disconnected:
+					listener.disconnected(null);
+					break;
+				default:
+					break;
+				}
 				serviceWasNotConnectedBefore = false;
 			}
 
