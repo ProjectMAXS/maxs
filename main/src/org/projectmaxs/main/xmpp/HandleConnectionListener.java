@@ -26,11 +26,12 @@ public class HandleConnectionListener extends StateChangeListener {
 
 	private static final Log LOG = Log.getLog();
 
-	private XMPPService mXMPPService;
+	private final XMPPService mXMPPService;
+
 	private ConnectionListener mConnectionListener;
 
 	public HandleConnectionListener(XMPPService xmppService, Settings settings) {
-		this.mXMPPService = xmppService;
+		mXMPPService = xmppService;
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class HandleConnectionListener extends StateChangeListener {
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
 				LOG.w("connectionClosedOnError");
-				mXMPPService.reconnect();
+				mXMPPService.scheduleReconnect();
 			}
 
 			@Override

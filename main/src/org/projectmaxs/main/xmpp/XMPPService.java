@@ -204,6 +204,20 @@ public class XMPPService {
 		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP_MESSAGE, null, from);
 	}
 
+	protected void scheduleReconnect() {
+		newState(State.WaitingForRetry);
+		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
+		mHandler.removeCallbacks(mReconnectRunnable);
+		mReconnectRunnable = new Runnable() {
+			@Override
+			public void run() {
+				LOG.d("scheduleReconnect: calling tryToConnect");
+				tryToConnect();
+			}
+		};
+		mHandler.postDelayed(mReconnectRunnable, 10000);
+	}
+
 	/**
 	 * Notifies the StateChangeListeners about the new state and sets mState to
 	 * newState. Does not add a log message.
@@ -379,19 +393,4 @@ public class XMPPService {
 			newState(State.Disconnected);
 		}
 	}
-
-	private void scheduleReconnect() {
-		newState(State.WaitingForRetry);
-		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
-		mHandler.removeCallbacks(mReconnectRunnable);
-		mReconnectRunnable = new Runnable() {
-			@Override
-			public void run() {
-				LOG.d("scheduleReconnect: calling tryToConnect");
-				tryToConnect();
-			}
-		};
-		mHandler.postDelayed(mReconnectRunnable, 10000);
-	}
-
 }
