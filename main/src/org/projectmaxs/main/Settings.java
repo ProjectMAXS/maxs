@@ -218,6 +218,9 @@ public class Settings implements OnSharedPreferenceChangeListener {
 			}
 			mConnectionConfiguration.setSocketFactory(XMPPSocketFactory.getInstance());
 
+			// TODO AndroidConnectionConfiguration also contains this code
+			// but hopefully it will be obsolete once we integrate Ge0rg's
+			// memorizing trust manager.
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				mConnectionConfiguration.setTruststoreType("AndroidCAStore");
 				mConnectionConfiguration.setTruststorePassword(null);
