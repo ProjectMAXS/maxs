@@ -8,7 +8,9 @@
             android:summary="@string/pref_manual_service_settings_help"
             android:title="@string/pref_manual_service_settings" />
 
-        <PreferenceScreen android:dependency="@string/pref_manual_service_settings_key" android:title="@string/pref_manual_service_settings">
+        <PreferenceScreen
+            android:dependency="@string/pref_manual_service_settings_key"
+            android:title="@string/pref_manual_service_settings" >
             <EditTextPreference
                 android:key="@string/pref_manual_service_settings_host_key"
                 android:summary="@string/pref_manual_service_settings_host_help"
@@ -42,10 +44,26 @@
             android:key="@string/pref_app_debug_log_key"
             android:summary="@string/pref_app_debug_log_help"
             android:title="@string/pref_app_debug_log" />
-        <CheckBoxPreference android:key="@string/pref_app_xmpp_debug_key" android:summary="@string/pref_app_xmpp_debug_help" android:title="@string/pref_app_xmpp_debug" />
-        <CheckBoxPreference android:key="@string/pref_app_connect_on_main_screen_key" android:summary="@string/pref_app_connect_on_main_screen_help" android:title="@string/pref_app_connect_on_main_screen" android:defaultValue="false"/>
-        <CheckBoxPreference android:key="@string/pref_app_debug_network_key" android:title="@string/pref_app_debug_network" android:summary="@string/pref_app_debug_network_help"/>
+        <CheckBoxPreference
+            android:key="@string/pref_app_xmpp_debug_key"
+            android:summary="@string/pref_app_xmpp_debug_help"
+            android:title="@string/pref_app_xmpp_debug" />
+        <CheckBoxPreference
+            android:key="@string/pref_app_debug_network_key"
+            android:summary="@string/pref_app_debug_network_help"
+            android:title="@string/pref_app_debug_network" />
 
+        <PreferenceScreen android:title="@string/pref_app_start_stop_options" >
+            <CheckBoxPreference
+                android:key="@string/pref_app_connect_on_boot_completed_key"
+                android:summary="@string/pref_app_connect_on_boot_completed_help"
+                android:title="@string/pref_app_connect_on_boot_completed" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/pref_app_connect_on_main_screen_key"
+                android:summary="@string/pref_app_connect_on_main_screen_help"
+                android:title="@string/pref_app_connect_on_main_screen" />
+        </PreferenceScreen>
     </PreferenceCategory>
 
 </PreferenceScreen>

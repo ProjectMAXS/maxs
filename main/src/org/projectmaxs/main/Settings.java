@@ -70,6 +70,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private final String DEBUG_NETWORK;
 	private final String CONNECT_ON_MAIN_SCREEN;
 	private final String LAST_ACTIVE_NETWORK;
+	private final String CONNECT_ON_BOOT_COMPLETED;
 
 	private final Set<String> XMPP_CONNECTION_SETTINGS;
 
@@ -107,6 +108,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 		CONNECT_ON_MAIN_SCREEN = context.getString(R.string.pref_app_connect_on_main_screen_key);
+		CONNECT_ON_BOOT_COMPLETED = context.getString(R.string.pref_app_connect_on_boot_completed_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -198,6 +200,10 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	public boolean connectOnMainScreen() {
 		return mSharedPreferences.getBoolean(CONNECT_ON_MAIN_SCREEN, false);
+	}
+
+	public boolean connectOnBootCompleted() {
+		return mSharedPreferences.getBoolean(CONNECT_ON_BOOT_COMPLETED, false);
 	}
 
 	public boolean isDebugLogEnabled() {

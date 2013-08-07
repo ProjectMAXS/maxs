@@ -9,6 +9,7 @@
     <string name="pref_manual_service_settings_service_key">MANUAL_SERVICE_SETTINGS_SERVICE_KEY</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
     <string name="pref_app_connect_on_main_screen_key">CONNECT_ON_MAIN_SCREEN</string>
+    <string name="pref_app_connect_on_boot_completed_key">CONNECT_ON_BOOT_COMPLETED</string>
     <string name="pref_app_xmpp_debug_key">XMPP_DEBUG</string>
     <string name="pref_app_debug_network_key">DEBUG_NETWORK</string>
     <string name="pref_app_last_active_network_key">LAST_ACTIVE_NETWORK</string>
