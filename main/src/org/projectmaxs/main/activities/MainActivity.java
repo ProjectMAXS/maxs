@@ -110,6 +110,7 @@ public class MainActivity extends Activity {
 		if (!mSettings.getPassword().equals("")) mPassword.setText(mSettings.getPassword());
 
 		mConnButton.setEnabled(false);
+		mConnButton.requestFocus();
 	}
 
 	@Override
