@@ -317,7 +317,6 @@ public class XMPPService {
 	}
 
 	private synchronized void tryToConnect() {
-		LOG.d("tryToConnect");
 		if (isConnected()) {
 			LOG.d("tryToConnect: already connected, nothing to do here");
 			return;
@@ -347,6 +346,7 @@ public class XMPPService {
 			return;
 		}
 
+		LOG.d("tryToConnect: connect");
 		try {
 			con.connect();
 		} catch (XMPPException e) {
