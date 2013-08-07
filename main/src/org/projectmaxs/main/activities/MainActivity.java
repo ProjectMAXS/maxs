@@ -141,29 +141,30 @@ public class MainActivity extends Activity {
 				StateChangeListener listener = new StateChangeListener() {
 					@Override
 					public void connected(Connection con) {
-						status("connected");
+						status("connected", MainActivity.this.getString(R.string.disconnect));
 					}
 
 					@Override
 					public void disconnected(Connection con) {
-						status("disconnected");
+						status("disconnected", MainActivity.this.getString(R.string.connect));
 					}
 
 					@Override
 					public void connecting() {
-						status("connecting");
+						status("connecting", null);
 					}
 
 					@Override
 					public void disconnecting() {
-						status("disconnecting");
+						status("disconnecting", null);
 					}
 
-					private void status(final String status) {
+					private void status(final String status, final String connButtonText) {
 						MainActivity.this.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								mStatusText.setText(status);
+								if (connButtonText != null) mConnButton.setText(connButtonText);
 							}
 						});
 					}
@@ -215,6 +216,13 @@ public class MainActivity extends Activity {
 				}
 
 			});
+
+			if (mMAXSLocalService.getXMPPService().isConnected()) {
+				mConnButton.setText(getString(R.string.disconnect));
+			}
+			else {
+				mConnButton.setText(getString(R.string.connect));
+			}
 			mConnButton.setEnabled(true);
 
 			if (mSettings.connectOnMainScreen() && MAXSService.isRunning()) {
