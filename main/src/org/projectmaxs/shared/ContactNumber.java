@@ -19,6 +19,8 @@ package org.projectmaxs.shared;
 
 import java.util.List;
 
+import org.projectmaxs.shared.util.ParcelUtil;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -41,7 +43,7 @@ public class ContactNumber implements Parcelable {
 	private ContactNumber(Parcel in) {
 		mNumberType = in.readParcelable(NumberType.class.getClassLoader());
 		mNumber = in.readString();
-		mIsPrimary = in.readByte() != 0;
+		mIsPrimary = ParcelUtil.readBool(in);
 	}
 
 	public boolean isPrimary() {
@@ -57,7 +59,7 @@ public class ContactNumber implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(mNumberType, flags);
 		dest.writeString(mNumber);
-		dest.writeByte((byte) (mIsPrimary ? 1 : 0));
+		ParcelUtil.writeBool(dest, mIsPrimary);
 	}
 
 	public static final Creator<ContactNumber> CREATOR = new Creator<ContactNumber>() {
