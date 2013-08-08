@@ -31,7 +31,6 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		android.os.Debug.waitForDebugger();
 		Message message = onReceiveReturnMessages(context, intent);
 		if (message == null) {
 			LOG.e("onReceive: message was null");

@@ -53,7 +53,6 @@ public class ModuleService extends MAXSModuleIntentService {
 	public void onCreate() {
 		super.onCreate();
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
-		android.os.Debug.waitForDebugger();
 	}
 
 	@Override
