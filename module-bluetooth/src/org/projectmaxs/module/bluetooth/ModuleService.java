@@ -18,7 +18,7 @@
 package org.projectmaxs.module.bluetooth;
 
 import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.MessageContent;
+import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
@@ -53,19 +53,19 @@ public class ModuleService extends MAXSModuleIntentService {
 	public void onCreate() {
 		super.onCreate();
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
+		android.os.Debug.waitForDebugger();
 	}
 
 	@Override
-	public MessageContent handleCommand(Command command) {
-		if (mAdapter == null)
-			return new MessageContent("BT Adapter is null. Maybe this device does not support bluetooth?");
+	public Message handleCommand(Command command) {
+		if (mAdapter == null) return new Message("BT Adapter is null. Maybe this device does not support bluetooth?");
 
-		MessageContent msg;
+		Message msg;
 		if (command.getSubCommand().equals("status")) {
-			msg = new MessageContent("Bluetooth is enabled: " + mAdapter.isEnabled());
+			msg = new Message("Bluetooth is enabled: " + mAdapter.isEnabled());
 		}
 		else {
-			msg = new MessageContent("Unkown command");
+			msg = new Message("Unkown command");
 		}
 		return msg;
 	}

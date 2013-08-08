@@ -102,6 +102,7 @@ public class MAXSIntentService extends IntentService {
 	}
 
 	private void handleIntent(Intent intent) {
+
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {

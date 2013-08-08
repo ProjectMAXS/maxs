@@ -20,7 +20,6 @@ package org.projectmaxs.sharedmodule;
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;
 
 import android.app.IntentService;
@@ -63,23 +62,25 @@ public abstract class MAXSModuleIntentService extends IntentService {
 		mLog.d("onHandleIntent");
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
-		MessageContent msgContent = handleCommand(command);
-		if (msgContent == null) return;
+		Message message = handleCommand(command);
+		if (message == null) return;
 
-		sendMessage(msgContent, command.getId());
+		// make sure the id is set
+		sendMessage(message, command.getId());
 	}
 
-	public void sendMessage(MessageContent msgContent) {
-		sendMessage(msgContent, Message.NO_ID);
+	public void sendMessage(Message message, int cmdId) {
+		message.setId(cmdId);
+		sendMessage(message);
 	}
 
-	public void sendMessage(MessageContent msgContent, int commandId) {
+	public void sendMessage(Message message) {
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, new Message(msgContent, commandId));
+		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 		startService(replyIntent);
 	}
 
-	public abstract MessageContent handleCommand(Command command);
+	public abstract Message handleCommand(Command command);
 
 	public abstract void initLog(Context context);
 

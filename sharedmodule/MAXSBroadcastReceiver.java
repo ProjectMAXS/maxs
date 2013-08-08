@@ -17,11 +17,8 @@
 
 package org.projectmaxs.sharedmodule;
 
-import java.util.List;
-
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.MessageContent;
 import org.projectmaxs.shared.util.Log;
 
 import android.content.BroadcastReceiver;
@@ -35,26 +32,18 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		android.os.Debug.waitForDebugger();
-		List<MessageContent> messages = onReceiveReturnMessages(context, intent);
-		if (messages == null) {
-			LOG.e("onReceive: messages was null");
-			return;
-		}
-		if (messages.isEmpty()) {
-			LOG.e("onReceive: messages is empty");
+		Message message = onReceiveReturnMessages(context, intent);
+		if (message == null) {
+			LOG.e("onReceive: message was null");
 			return;
 		}
 
-		for (MessageContent mc : messages) {
-			Message message = new Message(mc);
-
-			Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
-			replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-			context.startService(replyIntent);
-		}
+		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
+		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
+		context.startService(replyIntent);
 	}
 
-	public abstract List<MessageContent> onReceiveReturnMessages(Context context, Intent intent);
+	public abstract Message onReceiveReturnMessages(Context context, Intent intent);
 
 	public void setRecentContact(Context context, String contactNumber) {
 		if (contactNumber == null) {

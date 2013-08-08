@@ -18,7 +18,7 @@
 package org.projectmaxs.module.bluetoothadmin;
 
 import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.MessageContent;
+import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
@@ -59,35 +59,34 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	@Override
-	public MessageContent handleCommand(Command command) {
-		if (mAdapter == null)
-			return new MessageContent("BT Adapter is null. Maybe this device does not support bluetooth?");
+	public Message handleCommand(Command command) {
+		if (mAdapter == null) return new Message("BT Adapter is null. Maybe this device does not support bluetooth?");
 
-		MessageContent msg;
+		Message msg;
 		final String subCommand = command.getSubCommand();
 		final int commandId = command.getId();
 		if ("enable".equals(subCommand)) {
 			boolean res = mAdapter.enable();
 			if (res) {
-				msg = new MessageContent("Enabling bluetooth adapter");
+				msg = new Message("Enabling bluetooth adapter");
 				registerBluetoothReceiver(commandId);
 			}
 			else {
-				msg = new MessageContent("Failed to enable bluetooth adapter");
+				msg = new Message("Failed to enable bluetooth adapter");
 			}
 		}
 		else if ("disable".equals(subCommand)) {
 			boolean res = mAdapter.disable();
 			if (res) {
-				msg = new MessageContent("Disabling bluetooth adapter");
+				msg = new Message("Disabling bluetooth adapter");
 				registerBluetoothReceiver(commandId);
 			}
 			else {
-				msg = new MessageContent("Failed to disable bluetooth adapter");
+				msg = new Message("Failed to disable bluetooth adapter");
 			}
 		}
 		else {
-			msg = new MessageContent("Unkown command");
+			msg = new Message("Unkown command");
 		}
 		return msg;
 	}
@@ -135,8 +134,8 @@ public class ModuleService extends MAXSModuleIntentService {
 			String state = stateToString(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1));
 			String prevState = stateToString(intent.getIntExtra(BluetoothAdapter.EXTRA_PREVIOUS_STATE, -1));
 			LOG.d("Bluetooth adapter changed state from '" + prevState + "' to '" + state + "'");
-			MessageContent msgContent = new MessageContent("Bluetooth adapter changed state from '" + prevState
-					+ "' to '" + state + "'");
+			Message msgContent = new Message("Bluetooth adapter changed state from '" + prevState + "' to '" + state
+					+ "'");
 			ModuleService.this.sendMessage(msgContent, mCommandId);
 			ModuleService.this.unregisterReceiver(this);
 		}

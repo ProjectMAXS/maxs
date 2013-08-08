@@ -17,12 +17,10 @@
 
 package org.projectmaxs.module.smsnotify;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.projectmaxs.shared.MessageContent;
+import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.sharedmodule.MAXSBroadcastReceiver;
 
@@ -35,7 +33,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	private static final Log LOG = Log.getLog();
 
 	@Override
-	public List<MessageContent> onReceiveReturnMessages(Context context, Intent intent) {
+	public Message onReceiveReturnMessages(Context context, Intent intent) {
 		LOG.d("onReceiveReturnMessages()");
 		Map<String, String> msg = RetrieveMessages(intent);
 		if (msg == null) {
@@ -43,14 +41,14 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			return null;
 		}
 
-		List<MessageContent> messages = new ArrayList<MessageContent>(msg.size());
+		Message message = new Message("New SMS Received");
 		for (String sender : msg.keySet()) {
 			String shortMessage = msg.get(sender);
 			LOG.d("Received sms from " + sender + ": " + shortMessage);
-			messages.add(new MessageContent("SMS from " + sender + ": " + shortMessage));
+			message.add("SMS from " + sender + ": " + shortMessage);
 		}
 		setRecentContact(context, msg.keySet().iterator().next());
-		return messages;
+		return message;
 	}
 
 	/**

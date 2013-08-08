@@ -17,39 +17,62 @@
 
 package org.projectmaxs.shared;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.projectmaxs.shared.messagecontent.AbstractElement;
+import org.projectmaxs.shared.messagecontent.Text;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Message implements Parcelable {
 	public static final int NO_ID = -1;
 
-	private final int mId;
-	private final MessageContent message;
-
-	public Message(MessageContent msg) {
-		this(msg, NO_ID);
-	}
-
-	public Message(MessageContent msg, int id) {
-		this.mId = id;
-		this.message = msg;
-	}
+	private final List<AbstractElement> mElements = new LinkedList<AbstractElement>();
+	private int mId;
 
 	public Message(String string) {
 		this(string, NO_ID);
 	}
 
 	public Message(String string, int id) {
-		this.mId = id;
-		this.message = new MessageContent(string);
+		mId = id;
+		mElements.add(new Text(string));
+	}
+
+	public void setId(int id) {
+		mId = id;
 	}
 
 	public int getId() {
 		return mId;
 	}
 
-	public MessageContent geMessage() {
-		return message;
+	public Message add(String string) {
+		AbstractElement last = mElements.get(mElements.size() - 1);
+		if (last instanceof Text) {
+			((Text) last).add(string);
+		}
+		else {
+			mElements.add(new Text(string));
+		}
+
+		return this;
+	}
+
+	public String getRawContent() {
+		StringBuilder sb = new StringBuilder();
+		Iterator<AbstractElement> it = mElements.iterator();
+		while (it.hasNext())
+			sb.append(it.next().getStringBuilder());
+		return sb.toString();
+	}
+
+	private Message(Parcel in) {
+		mId = in.readInt();
+		in.readList(mElements, getClass().getClassLoader());
 	}
 
 	@Override
@@ -60,16 +83,14 @@ public class Message implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(mId);
-		dest.writeParcelable(message, flags);
+		dest.writeList(mElements);
 	}
 
 	public static final Creator<Message> CREATOR = new Creator<Message>() {
 
 		@Override
 		public Message createFromParcel(Parcel source) {
-			int id = source.readInt();
-			MessageContent msg = source.readParcelable(MessageContent.class.getClassLoader());
-			return new Message(msg, id);
+			return new Message(source);
 		}
 
 		@Override

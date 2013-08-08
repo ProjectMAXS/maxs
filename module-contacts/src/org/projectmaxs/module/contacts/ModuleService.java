@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.projectmaxs.shared.Command;
 import org.projectmaxs.shared.Contact;
-import org.projectmaxs.shared.MessageContent;
+import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
 import org.projectmaxs.shared.aidl.IContactsModuleService;
 import org.projectmaxs.shared.util.Log;
@@ -63,13 +63,13 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	@Override
-	public MessageContent handleCommand(Command command) {
-		MessageContent msg;
+	public Message handleCommand(Command command) {
+		Message msg;
 		if (command.getSubCommand().equals("lookup")) {
-			msg = new MessageContent("TODO contact lookup");
+			msg = new Message("TODO contact lookup");
 		}
 		else {
-			msg = new MessageContent("Unkown command");
+			msg = new Message("Unkown command");
 		}
 		return msg;
 	}
