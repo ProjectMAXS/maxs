@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.projectmaxs.module.filewrite"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
+    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
+    <uses-sdk android:minSdkVersion="8"/>
+    <application android:label="@string/app_name">
+        <activity android:name=".activities.InfoAndSettings" android:exported="true"/>
+        <receiver android:name=".ModuleReceiver"
+            android:label="TODO" android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.REGISTER"/>
+                <action android:name="org.projectmaxs.EXPORT_SETTINGS"/>
+                <action android:name="org.projectmaxs.IMPORT_SETTINGS"/>
+            </intent-filter>
+        </receiver>
+        <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+            </intent-filter>
+        </service>
+        <service android:name=".FileWriteService" android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.WRITE_BYTES_TO_FILE"/>
+                <action android:name="org.projectmaxs.WRITE_STREAM_TO_FILE"/>
+            </intent-filter>
+        </service>
+        <service android:name=".IncomingFileTransferService" android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.INCOMING_FILETRANSFER"/>
+            </intent-filter>
+        </service>
+    </application>
+</manifest> 

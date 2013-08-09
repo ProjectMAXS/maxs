@@ -17,10 +17,13 @@
 
 package org.projectmaxs.main.activities;
 
+import java.io.CharArrayWriter;
 import java.io.File;
+import java.io.Writer;
 
 import org.projectmaxs.main.R;
 import org.projectmaxs.main.Settings;
+import org.projectmaxs.main.misc.ImportExportSettingsManager;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.main.util.FileManager;
 import org.projectmaxs.shared.GlobalConstants;
@@ -63,11 +66,15 @@ public class ImportExportSettings extends Activity {
 		File mainOutFile = null;
 		File exportDir = null;
 		try {
-			exportDir = FileManager.getInstance(this).getTimestampedSettingsExportDir();
+			exportDir = FileManager.getTimestampedSettingsExportDir();
 			appendStatus("set export directory to " + exportDir.getCanonicalPath());
 			mainOutFile = new File(exportDir, Constants.MAIN_PACKAGE + ".xml");
-			SharedPreferencesUtil.exportToFile(Settings.getInstance(this).getSharedPreferences(), mainOutFile,
+			Writer writer = new CharArrayWriter();
+			SharedPreferencesUtil.export(Settings.getInstance(this).getSharedPreferences(), writer,
 					Settings.DO_NOT_EXPORT);
+			ImportExportSettingsManager.getInstance(this)
+					.exportToFile(mainOutFile.getAbsolutePath(), writer.toString());
+
 		} catch (Exception e) {
 			LOG.e("exportAll: exception", e);
 			appendStatus("exception " + e.getMessage());

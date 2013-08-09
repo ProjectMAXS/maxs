@@ -18,33 +18,20 @@
 package org.projectmaxs.main.util;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Date;
 
 import org.projectmaxs.shared.util.Log;
 
-import android.content.Context;
 import android.os.Environment;
 
 public class FileManager {
 
 	private static final Log LOG = Log.getLog();
-	private static FileManager sFileManager = null;
 
-	private final Context mContext;
-	private final File mMAXSExternalStorageDirectory = new File(Environment.getExternalStorageDirectory(), "MAXS");
-	private final File mMAXSSettingsDirectory = new File(mMAXSExternalStorageDirectory, "Settings");
-
-	private FileManager(Context context) {
-		mContext = context;
-	}
-
-	public static synchronized FileManager getInstance(Context context) {
-		if (sFileManager == null) sFileManager = new FileManager(context);
-		return sFileManager;
-	}
+	private static final File mMAXSExternalStorageDirectory = new File(Environment.getExternalStorageDirectory(),
+			"MAXS");
+	private static final File mMAXSSettingsDirectory = new File(mMAXSExternalStorageDirectory, "Settings");
 
 	public static File createFile(String file) throws IOException {
 		File res = new File(file);
@@ -55,34 +42,7 @@ public class FileManager {
 		return res;
 	}
 
-	public static boolean saveToFile(String file, String content) {
-		return saveToFile(file, content.getBytes());
-	}
-
-	public static boolean saveToFile(String file, byte[] content) {
-		boolean success = true;
-		OutputStream os = null;
-		try {
-			os = new FileOutputStream(file);
-			os.write(content);
-		} catch (IOException e) {
-			LOG.w("saveToFile", e);
-			success = false;
-		}
-		finally {
-			if (os != null) {
-				try {
-					os.close();
-				} catch (IOException e) {
-					LOG.w("saveToFile", e);
-					success = false;
-				}
-			}
-		}
-		return success;
-	}
-
-	public File getTimestampedSettingsExportDir() throws IOException {
+	public static File getTimestampedSettingsExportDir() throws IOException {
 		String dateString = Constants.ISO8601_DATE_FORMAT.format(new Date());
 		dateString = dateString.replace(':', '-');
 		File timestampedDir = new File(mMAXSSettingsDirectory, dateString);
