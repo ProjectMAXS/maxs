@@ -1,0 +1,100 @@
+/*
+    This file is part of Project MAXS.
+
+    MAXS and its modules is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    MAXS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.projectmaxs.main.xmpp;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
+import org.projectmaxs.main.Settings;
+import org.projectmaxs.shared.GlobalConstants;
+import org.projectmaxs.shared.MAXSIncomingFileTransfer;
+import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.util.ParcelFileDescriptorUtil;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.ParcelFileDescriptor;
+
+public class XMPPFileTransfer extends StateChangeListener implements FileTransferListener {
+
+	private static final Log LOG = Log.getLog();
+
+	private final XMPPService mXMPPService;
+	private final Settings mSettings;
+	private final Context mContext;
+
+	private FileTransferManager mFileTransferManager;
+
+	protected XMPPFileTransfer(XMPPService xmppService, Settings settings, Context context) {
+		mXMPPService = xmppService;
+		mSettings = settings;
+		mContext = context;
+	}
+
+	@Override
+	public void fileTransferRequest(FileTransferRequest request) {
+		String requestor = request.getRequestor();
+		if (!mSettings.isMasterJID(requestor)) {
+			LOG.w("File transfer from non master jid " + requestor);
+		}
+
+		IncomingFileTransfer ift = request.accept();
+		InputStream is = null;
+		try {
+			is = ift.recieveFile();
+		} catch (XMPPException e) {
+			LOG.e("fileTransferRequest", e);
+			return;
+		}
+
+		String filename = request.getFileName();
+		long size = request.getFileSize();
+		String description = request.getDescription();
+		ParcelFileDescriptor pfd;
+		try {
+			pfd = ParcelFileDescriptorUtil.pipeFrom(is);
+		} catch (IOException e) {
+			LOG.e("fileTransferRequest", e);
+			return;
+		}
+
+		MAXSIncomingFileTransfer mift = new MAXSIncomingFileTransfer(filename, size, description, pfd, requestor);
+
+		Intent intent = new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mift);
+		mContext.sendBroadcast(intent);
+	}
+
+	@Override
+	public void connected(Connection connection) {
+		mFileTransferManager = new FileTransferManager(connection);
+		mFileTransferManager.addFileTransferListener(this);
+	}
+
+	@Override
+	public void disconnected(Connection connection) {
+		mFileTransferManager.removeFileTransferListener(this);
+		mFileTransferManager = null;
+	}
+}

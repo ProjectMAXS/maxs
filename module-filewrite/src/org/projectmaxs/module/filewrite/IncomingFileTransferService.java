@@ -17,6 +17,11 @@
 
 package org.projectmaxs.module.filewrite;
 
+import java.io.OutputStream;
+
+import org.projectmaxs.shared.GlobalConstants;
+import org.projectmaxs.shared.MAXSIncomingFileTransfer;
+
 import android.app.IntentService;
 import android.content.Intent;
 
@@ -28,7 +33,9 @@ public class IncomingFileTransferService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		// TODO Auto-generated method stub
-	}
+		MAXSIncomingFileTransfer mift = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
 
+		String filename = mift.getFilename();
+		OutputStream os = mift.getOutputStream();
+	}
 }

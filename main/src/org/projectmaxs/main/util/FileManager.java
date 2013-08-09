@@ -21,13 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import android.os.Environment;
+import org.projectmaxs.shared.GlobalConstants;
 
 public class FileManager {
 
-	private static final File mMAXSExternalStorageDirectory = new File(Environment.getExternalStorageDirectory(),
-			"MAXS");
-	private static final File mMAXSSettingsDirectory = new File(mMAXSExternalStorageDirectory, "Settings");
+	private static final File mMAXSSettingsDirectory = new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, "Settings");
 
 	public static File createFile(String file) throws IOException {
 		File res = new File(file);

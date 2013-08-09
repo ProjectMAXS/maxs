@@ -17,6 +17,10 @@
 
 package org.projectmaxs.shared;
 
+import java.io.File;
+
+import android.os.Environment;
+
 public class GlobalConstants {
 	public static final String PACKAGE = "org.projectmaxs";
 	public static final String MAIN_PACKAGE = PACKAGE + ".main";
@@ -48,6 +52,5 @@ public class GlobalConstants {
 	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";
 	public static final String PERMISSON_USE_MODULE = PERMISSON + ".USE_MODULE";
 
-	public static final String DELIVER_COUNT = PACKAGE + ".INTENT_DELIVER_COUNT";
-
+	public static final File MAXS_EXTERNAL_STORAGE = new File(Environment.getExternalStorageDirectory(), "MAXS");
 }
