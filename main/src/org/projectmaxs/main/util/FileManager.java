@@ -21,13 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import org.projectmaxs.shared.util.Log;
-
 import android.os.Environment;
 
 public class FileManager {
-
-	private static final Log LOG = Log.getLog();
 
 	private static final File mMAXSExternalStorageDirectory = new File(Environment.getExternalStorageDirectory(),
 			"MAXS");
@@ -42,18 +38,10 @@ public class FileManager {
 		return res;
 	}
 
-	public static File getTimestampedSettingsExportDir() throws IOException {
+	public static File getTimestampedSettingsExportDir() {
 		String dateString = Constants.ISO8601_DATE_FORMAT.format(new Date());
 		dateString = dateString.replace(':', '-');
 		File timestampedDir = new File(mMAXSSettingsDirectory, dateString);
-		checkCreateDir(mMAXSSettingsDirectory);
-		checkCreateDir(timestampedDir);
 		return timestampedDir;
-	}
-
-	private static void checkCreateDir(File dir) throws IOException {
-		if (!dir.exists()) dir.mkdirs();
-
-		if (!dir.isDirectory()) throw new IOException(dir.getAbsolutePath() + " is not a directory");
 	}
 }

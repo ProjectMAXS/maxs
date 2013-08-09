@@ -23,7 +23,6 @@ import java.util.Queue;
 
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.main.activities.ImportExportSettings;
-import org.projectmaxs.main.misc.ImportExportSettingsManager;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.Message;
 import org.projectmaxs.shared.ModuleInformation;
@@ -123,9 +122,11 @@ public class MAXSIntentService extends IntentService {
 			if (status != null) mMAXSLocalService.setStatus(status);
 		}
 		else if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
-			String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
-			String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			ImportExportSettingsManager.getInstance(this).exportToFile(file, content);
+			final String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
+			final String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			// use the application context here, otherwise we will get leaked
+			// serviceConnection errors.
+			ImportExportSettings.tryToExport(file, content.getBytes(), getApplicationContext());
 		}
 		else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);

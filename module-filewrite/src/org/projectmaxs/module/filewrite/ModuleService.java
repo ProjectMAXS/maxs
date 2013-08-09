@@ -74,13 +74,7 @@ public class ModuleService extends MAXSModuleIntentService {
 
 		@Override
 		public String writeFileBytes(String file, byte[] bytes) throws RemoteException {
-			boolean res = FileManager.saveToFile(file, bytes);
-			if (res) {
-				return "success";
-			}
-			else {
-				return "failure";
-			}
+			return FileManager.saveToFile(file, bytes);
 		}
 
 	};

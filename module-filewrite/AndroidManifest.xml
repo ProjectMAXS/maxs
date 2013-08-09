@@ -20,12 +20,7 @@
         <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
-            </intent-filter>
-        </service>
-        <service android:name=".FileWriteService" android:permission="org.projectmaxs.permission.USE_MODULE">
-            <intent-filter>
-                <action android:name="org.projectmaxs.WRITE_BYTES_TO_FILE"/>
-                <action android:name="org.projectmaxs.WRITE_STREAM_TO_FILE"/>
+                <action android:name="org.projectmaxs.ACTION_BIND_FILEWRITE"/>
             </intent-filter>
         </service>
         <service android:name=".IncomingFileTransferService" android:permission="org.projectmaxs.permission.USE_MODULE">

@@ -17,6 +17,7 @@
 
 package org.projectmaxs.module.filewrite;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,19 +27,24 @@ import org.projectmaxs.shared.util.Log;
 public class FileManager {
 	private static final Log LOG = Log.getLog();
 
-	public static boolean saveToFile(String file, String content) {
+	public static String saveToFile(String file, String content) {
 		return saveToFile(file, content.getBytes());
 	}
 
-	public static boolean saveToFile(String file, byte[] bytes) {
-		boolean success = true;
+	public static String saveToFile(String file, byte[] bytes) {
+		File parentDir = (new File(file)).getParentFile();
+		try {
+			checkCreateDir(parentDir);
+		} catch (IOException e1) {
+			return e1.getMessage();
+		}
 		OutputStream os = null;
 		try {
 			os = new FileOutputStream(file);
 			os.write(bytes);
 		} catch (IOException e) {
 			LOG.w("saveToFile", e);
-			success = false;
+			return e.getMessage();
 		}
 		finally {
 			if (os != null) {
@@ -46,10 +52,16 @@ public class FileManager {
 					os.close();
 				} catch (IOException e) {
 					LOG.w("saveToFile", e);
-					success = false;
+					return e.getMessage();
 				}
 			}
 		}
-		return success;
+		return null;
+	}
+
+	public static void checkCreateDir(File dir) throws IOException {
+		if (!dir.exists()) dir.mkdirs();
+
+		if (!dir.isDirectory()) throw new IOException(dir.getAbsolutePath() + " is not a directory");
 	}
 }
