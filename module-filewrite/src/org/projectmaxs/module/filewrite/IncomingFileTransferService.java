@@ -17,25 +17,78 @@
 
 package org.projectmaxs.module.filewrite;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.MAXSIncomingFileTransfer;
+import org.projectmaxs.shared.Message;
+import org.projectmaxs.shared.util.Log;
 
 import android.app.IntentService;
 import android.content.Intent;
 
 public class IncomingFileTransferService extends IntentService {
 
+	private static final Log LOG = Log.getLog();
+
 	public IncomingFileTransferService() {
 		super("IncomingFileTransferService");
 	}
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+		android.os.Debug.waitForDebugger();
+	}
+
+	@Override
 	protected void onHandleIntent(Intent intent) {
+		LOG.d("onHandleIntent");
 		MAXSIncomingFileTransfer mift = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
 
 		String filename = mift.getFilename();
-		OutputStream os = mift.getOutputStream();
+		InputStream is = mift.getInputStream();
+
+		OutputStream os;
+		try {
+			os = new FileOutputStream(new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, filename));
+		} catch (FileNotFoundException e) {
+			LOG.e("onHandleIntent", e);
+			return;
+		}
+
+		int len;
+		byte[] buf = new byte[1024];
+		try {
+			while ((len = is.read(buf)) > 0) {
+				os.write(buf, 0, len);
+			}
+		} catch (IOException e) {
+			LOG.e("onHandleIntent", e);
+			return;
+		}
+		finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
+			try {
+				os.close();
+			} catch (IOException e) {
+			}
+		}
+
+		sendMessage(new Message("Received file " + filename));
+	}
+
+	public void sendMessage(Message message) {
+		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
+		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
+		startService(replyIntent);
 	}
 }

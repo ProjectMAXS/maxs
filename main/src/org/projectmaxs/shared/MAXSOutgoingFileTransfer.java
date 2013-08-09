@@ -18,8 +18,6 @@
 package org.projectmaxs.shared;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,6 +35,14 @@ public class MAXSOutgoingFileTransfer extends MAXSFileTransfer implements Parcel
 		mCmdId = cmdId;
 	}
 
+	public void setReciver(String jid) {
+		mInvolvedJid = jid;
+	}
+
+	public int getCmdId() {
+		return mCmdId;
+	}
+
 	private MAXSOutgoingFileTransfer(Parcel in) {
 		super(in);
 		mCmdId = in.readInt();
@@ -51,10 +57,6 @@ public class MAXSOutgoingFileTransfer extends MAXSFileTransfer implements Parcel
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 		dest.writeInt(mCmdId);
-	}
-
-	public InputStream getInputStream() {
-		return new FileInputStream(mPfd.getFileDescriptor());
 	}
 
 	public static final Creator<MAXSOutgoingFileTransfer> CREATOR = new Creator<MAXSOutgoingFileTransfer>() {

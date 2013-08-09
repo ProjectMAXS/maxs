@@ -26,17 +26,17 @@ import android.os.Parcelable;
 
 public class MAXSIncomingFileTransfer extends MAXSFileTransfer implements Parcelable {
 
-	final String mInitiator;
-
 	public MAXSIncomingFileTransfer(String filename, long size, String description, ParcelFileDescriptor pdf,
 			String initiator) {
-		super(filename, size, description, pdf);
-		mInitiator = initiator;
+		super(filename, size, description, pdf, initiator);
+	}
+
+	public String getInitiator() {
+		return mInvolvedJid;
 	}
 
 	private MAXSIncomingFileTransfer(Parcel in) {
 		super(in);
-		mInitiator = in.readString();
 	}
 
 	@Override
@@ -47,7 +47,6 @@ public class MAXSIncomingFileTransfer extends MAXSFileTransfer implements Parcel
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeString(mInitiator);
 	}
 
 	public InputStream getOutputStream() {

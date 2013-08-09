@@ -73,6 +73,7 @@ public class XMPPService {
 		addListener(new HandleConnectionListener(this, mSettings));
 		addListener(new HandleMessagesListener(this, maxsLocalService));
 		addListener(new XMPPPingManager(this));
+		addListener(new XMPPFileTransfer(mSettings, maxsLocalService));
 
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);

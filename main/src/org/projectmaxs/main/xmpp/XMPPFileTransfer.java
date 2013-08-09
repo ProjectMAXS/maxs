@@ -19,19 +19,19 @@ package org.projectmaxs.main.xmpp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringBufferInputStream;
 
 import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
-import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.shared.GlobalConstants;
 import org.projectmaxs.shared.MAXSIncomingFileTransfer;
 import org.projectmaxs.shared.util.Log;
 import org.projectmaxs.shared.util.ParcelFileDescriptorUtil;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.ParcelFileDescriptor;
@@ -40,14 +40,12 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	private static final Log LOG = Log.getLog();
 
-	private final XMPPService mXMPPService;
 	private final Settings mSettings;
 	private final Context mContext;
 
 	private FileTransferManager mFileTransferManager;
 
-	protected XMPPFileTransfer(XMPPService xmppService, Settings settings, Context context) {
-		mXMPPService = xmppService;
+	protected XMPPFileTransfer(Settings settings, Context context) {
 		mSettings = settings;
 		mContext = context;
 	}
@@ -58,19 +56,22 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		if (!mSettings.isMasterJID(requestor)) {
 			LOG.w("File transfer from non master jid " + requestor);
 		}
+		request.reject();
+		// IncomingFileTransfer ift = request.accept();
+		// InputStream is = null;
+		// try {
+		// is = ift.recieveFile();
+		// } catch (XMPPException e) {
+		// LOG.e("fileTransferRequest", e);
+		// return;
+		// }
+		//
+		// String filename = request.getFileName();
+		// long size = request.getFileSize();
+		// String description = request.getDescription();
 
-		IncomingFileTransfer ift = request.accept();
-		InputStream is = null;
-		try {
-			is = ift.recieveFile();
-		} catch (XMPPException e) {
-			LOG.e("fileTransferRequest", e);
-			return;
-		}
-
-		String filename = request.getFileName();
-		long size = request.getFileSize();
-		String description = request.getDescription();
+		String content = "foobar";
+		InputStream is = new StringBufferInputStream(content);
 		ParcelFileDescriptor pfd;
 		try {
 			pfd = ParcelFileDescriptorUtil.pipeFrom(is);
@@ -79,11 +80,12 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 			return;
 		}
 
-		MAXSIncomingFileTransfer mift = new MAXSIncomingFileTransfer(filename, size, description, pfd, requestor);
+		MAXSIncomingFileTransfer mift = new MAXSIncomingFileTransfer("foo", content.length(), "bar", pfd, requestor);
 
 		Intent intent = new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mift);
-		mContext.sendBroadcast(intent);
+		ComponentName cn = mContext.startService(intent);
+		LOG.d(cn.toString());
 	}
 
 	@Override

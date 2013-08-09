@@ -17,6 +17,9 @@
 
 package org.projectmaxs.shared;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
@@ -27,6 +30,7 @@ public abstract class MAXSFileTransfer implements Parcelable {
 	protected long mSize;
 	protected String mDescription;
 	protected ParcelFileDescriptor mPfd;
+	protected String mInvolvedJid;
 
 	public MAXSFileTransfer() {
 	}
@@ -43,18 +47,24 @@ public abstract class MAXSFileTransfer implements Parcelable {
 		return mDescription;
 	}
 
-	public MAXSFileTransfer(String filename, long size, String description, ParcelFileDescriptor pdf) {
+	public InputStream getInputStream() {
+		return new FileInputStream(mPfd.getFileDescriptor());
+	}
+
+	public MAXSFileTransfer(String filename, long size, String description, ParcelFileDescriptor pdf, String invovledJid) {
 		mFilename = filename;
 		mSize = size;
 		mDescription = description;
 		mPfd = pdf;
+		mInvolvedJid = invovledJid;
 	}
 
 	protected MAXSFileTransfer(Parcel in) {
 		mFilename = in.readString();
 		mSize = in.readLong();
 		mDescription = in.readString();
-		mPfd = in.readParcelable(null);
+		mPfd = in.readFileDescriptor();
+		mInvolvedJid = in.readString();
 	}
 
 	@Override
@@ -62,6 +72,7 @@ public abstract class MAXSFileTransfer implements Parcelable {
 		dest.writeString(mFilename);
 		dest.writeLong(mSize);
 		dest.writeString(mDescription);
-		dest.writeParcelable(mPfd, flags);
+		mPfd.writeToParcel(dest, flags);
+		dest.writeString(mInvolvedJid);
 	}
 }
