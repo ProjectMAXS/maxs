@@ -17,8 +17,29 @@
 
 package org.projectmaxs.shared.global.util;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class SharedStringUtil {
 	public static String getSubstringAfter(String s, char c) {
 		return s.substring(s.lastIndexOf(c) + 1).trim();
+	}
+
+	public static Set<String> stringToSet(String string) {
+		Set<String> res = new HashSet<String>();
+		if (string != null && !string.equals("")) {
+			res.addAll(Arrays.asList(string.split(" ")));
+		}
+		return res;
+	}
+
+	public static String setToString(Set<String> set) {
+		StringBuilder sb = new StringBuilder();
+		for (String s : set) {
+			sb.append(s);
+			sb.append(" ");
+		}
+		return sb.toString();
 	}
 }

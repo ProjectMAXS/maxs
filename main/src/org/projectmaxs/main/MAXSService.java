@@ -28,6 +28,8 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.maintransport.TransportOrigin;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -78,6 +80,7 @@ public class MAXSService extends Service {
 		}
 	}
 
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) {
 			// The service has been killed by Android and we try to restart
@@ -86,12 +89,14 @@ public class MAXSService extends Service {
 				startService(new Intent(Constants.ACTION_START_SERVICE));
 			}
 			else {
-				LOG.w("onStartCommand() null intent with Gingerbread or higher");
+				LOG.w("onStartCommand() null intent with Gingerbread or lower");
 			}
-			return START_STICKY;
+			// Returning not sticky here, the start service intent will take
+			// care of starting the service sticky
+			return START_NOT_STICKY;
 		}
 		String action = intent.getAction();
-		LOG.d("onStartCommand(): action=" + action);
+		LOG.d("onStartCommand: action=" + action);
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			sIsRunning = true;
@@ -110,7 +115,9 @@ public class MAXSService extends Service {
 			sIsRunning = false;
 			return START_NOT_STICKY;
 		}
-		// TODO everything else
+		else {
+			// TODO illegal state exception
+		}
 		return START_STICKY;
 	}
 
@@ -123,14 +130,6 @@ public class MAXSService extends Service {
 		public MAXSService getService() {
 			return MAXSService.this;
 		}
-	}
-
-	public enum CommandOrigin {
-		// @formatter:off
-		UNKOWN, // If message is not created as response of a command
-		XMPP_MESSAGE,
-		XMPP_IQ
-		// @formatter:on
 	}
 
 	public void startService() {
@@ -158,7 +157,7 @@ public class MAXSService extends Service {
 	 *            information to identify the issuer, e.g. in case of XMPP the
 	 *            issuers (full) JID
 	 */
-	public void performCommand(String command, String subCmd, String args, ComponentName origin, String originId,
+	public void performCommand(String command, String subCmd, String args, TransportOrigin origin, String originId,
 			String issuerInformation) {
 
 		int id = Settings.getInstance(this).getNextCommandId();
@@ -228,7 +227,7 @@ public class MAXSService extends Service {
 		final int id = message.getId();
 		String originIssuerInfo = null;
 		String originId = null;
-		ComponentName origin = null;
+		TransportOrigin origin = null;
 		if (id != Message.NO_ID) {
 			CommandTable.Entry entry = mCommandTable.geEntry(id);
 			originIssuerInfo = entry.mOriginIssuerInfo;
@@ -240,7 +239,16 @@ public class MAXSService extends Service {
 				+ " message=" + message);
 
 		if (origin != null) {
-			// sendMessage(message, originIssuerInfo, originId)
+			Intent intent = origin.getIntentFor();
+			intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
+			intent.putExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO, originIssuerInfo);
+			intent.putExtra(TransportConstants.EXTRA_ORIGIN_ID, originId);
+			ComponentName usedTransport = startService(intent);
+			if (usedTransport == null) {
+				LOG.w("sendMessage: transport not found transportPackage=" + origin.getPackage() + " serviceClass="
+						+ origin.getServiceClass());
+				// TODO remove origin.getPackage() from module registry
+			}
 		}
 		else {
 			// TODO broadcast to all available broadcast transports

@@ -1,0 +1,114 @@
+/*
+    This file is part of Project MAXS.
+
+    MAXS and its modules is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    MAXS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.projectmaxs.transport.xmpp;
+
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.maintransport.TransportInformation;
+import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
+import org.projectmaxs.transport.xmpp.util.Constants;
+import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.Build;
+import android.os.IBinder;
+
+public class TransportService extends Service {
+
+	// @formatter:off
+	public static final TransportInformation TRANSPORT_INFORMATION = new TransportInformation(
+			Constants.PACKAGE,
+			"XMPP Transport",
+			true,
+			new TransportComponent[] {
+					new TransportComponent("Message", Constants.ACTION_SEND_AS_MESSAGE, true),
+					new TransportComponent("IQ", Constants.ACTION_SEND_AS_IQ, false)
+				}
+			);
+	// @formatter:on
+
+	private static final Log LOG = Log.getLog();
+	private static boolean sIsRunning = false;
+
+	public static boolean isRunning() {
+		return sIsRunning;
+	}
+
+	private XMPPService mXMPPService;
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		mXMPPService = XMPPService.getInstance(this);
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent == null) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+				startService(new Intent(TransportConstants.ACTION_START_SERVICE));
+			}
+			else {
+				LOG.w("onStartCommand() null intent with Gingerbread or lower");
+			}
+			// Returning not sticky here, the start service intent will take
+			// care of starting the service sticky
+			return START_NOT_STICKY;
+		}
+
+		boolean stickyStart = true;
+		final String action = intent.getAction();
+		LOG.d("onStartCommand: action=" + action);
+		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+			sIsRunning = true;
+			mXMPPService.connect();
+		}
+		else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
+			mXMPPService.disconnect();
+			stopSelf(startId);
+			sIsRunning = false;
+			stickyStart = false;
+		}
+		else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
+			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			mXMPPService.setStatus(status);
+		}
+		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)) {
+
+		}
+		else if (Constants.ACTION_SEND_AS_IQ.equals(action)) {
+
+		}
+		else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
+
+		}
+		else {
+			throw new IllegalStateException("Unkown intent action: " + action);
+		}
+
+		return stickyStart ? START_STICKY : START_NOT_STICKY;
+	}
+}

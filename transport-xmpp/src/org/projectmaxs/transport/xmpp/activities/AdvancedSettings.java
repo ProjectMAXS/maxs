@@ -15,28 +15,19 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main.util;
+package org.projectmaxs.transport.xmpp.activities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import org.projectmaxs.transport.xmpp.R;
 
-public class ParcelableUtil {
+import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-	public static byte[] marshall(Parcelable parceable) {
-		Parcel parcel = Parcel.obtain();
-		parceable.writeToParcel(parcel, 0);
-		byte[] bytes = parcel.marshall();
-		parcel.recycle();
-		return bytes;
+public class AdvancedSettings extends PreferenceActivity {
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.settings);
 	}
-
-	public static Parcel unmarshall(byte[] bytes) {
-		Parcel parcel = Parcel.obtain();
-		parcel.unmarshall(bytes, 0, bytes.length);
-		// This sh**t took me 2 hours to figure out, thanks to
-		// http://stackoverflow.com/a/1678057/194894
-		parcel.setDataPosition(0);
-		return parcel;
-	}
-
 }

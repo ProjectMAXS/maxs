@@ -1,4 +1,4 @@
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 /*
  This file is part of Project MAXS.
@@ -19,6 +19,7 @@ package org.projectmaxs.transport.xmpp;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionListener;
+import org.projectmaxs.shared.global.util.Log;
 
 public class HandleConnectionListener extends StateChangeListener {
 
@@ -28,7 +29,7 @@ public class HandleConnectionListener extends StateChangeListener {
 
 	private ConnectionListener mConnectionListener;
 
-	public HandleConnectionListener(XMPPService xmppService, Settings settings) {
+	public HandleConnectionListener(XMPPService xmppService) {
 		mXMPPService = xmppService;
 	}
 

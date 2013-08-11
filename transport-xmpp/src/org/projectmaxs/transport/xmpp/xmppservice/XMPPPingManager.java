@@ -15,11 +15,12 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.projectmaxs.shared.global.util.Log;
 
 public class XMPPPingManager extends StateChangeListener implements PingFailedListener {
 

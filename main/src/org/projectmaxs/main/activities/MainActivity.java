@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 		mSettings = Settings.getInstance(this);
 
 		// Views
-		mStartStopButton = (Button) findViewById(R.id.buttonConnect);
+		mStartStopButton = (Button) findViewById(R.id.buttonStartStop);
 
 		mStartStopButton.requestFocus();
 		mStartStopButton.setOnClickListener(new OnClickListener() {

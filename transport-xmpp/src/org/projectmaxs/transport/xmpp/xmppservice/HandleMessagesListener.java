@@ -15,18 +15,17 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.List;
 
 import org.jivesoftware.smack.Connection;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
-
-import android.content.Context;
+import org.projectmaxs.transport.xmpp.database.MessagesTable.Entry;
+import org.projectmaxs.transport.xmpp.util.Constants;
 
 public class HandleMessagesListener extends StateChangeListener {
 	private final MessagesTable mMessagesTable;
-	private final CommandTable mCommandTable;
 	private final XMPPService mXMPPService;
 
 	/**
@@ -34,25 +33,21 @@ public class HandleMessagesListener extends StateChangeListener {
 	 * and are therefore stored in the database for later submission.
 	 * 
 	 */
-	public HandleMessagesListener(XMPPService xmppService, Context context) {
-		mMessagesTable = MessagesTable.getInstance(context);
-		mCommandTable = CommandTable.getInstance(context);
+	public HandleMessagesListener(XMPPService xmppService) {
+		mMessagesTable = MessagesTable.getInstance(xmppService.getContext());
 		mXMPPService = xmppService;
 	}
 
 	@Override
 	public void connected(Connection connection) {
-		List<Message> messages = mMessagesTable.getAndDelete(CommandOrigin.XMPP_MESSAGE);
-		for (Message m : messages) {
-			String originIssuerInfo = null;
-			String originId = null;
-			Entry entry = mCommandTable.geEntry(m.getId());
-			if (entry != null) {
-				originIssuerInfo = entry.mOriginIssuerInfo;
-				originId = entry.mOriginId;
+		List<Entry> entries = mMessagesTable.getAllAndDelete();
+		for (Entry e : entries) {
+			if (Constants.ACTION_SEND_AS_MESSAGE.equals(e.mIntentAction)) {
+				mXMPPService.sendAsMessage(e.mMessage, e.mIssuerInfo, e.mIssuerId);
 			}
-
-			mXMPPService.sendAsMessage(m, originIssuerInfo, originId);
+			else if (Constants.ACTION_SEND_AS_IQ.equals(e.mIntentAction)) {
+				mXMPPService.sendAsIQ(e.mMessage, e.mIssuerInfo, e.mIssuerId);
+			}
 		}
 	};
 }

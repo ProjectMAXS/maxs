@@ -28,18 +28,24 @@ import android.os.Parcelable;
 public class TransportInformation implements Parcelable, Comparable<TransportInformation> {
 	private final String mTransportPackage;
 	private final String mTransportName;
+	private final boolean mSupportsStatus;
 	private final List<TransportComponent> mComponents;
 
-	public TransportInformation(String transportPackage, String transportName) {
+	public TransportInformation(String transportPackage, String transportName, boolean supportsStatus,
+			TransportComponent... components) {
 		mTransportPackage = transportPackage;
 		mTransportName = transportName;
+		mSupportsStatus = supportsStatus;
 		mComponents = new ArrayList<TransportComponent>(2);
+		for (TransportComponent c : components)
+			mComponents.add(c);
 	}
 
 	@SuppressWarnings("unchecked")
 	public TransportInformation(Parcel in) {
 		mTransportPackage = in.readString();
 		mTransportName = in.readString();
+		mSupportsStatus = ParcelUtil.readBool(in);
 		mComponents = in.readArrayList(getClass().getClassLoader());
 	}
 
@@ -61,6 +67,10 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 
 	public String getTransportName() {
 		return mTransportName;
+	}
+
+	public boolean supportsStatus() {
+		return mSupportsStatus;
 	}
 
 	public String toString() {
@@ -89,24 +99,31 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 		return this.mTransportPackage.compareTo(another.mTransportPackage);
 	}
 
-	static class TransportComponent implements Parcelable {
+	public static class TransportComponent implements Parcelable {
 		private final String mName;
-		private final String mClass;
+		private final String mIntentAction;
 		private final boolean mFeatureBroadcast;
-		private final boolean mFeatureStatus;
 
-		public TransportComponent(String name, String cls, boolean broadcast, boolean status) {
+		/**
+		 * 
+		 * @param name
+		 *            the name of the component
+		 * @param intentAction
+		 *            the intent action to use this component
+		 * @param broadcast
+		 *            does this component support broadcast deliveries, that is
+		 *            deliveries without a destination
+		 */
+		public TransportComponent(String name, String intentAction, boolean broadcast) {
 			mName = name;
-			mClass = cls;
+			mIntentAction = intentAction;
 			mFeatureBroadcast = broadcast;
-			mFeatureStatus = status;
 		}
 
 		private TransportComponent(Parcel in) {
 			mName = in.readString();
-			mClass = in.readString();
+			mIntentAction = in.readString();
 			mFeatureBroadcast = ParcelUtil.readBool(in);
-			mFeatureStatus = ParcelUtil.readBool(in);
 		}
 
 		@Override
@@ -117,9 +134,8 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
 			dest.writeString(mName);
-			dest.writeString(mClass);
+			dest.writeString(mIntentAction);
 			ParcelUtil.writeBool(dest, mFeatureBroadcast);
-			ParcelUtil.writeBool(dest, mFeatureStatus);
 		}
 
 		public static final Creator<TransportComponent> CREATOR = new Creator<TransportComponent>() {
@@ -140,16 +156,12 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 			return mName;
 		}
 
-		public String getClassName() {
-			return mClass;
+		public String getIntentAction() {
+			return mIntentAction;
 		}
 
 		public boolean isBroadcastSupported() {
 			return mFeatureBroadcast;
-		}
-
-		public boolean isStatusSupported() {
-			return mFeatureStatus;
 		}
 	}
 

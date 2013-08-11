@@ -67,9 +67,12 @@
         android:background="@android:color/darker_gray" />
 
 <TextView
-    android:id="@+id/statusText"
+    android:id="@+id/advancedSettings"
+    android:text="@string/advancedSettings"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:onClick="openAdvancedSettings" />
     
 </LinearLayout>
 </ScrollView>

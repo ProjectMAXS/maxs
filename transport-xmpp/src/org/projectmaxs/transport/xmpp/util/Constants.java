@@ -17,9 +17,18 @@
 
 package org.projectmaxs.transport.xmpp.util;
 
+import org.projectmaxs.shared.global.GlobalConstants;
+
 public class Constants {
 
-	public static final String PACKAGE = "org.projectmaxs.transport.xmpp";
+	public static final String PACKAGE = GlobalConstants.TRANSPORT_PACKAGE + ".xmpp";
+
+	public static final String ACTION_SEND_AS_MESSAGE = PACKAGE + ".SEND_AS_MESSAGE";
+	public static final String ACTION_SEND_AS_IQ = PACKAGE + ".SEND_AS_IQ";
 	public static final String ACTION_NETWORK_STATUS_CHANGED = PACKAGE + ".NETWORK_STATUS_CHANGED";
+
+	public static final String ACTION_EXTRA = PACKAGE + ".EXTRA";
+	public static final String EXTRA_NETWORK_TYPE_CHANGED = ACTION_EXTRA + "NETWORK_TYPE_CHANGED";
+	public static final String EXTRA_NETWORK_CONNECTED = ACTION_EXTRA + "NETWORK_CONNECTED";
 
 }

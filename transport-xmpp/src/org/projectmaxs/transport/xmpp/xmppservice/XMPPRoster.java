@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -30,6 +30,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.util.StringUtils;
+import org.projectmaxs.transport.xmpp.Settings;
 
 public class XMPPRoster extends StateChangeListener implements RosterListener {
 

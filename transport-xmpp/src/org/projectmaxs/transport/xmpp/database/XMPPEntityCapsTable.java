@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main.database;
+package org.projectmaxs.transport.xmpp.database;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,12 +35,12 @@ public class XMPPEntityCapsTable {
 	public static final String CREATE_TABLE =
 		"CREATE TABLE " +  TABLE_NAME +
 		" (" +
-		 COLUMN_NAME_NODE + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL +
+		 COLUMN_NAME_NODE + XMPPDatabase.TEXT_TYPE + " PRIMARY KEY" + XMPPDatabase.COMMA_SEP +
+		 COLUMN_NAME_INFO + XMPPDatabase.TEXT_TYPE + XMPPDatabase.NOT_NULL +
 		" )";
 	// @formatter:on
 
-	public static final String DELETE_TABLE = MAXSDatabase.DROP_TABLE + TABLE_NAME;
+	public static final String DELETE_TABLE = XMPPDatabase.DROP_TABLE + TABLE_NAME;
 
 	private static XMPPEntityCapsTable sXMPPEntityCapsTable;
 
@@ -52,7 +52,7 @@ public class XMPPEntityCapsTable {
 	private final SQLiteDatabase mDatabase;
 
 	private XMPPEntityCapsTable(Context context) {
-		mDatabase = MAXSDatabase.getInstance(context).getWritableDatabase();
+		mDatabase = XMPPDatabase.getInstance(context).getWritableDatabase();
 	}
 
 	public void addDiscoverInfo(String node, String info) {

@@ -15,37 +15,16 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smackx.XHTMLManager;
 
-public class StateChangeListener {
+public class HandleXHTML extends StateChangeListener {
 
+	@Override
 	public void newConnection(Connection connection) {
-	}
-
-	public void connected(Connection connection) {
-	}
-
-	/**
-	 * Called when we got disconnected or when a connection attempt failed. If
-	 * there has never been any established connection, connection will be null.
-	 * 
-	 * @param connection
-	 *            the connection that got disconnected, may be null
-	 */
-	public void disconnected(Connection connection) {
-	}
-
-	// These callback methods don't get access to the connection instance
-	// because they will be called in the middle of a state change
-
-	public void connecting() {
-
-	}
-
-	public void disconnecting() {
-
+		XHTMLManager.setServiceEnabled(connection, false);
 	}
 
 }

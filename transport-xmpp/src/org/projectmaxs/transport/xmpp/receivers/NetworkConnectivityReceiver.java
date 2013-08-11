@@ -15,12 +15,12 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main.receivers;
+package org.projectmaxs.transport.xmpp.receivers;
 
-import org.projectmaxs.main.MAXSService;
-import org.projectmaxs.main.Settings;
-import org.projectmaxs.main.util.Constants;
-import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.transport.xmpp.Settings;
+import org.projectmaxs.transport.xmpp.TransportService;
+import org.projectmaxs.transport.xmpp.util.Constants;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -52,7 +52,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 		boolean connected;
 		boolean networkTypeChanged;
 
-		if (MAXSService.isRunning()) {
+		if (TransportService.isRunning()) {
 			String lastActiveNetworkType = settings.getLastActiveNetwork();
 			if (activeNetworkInfo != null) {
 				// we have an active data connection

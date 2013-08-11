@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,9 @@ import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.MAXSIncomingFileTransfer;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.ParcelFileDescriptorUtil;
+import org.projectmaxs.transport.xmpp.Settings;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -43,8 +45,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	private FileTransferManager mFileTransferManager;
 
-	protected XMPPFileTransfer(Settings settings, Context context) {
-		mSettings = settings;
+	protected XMPPFileTransfer(Context context) {
+		mSettings = Settings.getInstance(context);
 		mContext = context;
 	}
 

@@ -20,7 +20,7 @@ package org.projectmaxs.main.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.projectmaxs.main.util.ParcelableUtil;
+import org.projectmaxs.shared.global.util.ParcelableUtil;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.content.ContentValues;

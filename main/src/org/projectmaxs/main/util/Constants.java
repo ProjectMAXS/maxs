@@ -28,8 +28,4 @@ public class Constants {
 	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
 	public static final String ACTION_START_SERVICE = MAIN_PACKAGE + ".START_SERVICE";
 	public static final String ACTION_STOP_SERVICE = MAIN_PACKAGE + ".STOP_SERVICE";
-
-	public static final String ACTION_EXTRA = MAIN_PACKAGE + ".EXTRA";
-	public static final String EXTRA_NETWORK_TYPE_CHANGED = ACTION_EXTRA + "NETWORK_TYPE_CHANGED";
-	public static final String EXTRA_NETWORK_CONNECTED = ACTION_EXTRA + "NETWORK_CONNECTED";
 }

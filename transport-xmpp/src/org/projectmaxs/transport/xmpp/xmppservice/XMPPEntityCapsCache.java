@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -29,6 +29,7 @@ import org.jivesoftware.smackx.entitycaps.EntityCapsManager;
 import org.jivesoftware.smackx.entitycaps.cache.EntityCapsPersistentCache;
 import org.jivesoftware.smackx.packet.DiscoverInfo;
 import org.jivesoftware.smackx.provider.DiscoverInfoProvider;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.database.XMPPEntityCapsTable;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

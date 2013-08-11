@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.main.util;
+package org.projectmaxs.transport.xmpp.util;
 
 import org.jivesoftware.smack.util.StringUtils;
 

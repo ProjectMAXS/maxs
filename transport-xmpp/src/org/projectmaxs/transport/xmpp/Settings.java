@@ -27,9 +27,11 @@ import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.Log.LogSettings;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
+import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
 
-import android.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -66,9 +68,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private final String DEBUG_LOG;
 	private final String XMPP_DEBUG;
 	private final String DEBUG_NETWORK;
-	private final String CONNECT_ON_MAIN_SCREEN;
 	private final String LAST_ACTIVE_NETWORK;
-	private final String CONNECT_ON_BOOT_COMPLETED;
 
 	private final Set<String> XMPP_CONNECTION_SETTINGS;
 
@@ -105,8 +105,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
-		CONNECT_ON_MAIN_SCREEN = context.getString(R.string.pref_app_connect_on_main_screen_key);
-		CONNECT_ON_BOOT_COMPLETED = context.getString(R.string.pref_app_connect_on_boot_completed_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -142,7 +140,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	 */
 	public Set<String> getMasterJids() {
 		String s = mSharedPreferences.getString(MASTER_JIDS, "");
-		Set<String> res = StringUtil.stringToSet(s);
+		Set<String> res = SharedStringUtil.stringToSet(s);
 		return res;
 	}
 
@@ -194,14 +192,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	public boolean getServiceState() {
 		return mSharedPreferences.getBoolean(SERVICE_ACTIVE, false);
-	}
-
-	public boolean connectOnMainScreen() {
-		return mSharedPreferences.getBoolean(CONNECT_ON_MAIN_SCREEN, false);
-	}
-
-	public boolean connectOnBootCompleted() {
-		return mSharedPreferences.getBoolean(CONNECT_ON_BOOT_COMPLETED, false);
 	}
 
 	public boolean isDebugLogEnabled() {
@@ -290,7 +280,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private void saveMasterJids(Set<String> newMasterJids) {
 		SharedPreferences.Editor e = mSharedPreferences.edit();
 
-		String masterJids = StringUtil.setToString(newMasterJids);
+		String masterJids = SharedStringUtil.setToString(newMasterJids);
 		e.putString(MASTER_JIDS, masterJids);
 		e.commit();
 	}

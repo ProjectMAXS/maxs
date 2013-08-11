@@ -1,6 +1,7 @@
 package org.projectmaxs.module.sms.activites;
 
-import android.R;
+import org.projectmaxs.module.sms.R;
+
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 

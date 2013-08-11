@@ -15,13 +15,14 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.projectmaxs.transport.xmpp.Settings;
 
 public class HandleChatPacketListener extends StateChangeListener {
 
@@ -29,9 +30,9 @@ public class HandleChatPacketListener extends StateChangeListener {
 	private PacketListener mChatPacketListener;
 	private Settings mSettings;
 
-	public HandleChatPacketListener(XMPPService xmppService, Settings settings) {
-		this.mXMPPService = xmppService;
-		mSettings = settings;
+	public HandleChatPacketListener(XMPPService xmppService) {
+		mXMPPService = xmppService;
+		mSettings = Settings.getInstance(xmppService.getContext());
 	}
 
 	@Override

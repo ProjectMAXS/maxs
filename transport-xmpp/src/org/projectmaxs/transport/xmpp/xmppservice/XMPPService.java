@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,46 +31,55 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
+import org.projectmaxs.transport.xmpp.util.Constants;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 
 public class XMPPService {
 	private static final Log LOG = Log.getLog();
 
+	private static XMPPService sXMPPService;
+
 	private final Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
 	private final Handler mHandler = new Handler();
-	private final Settings mSettings;
-	private final MAXSService mMAXSLocalService;
-	private final MessagesTable mMessagesTable;
-	private final XMPPStatus mXMPPStatus;
 
+	private final Settings mSettings;
+	private final MessagesTable mMessagesTable;
+	private final Context mContext;
+	private final ConnectivityManager mConnectivityManager;
+
+	private XMPPStatus mXMPPStatus;
 	private State mState = State.Disconnected;
 	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
 	private Runnable mReconnectRunnable;
 
-	/**
-	 * Creates a new XMPPService instance. The XMPP connection will be
-	 * automatically resumed if it was previously established
-	 * 
-	 * @param maxsLocalService
-	 */
-	public XMPPService(MAXSService maxsLocalService) {
-		SmackAndroid.init(maxsLocalService);
+	public static synchronized XMPPService getInstance(Context context) {
+		if (sXMPPService == null) sXMPPService = new XMPPService(context);
+		return sXMPPService;
+	}
 
-		XMPPEntityCapsCache.initialize(maxsLocalService);
+	private XMPPService(Context context) {
+		SmackAndroid.init(context);
 
-		mSettings = Settings.getInstance(maxsLocalService);
-		mMAXSLocalService = maxsLocalService;
-		mMessagesTable = MessagesTable.getInstance(maxsLocalService);
+		XMPPEntityCapsCache.initialize(context);
 
-		addListener(new HandleChatPacketListener(this, mSettings));
-		addListener(new HandleConnectionListener(this, mSettings));
-		addListener(new HandleMessagesListener(this, maxsLocalService));
+		mContext = context;
+		mSettings = Settings.getInstance(context);
+		mMessagesTable = MessagesTable.getInstance(context);
+		mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		addListener(new HandleChatPacketListener(this));
+		addListener(new HandleConnectionListener(this));
+		addListener(new HandleMessagesListener(this));
 		addListener(new XMPPPingManager(this));
-		addListener(new XMPPFileTransfer(mSettings, maxsLocalService));
+		addListener(new XMPPFileTransfer(context));
 
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
@@ -115,10 +124,14 @@ public class XMPPService {
 		mXMPPStatus.setStatus(status);
 	}
 
-	public void sendAsMessage(org.projectmaxs.shared.Message message, String originIssuerInfo, String originId) {
+	public Context getContext() {
+		return mContext;
+	}
+
+	protected void sendAsMessage(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			LOG.w("sendAsMessage: Not connected, adding message to DB");
-			mMessagesTable.addMessage(message, CommandOrigin.XMPP_MESSAGE);
+			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo, originId);
 			return;
 		}
 
@@ -159,11 +172,11 @@ public class XMPPService {
 		return;
 	}
 
-	public void sendAsIQ(org.projectmaxs.shared.Message message, String originIssuerInfo, String issuerId) {
+	protected void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String issuerId) {
 		// TODO
 	}
 
-	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
+	protected void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
 		// first disconnect if the network type changed and we are now connected
 		// with an now unusable network
 		if ((networkTypeChanged && isConnected()) || !connected) {
@@ -197,7 +210,8 @@ public class XMPPService {
 			args = sb.toString();
 		}
 		String from = message.getFrom();
-		mMAXSLocalService.performCommand(command, subCmd, args, MAXSService.CommandOrigin.XMPP_MESSAGE, null, from);
+		// TODO mMAXSLocalService.performCommand(command, subCmd, args,
+		// MAXSService.CommandOrigin.XMPP_MESSAGE, null, from);
 	}
 
 	protected void scheduleReconnect() {
@@ -315,11 +329,21 @@ public class XMPPService {
 	}
 
 	private synchronized void tryToConnect() {
+		String failureReason = null;
+		if (mSettings.getPassword().length() == 0) failureReason = "Password not set or empty";
+		if (mSettings.getJid().length() == 0) failureReason = "JID not set or empty";
+		if (mSettings.getMasterJidCount() == 0) failureReason = "Master JID(s) not configured";
+		if (failureReason != null) {
+			LOG.w("tryToConnect: failureReason=" + failureReason);
+			// TODO intent ACTION_SERVICE_STATUS
+			return;
+		}
+
 		if (isConnected()) {
 			LOG.d("tryToConnect: already connected, nothing to do here");
 			return;
 		}
-		if (!mMAXSLocalService.dataConnectionAvailable()) {
+		if (dataConnectionAvailable()) {
 			LOG.d("tryToConnect: no data connection available");
 			newState(State.WaitingForNetwork);
 			return;

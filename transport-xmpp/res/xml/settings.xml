@@ -53,17 +53,6 @@
             android:summary="@string/pref_app_debug_network_help"
             android:title="@string/pref_app_debug_network" />
 
-        <PreferenceScreen android:title="@string/pref_app_start_stop_options" >
-            <CheckBoxPreference
-                android:key="@string/pref_app_connect_on_boot_completed_key"
-                android:summary="@string/pref_app_connect_on_boot_completed_help"
-                android:title="@string/pref_app_connect_on_boot_completed" />
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="@string/pref_app_connect_on_main_screen_key"
-                android:summary="@string/pref_app_connect_on_main_screen_help"
-                android:title="@string/pref_app_connect_on_main_screen" />
-        </PreferenceScreen>
     </PreferenceCategory>
 
 </PreferenceScreen>

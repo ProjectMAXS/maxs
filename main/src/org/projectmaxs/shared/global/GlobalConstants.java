@@ -24,6 +24,7 @@ import android.os.Environment;
 public class GlobalConstants {
 	public static final String PACKAGE = "org.projectmaxs";
 	public static final String MAIN_PACKAGE = PACKAGE + ".main";
+	public static final String TRANSPORT_PACKAGE = PACKAGE + ".transport";
 
 	public static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
 	public static final String ACTION_PERFORM_COMMAND = PACKAGE + ".PERFORM_COMMAND";

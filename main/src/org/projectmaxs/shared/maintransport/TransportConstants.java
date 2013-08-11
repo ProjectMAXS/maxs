@@ -17,6 +17,17 @@
 
 package org.projectmaxs.shared.maintransport;
 
+import org.projectmaxs.shared.global.GlobalConstants;
+
 public class TransportConstants {
+
+	public static final String TRANSPORT_SERVICE = ".TransportService";
+
+	public static final String ACTION_START_SERVICE = GlobalConstants.TRANSPORT_PACKAGE + ".START_SERVICE";
+	public static final String ACTION_STOP_SERVICE = GlobalConstants.TRANSPORT_PACKAGE + ".STOP_SERVICE";
+	public static final String ACTION_SET_STATUS = GlobalConstants.TRANSPORT_PACKAGE + ".SET_STATUS";
+
+	public static final String EXTRA_ORIGIN_ISSUER_INFO = GlobalConstants.TRANSPORT_PACKAGE + ".ORIGIN_ISSUER_INFO";
+	public static final String EXTRA_ORIGIN_ID = GlobalConstants.TRANSPORT_PACKAGE + ".ORIGIN_ID";
 
 }

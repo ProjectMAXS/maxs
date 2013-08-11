@@ -15,11 +15,11 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.packet.Presence;
-import org.projectmaxs.transport.xmpp.XMPPRoster.MasterJidListener;
+import org.projectmaxs.transport.xmpp.xmppservice.XMPPRoster.MasterJidListener;
 
 public class XMPPStatus extends StateChangeListener {
 

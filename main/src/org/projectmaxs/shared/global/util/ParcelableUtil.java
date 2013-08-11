@@ -15,16 +15,28 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp;
+package org.projectmaxs.shared.global.util;
 
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smackx.XHTMLManager;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class HandleXHTML extends StateChangeListener {
+public class ParcelableUtil {
 
-	@Override
-	public void newConnection(Connection connection) {
-		XHTMLManager.setServiceEnabled(connection, false);
+	public static byte[] marshall(Parcelable parceable) {
+		Parcel parcel = Parcel.obtain();
+		parceable.writeToParcel(parcel, 0);
+		byte[] bytes = parcel.marshall();
+		parcel.recycle();
+		return bytes;
+	}
+
+	public static Parcel unmarshall(byte[] bytes) {
+		Parcel parcel = Parcel.obtain();
+		parcel.unmarshall(bytes, 0, bytes.length);
+		// This sh**t took me 2 hours to figure out, thanks to
+		// http://stackoverflow.com/a/1678057/194894
+		parcel.setDataPosition(0);
+		return parcel;
 	}
 
 }
