@@ -69,7 +69,10 @@ public class XMPPEntityCapsTable {
 	public Map<String, String> getDiscoverInfos() {
 		Map<String, String> res = new HashMap<String, String>();
 		Cursor c = mDatabase.query(TABLE_NAME, null, null, null, null, null, null);
-		if (!c.moveToFirst()) return res;
+		if (!c.moveToFirst()) {
+			c.close();
+			return res;
+		}
 
 		do {
 			String info = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INFO));
@@ -82,7 +85,7 @@ public class XMPPEntityCapsTable {
 	}
 
 	public boolean containsNode(String node) {
-		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_NODE + "='" + node + "'", null, null, null, null);
+		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_NODE + "= ?", new String[] { node }, null, null, null);
 		boolean exists = c.moveToFirst();
 		c.close();
 		return exists;

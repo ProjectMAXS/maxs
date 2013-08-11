@@ -68,7 +68,10 @@ public class StatusTable {
 	public Map<String, String> getAll() {
 		Map<String, String> res = new HashMap<String, String>();
 		Cursor c = mDatabase.query(TABLE_NAME, null, null, null, null, null, null);
-		if (!c.moveToFirst()) return res;
+		if (!c.moveToFirst()) {
+			c.close();
+			return res;
+		}
 
 		do {
 			String key = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_KEY));

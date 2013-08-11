@@ -18,6 +18,7 @@
 package org.projectmaxs.transport.xmpp;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
@@ -33,7 +34,7 @@ import android.os.IBinder;
 public class TransportService extends Service {
 
 	// @formatter:off
-	public static final TransportInformation TRANSPORT_INFORMATION = new TransportInformation(
+	public static final TransportInformation sTransportInformation = new TransportInformation(
 			Constants.PACKAGE,
 			"XMPP Transport",
 			true,
@@ -61,7 +62,6 @@ public class TransportService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
 		mXMPPService = XMPPService.getInstance(this);
 	}
 
@@ -96,14 +96,15 @@ public class TransportService extends Service {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mXMPPService.setStatus(status);
 		}
-		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)) {
-
-		}
-		else if (Constants.ACTION_SEND_AS_IQ.equals(action)) {
-
+		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
+			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
+			String originIssuerInfo = intent.getStringExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO);
+			String originId = intent.getStringExtra(TransportConstants.EXTRA_ORIGIN_ID);
+			mXMPPService.send(message, action, originIssuerInfo, originId);
 		}
 		else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
-
+			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			mXMPPService.setStatus(status);
 		}
 		else {
 			throw new IllegalStateException("Unkown intent action: " + action);

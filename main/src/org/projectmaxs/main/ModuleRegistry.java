@@ -28,11 +28,9 @@ import java.util.Set;
 
 import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.database.ModuleRegistryTable;
-import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.content.Context;
-import android.content.Intent;
 
 public class ModuleRegistry {
 
@@ -93,10 +91,6 @@ public class ModuleRegistry {
 
 	public synchronized boolean removeChangeListener(ChangeListener listener) {
 		return mChangeListeners.remove(listener);
-	}
-
-	protected void challengeAllModulesToRegister() {
-		mContext.sendBroadcast(new Intent(GlobalConstants.ACTION_REGISTER));
 	}
 
 	public synchronized List<ModuleInformation> getAllModules() {

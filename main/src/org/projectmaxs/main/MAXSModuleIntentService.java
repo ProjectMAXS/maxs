@@ -22,9 +22,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import org.projectmaxs.main.MAXSService.LocalBinder;
-import org.projectmaxs.main.activities.ImportExportSettings;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.ModuleInformation;
+import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -33,11 +35,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-public class MAXSIntentService extends IntentService {
+public class MAXSModuleIntentService extends IntentService {
 
 	private static final Log LOG = Log.getLog();
 
-	public MAXSIntentService() {
+	public MAXSModuleIntentService() {
 		super("MAXSService");
 	}
 
@@ -101,20 +103,25 @@ public class MAXSIntentService extends IntentService {
 
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
-		if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
-			final String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
-			final String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			// use the application context here, otherwise we will get leaked
-			// serviceConnection errors.
-			ImportExportSettings.tryToExport(file, content.getBytes(), getApplicationContext());
+		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
+			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
+			mModuleRegistry.registerModule(mi);
 		}
-		else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
-			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);
-			if (status == null) return;
-			ImportExportSettings.appendStatus(status);
+		else if (action.equals(GlobalConstants.ACTION_SEND_USER_MESSAGE)) {
+			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
+			mMAXSLocalService.sendMessage(msg);
+		}
+		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
+			String contactNumber = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			mMAXSLocalService.setRecentContact(contactNumber);
+		}
+		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
+			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
+			String status = StatusRegistry.getInstanceAndInit(this).add(info);
+			if (status != null) mMAXSLocalService.setStatus(status);
 		}
 		else {
-			// TODO throw new IllegalStateException();
+			throw new IllegalStateException("MAXSModuleIntentService unkown action: " + action);
 		}
 	}
 }

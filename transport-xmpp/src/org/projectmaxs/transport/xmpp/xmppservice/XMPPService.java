@@ -128,6 +128,19 @@ public class XMPPService {
 		return mContext;
 	}
 
+	public void send(org.projectmaxs.shared.global.Message message, String action, String originIssuerInfo,
+			String originId) {
+		if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)) {
+			sendAsMessage(message, originIssuerInfo, originId);
+		}
+		else if (Constants.ACTION_SEND_AS_IQ.equals(action)) {
+			sendAsIQ(message, originIssuerInfo, originId);
+		}
+		else {
+			throw new IllegalStateException("XMPPService send: unkown action=" + action);
+		}
+	}
+
 	protected void sendAsMessage(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			LOG.w("sendAsMessage: Not connected, adding message to DB");

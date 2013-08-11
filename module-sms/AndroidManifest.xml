@@ -18,7 +18,12 @@
         </receiver>
         <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
-                <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+                <action android:name="org.projectmaxs.transport.START_SERVICE" />
+                <action android:name="org.projectmaxs.transport.STOP_SERVICE" />
+                <action android:name="org.projectmaxs.transport.SET_STATUS" />
+                <action android:name="org.projectmaxs.transport.xmpp.SEND_AS_MESSAGE" />
+                <action android:name="org.projectmaxs.transport.xmpp.SEND_AS_IQ" />
+                <action android:name="org.projectmaxs.transport.xmpp.NETWORK_STATUS_CHANGED" />
             </intent-filter>
         </service>
     </application>

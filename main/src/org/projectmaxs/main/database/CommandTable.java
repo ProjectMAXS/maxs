@@ -95,9 +95,12 @@ public class CommandTable {
 
 	public TransportOrigin getOrigin(int id) {
 		final String[] projection = { COLUMN_NAME_ORIGIN_PACKAGE, COLUMN_NAME_ORIGIN_INTENT_ACTION };
-		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null,
-				null);
-		if (!c.moveToFirst()) return null;
+		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "= ?",
+				new String[] { String.valueOf(id) }, null, null, null);
+		if (!c.moveToFirst()) {
+			c.close();
+			return null;
+		}
 		String pkg = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_PACKAGE));
 		String action = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_INTENT_ACTION));
 		return new TransportOrigin(pkg, action);
@@ -113,8 +116,8 @@ public class CommandTable {
 				COLUMN_NAME_ORIGIN_ID
 				};
 		// @formatter:on
-		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null,
-				null);
+		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "= ?",
+				new String[] { String.valueOf(id) }, null, null, null);
 		if (!c.moveToFirst()) {
 			c.close();
 			return null;
@@ -130,7 +133,8 @@ public class CommandTable {
 	}
 
 	public Entry getFullEntry(int id) {
-		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null, null);
+		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_COMMAND_ID + "= ?",
+				new String[] { String.valueOf(id) }, null, null, null);
 		if (!c.moveToFirst()) {
 			c.close();
 			return null;

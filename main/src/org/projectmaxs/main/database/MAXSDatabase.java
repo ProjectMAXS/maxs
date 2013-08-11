@@ -41,12 +41,14 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 	private static final String[] SQL_CREATE_ENTRIES = new String[] {
 				CommandTable.CREATE_TABLE,
 				ModuleRegistryTable.CREATE_TABLE,
-				StatusTable.CREATE_TABLE
+				StatusTable.CREATE_TABLE,
+				TransportRegistryTable.CREATE_TABLE
 	};
 	private static final String[] SQL_DELETE_ENTRIES = new String[] {
 		CommandTable.DELETE_TABLE,
 		ModuleRegistryTable.DELETE_TABLE,
-		StatusTable.DELETE_TABLE
+		StatusTable.DELETE_TABLE,
+		TransportRegistryTable.DELETE_TABLE
 	};
 	// @formatter:on
 
