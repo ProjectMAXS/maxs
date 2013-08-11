@@ -66,12 +66,12 @@
         android:layout_height="3dp"
         android:background="@android:color/darker_gray" />
 
-<TextView
+<Button
     android:id="@+id/advancedSettings"
     android:text="@string/advancedSettings"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
+    android:textSize="20sp"
     android:onClick="openAdvancedSettings" />
     
 </LinearLayout>

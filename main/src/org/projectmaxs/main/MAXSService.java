@@ -29,6 +29,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.Contact;
 import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportOrigin;
 
 import android.app.Service;
@@ -53,13 +54,18 @@ public class MAXSService extends Service {
 		sStartStopListeners.add(listener);
 	}
 
+	public static void removeStartStopListener(StartStopListener listener) {
+		sStartStopListeners.remove(listener);
+	}
+
 	private final Handler mHandler = new Handler();
 
 	// private ConnectivityManager mConnectivityManager;
 	private Contact mRecentContact;
 	private Runnable mRecentContactRunnable;
 	private CommandTable mCommandTable;
-	private ModuleRegistry mCommandRegistry;
+	private ModuleRegistry mModuleRegistry;
+	private TransportRegistry mTransportRegistry;
 
 	private final IBinder mBinder = new LocalBinder();
 
@@ -68,7 +74,8 @@ public class MAXSService extends Service {
 		super.onCreate();
 		LOG.initialize(Settings.getInstance(this).getLogSettings());
 		mCommandTable = CommandTable.getInstance(this);
-		mCommandRegistry = ModuleRegistry.getInstance(this);
+		mModuleRegistry = ModuleRegistry.getInstance(this);
+		mTransportRegistry = TransportRegistry.getInstance(this);
 
 		MAXSBatteryManager.init(this);
 		StatusRegistry.getInstanceAndInit(this);
@@ -100,14 +107,14 @@ public class MAXSService extends Service {
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			sIsRunning = true;
-			// TODO connect all transports
+			sendActionToAllTransportServices(TransportConstants.ACTION_START_SERVICE);
 			Settings.getInstance(this).setServiceState(true);
 			for (StartStopListener listener : sStartStopListeners)
 				listener.onServiceStart(this);
 			return START_STICKY;
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
-			// TODO disconnect all transports
+			sendActionToAllTransportServices(TransportConstants.ACTION_STOP_SERVICE);
 			Settings.getInstance(this).setServiceState(false);
 			for (StartStopListener listener : sStartStopListeners)
 				listener.onServiceStop(this);
@@ -163,7 +170,7 @@ public class MAXSService extends Service {
 		int id = Settings.getInstance(this).getNextCommandId();
 		mCommandTable.addCommand(id, command, subCmd, args, origin, issuerInformation, originId);
 
-		CommandInformation ci = mCommandRegistry.get(command);
+		CommandInformation ci = mModuleRegistry.get(command);
 		if (ci == null) {
 			sendMessage(new Message("Unkown command: " + command, id));
 			return;
@@ -251,12 +258,21 @@ public class MAXSService extends Service {
 			}
 		}
 		else {
-			// TODO broadcast to all available broadcast transports
+			// TODO broadcast to all available broadcast transports components
 		}
 	}
 
 	protected void setStatus(String status) {
 		// TODO set status to all statusable transports
+	}
+
+	private void sendActionToAllTransportServices(String action) {
+		List<TransportInformation> transports = mTransportRegistry.getAllTransports();
+		for (TransportInformation ti : transports) {
+			Intent intent = new Intent(action);
+			intent.setComponent(new ComponentName(ti.getTransportPackage(), ".TransportService"));
+			startService(intent);
+		}
 	}
 
 	public static abstract class StartStopListener {

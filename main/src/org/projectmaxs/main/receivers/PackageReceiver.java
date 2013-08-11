@@ -30,6 +30,7 @@ import android.net.Uri;
 public class PackageReceiver extends BroadcastReceiver {
 
 	private static final Log LOG = Log.getLog();
+	private static final String[] sReceivers = new String[] { ".ModuleReceiver", ".TransportReceiver" };
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -47,9 +48,11 @@ public class PackageReceiver extends BroadcastReceiver {
 
 	private void onInstalledOrReplaced(Context context, String packageName) {
 		LOG.d("onInstalledOrReplaced: packageName=" + packageName + " intent=" + GlobalConstants.ACTION_REGISTER);
-		Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
-		intent.setComponent(new ComponentName(packageName, packageName + ".ModuleReceiver"));
-		context.sendBroadcast(intent);
+		for (String receiver : sReceivers) {
+			Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
+			intent.setComponent(new ComponentName(packageName, packageName + receiver));
+			context.sendBroadcast(intent);
+		}
 	}
 
 	private void onRemoved(Context context, String packageName) {

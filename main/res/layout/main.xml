@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollViewMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+      <ListView
+            android:id="@+id/transportsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
-<Button
-    android:id="@+id/buttonStartStop"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:focusableInTouchMode="true"
-    android:text="@string/startService" />
+        <Button
+            android:id="@+id/buttonStartStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:text="@string/startService" />
 
-<Button
-    android:id="@+id/buttonAdvancedSettings"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:onClick="openAdvancedSettings"
-    android:text="@string/pref_advanced_settings" />
+        <Button
+            android:id="@+id/buttonAdvancedSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openAdvancedSettings"
+            android:text="@string/pref_advanced_settings" />
 
-<Button
-    android:id="@+id/buttonModules"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:onClick="openModules"
-    android:text="Modules" />
+        <Button
+            android:id="@+id/buttonModules"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openModules"
+            android:text="Modules" />
 
-<Button
-    android:id="@+id/buttonImportExportSettings"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:onClick="openImportExportSettings"
-    android:text="Import/Export Settings" />
+        <Button
+            android:id="@+id/buttonImportExportSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openImportExportSettings"
+            android:text="Import/Export Settings" />
+    </LinearLayout>
 
-</LinearLayout>
 </ScrollView>
-

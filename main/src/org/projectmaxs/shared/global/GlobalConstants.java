@@ -39,7 +39,7 @@ public class GlobalConstants {
 	public static final String ACTION_REGISTER_MODULE = MAIN_PACKAGE + ".REGISTER_MODULE";
 	public static final String ACTION_SET_RECENT_CONTACT = MAIN_PACKAGE + ".SET_RECENT_CONTACT";
 	public static final String ACTION_UPDATE_STATUS = MAIN_PACKAGE + ".UPDATE_STATUS";
-	public static final String ACTION_SEND_USER_MESSAGE = MAIN_PACKAGE + ".SEND_USER_MESSAGE";
+	public static final String ACTION_SEND_MESSAGE = MAIN_PACKAGE + ".SEND_MESSAGE";
 	public static final String ACTION_EXPORT_TO_FILE = MAIN_PACKAGE + ".EXPORT_TO_FILE";
 	public static final String ACTION_IMPORT_EXPORT_STATUS = MAIN_PACKAGE + ".IMPORT_EXPORT_STATUS";
 
@@ -48,10 +48,14 @@ public class GlobalConstants {
 	public static final String EXTRA_MESSAGE = PACKAGE + ".MESSAGE";
 	public static final String EXTRA_FILE = PACKAGE + ".FILE";
 	public static final String EXTRA_CONTENT = PACKAGE + ".CONTENT";
+	public static final String EXTRA_PACKAGE = PACKAGE + ".PACKAGE";
 
-	public static final String PERMISSON = PACKAGE + ".permission";
-	public static final String PERMISSON_USE_MAIN = PERMISSON + ".USE_MAIN";
-	public static final String PERMISSON_USE_MODULE = PERMISSON + ".USE_MODULE";
+	public static final String PERMISSION = PACKAGE + ".permission";
+	public static final String PERMISSION_USE_MODULE = PERMISSION + ".USE_MODULE";
+	public static final String PERMISSION_USE_TRANSPORT = PERMISSION + ".USE_TRANSPORT";
+	public static final String PERMISSION_USE_MAIN = PERMISSION + ".USE_MAIN";
+	public static final String PERMISSION_USE_MAIN_AS_MODULE = PERMISSION + ".USE_MAIN_AS_MODULE";
+	public static final String PERMISSION_USE_MAIN_AS_TRANSPORT = PERMISSION + ".USE_MAIN_AS_TRANSPORT";
 
 	public static final File MAXS_EXTERNAL_STORAGE = new File(Environment.getExternalStorageDirectory(), "MAXS");
 }

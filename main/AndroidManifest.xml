@@ -43,16 +43,15 @@
                 <action android:name="org.projectmaxs.main.REGISTER_MODULE"/>
                 <action android:name="org.projectmaxs.main.SET_RECENT_CONTACT"/>
                 <action android:name="org.projectmaxs.main.UPDATE_STATUS"/>
-                <action android:name="org.projectmaxs.main.SEND_USER_MESSAGE"/>
+                <action android:name="org.projectmaxs.main.SEND_MESSAGE"/>
             </intent-filter>
         </service>
-        <service android:name=".MAXSTansportIntentService"
+        <service android:name=".MAXSTransportIntentService"
             android:permission="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT">
             <intent-filter>
                 <action android:name="org.projectmaxs.main.REGISTER_TRANSPORT"/>
                 <action android:name="org.projectmaxs.main.PERFORM_COMMAND"/>
-                <action android:name="org.projectmaxs.main.UPDATE_STATUS"/>
-                <action android:name="org.projectmaxs.main.SEND_USER_MESSAGE"/>
+                <action android:name="org.projectmaxs.main.UPDATE_TRANSPORT_STATUS"/>
             </intent-filter>
         </service>
         <service android:name=".MAXSRemoteService"

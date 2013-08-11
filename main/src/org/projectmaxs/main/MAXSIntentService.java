@@ -17,10 +17,6 @@
 
 package org.projectmaxs.main;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.main.activities.ImportExportSettings;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -42,15 +38,11 @@ public class MAXSIntentService extends IntentService {
 	}
 
 	private MAXSService mMAXSLocalService;
-	private ModuleRegistry mModuleRegistry;
-
-	private Queue<Intent> mIntentQueue = new LinkedList<Intent>();
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		bindMAXSService();
-		mModuleRegistry = ModuleRegistry.getInstance(this);
 	}
 
 	@Override
@@ -68,37 +60,17 @@ public class MAXSIntentService extends IntentService {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
 			mMAXSLocalService = binder.getService();
-			Iterator<Intent> it = mIntentQueue.iterator();
-			while (it.hasNext())
-				handleIntent(it.next());
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			mMAXSLocalService = null;
-			// try to rebind the service
-			bindMAXSService();
 		}
 
 	};
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (mMAXSLocalService == null) {
-			mIntentQueue.add(intent);
-		}
-		else {
-			handleIntent(intent);
-		}
-	}
-
-	private void bindMAXSService() {
-		Intent intent = new Intent(this, MAXSService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	private void handleIntent(Intent intent) {
-
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
 		if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
@@ -116,5 +88,10 @@ public class MAXSIntentService extends IntentService {
 		else {
 			// TODO throw new IllegalStateException();
 		}
+	}
+
+	private void bindMAXSService() {
+		Intent intent = new Intent(this, MAXSService.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 }

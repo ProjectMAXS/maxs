@@ -18,6 +18,7 @@
 package org.projectmaxs.shared.maintransport;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.projectmaxs.shared.global.util.ParcelUtil;
@@ -58,6 +59,7 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mTransportPackage);
 		dest.writeString(mTransportName);
+		ParcelUtil.writeBool(dest, mSupportsStatus);
 		dest.writeList(mComponents);
 	}
 
@@ -74,7 +76,14 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 	}
 
 	public String toString() {
-		return "Package: " + mTransportPackage;
+		return "TransportInformation: package=" + mTransportPackage;
+	}
+
+	public List<TransportComponent> getAllBroadcastableComponents() {
+		List<TransportComponent> res = new LinkedList<TransportComponent>();
+		for (TransportComponent c : mComponents)
+			if (c.mFeatureBroadcast) res.add(c);
+		return res;
 	}
 
 	public static final Creator<TransportInformation> CREATOR = new Creator<TransportInformation>() {

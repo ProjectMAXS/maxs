@@ -76,7 +76,10 @@ public class MessagesTable {
 	public List<Entry> getAllAndDelete() {
 		List<Entry> entries = new LinkedList<Entry>();
 		Cursor c = mDatabase.query(TABLE_NAME, null, null, null, null, null, null);
-		if (!c.moveToFirst()) return entries;
+		if (!c.moveToFirst()) {
+			c.close();
+			return entries;
+		}
 
 		do {
 			byte[] messageBytes = c.getBlob(c.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE));

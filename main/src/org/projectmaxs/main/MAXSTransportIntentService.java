@@ -17,17 +17,12 @@
 
 package org.projectmaxs.main;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.projectmaxs.main.MAXSService.LocalBinder;
-import org.projectmaxs.main.activities.ImportExportSettings;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.ModuleInformation;
-import org.projectmaxs.shared.mainmodule.StatusInformation;
+import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.maintransport.TransportInformation;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -45,15 +40,13 @@ public class MAXSTransportIntentService extends IntentService {
 	}
 
 	private MAXSService mMAXSLocalService;
-	private ModuleRegistry mModuleRegistry;
-
-	private Queue<Intent> mIntentQueue = new LinkedList<Intent>();
+	private TransportRegistry mTransportRegistry;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		bindMAXSService();
-		mModuleRegistry = ModuleRegistry.getInstance(this);
+		mTransportRegistry = TransportRegistry.getInstance(this);
 	}
 
 	@Override
@@ -71,70 +64,40 @@ public class MAXSTransportIntentService extends IntentService {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
 			mMAXSLocalService = binder.getService();
-			Iterator<Intent> it = mIntentQueue.iterator();
-			while (it.hasNext())
-				handleIntent(it.next());
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			mMAXSLocalService = null;
-			// try to rebind the service
-			bindMAXSService();
 		}
 
 	};
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (mMAXSLocalService == null) {
-			mIntentQueue.add(intent);
+
+		String action = intent.getAction();
+		LOG.d("handleIntent() Action: " + action);
+		if (TransportConstants.ACTION_REGISTER_TRANSPORT.equals(action)) {
+			TransportInformation ti = intent.getParcelableExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION);
+			mTransportRegistry.registerTransport(ti);
+		}
+		else if (TransportConstants.ACTION_PERFORM_COMMAND.equals(action)) {
+			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
+			mMAXSLocalService.sendMessage(msg);
+		}
+		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
+			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);
+			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			mTransportRegistry.updateStatus(transportPackage, status);
 		}
 		else {
-			handleIntent(intent);
+			throw new IllegalStateException("onHandleIntent: unkown action " + action);
 		}
 	}
 
 	private void bindMAXSService() {
 		Intent intent = new Intent(this, MAXSService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	private void handleIntent(Intent intent) {
-
-		String action = intent.getAction();
-		LOG.d("handleIntent() Action: " + action);
-		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
-			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
-			mModuleRegistry.registerModule(mi);
-		}
-		else if (action.equals(GlobalConstants.ACTION_SEND_USER_MESSAGE)) {
-			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
-			mMAXSLocalService.sendMessage(msg);
-		}
-		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
-			String contactNumber = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			mMAXSLocalService.setRecentContact(contactNumber);
-		}
-		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
-			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
-			String status = StatusRegistry.getInstanceAndInit(this).add(info);
-			if (status != null) mMAXSLocalService.setStatus(status);
-		}
-		else if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
-			final String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
-			final String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			// use the application context here, otherwise we will get leaked
-			// serviceConnection errors.
-			ImportExportSettings.tryToExport(file, content.getBytes(), getApplicationContext());
-		}
-		else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
-			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);
-			if (status == null) return;
-			ImportExportSettings.appendStatus(status);
-		}
-		else {
-			// TODO throw new IllegalStateException();
-		}
 	}
 }

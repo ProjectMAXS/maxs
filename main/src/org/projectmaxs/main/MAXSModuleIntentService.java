@@ -17,10 +17,6 @@
 
 package org.projectmaxs.main;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
@@ -46,8 +42,6 @@ public class MAXSModuleIntentService extends IntentService {
 	private MAXSService mMAXSLocalService;
 	private ModuleRegistry mModuleRegistry;
 
-	private Queue<Intent> mIntentQueue = new LinkedList<Intent>();
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -70,28 +64,18 @@ public class MAXSModuleIntentService extends IntentService {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
 			mMAXSLocalService = binder.getService();
-			Iterator<Intent> it = mIntentQueue.iterator();
-			while (it.hasNext())
-				handleIntent(it.next());
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			mMAXSLocalService = null;
-			// try to rebind the service
-			bindMAXSService();
 		}
 
 	};
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (mMAXSLocalService == null) {
-			mIntentQueue.add(intent);
-		}
-		else {
-			handleIntent(intent);
-		}
+
 	}
 
 	private void bindMAXSService() {
@@ -100,14 +84,13 @@ public class MAXSModuleIntentService extends IntentService {
 	}
 
 	private void handleIntent(Intent intent) {
-
 		String action = intent.getAction();
-		LOG.d("handleIntent() Action: " + action);
+		LOG.d("handleIntent: action=" + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
 			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
 			mModuleRegistry.registerModule(mi);
 		}
-		else if (action.equals(GlobalConstants.ACTION_SEND_USER_MESSAGE)) {
+		else if (action.equals(GlobalConstants.ACTION_SEND_MESSAGE)) {
 			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
 			mMAXSLocalService.sendMessage(msg);
 		}
