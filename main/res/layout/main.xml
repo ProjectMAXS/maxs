@@ -10,73 +10,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/masterAddresses"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/textMasterAddresses"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/master_addresses"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/firstMasterAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_jid"
-            android:inputType="textEmailAddress" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="3dp"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-       android:id="@+id/textDeviceAccount"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/device_account"
-       android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <EditText
-        android:id="@+id/jid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hint_jid"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
-
-        <View
-        android:layout_width="fill_parent"
-        android:layout_height="3dp"
-        android:background="@android:color/darker_gray" />
-
-<TextView
-    android:id="@+id/statusText"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" />
-
 <Button
-    android:id="@+id/buttonConnect"
+    android:id="@+id/buttonStartStop"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:focusableInTouchMode="true"
-    android:text="@string/connect" />
+    android:text="@string/startService" />
 
 <Button
     android:id="@+id/buttonAdvancedSettings"

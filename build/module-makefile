@@ -1,5 +1,10 @@
+BASE := $(shell readlink -f ../)
+MAIN := $(BASE)/main/
+SHARED := $(BASE)/shared/
 SHARED_SOURCE := src/org/projectmaxs/shared
-SHARED_MODULE_SOURCE := src/org/projectmaxs/sharedmodule
+SHARED_GLOBAL_SOURCE := $(SHARED_SOURCE)/global
+SHARED_MODULE_SOURCE := $(SHARED_SOURCE)/module
+SHARED_MAINMODULE_SOURCE := $(SHARED_SOURCE)/mainmodule
 MODULE_NAME := $(shell basename `pwd`)
 DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
@@ -8,7 +13,7 @@ ANT_BUILD_TARGET ?= debug
 
 all: module
 
-module: $(SHARED_SOURCE) $(SHARED_MODULE_SOURCE)
+module: shared
 	ant $(ANT_BUILD_TARGET)
 
 deploy: .lastDeployed
@@ -23,13 +28,19 @@ $(DEBUG_APK):
 clean:
 	ant clean
 
-shared: $(SHARED_SOURCE) $(SHARED_MODULE_SOURCE)
+shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINMODULE_SOURCE) $(SHARED_MODULE_SOURCE)
 
 $(SHARED_SOURCE):
-	ln -s ../../../../main/$@ $@
+	mkdir $@
 
-$(SHARED_MODULE_SOURCE):
-	ln -s ../../../../sharedmodule $@
+$(SHARED_GLOBAL_SOURCE): $(SHARED_SOURCE)
+	ln -rs $(MAIN)/$@ $@
+
+$(SHARED_MAINMODULE_SOURCE): $(SHARED_SOURCE)
+	ln -rs $(MAIN)/$@ $@
+
+$(SHARED_MODULE_SOURCE): $(SHARED_SOURCE)
+	ln -rs $(SHARED)/module $@
 
 eclipse: .settings .classpath .project shared
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.projectmaxs.main.util.ParcelableUtil;
-import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.content.ContentValues;
 import android.content.Context;

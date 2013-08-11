@@ -5,17 +5,8 @@ DEBUG_APK := bin/MAXS-debug.apk
 
 all: main
 
-main: asmack
+main:
 	ant $(ANT_BUILD_TARGET)
-
-asmack: libs-sources libs
-	./asmack.sh
-
-libs-sources:
-	mkdir $@
-
-libs:
-	mkdir $@
 
 deploy: .lastDeployed
 

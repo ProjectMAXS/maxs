@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.projectmaxs.main.database.StatusTable;
-import org.projectmaxs.shared.StatusInformation;
+import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.content.Context;
 

@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.MAXSIncomingFileTransfer;
-import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.MAXSIncomingFileTransfer;
+import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.util.Log;
 
 import android.app.IntentService;
 import android.content.Intent;

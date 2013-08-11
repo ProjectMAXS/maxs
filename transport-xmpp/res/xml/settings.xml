@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pref_xmpp_service_settings" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_manual_service_settings_key"
+            android:summary="@string/pref_manual_service_settings_help"
+            android:title="@string/pref_manual_service_settings" />
+
+        <PreferenceScreen
+            android:dependency="@string/pref_manual_service_settings_key"
+            android:title="@string/pref_manual_service_settings" >
+            <EditTextPreference
+                android:key="@string/pref_manual_service_settings_host_key"
+                android:summary="@string/pref_manual_service_settings_host_help"
+                android:title="@string/pref_manual_service_settings_host" />
+            <EditTextPreference
+                android:defaultValue="5222"
+                android:key="@string/pref_manual_service_settings_port_key"
+                android:summary="@string/pref_manual_service_settings_port_help"
+                android:title="@string/pref_manual_service_settings_port" />
+            <EditTextPreference
+                android:key="@string/pref_manual_service_settings_service_key"
+                android:summary="@string/pref_manual_service_settings_service_help"
+                android:title="@string/pref_manual_service_settings_service" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_xmpp_stream_settings" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_xmpp_stream_compression_key"
+            android:summary="@string/pref_xmpp_stream_compression_help"
+            android:title="@string/pref_xmpp_stream_compression" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_xmpp_stream_encryption_key"
+            android:summary="@string/pref_xmpp_stream_encryption_help"
+            android:title="@string/pref_xmpp_stream_encryption" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_app_settings" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_app_debug_log_key"
+            android:summary="@string/pref_app_debug_log_help"
+            android:title="@string/pref_app_debug_log" />
+        <CheckBoxPreference
+            android:key="@string/pref_app_xmpp_debug_key"
+            android:summary="@string/pref_app_xmpp_debug_help"
+            android:title="@string/pref_app_xmpp_debug" />
+        <CheckBoxPreference
+            android:key="@string/pref_app_debug_network_key"
+            android:summary="@string/pref_app_debug_network_help"
+            android:title="@string/pref_app_debug_network" />
+
+        <PreferenceScreen android:title="@string/pref_app_start_stop_options" >
+            <CheckBoxPreference
+                android:key="@string/pref_app_connect_on_boot_completed_key"
+                android:summary="@string/pref_app_connect_on_boot_completed_help"
+                android:title="@string/pref_app_connect_on_boot_completed" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/pref_app_connect_on_main_screen_key"
+                android:summary="@string/pref_app_connect_on_main_screen_help"
+                android:title="@string/pref_app_connect_on_main_screen" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+</PreferenceScreen>

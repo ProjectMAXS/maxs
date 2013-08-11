@@ -23,11 +23,11 @@ import java.util.Queue;
 
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.main.activities.ImportExportSettings;
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.StatusInformation;
-import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.ModuleInformation;
+import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.app.IntentService;
 import android.content.ComponentName;

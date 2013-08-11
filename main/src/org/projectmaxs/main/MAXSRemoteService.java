@@ -18,8 +18,8 @@
 package org.projectmaxs.main;
 
 import org.projectmaxs.main.MAXSService.LocalBinder;
-import org.projectmaxs.shared.Contact;
-import org.projectmaxs.shared.aidl.IMAXSRemoteService;
+import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.mainmodule.aidl.IMAXSRemoteService;
 
 import android.app.Service;
 import android.content.ComponentName;

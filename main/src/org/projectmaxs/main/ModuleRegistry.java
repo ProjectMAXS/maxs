@@ -28,8 +28,8 @@ import java.util.Set;
 
 import org.projectmaxs.main.CommandInformation.CommandClashException;
 import org.projectmaxs.main.database.ModuleRegistryTable;
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.content.Context;
 import android.content.Intent;

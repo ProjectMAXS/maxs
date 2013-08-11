@@ -20,7 +20,7 @@ package org.projectmaxs.main.database;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.projectmaxs.shared.StatusInformation;
+import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.content.ContentValues;
 import android.content.Context;

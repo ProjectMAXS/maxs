@@ -18,8 +18,8 @@
 package org.projectmaxs.main.receivers;
 
 import org.projectmaxs.main.ModuleRegistry;
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.Log;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;

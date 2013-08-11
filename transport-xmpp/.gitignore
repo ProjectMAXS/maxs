@@ -1,0 +1,9 @@
+.classpath
+.project
+.settings
+.lastBuild
+.lastDeployed
+bin/
+gen/
+libs-sources/
+libs/

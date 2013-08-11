@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.projectmaxs.shared.ModuleInformation.Command;
+import org.projectmaxs.shared.mainmodule.ModuleInformation.Command;
 
 public class CommandInformation {
 	private final String mCommand;

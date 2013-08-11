@@ -17,8 +17,8 @@
 
 package org.projectmaxs.module.filewrite;
 
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.sharedmodule.MAXSModuleReceiver;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.module.MAXSModuleReceiver;
 
 import android.content.Context;
 import android.content.SharedPreferences;

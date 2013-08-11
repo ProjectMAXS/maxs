@@ -17,9 +17,10 @@
 
 package org.projectmaxs.module.sms;
 
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.Log.LogSettings;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.Log.LogSettings;
 
+import android.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

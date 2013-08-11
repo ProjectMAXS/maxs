@@ -26,11 +26,11 @@ import org.projectmaxs.main.R;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.main.util.FileManager;
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.aidl.IFileWriteModuleService;
-import org.projectmaxs.shared.util.AsyncServiceTask;
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.SharedPreferencesUtil;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.aidl.IFileWriteModuleService;
+import org.projectmaxs.shared.global.util.AsyncServiceTask;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 
 import android.app.Activity;
 import android.content.Context;
@@ -82,8 +82,7 @@ public class ImportExportSettings extends Activity {
 		final String file = mainOutFile.getAbsolutePath();
 		Writer writer = new CharArrayWriter();
 		try {
-			SharedPreferencesUtil.export(Settings.getInstance(this).getSharedPreferences(), writer,
-					Settings.DO_NOT_EXPORT);
+			SharedPreferencesUtil.export(Settings.getInstance(this).getSharedPreferences(), writer, null);
 			final byte[] bytes = writer.toString().getBytes();
 			tryToExport(file, bytes, this);
 		} catch (IOException e1) {

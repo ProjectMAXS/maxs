@@ -20,9 +20,9 @@ package org.projectmaxs.module.smsnotify;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.sharedmodule.MAXSBroadcastReceiver;
+import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.module.MAXSBroadcastReceiver;
 
 import android.content.Context;
 import android.content.Intent;

@@ -17,12 +17,12 @@
 
 package org.projectmaxs.module.fileread;
 
-import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.ModuleInformation;
-import org.projectmaxs.shared.aidl.IFileReadModuleService;
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.sharedmodule.MAXSModuleIntentService;
+import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.aidl.IFileReadModuleService;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.Command;
+import org.projectmaxs.shared.mainmodule.ModuleInformation;
+import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
 import android.content.Context;
 import android.content.Intent;

@@ -23,18 +23,15 @@ import java.util.List;
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.misc.MAXSBatteryManager;
 import org.projectmaxs.main.util.Constants;
-import org.projectmaxs.main.xmpp.XMPPService;
-import org.projectmaxs.shared.Command;
-import org.projectmaxs.shared.Contact;
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.Message;
-import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.Command;
+import org.projectmaxs.shared.mainmodule.Contact;
 
 import android.app.Service;
-import android.content.Context;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -55,10 +52,8 @@ public class MAXSService extends Service {
 	}
 
 	private final Handler mHandler = new Handler();
-	private ConnectivityManager mConnectivityManager;
 
-	private XMPPService mXMPPService;
-
+	// private ConnectivityManager mConnectivityManager;
 	private Contact mRecentContact;
 	private Runnable mRecentContactRunnable;
 	private CommandTable mCommandTable;
@@ -70,10 +65,8 @@ public class MAXSService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		LOG.initialize(Settings.getInstance(this).getLogSettings());
-		mXMPPService = new XMPPService(this);
 		mCommandTable = CommandTable.getInstance(this);
 		mCommandRegistry = ModuleRegistry.getInstance(this);
-		mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		MAXSBatteryManager.init(this);
 		StatusRegistry.getInstanceAndInit(this);
@@ -102,25 +95,20 @@ public class MAXSService extends Service {
 
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			sIsRunning = true;
-			mXMPPService.connect();
+			// TODO connect all transports
 			Settings.getInstance(this).setServiceState(true);
 			for (StartStopListener listener : sStartStopListeners)
 				listener.onServiceStart(this);
 			return START_STICKY;
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
-			mXMPPService.disconnect();
+			// TODO disconnect all transports
 			Settings.getInstance(this).setServiceState(false);
 			for (StartStopListener listener : sStartStopListeners)
 				listener.onServiceStop(this);
 			stopSelf(startId);
 			sIsRunning = false;
 			return START_NOT_STICKY;
-		}
-		else if (action.equals(Constants.ACTION_NETWORK_STATUS_CHANGED)) {
-			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
-			boolean networkTypeChanged = intent.getBooleanExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
-			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
 		}
 		// TODO everything else
 		return START_STICKY;
@@ -135,10 +123,6 @@ public class MAXSService extends Service {
 		public MAXSService getService() {
 			return MAXSService.this;
 		}
-	}
-
-	public XMPPService getXMPPService() {
-		return mXMPPService;
 	}
 
 	public enum CommandOrigin {
@@ -174,7 +158,7 @@ public class MAXSService extends Service {
 	 *            information to identify the issuer, e.g. in case of XMPP the
 	 *            issuers (full) JID
 	 */
-	public void performCommand(String command, String subCmd, String args, CommandOrigin origin, String originId,
+	public void performCommand(String command, String subCmd, String args, ComponentName origin, String originId,
 			String issuerInformation) {
 
 		int id = Settings.getInstance(this).getNextCommandId();
@@ -208,12 +192,6 @@ public class MAXSService extends Service {
 		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
 		intent.setClassName(modulePackage, modulePackage + ".ModuleService");
 		startService(intent);
-	}
-
-	public boolean dataConnectionAvailable() {
-		NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
-		if (activeNetwork == null) return false;
-		return activeNetwork.isConnected();
 	}
 
 	protected Contact getRecentContact() {
@@ -250,33 +228,27 @@ public class MAXSService extends Service {
 		final int id = message.getId();
 		String originIssuerInfo = null;
 		String originId = null;
-		CommandOrigin commandOrigin = CommandOrigin.UNKOWN;
+		ComponentName origin = null;
 		if (id != Message.NO_ID) {
 			CommandTable.Entry entry = mCommandTable.geEntry(id);
 			originIssuerInfo = entry.mOriginIssuerInfo;
-			commandOrigin = entry.mOrigin;
+			origin = entry.mOrigin;
 			originId = entry.mOriginId;
 		}
 
-		LOG.d("sendMessage() commandOrigin=" + commandOrigin + " originIssuerInfo=" + originIssuerInfo + " originId="
-				+ originId + " message=" + message);
-		switch (commandOrigin) {
-		case XMPP_MESSAGE:
-			mXMPPService.sendAsMessage(message, originIssuerInfo, originId);
-			break;
-		case XMPP_IQ:
-			mXMPPService.sendAsIQ(message, originIssuerInfo, originId);
-			break;
-		default:
-			// if we could not determine the command origin, broadcast to all
-			mXMPPService.sendAsMessage(message, null, null);
-			break;
-		}
+		LOG.d("sendMessage() origin='" + origin + "' originIssuerInfo=" + originIssuerInfo + " originId=" + originId
+				+ " message=" + message);
 
+		if (origin != null) {
+			// sendMessage(message, originIssuerInfo, originId)
+		}
+		else {
+			// TODO broadcast to all available broadcast transports
+		}
 	}
 
 	protected void setStatus(String status) {
-		mXMPPService.setStatus(status);
+		// TODO set status to all statusable transports
 	}
 
 	public static abstract class StartStopListener {

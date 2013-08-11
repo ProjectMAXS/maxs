@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.projectmaxs.main.ModuleRegistry;
 import org.projectmaxs.main.R;
-import org.projectmaxs.shared.ModuleInformation;
+import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.app.Activity;
 import android.content.ComponentName;

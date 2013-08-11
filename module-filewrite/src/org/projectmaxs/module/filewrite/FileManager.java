@@ -22,7 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.projectmaxs.shared.util.Log;
+import org.projectmaxs.shared.global.util.Log;
 
 public class FileManager {
 	private static final Log LOG = Log.getLog();

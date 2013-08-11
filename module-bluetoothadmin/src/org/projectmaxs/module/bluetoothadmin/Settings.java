@@ -17,8 +17,8 @@
 
 package org.projectmaxs.module.bluetoothadmin;
 
-import org.projectmaxs.shared.util.Log;
-import org.projectmaxs.shared.util.Log.LogSettings;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.Log.LogSettings;
 
 import android.content.Context;
 import android.content.SharedPreferences;

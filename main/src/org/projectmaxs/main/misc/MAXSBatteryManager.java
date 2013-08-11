@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.projectmaxs.main.MAXSService;
-import org.projectmaxs.shared.GlobalConstants;
-import org.projectmaxs.shared.StatusInformation;
+import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import org.projectmaxs.shared.GlobalConstants;
+import org.projectmaxs.shared.global.GlobalConstants;
 
 public class FileManager {
 

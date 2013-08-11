@@ -20,7 +20,7 @@ package org.projectmaxs.main.util;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import org.projectmaxs.shared.GlobalConstants;
+import org.projectmaxs.shared.global.GlobalConstants;
 
 public class Constants {
 	public static final DateFormat ISO8601_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
@@ -28,7 +28,6 @@ public class Constants {
 	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
 	public static final String ACTION_START_SERVICE = MAIN_PACKAGE + ".START_SERVICE";
 	public static final String ACTION_STOP_SERVICE = MAIN_PACKAGE + ".STOP_SERVICE";
-	public static final String ACTION_NETWORK_STATUS_CHANGED = MAIN_PACKAGE + ".NETWORK_STATUS_CHANGED";
 
 	public static final String ACTION_EXTRA = MAIN_PACKAGE + ".EXTRA";
 	public static final String EXTRA_NETWORK_TYPE_CHANGED = ACTION_EXTRA + "NETWORK_TYPE_CHANGED";

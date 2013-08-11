@@ -19,8 +19,7 @@ package org.projectmaxs.main.database;
 
 import java.sql.Timestamp;
 
-import org.projectmaxs.main.MAXSService.CommandOrigin;
-
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -36,7 +35,8 @@ public class CommandTable {
 	private static final String COLUMN_NAME_COMMAND = "command";
 	private static final String COLUMN_NAME_SUBCOMMAND = "subcommand";
 	private static final String COLUMN_NAME_ARGS = "args";
-	private static final String COLUMN_NAME_ORIGIN = "orign";
+	private static final String COLUMN_NAME_ORIGIN_PACKAGE = "orignPackage";
+	private static final String COLUMN_NAME_ORIGIN_CLASS = "originClass";
 	private static final String COLUMN_NAME_ORIGIN_ISSUER_INFO = "originIssuerInfo";
 	private static final String COLUMN_NAME_ORIGIN_ID = "originId";
 
@@ -49,7 +49,8 @@ public class CommandTable {
 		 COLUMN_NAME_COMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_SUBCOMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_ARGS + MAXSDatabase.TEXT_TYPE + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_ORIGIN + MAXSDatabase.INTEGER_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_ORIGIN_PACKAGE + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+ 		 COLUMN_NAME_ORIGIN_PACKAGE + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_ORIGIN_ISSUER_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
 		 COLUMN_NAME_ORIGIN_ID + MAXSDatabase.TEXT_TYPE +
 		" )";
@@ -73,7 +74,7 @@ public class CommandTable {
 		purgeOldEntries();
 	}
 
-	public void addCommand(int id, String command, String subCmd, String args, CommandOrigin origin,
+	public void addCommand(int id, String command, String subCmd, String args, ComponentName origin,
 			String issuerInformation, String originId) {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		ContentValues values = new ContentValues();
@@ -82,7 +83,8 @@ public class CommandTable {
 		values.put(COLUMN_NAME_COMMAND, command);
 		values.put(COLUMN_NAME_SUBCOMMAND, subCmd);
 		values.put(COLUMN_NAME_ARGS, args);
-		values.put(COLUMN_NAME_ORIGIN, origin.ordinal());
+		values.put(COLUMN_NAME_ORIGIN_PACKAGE, origin.getPackageName());
+		values.put(COLUMN_NAME_ORIGIN_CLASS, origin.getClassName());
 		values.put(COLUMN_NAME_ORIGIN_ISSUER_INFO, issuerInformation);
 		values.put(COLUMN_NAME_ORIGIN_ID, originId);
 
@@ -90,20 +92,22 @@ public class CommandTable {
 		if (res == -1) throw new IllegalStateException("Could not insert command in database");
 	}
 
-	public CommandOrigin getOrigin(int id) {
-		final String[] projection = { COLUMN_NAME_ORIGIN };
+	public ComponentName getOrigin(int id) {
+		final String[] projection = { COLUMN_NAME_ORIGIN_PACKAGE, COLUMN_NAME_ORIGIN_CLASS };
 		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "='" + id + "'", null, null, null,
 				null);
 		if (!c.moveToFirst()) return null;
-		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGIN));
-		return CommandOrigin.values()[originInt];
+		String pkg = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_PACKAGE));
+		String cls = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_CLASS));
+		return new ComponentName(pkg, cls);
 	}
 
 	public Entry geEntry(int id) {
 		if (id < 0) return null;
 		// @formatter:off
 		final String[] projection = { 
-				COLUMN_NAME_ORIGIN,
+				COLUMN_NAME_ORIGIN_PACKAGE,
+				COLUMN_NAME_ORIGIN_CLASS,
 				COLUMN_NAME_ORIGIN_ISSUER_INFO,
 				COLUMN_NAME_ORIGIN_ID
 				};
@@ -115,13 +119,13 @@ public class CommandTable {
 			return null;
 		}
 
-		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGIN));
+		String pkg = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_PACKAGE));
+		String cls = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_CLASS));
 		String originIssuerInfo = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ISSUER_INFO));
 		String originId = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ID));
-		CommandOrigin origin = CommandOrigin.values()[originInt];
 
 		c.close();
-		return new Entry(id, origin, originIssuerInfo, originId);
+		return new Entry(id, new ComponentName(pkg, cls), originIssuerInfo, originId);
 	}
 
 	public Entry getFullEntry(int id) {
@@ -135,24 +139,25 @@ public class CommandTable {
 		String command = c.getString(c.getColumnIndex(COLUMN_NAME_COMMAND));
 		String subCmd = c.getString(c.getColumnIndex(COLUMN_NAME_SUBCOMMAND));
 		String args = c.getString(c.getColumnIndex(COLUMN_NAME_ARGS));
-		int originInt = c.getInt(c.getColumnIndex(COLUMN_NAME_ORIGIN));
+		String pkg = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_PACKAGE));
+		String cls = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_CLASS));
 		String originIssuerInfo = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ISSUER_INFO));
 		String originId = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ID));
 
 		Timestamp timestmap = Timestamp.valueOf(timestampStr);
-		CommandOrigin origin = CommandOrigin.values()[originInt];
 
 		c.close();
-		return new FullEntry(id, timestmap, command, subCmd, args, origin, originIssuerInfo, originId);
+		return new FullEntry(id, timestmap, command, subCmd, args, new ComponentName(pkg, cls), originIssuerInfo,
+				originId);
 	}
 
 	public static class Entry {
 		public final int mId;
-		public final CommandOrigin mOrigin;
+		public final ComponentName mOrigin;
 		public final String mOriginIssuerInfo;
 		public final String mOriginId;
 
-		Entry(int id, CommandOrigin origin, String originIssuerInfo, String originId) {
+		Entry(int id, ComponentName origin, String originIssuerInfo, String originId) {
 			this.mId = id;
 			this.mOrigin = origin;
 			this.mOriginIssuerInfo = originIssuerInfo;
@@ -166,7 +171,7 @@ public class CommandTable {
 		public final String mSubCmd;
 		public final String mArgs;
 
-		FullEntry(int id, Timestamp timestamp, String command, String subCmd, String args, CommandOrigin origin,
+		FullEntry(int id, Timestamp timestamp, String command, String subCmd, String args, ComponentName origin,
 				String originIssuerInfo, String originId) {
 			super(id, origin, originIssuerInfo, originId);
 			this.mTimestamp = timestamp;

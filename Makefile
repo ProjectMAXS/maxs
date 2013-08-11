@@ -1,6 +1,7 @@
-MODULES := $(shell find -name 'module-*' -type d)
+MODULES := $(shell find -mindepth 1 -maxdepth 1 -type d -name 'module-*')
+TRANSPORTS := $(shell find -mindepth 1 -maxdepth 1 -type d -name 'transport-*')
 MODULES_MAKEFILE := $(foreach mod, $(MODULES), $(mod)/Makefile)
-ALL := main $(MODULES)
+ALL := main $(MODULES) $(TRANSPORTS)
 
 .PHONY: all $(ALL) eclipse
 
@@ -18,6 +19,5 @@ deploy:
 $(ALL): $(MODULES_MAKEFILE)
 	make -C $@ $(TARGET)
 
-%/Makefile:
+module-%/Makefile:
 	 ln -s ../build/module-makefile $@
-
