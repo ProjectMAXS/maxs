@@ -48,8 +48,8 @@ public class TransportRegistry {
 	private final Set<ChangeListener> mChangeListeners = Collections
 			.newSetFromMap(new ConcurrentHashMap<ChangeListener, Boolean>());
 
-	private Context mContext;
-	private TransportRegistryTable mTransportRegistryTable;
+	private final Context mContext;
+	private final TransportRegistryTable mTransportRegistryTable;
 
 	/**
 	 * Constructor for TransportRegistry. Loads the TransportInformation from
@@ -79,6 +79,11 @@ public class TransportRegistry {
 
 	public synchronized List<TransportInformation> getAllTransports() {
 		return Collections.unmodifiableList(mTransportList);
+	}
+
+	public synchronized List<TransportInformation> getCopyAddListener(ChangeListener listener) {
+		addChangeListener(listener);
+		return new ArrayList(mTransportList);
 	}
 
 	public void updateStatus(String transportPackage, String status) {
@@ -124,20 +129,28 @@ public class TransportRegistry {
 	}
 
 	private void remove(String transportPackage) {
+		if (!containsTransport(transportPackage)) {
+			LOG.w("remove: transportInformation not found package=" + transportPackage);
+			return;
+		}
 		updateStatus(transportPackage, "removed");
 		Iterator<TransportInformation> it = mTransportList.iterator();
+		TransportInformation ti = null;
 		while (it.hasNext()) {
-			TransportInformation ti = it.next();
-			if (transportPackage.equals(ti.getTransportPackage())) it.remove();
+			TransportInformation cur = it.next();
+			if (transportPackage.equals(cur.getTransportPackage())) {
+				ti = cur;
+				it.remove();
+			}
 		}
 		mPackageStatus.remove(transportPackage);
 		mTransportRegistryTable.deleteTransportInformation(transportPackage);
 		for (ChangeListener l : mChangeListeners)
-			l.transportUnregisted(transportPackage);
+			l.transportUnregisted(ti);
 	}
 
 	public static abstract class ChangeListener {
-		public void transportUnregisted(String transportPackage) {
+		public void transportUnregisted(TransportInformation transportInformation) {
 		};
 
 		public void transportRegistered(TransportInformation transportInformation) {

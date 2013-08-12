@@ -68,11 +68,12 @@
 
 <Button
     android:id="@+id/advancedSettings"
-    android:text="@string/advancedSettings"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:textSize="20sp"
-    android:onClick="openAdvancedSettings" />
+    android:focusableInTouchMode="true"
+    android:onClick="openAdvancedSettings"
+    android:text="@string/advancedSettings"
+    android:textSize="20sp" />
     
 </LinearLayout>
 </ScrollView>

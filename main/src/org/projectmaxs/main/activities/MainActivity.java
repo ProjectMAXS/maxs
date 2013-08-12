@@ -40,12 +40,14 @@ public class MainActivity extends Activity {
 	private List<TransportInformation> mTransportInformationList;
 	private TransportRegistry.ChangeListener mTransportRegistryListener = new TransportRegistry.ChangeListener() {
 		@Override
-		public void transportUnregisted(String transportPackage) {
+		public void transportUnregisted(TransportInformation transportInformation) {
+			mTransportInformationList.remove(transportInformation);
 			notifyAdapter();
 		}
 
 		@Override
 		public void transportRegistered(TransportInformation transportInformation) {
+			mTransportInformationList.add(transportInformation);
 			notifyAdapter();
 		}
 
@@ -102,10 +104,9 @@ public class MainActivity extends Activity {
 		}
 
 		// Race condition between getAllTransports and
-		mTransportInformationList = TransportRegistry.getInstance(this).getAllTransports();
+		mTransportInformationList = TransportRegistry.getInstance(this).getCopyAddListener(mTransportRegistryListener);
 		mTIAdapter = new TransportInformationAdapter(this, mTransportInformationList);
 		mTransportList.setAdapter(mTIAdapter);
-		TransportRegistry.getInstance(this).addChangeListener(mTransportRegistryListener);
 
 		// request all transports to update their status
 		for (TransportInformation ti : mTransportInformationList) {

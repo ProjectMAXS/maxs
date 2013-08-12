@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class InfoAndSettings extends Activity {
 	private EditText mJID;
 	private String mLastJidText;
 	private EditText mPassword;
+	private Button mAdvancedSettings;
 
 	public void openAdvancedSettings(View view) {
 		startActivity(new Intent(this, AdvancedSettings.class));
@@ -44,6 +46,10 @@ public class InfoAndSettings extends Activity {
 		mFirstMasterAddress = (EditText) findViewById(R.id.firstMasterAddress);
 		mJID = (EditText) findViewById(R.id.jid);
 		mPassword = (EditText) findViewById(R.id.password);
+		mAdvancedSettings = (Button) findViewById(R.id.advancedSettings);
+
+		// Avoid the virtual keyboard by focusing a button
+		mAdvancedSettings.requestFocus();
 
 		new MasterAddressCallbacks(mFirstMasterAddress);
 		new EditTextWatcher(mJID) {

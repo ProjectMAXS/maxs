@@ -27,8 +27,7 @@ import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
-import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.Log.LogSettings;
+import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
 
@@ -38,7 +37,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-public class Settings implements OnSharedPreferenceChangeListener {
+public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
 
 	private static final String MASTER_JIDS = "MASTER_JIDS";
 	private static final String JID = "JID";
@@ -82,7 +81,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	private SharedPreferences mSharedPreferences;
 	private ConnectionConfiguration mConnectionConfiguration;
-	private LogSettings mLogSettings;
 
 	private Settings(Context context) {
 		// this.mSharedPreferences =
@@ -106,13 +104,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-		mLogSettings = new Log.LogSettings() {
-			@Override
-			public boolean debugLog() {
-				return isDebugLogEnabled();
-			}
-		};
 	}
 
 	public String getJid() {
@@ -199,10 +190,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	public boolean isNetworkDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_NETWORK, false);
-	}
-
-	public Log.LogSettings {
-		return mLogSettings;
 	}
 
 	public ConnectionConfiguration getConnectionConfiguration() throws XMPPException {
