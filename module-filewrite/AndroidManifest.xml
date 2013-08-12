@@ -3,10 +3,12 @@
       package="org.projectmaxs.module.filewrite"
       android:versionCode="1"
       android:versionName="1.0">
+      
+    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
+    <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
-    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <uses-sdk android:minSdkVersion="9"/>
     <application android:label="@string/app_name">
         <activity android:name=".activities.InfoAndSettings" android:exported="true"/>
@@ -24,7 +26,7 @@
                 <action android:name="org.projectmaxs.ACTION_BIND_FILEWRITE"/>
             </intent-filter>
         </service>
-        <service android:name=".IncomingFileTransferService" android:permission="org.projectmaxs.permission.USE_MODULE">
+        <service android:name=".IncomingFileTransferService" android:permission="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE">
             <intent-filter>
                 <action android:name="org.projectmaxs.INCOMING_FILETRANSFER"/>
             </intent-filter>

@@ -17,6 +17,8 @@
 
 package org.projectmaxs.transport.xmpp;
 
+import java.util.Set;
+
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.transport.MAXSTransportReceiver;
 
@@ -41,4 +43,8 @@ public class TransportReceiver extends MAXSTransportReceiver {
 		return Settings.getInstance(context).getSharedPreferences();
 	}
 
+	@Override
+	public Set<String> doNotExport() {
+		return Settings.DO_NOT_EXPORT;
+	}
 }

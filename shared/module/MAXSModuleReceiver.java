@@ -20,6 +20,7 @@ package org.projectmaxs.shared.module;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Set;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
@@ -69,10 +70,14 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 
 	public abstract SharedPreferences getSharedPreferences(Context context);
 
+	public Set<String> doNotExport() {
+		return null;
+	}
+
 	private Intent exportSettings(Context context, String directory) {
 		StringWriter writer = new StringWriter();
 		try {
-			SharedPreferencesUtil.export(getSharedPreferences(context), writer, null);
+			SharedPreferencesUtil.export(getSharedPreferences(context), writer, doNotExport());
 		} catch (IOException e) {
 			mLog.e("exportSettings", e);
 			return importExportStatus(e.getMessage());

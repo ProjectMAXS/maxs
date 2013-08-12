@@ -128,6 +128,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onDestroy() {
+		super.onDestroy();
 		MAXSService.removeStartStopListener(mListener);
 		TransportRegistry.getInstance(this).removeChangeListener(mTransportRegistryListener);
 	}

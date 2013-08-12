@@ -30,6 +30,7 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.aidl.IFileWriteModuleService;
 import org.projectmaxs.shared.global.util.AsyncServiceTask;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PackageManagerUtil;
 import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 
 import android.app.Activity;
@@ -75,6 +76,11 @@ public class ImportExportSettings extends Activity {
 
 	public void exportAll(View view) {
 		sImportExportStatus.setText("");
+
+		if (!PackageManagerUtil.getInstance(this).isPackageInstalled(GlobalConstants.FILEWRITE_MODULE_PACKAGE)) {
+			appendStatus("Required module " + GlobalConstants.FILEWRITE_MODULE_PACKAGE + " is not installed");
+			return;
+		}
 
 		File exportDir = FileManager.getTimestampedSettingsExportDir();
 		appendStatus("set export directory to " + exportDir.getAbsolutePath());
