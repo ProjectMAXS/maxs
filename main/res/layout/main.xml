@@ -8,36 +8,42 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-      <ListView
+
+        <ListView
             android:id="@+id/transportsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="3dp"
+            android:background="@android:color/darker_gray" />
+
         <Button
             android:id="@+id/buttonStartStop"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
             android:text="@string/startService" />
 
         <Button
             android:id="@+id/buttonAdvancedSettings"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="openAdvancedSettings"
             android:text="@string/pref_advanced_settings" />
 
         <Button
             android:id="@+id/buttonModules"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="openModules"
             android:text="Modules" />
 
         <Button
             android:id="@+id/buttonImportExportSettings"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="openImportExportSettings"
             android:text="Import/Export Settings" />
