@@ -47,6 +47,13 @@
             android:layout_height="wrap_content"
             android:onClick="openImportExportSettings"
             android:text="Import/Export Settings" />
+
+         <Button
+            android:id="@+id/discoverComponents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="discoverComponents"
+            android:text="Discover Components" />
     </LinearLayout>
 
 </ScrollView>

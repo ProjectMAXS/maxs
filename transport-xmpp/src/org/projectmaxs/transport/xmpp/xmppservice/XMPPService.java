@@ -228,7 +228,7 @@ public class XMPPService {
 		String issuerInfo = message.getFrom();
 		LOG.d("newMessageFromMasterJID: command=" + command + " from=" + issuerInfo);
 
-		Intent intent = new Intent(TransportConstants.ACTION_PERFORM_COMMAND);
+		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
 		CommandOrigin origin = new CommandOrigin(Constants.PACKAGE, Constants.ACTION_SEND_AS_MESSAGE, issuerInfo, null);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);

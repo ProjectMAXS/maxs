@@ -23,7 +23,7 @@ $(DEBUG_APK):
 
 .lastDeployed: $(DEBUG_APK)
 	touch $@
-	adb install -r $(DEBUG_APK)
+	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 clean:
 	ant clean

@@ -1,5 +1,6 @@
 package org.projectmaxs.main.activities;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.projectmaxs.main.ModuleRegistry;
@@ -32,7 +33,7 @@ public class Modules extends Activity {
 				@Override
 				public void run() {
 					mModuleInformationList.add(module);
-					mModuleInformationAdapter.notifyDataSetChanged();
+					sortAndNotify();
 				}
 			});
 		}
@@ -43,9 +44,14 @@ public class Modules extends Activity {
 				@Override
 				public void run() {
 					mModuleInformationList.remove(module);
-					mModuleInformationAdapter.notifyDataSetChanged();
+					sortAndNotify();
 				}
 			});
+		}
+
+		private void sortAndNotify() {
+			Collections.sort(mModuleInformationList);
+			mModuleInformationAdapter.notifyDataSetChanged();
 		}
 	};
 

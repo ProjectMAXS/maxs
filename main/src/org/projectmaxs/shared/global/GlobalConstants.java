@@ -27,6 +27,10 @@ public class GlobalConstants {
 	public static final String TRANSPORT_PACKAGE = PACKAGE + ".transport";
 
 	public static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
+
+	/**
+	 * Used to send command from transport to main, and from main to module.
+	 */
 	public static final String ACTION_PERFORM_COMMAND = PACKAGE + ".PERFORM_COMMAND";
 	public static final String ACTION_EXPORT_SETTINGS = PACKAGE + ".EXPORT_SETTINGS";
 	public static final String ACTION_IMPORT_SETTINGS = PACKAGE + ".IMPORT_SETTINGS";

@@ -28,7 +28,6 @@ public class TransportConstants {
 	public static final String TRANSPORT_SERVICE = ".TransportService";
 
 	public static final String ACTION_REGISTER_TRANSPORT = MAIN_PACKAGE + ".REGISTER_TRANSPORT";
-	public static final String ACTION_PERFORM_COMMAND = MAIN_PACKAGE + ".PERFORM_COMMAND";
 	public static final String ACTION_UPDATE_TRANSPORT_STATUS = MAIN_PACKAGE + ".UPDATE_TRANSPORT_STATUS";
 
 	public static final String ACTION_REQUEST_TRANSPORT_STATUS = TRANSPORT_PACKAGE + ".REQUEST_TRANSPORT_STATUS";

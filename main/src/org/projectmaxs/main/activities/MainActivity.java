@@ -1,5 +1,6 @@
 package org.projectmaxs.main.activities;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.projectmaxs.main.MAXSService;
@@ -9,6 +10,7 @@ import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.TransportRegistry;
 import org.projectmaxs.main.TransportRegistry.ChangeListener;
 import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
@@ -45,7 +47,7 @@ public class MainActivity extends Activity {
 				@Override
 				public void run() {
 					mTransportInformationList.remove(transportInformation);
-					mTIAdapter.notifyDataSetChanged();
+					sortAndNotify();
 				}
 			});
 		}
@@ -56,9 +58,14 @@ public class MainActivity extends Activity {
 				@Override
 				public void run() {
 					mTransportInformationList.add(transportInformation);
-					mTIAdapter.notifyDataSetChanged();
+					sortAndNotify();
 				}
 			});
+		}
+
+		private void sortAndNotify() {
+			Collections.sort(mTransportInformationList);
+			mTIAdapter.notifyDataSetChanged();
 		}
 	};
 
@@ -213,5 +220,10 @@ public class MainActivity extends Activity {
 
 	public void openImportExportSettings(View view) {
 		startActivity(new Intent(this, ImportExportSettings.class));
+	}
+
+	public void discoverComponents(View view) {
+		Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
+		sendBroadcast(intent);
 	}
 }
