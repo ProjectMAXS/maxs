@@ -35,17 +35,20 @@ public class MainActivity extends Activity {
 
 	private Button mStartStopButton;
 	private ListView mTransportList;
+	private TransportInformationAdapter mTIAdapter;
 
 	private List<TransportInformation> mTransportInformationList;
 	private TransportRegistry.ChangeListener mTransportRegistryListener = new TransportRegistry.ChangeListener() {
 		@Override
 		public void transportUnregisted(String transportPackage) {
 			mTransportInformationList.remove(transportPackage);
+			mTIAdapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void transportRegistered(TransportInformation transportInformation) {
 			mTransportInformationList.add(transportInformation);
+			mTIAdapter.notifyDataSetChanged();
 		}
 	};
 
@@ -93,7 +96,8 @@ public class MainActivity extends Activity {
 
 		// Race condition between getAllTransports and
 		mTransportInformationList = TransportRegistry.getInstance(this).getAllTransports();
-		mTransportList.setAdapter(new TransportInformationAdapter(this, mTransportInformationList));
+		mTIAdapter = new TransportInformationAdapter(this, mTransportInformationList);
+		mTransportList.setAdapter(mTIAdapter);
 		TransportRegistry.getInstance(this).addChangeListener(mTransportRegistryListener);
 	}
 

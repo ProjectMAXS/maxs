@@ -45,17 +45,15 @@ public class MAXSModuleIntentService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		bindMAXSService();
+		Intent intent = new Intent(this, MAXSService.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		mModuleRegistry = ModuleRegistry.getInstance(this);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (mMAXSLocalService != null) {
-			unbindService(mConnection);
-			mMAXSLocalService = null;
-		}
+		unbindService(mConnection);
 	}
 
 	ServiceConnection mConnection = new ServiceConnection() {
@@ -75,17 +73,8 @@ public class MAXSModuleIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-
-	}
-
-	private void bindMAXSService() {
-		Intent intent = new Intent(this, MAXSService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	private void handleIntent(Intent intent) {
 		String action = intent.getAction();
-		LOG.d("handleIntent: action=" + action);
+		LOG.d("onHandleIntent: action=" + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
 			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
 			mModuleRegistry.registerModule(mi);

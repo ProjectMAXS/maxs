@@ -82,7 +82,7 @@ public class MAXSService extends Service {
 
 		// Start the service the connection was previously established
 		if (Settings.getInstance(this).getServiceState()) {
-			LOG.d("onCreate: previous connectin state was running, calling startService");
+			LOG.d("onCreate: previous connection state was running, calling startService");
 			startService();
 		}
 	}
@@ -96,36 +96,47 @@ public class MAXSService extends Service {
 				startService(new Intent(Constants.ACTION_START_SERVICE));
 			}
 			else {
-				LOG.w("onStartCommand() null intent with Gingerbread or lower");
+				LOG.w("onStartCommand: null intent with Gingerbread or lower");
 			}
 			// Returning not sticky here, the start service intent will take
 			// care of starting the service sticky
 			return START_NOT_STICKY;
 		}
+
 		String action = intent.getAction();
 		LOG.d("onStartCommand: action=" + action);
 
+		boolean sticky = true;
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
-			sIsRunning = true;
-			sendActionToAllTransportServices(TransportConstants.ACTION_START_SERVICE);
-			Settings.getInstance(this).setServiceState(true);
-			for (StartStopListener listener : sStartStopListeners)
-				listener.onServiceStart(this);
-			return START_STICKY;
+			if (sIsRunning) {
+				LOG.d("onStartCommand: service already running, nothing to do here");
+			}
+			else {
+				sIsRunning = true;
+				sendActionToAllTransportServices(TransportConstants.ACTION_START_SERVICE);
+				Settings.getInstance(this).setServiceState(true);
+				for (StartStopListener listener : sStartStopListeners)
+					listener.onServiceStart(this);
+			}
 		}
 		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
-			sendActionToAllTransportServices(TransportConstants.ACTION_STOP_SERVICE);
-			Settings.getInstance(this).setServiceState(false);
-			for (StartStopListener listener : sStartStopListeners)
-				listener.onServiceStop(this);
-			stopSelf(startId);
-			sIsRunning = false;
-			return START_NOT_STICKY;
+			sticky = false;
+			if (!sIsRunning) {
+				LOG.d("onStartCommand: service already stopped, nothing to do here");
+			}
+			else {
+				sendActionToAllTransportServices(TransportConstants.ACTION_STOP_SERVICE);
+				Settings.getInstance(this).setServiceState(false);
+				for (StartStopListener listener : sStartStopListeners)
+					listener.onServiceStop(this);
+				stopSelf(startId);
+				sIsRunning = false;
+			}
 		}
 		else {
-			// TODO illegal state exception
+			throw new IllegalStateException("MAXSService unkown action " + action);
 		}
-		return START_STICKY;
+		return sticky ? START_STICKY : START_NOT_STICKY;
 	}
 
 	@Override
@@ -270,8 +281,12 @@ public class MAXSService extends Service {
 		List<TransportInformation> transports = mTransportRegistry.getAllTransports();
 		for (TransportInformation ti : transports) {
 			Intent intent = new Intent(action);
-			intent.setComponent(new ComponentName(ti.getTransportPackage(), ".TransportService"));
-			startService(intent);
+			String transportPackage = ti.getTransportPackage();
+			intent.setComponent(new ComponentName(transportPackage, transportPackage + ".TransportService"));
+			ComponentName cn = startService(intent);
+			if (cn == null) {
+				LOG.e("sendActionToAllTransportServices: No service found for " + transportPackage);
+			}
 		}
 	}
 
