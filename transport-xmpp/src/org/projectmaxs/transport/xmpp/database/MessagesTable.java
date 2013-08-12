@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.ParcelableUtil;
+import org.projectmaxs.shared.maintransport.CommandOrigin;
+import org.projectmaxs.transport.xmpp.util.Constants;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -87,7 +89,7 @@ public class MessagesTable {
 			String intentAction = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INTENT_ACTION));
 			String issuerId = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_ID));
 			String issuerInfo = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_INFO));
-			entries.add(new Entry(message, intentAction, issuerInfo, issuerId));
+			entries.add(new Entry(message, new CommandOrigin(Constants.PACKAGE, intentAction, issuerInfo, issuerId)));
 		} while (c.moveToNext());
 
 		// Delete all rows with the given origin after we have read out the
@@ -100,15 +102,11 @@ public class MessagesTable {
 
 	public static class Entry {
 		public final Message mMessage;
-		public final String mIntentAction;
-		public final String mIssuerId;
-		public final String mIssuerInfo;
+		public final CommandOrigin mOrigin;
 
-		private Entry(Message message, String intentAction, String issuerInfo, String issuerId) {
+		private Entry(Message message, CommandOrigin origin) {
 			mMessage = message;
-			mIntentAction = intentAction;
-			mIssuerId = issuerId;
-			mIssuerInfo = issuerInfo;
+			mOrigin = origin;
 		}
 	}
 }

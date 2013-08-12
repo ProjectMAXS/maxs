@@ -170,7 +170,7 @@ public class XMPPService {
 		}
 	}
 
-	protected void sendAsMessage(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String originId) {
+	private void sendAsMessage(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			LOG.w("sendAsMessage: Not connected, adding message to DB");
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo, originId);
@@ -214,7 +214,7 @@ public class XMPPService {
 		return;
 	}
 
-	protected void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String issuerId) {
+	private void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String issuerId) {
 		// in a not so far future
 	}
 

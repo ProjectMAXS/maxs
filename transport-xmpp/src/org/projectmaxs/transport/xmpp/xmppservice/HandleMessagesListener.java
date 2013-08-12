@@ -22,7 +22,6 @@ import java.util.List;
 import org.jivesoftware.smack.Connection;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.database.MessagesTable.Entry;
-import org.projectmaxs.transport.xmpp.util.Constants;
 
 public class HandleMessagesListener extends StateChangeListener {
 	private final MessagesTable mMessagesTable;
@@ -41,13 +40,8 @@ public class HandleMessagesListener extends StateChangeListener {
 	@Override
 	public void connected(Connection connection) {
 		List<Entry> entries = mMessagesTable.getAllAndDelete();
-		for (Entry e : entries) {
-			if (Constants.ACTION_SEND_AS_MESSAGE.equals(e.mIntentAction)) {
-				mXMPPService.sendAsMessage(e.mMessage, e.mIssuerInfo, e.mIssuerId);
-			}
-			else if (Constants.ACTION_SEND_AS_IQ.equals(e.mIntentAction)) {
-				mXMPPService.sendAsIQ(e.mMessage, e.mIssuerInfo, e.mIssuerId);
-			}
-		}
+		for (Entry e : entries)
+			mXMPPService.send(e.mMessage, e.mOrigin);
+
 	};
 }
