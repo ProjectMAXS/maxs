@@ -43,7 +43,6 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		android.os.Debug.waitForDebugger();
 		initLog(context);
 		String action = intent.getAction();
 		mLog.d("onReceive: action=" + action);

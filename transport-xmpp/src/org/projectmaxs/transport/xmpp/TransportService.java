@@ -65,7 +65,6 @@ public class TransportService extends MAXSTransportService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		android.os.Debug.waitForDebugger();
 		mXMPPService = XMPPService.getInstance(this);
 	}
 

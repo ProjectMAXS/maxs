@@ -28,7 +28,7 @@ libs:
 deploy: .lastDeployed
 
 $(DEBUG_APK):
-	make module ANT_BUILD_TARGET=debug
+	make transport ANT_BUILD_TARGET=debug
 
 .lastDeployed: $(DEBUG_APK)
 	touch $@

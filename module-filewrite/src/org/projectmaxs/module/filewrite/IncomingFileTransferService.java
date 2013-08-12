@@ -43,7 +43,6 @@ public class IncomingFileTransferService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		android.os.Debug.waitForDebugger();
 	}
 
 	@Override

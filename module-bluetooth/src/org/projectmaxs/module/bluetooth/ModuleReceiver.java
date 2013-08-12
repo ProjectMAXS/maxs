@@ -28,8 +28,6 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 
 	public ModuleReceiver() {
 		super(LOG, ModuleService.sMODULE_INFORMATION);
-		android.os.Debug.waitForDebugger();
-		// foo
 	}
 
 	@Override
