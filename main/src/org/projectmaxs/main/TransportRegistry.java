@@ -19,7 +19,6 @@ package org.projectmaxs.main;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,8 @@ public class TransportRegistry {
 	private final List<TransportInformation> mTransportList = new ArrayList<TransportInformation>(5);
 	private final Map<String, String> mPackageStatus = new ConcurrentHashMap<String, String>();
 
-	private final Set<ChangeListener> mChangeListeners = new HashSet<ChangeListener>();
+	private final Set<ChangeListener> mChangeListeners = Collections
+			.newSetFromMap(new ConcurrentHashMap<ChangeListener, Boolean>());
 
 	private Context mContext;
 	private TransportRegistryTable mTransportRegistryTable;

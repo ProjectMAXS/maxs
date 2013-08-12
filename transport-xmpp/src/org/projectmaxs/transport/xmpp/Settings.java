@@ -45,7 +45,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	private static final String PASSWORD = "PASSWORD";
 	private static final String LAST_RECIPIENT = "LAST_RECIPIENT";
 	private static final String CMD_ID = "CMD_ID";
-	private static final String SERVICE_ACTIVE = "SERVICE_ACTIVE";
 
 	/**
 	 * A set of keys that should not get exported
@@ -184,14 +183,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		int id = mSharedPreferences.getInt(CMD_ID, 0);
 		mSharedPreferences.edit().putInt(CMD_ID, id + 1).commit();
 		return id;
-	}
-
-	public void setServiceState(boolean active) {
-		mSharedPreferences.edit().putBoolean(SERVICE_ACTIVE, active).commit();
-	}
-
-	public boolean getServiceState() {
-		return mSharedPreferences.getBoolean(SERVICE_ACTIVE, false);
 	}
 
 	public boolean isDebugLogEnabled() {

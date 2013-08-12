@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -74,8 +73,6 @@ public class XMPPService {
 	}
 
 	private XMPPService(Context context) {
-		SmackAndroid.init(context);
-
 		XMPPEntityCapsCache.initialize(context);
 
 		mContext = context;
@@ -142,6 +139,23 @@ public class XMPPService {
 		return mContext;
 	}
 
+	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
+		// first disconnect if the network type changed and we are now connected
+		// with an now unusable network
+		if ((networkTypeChanged && isConnected()) || !connected) {
+			disconnect();
+		}
+
+		// if we have an connected network but we are not connected, connect
+		if (connected && !isConnected()) {
+			connect();
+		}
+		else if (!connected) {
+			LOG.d("newConnectivityInformatin: we are not connected any more, changing state to WaitingForNetwork");
+			newState(State.WaitingForNetwork);
+		}
+	}
+
 	public void send(org.projectmaxs.shared.global.Message message, String action, String originIssuerInfo,
 			String originId) {
 		if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)) {
@@ -201,22 +215,6 @@ public class XMPPService {
 
 	protected void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String issuerId) {
 		// TODO
-	}
-
-	protected void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
-		// first disconnect if the network type changed and we are now connected
-		// with an now unusable network
-		if ((networkTypeChanged && isConnected()) || !connected) {
-			disconnect();
-		}
-
-		// if we have an connected network but we are not connected, connect
-		if (connected && !isConnected()) {
-			connect();
-		}
-		else if (!connected) {
-			newState(State.WaitingForNetwork);
-		}
 	}
 
 	protected void newMessageFromMasterJID(Message message) {
@@ -279,6 +277,14 @@ public class XMPPService {
 		case Disconnecting:
 			for (StateChangeListener l : mStateChangeListeners)
 				l.disconnecting();
+			break;
+		case WaitingForNetwork:
+			for (StateChangeListener l : mStateChangeListeners)
+				l.waitingForNetwork();
+			break;
+		case WaitingForRetry:
+			for (StateChangeListener l : mStateChangeListeners)
+				l.waitingForRetry();
 			break;
 		default:
 			break;

@@ -17,6 +17,7 @@
 
 package org.projectmaxs.transport.xmpp;
 
+import org.jivesoftware.smack.SmackAndroid;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
@@ -56,6 +57,7 @@ public class TransportService extends MAXSTransportService {
 	}
 
 	private XMPPService mXMPPService;
+	private SmackAndroid mSmackAndroid;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -65,7 +67,14 @@ public class TransportService extends MAXSTransportService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mSmackAndroid = SmackAndroid.init(this);
 		mXMPPService = XMPPService.getInstance(this);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mSmackAndroid.onDestroy();
 	}
 
 	@Override
@@ -101,6 +110,7 @@ public class TransportService extends MAXSTransportService {
 	@Override
 	public void onHandleIntent(Intent intent) {
 		final String action = intent.getAction();
+		LOG.d("onHandleIntent: " + action);
 		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			mXMPPService.connect();
 		}
@@ -121,8 +131,9 @@ public class TransportService extends MAXSTransportService {
 			mXMPPService.send(message, action, originIssuerInfo, originId);
 		}
 		else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
-			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			mXMPPService.setStatus(status);
+			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
+			boolean networkTypeChanged = intent.getBooleanExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
+			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
 		}
 		else {
 			throw new IllegalStateException("Unkown intent action: " + action);

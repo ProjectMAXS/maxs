@@ -62,12 +62,24 @@ public class HandleTransportStatus extends StateChangeListener {
 		setAndSendStatus("disconnected");
 	}
 
+	@Override
 	public void connecting() {
 		setAndSendStatus("connecting");
 	}
 
+	@Override
 	public void disconnecting() {
 		setAndSendStatus("disconnecting");
+	}
+
+	@Override
+	public void waitingForNetwork() {
+		setAndSendStatus("waiting for data connection");
+	}
+
+	@Override
+	public void waitingForRetry() {
+		setAndSendStatus("waiting for connection retry");
 	}
 
 	protected void setAndSendStatus(String status) {

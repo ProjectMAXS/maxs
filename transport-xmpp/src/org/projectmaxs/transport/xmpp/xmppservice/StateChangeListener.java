@@ -48,4 +48,12 @@ public class StateChangeListener {
 
 	}
 
+	public void waitingForNetwork() {
+
+	}
+
+	public void waitingForRetry() {
+
+	}
+
 }

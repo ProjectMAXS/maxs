@@ -32,8 +32,8 @@
             android:name=".TransportService"
             android:permission="org.projectmaxs.permission.USE_TRANSPORT" >
             <intent-filter>
-                <action android:name="org.projectmaxs.PERFORM_COMMAND" />
-                <action android:name="org.projectmaxs.xmpp.REQUEST_TRANSPORT_STATUS" />
+                <!-- This is the only filter needed, all other intents are sent with setClassName() -->
+                <action android:name="org.projectmaxs.transport.xmpp.NETWORK_STATUS_CHANGED" />
             </intent-filter>
         </service>
     </application>

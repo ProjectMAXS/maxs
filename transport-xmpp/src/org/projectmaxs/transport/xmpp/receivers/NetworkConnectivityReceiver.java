@@ -76,7 +76,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 				}
 				settings.setLastActiveNetwork("");
 			}
-			LOG.d("Broadcasting NETWORK_STATUS_CHANGED connected=" + connected + " changed=" + networkTypeChanged);
+			LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed=" + networkTypeChanged);
 			Intent i = new Intent(Constants.ACTION_NETWORK_STATUS_CHANGED);
 			i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
 			i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);
