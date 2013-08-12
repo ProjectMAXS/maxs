@@ -92,16 +92,13 @@ public class TransportRegistry {
 	public synchronized void unregisterTransport(String transportPackage) {
 		if (!mTransportRegistryTable.containsTransport(transportPackage)) return;
 		remove(transportPackage);
-		for (ChangeListener l : mChangeListeners)
-			l.transportUnregisted(transportPackage);
 	}
 
 	protected synchronized void registerTransport(TransportInformation transportInformation) {
 		// first remove all traces of the Transport
 		remove(transportInformation.getTransportPackage());
 		add(transportInformation);
-		for (ChangeListener l : mChangeListeners)
-			l.transportRegistered(transportInformation);
+
 	}
 
 	private void add(TransportInformation transportInformation) {
@@ -109,6 +106,8 @@ public class TransportRegistry {
 		mPackageTransport.put(transportPackage, transportInformation);
 		mPackageStatus.put(transportPackage, "unkown");
 		mTransportRegistryTable.insertOrReplace(transportInformation);
+		for (ChangeListener l : mChangeListeners)
+			l.transportRegistered(transportInformation);
 	}
 
 	private void remove(String transportPackage) {
@@ -116,6 +115,8 @@ public class TransportRegistry {
 		mPackageStatus.remove(transportPackage);
 		mPackageTransport.remove(transportPackage);
 		mTransportRegistryTable.deleteTransportInformation(transportPackage);
+		for (ChangeListener l : mChangeListeners)
+			l.transportUnregisted(transportPackage);
 	}
 
 	public static abstract class ChangeListener {

@@ -3,6 +3,7 @@
       package="org.projectmaxs.module.sms"
       android:versionCode="1"
       android:versionName="1.0">
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
     <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <uses-sdk android:minSdkVersion="8"/>
@@ -18,12 +19,7 @@
         </receiver>
         <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
-                <action android:name="org.projectmaxs.transport.START_SERVICE" />
-                <action android:name="org.projectmaxs.transport.STOP_SERVICE" />
-                <action android:name="org.projectmaxs.transport.SET_STATUS" />
-                <action android:name="org.projectmaxs.transport.xmpp.SEND_AS_MESSAGE" />
-                <action android:name="org.projectmaxs.transport.xmpp.SEND_AS_IQ" />
-                <action android:name="org.projectmaxs.transport.xmpp.NETWORK_STATUS_CHANGED" />
+                <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
             </intent-filter>
         </service>
     </application>

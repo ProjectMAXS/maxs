@@ -75,7 +75,7 @@ public abstract class MAXSModuleIntentService extends IntentService {
 	}
 
 	public void sendMessage(Message message) {
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_USER_MESSAGE);
+		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
 		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 		startService(replyIntent);
 	}

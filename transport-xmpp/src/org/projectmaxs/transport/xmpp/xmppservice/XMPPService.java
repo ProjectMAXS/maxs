@@ -80,6 +80,7 @@ public class XMPPService {
 		addListener(new HandleMessagesListener(this));
 		addListener(new XMPPPingManager(this));
 		addListener(new XMPPFileTransfer(context));
+		addListener(new HandleTransportStatus(context));
 
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
@@ -348,7 +349,7 @@ public class XMPPService {
 		if (mSettings.getMasterJidCount() == 0) failureReason = "Master JID(s) not configured";
 		if (failureReason != null) {
 			LOG.w("tryToConnect: failureReason=" + failureReason);
-			// TODO intent ACTION_SERVICE_STATUS
+			HandleTransportStatus.sendStatus(mContext, "Unable to connect: " + failureReason);
 			return;
 		}
 
@@ -356,7 +357,7 @@ public class XMPPService {
 			LOG.d("tryToConnect: already connected, nothing to do here");
 			return;
 		}
-		if (dataConnectionAvailable()) {
+		if (!dataConnectionAvailable()) {
 			LOG.d("tryToConnect: no data connection available");
 			newState(State.WaitingForNetwork);
 			return;
