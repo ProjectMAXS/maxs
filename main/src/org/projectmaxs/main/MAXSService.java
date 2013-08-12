@@ -28,10 +28,10 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
-import org.projectmaxs.shared.maintransport.TransportOrigin;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -166,14 +166,8 @@ public class MAXSService extends Service {
 	 * @param command
 	 * @param origin
 	 *            the transport the command arrived with
-	 * @param originId
-	 *            the id the command arrived with, e.g. in case of XMPP IQ
-	 *            commands, the IQ ID
-	 * @param issuerInformation
-	 *            information to identify the issuer, e.g. in case of XMPP the
-	 *            issuers (full) JID
 	 */
-	public void performCommand(String fullCommand, TransportOrigin origin, String originId, String issuerInformation) {
+	public void performCommand(String fullCommand, CommandOrigin origin) {
 		String[] splitedFullCommand = fullCommand.split(" ");
 		String command = splitedFullCommand[0];
 
@@ -189,7 +183,7 @@ public class MAXSService extends Service {
 		}
 
 		int id = Settings.getInstance(this).getNextCommandId();
-		mCommandTable.addCommand(id, command, subCmd, args, origin, issuerInformation, originId);
+		mCommandTable.addCommand(id, command, subCmd, args, origin);
 
 		CommandInformation ci = mModuleRegistry.get(command);
 		if (ci == null) {
@@ -253,24 +247,19 @@ public class MAXSService extends Service {
 
 	protected void sendMessage(Message message) {
 		final int id = message.getId();
-		String originIssuerInfo = null;
-		String originId = null;
-		TransportOrigin origin = null;
+
+		CommandOrigin origin = null;
 		if (id != Message.NO_ID) {
 			CommandTable.Entry entry = mCommandTable.geEntry(id);
-			originIssuerInfo = entry.mOriginIssuerInfo;
 			origin = entry.mOrigin;
-			originId = entry.mOriginId;
 		}
 
-		LOG.d("sendMessage() origin='" + origin + "' originIssuerInfo=" + originIssuerInfo + " originId=" + originId
-				+ " message=" + message);
+		LOG.d("sendMessage() origin='" + origin + "' message=" + message);
 
 		if (origin != null) {
 			Intent intent = origin.getIntentFor();
 			intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-			intent.putExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO, originIssuerInfo);
-			intent.putExtra(TransportConstants.EXTRA_ORIGIN_ID, originId);
+			intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 			ComponentName usedTransport = startService(intent);
 			if (usedTransport == null) {
 				LOG.w("sendMessage: transport not found transportPackage=" + origin.getPackage() + " serviceClass="

@@ -21,6 +21,7 @@ import org.jivesoftware.smack.SmackAndroid;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
@@ -79,12 +80,7 @@ public class TransportService extends MAXSTransportService {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent == null) {
-			startService(new Intent(TransportConstants.ACTION_START_SERVICE));
-			// Returning not sticky here, the start service intent will take
-			// care of starting the service sticky
-			return START_NOT_STICKY;
-		}
+		if (intent == null) intent = new Intent(TransportConstants.ACTION_START_SERVICE);
 
 		boolean stickyStart = true;
 		final String action = intent.getAction();
@@ -126,9 +122,9 @@ public class TransportService extends MAXSTransportService {
 		}
 		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
 			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
-			String originIssuerInfo = intent.getStringExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO);
-			String originId = intent.getStringExtra(TransportConstants.EXTRA_ORIGIN_ID);
-			mXMPPService.send(message, action, originIssuerInfo, originId);
+			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
+
+			mXMPPService.send(message, origin);
 		}
 		else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
 			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);

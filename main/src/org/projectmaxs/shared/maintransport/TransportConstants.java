@@ -36,10 +36,8 @@ public class TransportConstants {
 	public static final String ACTION_STOP_SERVICE = TRANSPORT_PACKAGE + ".STOP_SERVICE";
 	public static final String ACTION_SET_STATUS = TRANSPORT_PACKAGE + ".SET_STATUS";
 
-	public static final String EXTRA_ORIGIN_ISSUER_INFO = TRANSPORT_PACKAGE + ".ORIGIN_ISSUER_INFO";
-	public static final String EXTRA_ORIGIN_ID = TRANSPORT_PACKAGE + ".ORIGIN_ID";
 	public static final String EXTRA_COMMAND = TRANSPORT_PACKAGE + ".COMMAND";
-	public static final String EXTRA_TRANSPORT_ORIGIN = TRANSPORT_PACKAGE + ".TRANSPORT_ORIGIN";
+	public static final String EXTRA_COMMAND_ORIGIN = TRANSPORT_PACKAGE + ".COMMAND_ORIGIN";
 
 	public static final String EXTRA_TRANSPORT_INFORMATION = TRANSPORT_PACKAGE + ".TRANSPORT_INFORMATION";
 

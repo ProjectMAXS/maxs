@@ -20,9 +20,9 @@ package org.projectmaxs.main;
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
-import org.projectmaxs.shared.maintransport.TransportOrigin;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -81,11 +81,9 @@ public class MAXSTransportIntentService extends IntentService {
 		}
 		else if (TransportConstants.ACTION_PERFORM_COMMAND.equals(action)) {
 			String fullCommand = intent.getStringExtra(TransportConstants.EXTRA_COMMAND);
-			TransportOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_TRANSPORT_ORIGIN);
-			String originId = intent.getStringExtra(TransportConstants.EXTRA_ORIGIN_ID);
-			String issuerInfo = intent.getStringExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO);
+			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 
-			mMAXSLocalService.performCommand(fullCommand, origin, originId, issuerInfo);
+			mMAXSLocalService.performCommand(fullCommand, origin);
 		}
 		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
 			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);

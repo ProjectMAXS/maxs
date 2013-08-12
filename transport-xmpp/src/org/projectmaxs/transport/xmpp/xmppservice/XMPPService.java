@@ -32,8 +32,8 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
-import org.projectmaxs.shared.maintransport.TransportOrigin;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.Constants;
@@ -47,8 +47,6 @@ import android.os.Handler;
 
 public class XMPPService {
 	private static final Log LOG = Log.getLog();
-	private static final TransportOrigin MESSAGE_TRANSPORT_ORIGIN = new TransportOrigin(Constants.PACKAGE,
-			Constants.ACTION_SEND_AS_MESSAGE);
 
 	private static XMPPService sXMPPService;
 
@@ -156,8 +154,11 @@ public class XMPPService {
 		}
 	}
 
-	public void send(org.projectmaxs.shared.global.Message message, String action, String originIssuerInfo,
-			String originId) {
+	public void send(org.projectmaxs.shared.global.Message message, CommandOrigin origin) {
+		String action = origin.getIntentAction();
+		String originId = origin.getOriginId();
+		String originIssuerInfo = origin.getOriginIssuerInfo();
+
 		if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)) {
 			sendAsMessage(message, originIssuerInfo, originId);
 		}
@@ -228,9 +229,9 @@ public class XMPPService {
 		LOG.d("newMessageFromMasterJID: command=" + command + " from=" + issuerInfo);
 
 		Intent intent = new Intent(TransportConstants.ACTION_PERFORM_COMMAND);
+		CommandOrigin origin = new CommandOrigin(Constants.PACKAGE, Constants.ACTION_SEND_AS_MESSAGE, issuerInfo, null);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
-		intent.putExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO, issuerInfo);
-		intent.putExtra(TransportConstants.EXTRA_TRANSPORT_ORIGIN, MESSAGE_TRANSPORT_ORIGIN);
+		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 		intent.setClassName(GlobalConstants.MAIN_PACKAGE, TransportConstants.MAIN_TRANSPORT_SERVICE);
 		ComponentName cn = mContext.startService(intent);
 		if (cn == null) {

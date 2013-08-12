@@ -19,7 +19,7 @@ package org.projectmaxs.main.database;
 
 import java.sql.Timestamp;
 
-import org.projectmaxs.shared.maintransport.TransportOrigin;
+import org.projectmaxs.shared.maintransport.CommandOrigin;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -75,8 +75,7 @@ public class CommandTable {
 		purgeOldEntries();
 	}
 
-	public void addCommand(int id, String command, String subCmd, String args, TransportOrigin origin,
-			String issuerInformation, String originId) {
+	public void addCommand(int id, String command, String subCmd, String args, CommandOrigin origin) {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_COMMAND_ID, id);
@@ -86,14 +85,14 @@ public class CommandTable {
 		values.put(COLUMN_NAME_ARGS, args);
 		values.put(COLUMN_NAME_ORIGIN_PACKAGE, origin.getPackage());
 		values.put(COLUMN_NAME_ORIGIN_INTENT_ACTION, origin.getIntentAction());
-		values.put(COLUMN_NAME_ORIGIN_ISSUER_INFO, issuerInformation);
-		values.put(COLUMN_NAME_ORIGIN_ID, originId);
+		values.put(COLUMN_NAME_ORIGIN_ISSUER_INFO, origin.getOriginIssuerInfo());
+		values.put(COLUMN_NAME_ORIGIN_ID, origin.getOriginId());
 
 		long res = mDatabase.insert(TABLE_NAME, null, values);
 		if (res == -1) throw new IllegalStateException("Could not insert command in database");
 	}
 
-	public TransportOrigin getOrigin(int id) {
+	public CommandOrigin getOrigin(int id) {
 		final String[] projection = { COLUMN_NAME_ORIGIN_PACKAGE, COLUMN_NAME_ORIGIN_INTENT_ACTION };
 		Cursor c = mDatabase.query(TABLE_NAME, projection, COLUMN_NAME_COMMAND_ID + "= ?",
 				new String[] { String.valueOf(id) }, null, null, null);
@@ -103,7 +102,10 @@ public class CommandTable {
 		}
 		String pkg = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_PACKAGE));
 		String action = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_INTENT_ACTION));
-		return new TransportOrigin(pkg, action);
+		String originIssuerInfo = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_ISSUER_INFO));
+		String originId = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_ID));
+
+		return new CommandOrigin(pkg, action, originIssuerInfo, originId);
 	}
 
 	public Entry geEntry(int id) {
@@ -129,7 +131,7 @@ public class CommandTable {
 		String originId = c.getString(c.getColumnIndex(COLUMN_NAME_ORIGIN_ID));
 
 		c.close();
-		return new Entry(id, new TransportOrigin(pkg, action), originIssuerInfo, originId);
+		return new Entry(id, new CommandOrigin(pkg, action, originIssuerInfo, originId));
 	}
 
 	public Entry getFullEntry(int id) {
@@ -152,21 +154,17 @@ public class CommandTable {
 		Timestamp timestmap = Timestamp.valueOf(timestampStr);
 
 		c.close();
-		return new FullEntry(id, timestmap, command, subCmd, args, new TransportOrigin(pkg, action), originIssuerInfo,
-				originId);
+		return new FullEntry(id, timestmap, command, subCmd, args, new CommandOrigin(pkg, action, originIssuerInfo,
+				originId));
 	}
 
 	public static class Entry {
 		public final int mId;
-		public final TransportOrigin mOrigin;
-		public final String mOriginIssuerInfo;
-		public final String mOriginId;
+		public final CommandOrigin mOrigin;
 
-		Entry(int id, TransportOrigin origin, String originIssuerInfo, String originId) {
-			this.mId = id;
-			this.mOrigin = origin;
-			this.mOriginIssuerInfo = originIssuerInfo;
-			this.mOriginId = originId;
+		Entry(int id, CommandOrigin origin) {
+			mId = id;
+			mOrigin = origin;
 		}
 	}
 
@@ -176,9 +174,8 @@ public class CommandTable {
 		public final String mSubCmd;
 		public final String mArgs;
 
-		FullEntry(int id, Timestamp timestamp, String command, String subCmd, String args, TransportOrigin origin,
-				String originIssuerInfo, String originId) {
-			super(id, origin, originIssuerInfo, originId);
+		FullEntry(int id, Timestamp timestamp, String command, String subCmd, String args, CommandOrigin origin) {
+			super(id, origin);
 			this.mTimestamp = timestamp;
 			this.mCommand = command;
 			this.mSubCmd = subCmd;

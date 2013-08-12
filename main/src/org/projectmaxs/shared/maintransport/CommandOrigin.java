@@ -21,19 +21,25 @@ import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class TransportOrigin implements Parcelable {
+public class CommandOrigin implements Parcelable {
 
 	private final String mPackage;
 	private final String mIntentAction;
+	private final String mOriginIssuerInfo;
+	private final String mOriginId;
 
-	public TransportOrigin(String pkg, String intentAction) {
+	public CommandOrigin(String pkg, String intentAction, String originIssuerInfo, String originId) {
 		mPackage = pkg;
 		mIntentAction = intentAction;
+		mOriginIssuerInfo = originIssuerInfo;
+		mOriginId = originId;
 	}
 
-	private TransportOrigin(Parcel in) {
+	private CommandOrigin(Parcel in) {
 		mPackage = in.readString();
 		mIntentAction = in.readString();
+		mOriginIssuerInfo = in.readString();
+		mOriginId = in.readString();
 	}
 
 	@Override
@@ -45,18 +51,20 @@ public class TransportOrigin implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mPackage);
 		dest.writeString(mIntentAction);
+		dest.writeString(mOriginIssuerInfo);
+		dest.writeString(mOriginId);
 	}
 
-	public static final Creator<TransportOrigin> CREATOR = new Creator<TransportOrigin>() {
+	public static final Creator<CommandOrigin> CREATOR = new Creator<CommandOrigin>() {
 
 		@Override
-		public TransportOrigin createFromParcel(Parcel source) {
-			return new TransportOrigin(source);
+		public CommandOrigin createFromParcel(Parcel source) {
+			return new CommandOrigin(source);
 		}
 
 		@Override
-		public TransportOrigin[] newArray(int size) {
-			return new TransportOrigin[size];
+		public CommandOrigin[] newArray(int size) {
+			return new CommandOrigin[size];
 		}
 
 	};
@@ -69,6 +77,24 @@ public class TransportOrigin implements Parcelable {
 		return mIntentAction;
 	}
 
+	public String getOriginIssuerInfo() {
+		return mOriginIssuerInfo;
+	}
+
+	public String getOriginId() {
+		return mOriginId;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("CommandOrigin package=" + mPackage);
+		sb.append(" act=" + mIntentAction);
+		sb.append(" issuerInfo=" + mOriginIssuerInfo);
+		sb.append(" id=" + mOriginId);
+		return sb.toString();
+	}
+
 	public String getServiceClass() {
 		return mPackage + TransportConstants.TRANSPORT_SERVICE;
 	}
@@ -76,6 +102,7 @@ public class TransportOrigin implements Parcelable {
 	public Intent getIntentFor() {
 		Intent intent = new Intent(mIntentAction);
 		intent.setClassName(mPackage, getServiceClass());
+		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, this);
 		return intent;
 	}
 }
