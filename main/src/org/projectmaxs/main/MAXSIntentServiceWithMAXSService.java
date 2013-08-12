@@ -17,9 +17,12 @@
 
 package org.projectmaxs.main;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.projectmaxs.main.MAXSService.LocalBinder;
-import org.projectmaxs.shared.mainmodule.Contact;
-import org.projectmaxs.shared.mainmodule.aidl.IMAXSRemoteService;
+import org.projectmaxs.shared.global.util.Log;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -27,25 +30,40 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.RemoteException;
 
-public class MAXSRemoteService extends Service {
+public abstract class MAXSIntentServiceWithMAXSService extends Service {
+	private final Queue<Intent> mQueue = new LinkedList<Intent>();
 
 	private MAXSService mMAXSService;
+	private Log mLog;
 
 	@Override
-	public IBinder onBind(Intent i) {
-		if (mMAXSService == null) {
-			Intent intent = new Intent(this, MAXSService.class);
-			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		}
-		return mBinder;
+	public void onCreate() {
+		super.onCreate();
+		bindService(new Intent(this, MAXSService.class), mConnection, Context.BIND_AUTO_CREATE);
+		mLog = getLog();
 	}
 
 	@Override
-	public boolean onUnbind(Intent intent) {
+	public void onDestroy() {
+		super.onDestroy();
+		// not sure if this is really needed
 		unbindService(mConnection);
-		return false;
+	}
+
+	@Override
+	public final int onStartCommand(Intent intent, int flags, int startId) {
+		if (mMAXSService == null) {
+			mLog.d("onStartCommand: mMAXSService is null, adding to queue");
+			mQueue.add(intent);
+			// start sticky because there are now intents in the queue to handle
+			return START_STICKY;
+		}
+		else {
+			onHandleIntent(mMAXSService, intent);
+			stopSelf(startId);
+			return START_NOT_STICKY;
+		}
 	}
 
 	ServiceConnection mConnection = new ServiceConnection() {
@@ -53,6 +71,13 @@ public class MAXSRemoteService extends Service {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
 			mMAXSService = binder.getService();
+			if (!mQueue.isEmpty()) {
+				mLog.d("onServiceConnected: mQueue not empty, processing");
+				Iterator<Intent> it = mQueue.iterator();
+				while (it.hasNext())
+					onHandleIntent(mMAXSService, it.next());
+			}
+			stopSelf();
 		}
 
 		@Override
@@ -61,15 +86,13 @@ public class MAXSRemoteService extends Service {
 		}
 	};
 
-	private final IMAXSRemoteService.Stub mBinder = new IMAXSRemoteService.Stub() {
-		@Override
-		public Contact getRecentContact() throws RemoteException {
-			return mMAXSService.getRecentContact();
-		}
+	protected abstract void onHandleIntent(MAXSService maxsService, Intent intent);
 
-		@Override
-		public Contact getContactFromAlias(String alias) throws RemoteException {
-			return mMAXSService.getContactFromAlias(alias);
-		}
-	};
+	protected abstract Log getLog();
+
+	@Override
+	public final IBinder onBind(Intent intent) {
+		return null;
+	}
+
 }

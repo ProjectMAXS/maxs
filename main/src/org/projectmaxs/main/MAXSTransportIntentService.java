@@ -17,61 +17,28 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
-import android.app.IntentService;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 
-public class MAXSTransportIntentService extends IntentService {
+public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService {
 
 	private static final Log LOG = Log.getLog();
 
-	public MAXSTransportIntentService() {
-		super("MAXSService");
-	}
-
-	private MAXSService mMAXSLocalService;
 	private TransportRegistry mTransportRegistry;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		bindMAXSService();
 		mTransportRegistry = TransportRegistry.getInstance(this);
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		unbindService(mConnection);
-	}
-
-	ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			LocalBinder binder = (LocalBinder) service;
-			mMAXSLocalService = binder.getService();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mMAXSLocalService = null;
-		}
-
-	};
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(MAXSService maxsService, Intent intent) {
 
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
@@ -82,7 +49,7 @@ public class MAXSTransportIntentService extends IntentService {
 		else if (GlobalConstants.ACTION_PERFORM_COMMAND.equals(action)) {
 			String fullCommand = intent.getStringExtra(TransportConstants.EXTRA_COMMAND);
 			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
-			mMAXSLocalService.performCommand(fullCommand, origin);
+			maxsService.performCommand(fullCommand, origin);
 		}
 		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
 			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);
@@ -94,8 +61,8 @@ public class MAXSTransportIntentService extends IntentService {
 		}
 	}
 
-	private void bindMAXSService() {
-		Intent intent = new Intent(this, MAXSService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	@Override
+	public Log getLog() {
+		return LOG;
 	}
 }

@@ -17,62 +17,28 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
 
-import android.app.IntentService;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 
-public class MAXSModuleIntentService extends IntentService {
+public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 
 	private static final Log LOG = Log.getLog();
 
-	public MAXSModuleIntentService() {
-		super("MAXSService");
-	}
-
-	private MAXSService mMAXSLocalService;
 	private ModuleRegistry mModuleRegistry;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Intent intent = new Intent(this, MAXSService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		mModuleRegistry = ModuleRegistry.getInstance(this);
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		unbindService(mConnection);
-	}
-
-	ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			LocalBinder binder = (LocalBinder) service;
-			mMAXSLocalService = binder.getService();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mMAXSLocalService = null;
-		}
-
-	};
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(MAXSService maxsService, Intent intent) {
 		String action = intent.getAction();
 		LOG.d("onHandleIntent: action=" + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
@@ -81,20 +47,25 @@ public class MAXSModuleIntentService extends IntentService {
 		}
 		else if (action.equals(GlobalConstants.ACTION_SEND_MESSAGE)) {
 			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
-			mMAXSLocalService.sendMessage(msg);
+			maxsService.sendMessage(msg);
 		}
 		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
 			String contactNumber = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			mMAXSLocalService.setRecentContact(contactNumber);
+			maxsService.setRecentContact(contactNumber);
 		}
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
 			String status = StatusRegistry.getInstanceAndInit(this).add(info);
 			// only set the status if something has changed
-			if (status != null) mMAXSLocalService.setStatus(status);
+			if (status != null) maxsService.setStatus(status);
 		}
 		else {
 			throw new IllegalStateException("MAXSModuleIntentService unkown action: " + action);
 		}
+	}
+
+	@Override
+	public Log getLog() {
+		return LOG;
 	}
 }

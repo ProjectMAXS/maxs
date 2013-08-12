@@ -17,17 +17,12 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.main.activities.ImportExportSettings;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 
 import android.app.IntentService;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 
 public class MAXSIntentService extends IntentService {
 
@@ -36,35 +31,6 @@ public class MAXSIntentService extends IntentService {
 	public MAXSIntentService() {
 		super("MAXSService");
 	}
-
-	private MAXSService mMAXSLocalService;
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		bindMAXSService();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		unbindService(mConnection);
-	}
-
-	ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			LocalBinder binder = (LocalBinder) service;
-			mMAXSLocalService = binder.getService();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mMAXSLocalService = null;
-		}
-
-	};
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -85,10 +51,5 @@ public class MAXSIntentService extends IntentService {
 		else {
 			// TODO throw new IllegalStateException();
 		}
-	}
-
-	private void bindMAXSService() {
-		Intent intent = new Intent(this, MAXSService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 }
