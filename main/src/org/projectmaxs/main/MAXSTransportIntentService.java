@@ -83,8 +83,8 @@ public class MAXSTransportIntentService extends IntentService {
 			mTransportRegistry.registerTransport(ti);
 		}
 		else if (TransportConstants.ACTION_PERFORM_COMMAND.equals(action)) {
-			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
-			mMAXSLocalService.sendMessage(msg);
+			String command = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			mMAXSLocalService.performCommand(command, subCmd, args, origin, originId, issuerInformation)
 		}
 		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
 			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);

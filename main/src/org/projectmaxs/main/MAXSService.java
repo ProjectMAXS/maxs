@@ -30,6 +30,7 @@ import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.Contact;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
+import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
 import org.projectmaxs.shared.maintransport.TransportOrigin;
 
 import android.app.Service;
@@ -269,7 +270,25 @@ public class MAXSService extends Service {
 			}
 		}
 		else {
-			// TODO broadcast to all available broadcast transports components
+			// Broadcast this message
+			List<TransportInformation> transportList = mTransportRegistry.getAllTransports();
+			for (TransportInformation ti : transportList) {
+				String transportPackage = ti.getTransportPackage();
+				List<TransportComponent> tcList = ti.getAllBroadcastableComponents();
+				for (TransportComponent tc : tcList) {
+					Intent intent = new Intent(tc.getIntentAction());
+					intent.setComponent(new ComponentName(transportPackage, transportPackage
+							+ TransportConstants.TRANSPORT_SERVICE));
+					intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
+					// no originIssuerInfo or originId info available here
+					ComponentName usedTransport = startService(intent);
+					if (usedTransport == null) {
+						LOG.w("sendMessage: transport not found transportPackage=" + transportPackage
+								+ " serviceClass=" + transportPackage + TransportConstants.TRANSPORT_SERVICE);
+					}
+				}
+
+			}
 		}
 	}
 
