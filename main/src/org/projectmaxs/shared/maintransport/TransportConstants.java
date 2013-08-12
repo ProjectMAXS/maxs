@@ -24,6 +24,7 @@ public class TransportConstants {
 	public static final String TRANSPORT_PACKAGE = GlobalConstants.TRANSPORT_PACKAGE;
 	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
 
+	public static final String MAIN_TRANSPORT_SERVICE = MAIN_PACKAGE + ".MAXSTransportIntentService";
 	public static final String TRANSPORT_SERVICE = ".TransportService";
 
 	public static final String ACTION_REGISTER_TRANSPORT = MAIN_PACKAGE + ".REGISTER_TRANSPORT";
@@ -36,6 +37,9 @@ public class TransportConstants {
 
 	public static final String EXTRA_ORIGIN_ISSUER_INFO = TRANSPORT_PACKAGE + ".ORIGIN_ISSUER_INFO";
 	public static final String EXTRA_ORIGIN_ID = TRANSPORT_PACKAGE + ".ORIGIN_ID";
+	public static final String EXTRA_COMMAND = TRANSPORT_PACKAGE + ".COMMAND";
+	public static final String EXTRA_TRANSPORT_ORIGIN = TRANSPORT_PACKAGE + ".TRANSPORT_ORIGIN";
+
 	public static final String EXTRA_TRANSPORT_INFORMATION = TRANSPORT_PACKAGE + ".TRANSPORT_INFORMATION";
 
 }

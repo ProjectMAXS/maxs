@@ -22,7 +22,6 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -50,7 +49,7 @@ public class PackageReceiver extends BroadcastReceiver {
 		LOG.d("onInstalledOrReplaced: packageName=" + packageName + " intent=" + GlobalConstants.ACTION_REGISTER);
 		for (String receiver : sReceivers) {
 			Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
-			intent.setComponent(new ComponentName(packageName, packageName + receiver));
+			intent.setClassName(packageName, packageName + receiver);
 			context.sendBroadcast(intent);
 		}
 	}

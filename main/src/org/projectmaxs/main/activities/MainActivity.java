@@ -13,7 +13,6 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -168,7 +167,7 @@ public class MainActivity extends Activity {
 			TransportRegistry.getInstance(mContext).addChangeListener(cl);
 
 			final Intent intent = new Intent();
-			intent.setComponent(new ComponentName(transportPackage, transportPackage + ".activities.InfoAndSettings"));
+			intent.setClassName(transportPackage, transportPackage + ".activities.InfoAndSettings");
 			more.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

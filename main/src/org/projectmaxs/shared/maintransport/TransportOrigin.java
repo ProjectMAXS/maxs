@@ -17,7 +17,6 @@
 
 package org.projectmaxs.shared.maintransport;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -76,7 +75,7 @@ public class TransportOrigin implements Parcelable {
 
 	public Intent getIntentFor() {
 		Intent intent = new Intent(mIntentAction);
-		intent.setComponent(new ComponentName(mPackage, getServiceClass()));
+		intent.setClassName(mPackage, getServiceClass());
 		return intent;
 	}
 }

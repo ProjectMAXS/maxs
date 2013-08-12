@@ -8,7 +8,6 @@ import org.projectmaxs.main.R;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -75,7 +74,7 @@ public class Modules extends Activity {
 			}
 
 			final Intent intent = new Intent();
-			intent.setComponent(new ComponentName(modulePackage, modulePackage + ".activities.InfoAndSettings"));
+			intent.setClassName(modulePackage, modulePackage + ".activities.InfoAndSettings");
 			row.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

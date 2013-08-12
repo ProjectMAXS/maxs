@@ -31,18 +31,25 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.maintransport.TransportOrigin;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 
 public class XMPPService {
 	private static final Log LOG = Log.getLog();
+	private static final TransportOrigin MESSAGE_TRANSPORT_ORIGIN = new TransportOrigin(Constants.PACKAGE,
+			Constants.ACTION_SEND_AS_MESSAGE);
 
 	private static XMPPService sXMPPService;
 
@@ -207,25 +214,24 @@ public class XMPPService {
 	}
 
 	protected void newMessageFromMasterJID(Message message) {
-		String body = message.getBody();
-		if (body == null) return;
-
-		String[] splitedBody = body.split(" ");
-		String command = splitedBody[0];
-
-		String subCmd = null;
-		if (splitedBody.length > 1) subCmd = splitedBody[1];
-
-		String args = null;
-		if (splitedBody.length > 2) {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 2; i < splitedBody.length; i++)
-				sb.append(splitedBody[i]);
-			args = sb.toString();
+		String command = message.getBody();
+		if (command == null) {
+			LOG.e("newMessageFromMasterJID: empty body");
+			return;
 		}
-		String from = message.getFrom();
-		// TODO mMAXSLocalService.performCommand(command, subCmd, args,
-		// MAXSService.CommandOrigin.XMPP_MESSAGE, null, from);
+
+		String issuerInfo = message.getFrom();
+		LOG.d("newMessageFromMasterJID: command=" + command + " from=" + issuerInfo);
+
+		Intent intent = new Intent(TransportConstants.ACTION_PERFORM_COMMAND);
+		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
+		intent.putExtra(TransportConstants.EXTRA_ORIGIN_ISSUER_INFO, issuerInfo);
+		intent.putExtra(TransportConstants.EXTRA_TRANSPORT_ORIGIN, MESSAGE_TRANSPORT_ORIGIN);
+		intent.setClassName(GlobalConstants.MAIN_PACKAGE, TransportConstants.MAIN_TRANSPORT_SERVICE);
+		ComponentName cn = mContext.startService(intent);
+		if (cn == null) {
+			LOG.e("newMessageFromMasterJID: could not start main transport service");
+		}
 	}
 
 	protected void scheduleReconnect() {

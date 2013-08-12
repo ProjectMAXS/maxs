@@ -162,13 +162,10 @@ public class MAXSService extends Service {
 	}
 
 	/**
-	 * args can be also in the place of subCmd if the default subCmd is wanted
 	 * 
 	 * @param command
-	 * @param subCmd
-	 * @param args
 	 * @param origin
-	 *            the transport protocol the command arrived with
+	 *            the transport the command arrived with
 	 * @param originId
 	 *            the id the command arrived with, e.g. in case of XMPP IQ
 	 *            commands, the IQ ID
@@ -176,8 +173,20 @@ public class MAXSService extends Service {
 	 *            information to identify the issuer, e.g. in case of XMPP the
 	 *            issuers (full) JID
 	 */
-	public void performCommand(String command, String subCmd, String args, TransportOrigin origin, String originId,
-			String issuerInformation) {
+	public void performCommand(String fullCommand, TransportOrigin origin, String originId, String issuerInformation) {
+		String[] splitedFullCommand = fullCommand.split(" ");
+		String command = splitedFullCommand[0];
+
+		String subCmd = null;
+		if (splitedFullCommand.length > 1) subCmd = splitedFullCommand[1];
+
+		String args = null;
+		if (splitedFullCommand.length > 2) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 2; i < splitedFullCommand.length; i++)
+				sb.append(splitedFullCommand[i]);
+			args = sb.toString();
+		}
 
 		int id = Settings.getInstance(this).getNextCommandId();
 		mCommandTable.addCommand(id, command, subCmd, args, origin, issuerInformation, originId);
@@ -266,7 +275,6 @@ public class MAXSService extends Service {
 			if (usedTransport == null) {
 				LOG.w("sendMessage: transport not found transportPackage=" + origin.getPackage() + " serviceClass="
 						+ origin.getServiceClass());
-				// TODO remove origin.getPackage() from module registry
 			}
 		}
 		else {
@@ -277,8 +285,7 @@ public class MAXSService extends Service {
 				List<TransportComponent> tcList = ti.getAllBroadcastableComponents();
 				for (TransportComponent tc : tcList) {
 					Intent intent = new Intent(tc.getIntentAction());
-					intent.setComponent(new ComponentName(transportPackage, transportPackage
-							+ TransportConstants.TRANSPORT_SERVICE));
+					intent.setClassName(transportPackage, transportPackage + TransportConstants.TRANSPORT_SERVICE);
 					intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 					// no originIssuerInfo or originId info available here
 					ComponentName usedTransport = startService(intent);
@@ -301,7 +308,7 @@ public class MAXSService extends Service {
 		for (TransportInformation ti : transports) {
 			Intent intent = new Intent(action);
 			String transportPackage = ti.getTransportPackage();
-			intent.setComponent(new ComponentName(transportPackage, transportPackage + ".TransportService"));
+			intent.setClassName(transportPackage, transportPackage + ".TransportService");
 			ComponentName cn = startService(intent);
 			if (cn == null) {
 				LOG.e("sendActionToAllTransportServices: No service found for " + transportPackage);
