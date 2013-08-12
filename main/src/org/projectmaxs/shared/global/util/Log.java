@@ -21,7 +21,7 @@ import android.text.TextUtils;
 
 public class Log {
 
-	private static LogSettings sLogSettings;
+	private static DebugLogSettings sDebugLogSettings;
 	private final String mLogTag;
 
 	public static Log getLog(Class<?> c) {
@@ -41,8 +41,8 @@ public class Log {
 		this.mLogTag = logTag;
 	}
 
-	public void initialize(LogSettings settings) {
-		sLogSettings = settings;
+	public void initialize(DebugLogSettings settings) {
+		sDebugLogSettings = settings;
 	}
 
 	public void w(String msg) {
@@ -62,7 +62,7 @@ public class Log {
 	}
 
 	public void d(String msg) {
-		if (sLogSettings != null && sLogSettings.debugLog()) {
+		if (sDebugLogSettings != null && sDebugLogSettings.isDebugLogEnabled()) {
 			android.util.Log.d(mLogTag, msg);
 		}
 		else {
@@ -70,8 +70,8 @@ public class Log {
 		}
 	}
 
-	static public abstract class LogSettings {
-		public abstract boolean debugLog();
+	public static interface DebugLogSettings {
+		public boolean isDebugLogEnabled();
 	}
 
 	private static String shortClassName(Class<?> c) {

@@ -201,7 +201,7 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		return mSharedPreferences.getBoolean(DEBUG_NETWORK, false);
 	}
 
-	public Log.LogSettings getLogSettings() {
+	public Log.LogSettings {
 		return mLogSettings;
 	}
 

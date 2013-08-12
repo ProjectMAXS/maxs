@@ -215,7 +215,7 @@ public class XMPPService {
 	}
 
 	protected void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String issuerId) {
-		// TODO
+		// in a not so far future
 	}
 
 	protected void newMessageFromMasterJID(Message message) {
@@ -355,9 +355,8 @@ public class XMPPService {
 			}
 			break;
 		default:
-			LOG.w("changeState: Unkown state change combination. mState=" + mState + ", desiredState=" + desiredState);
-			// TODO enable this
-			// throw new IllegalStateException();
+			throw new IllegalStateException("changeState: Unkown state change combination. mState=" + mState
+					+ ", desiredState=" + desiredState);
 		}
 	}
 
@@ -430,8 +429,6 @@ public class XMPPService {
 			}
 		}
 
-		// TODO handle offline messages as StateChangeListener
-
 		LOG.d("tryToConnect: successfully connected \\o/");
 		newState(State.Connected);
 	}
@@ -440,7 +437,6 @@ public class XMPPService {
 		if (mConnection != null) {
 			if (mConnection.isConnected()) {
 				newState(State.Disconnecting);
-				// TODO better disconnect handle (e.g. in extra thread)
 				LOG.d("disconnectConnection: disconnect start");
 				mConnection.disconnect();
 				LOG.d("disconnectConnection: disconnect stop");

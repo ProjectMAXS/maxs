@@ -17,15 +17,14 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.Log.LogSettings;
+import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
-public class Settings implements OnSharedPreferenceChangeListener {
+public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
 
 	private static final String LAST_RECIPIENT = "LAST_RECIPIENT";
 	private static final String CMD_ID = "CMD_ID";
@@ -46,7 +45,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	}
 
 	private SharedPreferences mSharedPreferences;
-	private LogSettings mLogSettings;
 
 	private Settings(Context context) {
 		// this.mSharedPreferences =
@@ -59,13 +57,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 		CONNECT_ON_BOOT_COMPLETED = context.getString(R.string.pref_app_connect_on_boot_completed_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-		mLogSettings = new Log.LogSettings() {
-			@Override
-			public boolean debugLog() {
-				return isDebugLogEnabled();
-			}
-		};
 	}
 
 	public void setLastRecipient(String lastRecipient) {
@@ -100,10 +91,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 	public boolean isDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
-	}
-
-	public Log.LogSettings getLogSettings() {
-		return mLogSettings;
 	}
 
 	public SharedPreferences getSharedPreferences() {

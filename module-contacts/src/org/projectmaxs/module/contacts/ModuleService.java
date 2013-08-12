@@ -76,7 +76,7 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	@Override
 	public void initLog(Context context) {
-		LOG.initialize(Settings.getInstance(context).getLogSettings());
+		LOG.initialize(Settings.getInstance(context));
 	}
 
 	private List<Contact> lookupContact(String lookupInfo) {

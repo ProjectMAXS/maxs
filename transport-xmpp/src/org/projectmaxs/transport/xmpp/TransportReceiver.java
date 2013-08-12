@@ -33,7 +33,7 @@ public class TransportReceiver extends MAXSTransportReceiver {
 
 	@Override
 	public void initLog(Context context) {
-		LOG.initialize(Settings.getInstance(context).getLogSettings());
+		LOG.initialize(Settings.getInstance(context));
 	}
 
 	@Override

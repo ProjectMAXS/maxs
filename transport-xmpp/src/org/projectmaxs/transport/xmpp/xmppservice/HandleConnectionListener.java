@@ -35,26 +35,10 @@ public class HandleConnectionListener extends StateChangeListener {
 
 	@Override
 	public void connected(Connection connection) {
-		// TODO maybe only create and add new listener if newConnection
 		mConnectionListener = new ConnectionListener() {
 
 			@Override
 			public void connectionClosed() {
-
-				// TODO is this also called when the connection is closed by the
-				// server? in that case -> reconnect, with something like
-				// @formatter:off
-				/*
-				XMPPService.State current = mXMPPService.getCurrentState();
-				switch (current) {
-				case Connected:
-					mXMPPService.reconnect();
-					break;
-				default:
-					break;
-				}
-				*/
-				// @formatter:on
 			}
 
 			@Override

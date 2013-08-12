@@ -73,7 +73,7 @@ public class MAXSService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		LOG.initialize(Settings.getInstance(this).getLogSettings());
+		LOG.initialize(Settings.getInstance(this));
 		mCommandTable = CommandTable.getInstance(this);
 		mModuleRegistry = ModuleRegistry.getInstance(this);
 		mTransportRegistry = TransportRegistry.getInstance(this);

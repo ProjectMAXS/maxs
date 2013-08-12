@@ -3,7 +3,7 @@
       package="org.projectmaxs.main"
       android:versionCode="1"
       android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="9"/>
 
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>

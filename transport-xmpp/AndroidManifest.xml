@@ -16,7 +16,7 @@
         <activity android:name=".activities.InfoAndSettings" android:exported="true" />
         <activity android:name=".activities.AdvancedSettings" />
         <receiver android:name=".TransportReceiver"
-            android:label="TODO" android:permission="org.projectmaxs.permission.USE_TRANSPORT">
+            android:label="Transport Receiver" android:permission="org.projectmaxs.permission.USE_TRANSPORT">
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER"/>
                 <action android:name="org.projectmaxs.EXPORT_SETTINGS"/>

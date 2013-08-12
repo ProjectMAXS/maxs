@@ -17,15 +17,14 @@
 
 package org.projectmaxs.module.bluetoothadmin;
 
-import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.Log.LogSettings;
+import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
-public class Settings implements OnSharedPreferenceChangeListener {
+public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
 	// App settings
 	private final String DEBUG_LOG;
 
@@ -39,7 +38,6 @@ public class Settings implements OnSharedPreferenceChangeListener {
 	}
 
 	private SharedPreferences mSharedPreferences;
-	private LogSettings mLogSettings;
 
 	private Settings(Context context) {
 		// this.mSharedPreferences =
@@ -51,20 +49,10 @@ public class Settings implements OnSharedPreferenceChangeListener {
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-		mLogSettings = new Log.LogSettings() {
-			@Override
-			public boolean debugLog() {
-				return isDebugLogEnabled();
-			}
-		};
 	}
 
 	public boolean isDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
-	}
-
-	public Log.LogSettings getLogSettings() {
-		return mLogSettings;
 	}
 
 	public SharedPreferences getSharedPreferences() {

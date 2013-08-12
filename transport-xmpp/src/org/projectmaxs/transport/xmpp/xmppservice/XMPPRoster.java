@@ -76,20 +76,14 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	@Override
 	public void entriesAdded(Collection<String> arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void entriesDeleted(Collection<String> arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void entriesUpdated(Collection<String> arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

@@ -166,9 +166,7 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 			mShortCommand = in.readString();
 			mDefaultSubCommand = in.readString();
 			mDefaultSubCommandWithArgs = in.readString();
-			int subCommandsLength = in.readInt();
-			String[] subCmdsArray = new String[subCommandsLength];
-			in.readStringArray(subCmdsArray);
+			String[] subCmdsArray = in.createStringArray();
 			mSubCommands = new HashSet<String>(Arrays.asList(subCmdsArray));
 		}
 
@@ -179,11 +177,6 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 			dest.writeString(mDefaultSubCommand);
 			dest.writeString(mDefaultSubCommandWithArgs);
 			String[] subCommands = mSubCommands.toArray(new String[mSubCommands.size()]);
-			// TODO describe better what is going on
-			// Bad Bad Android API, we have to encode the length 2 times.
-			// It's actually also encoded in the Array, but readStringArray()
-			// method bails out if the given array is to small
-			dest.writeInt(subCommands.length);
 			dest.writeStringArray(subCommands);
 		}
 

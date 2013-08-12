@@ -80,7 +80,10 @@ public class TransportService extends MAXSTransportService {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent == null) intent = new Intent(TransportConstants.ACTION_START_SERVICE);
+		if (intent == null) {
+			LOG.d("onStartCommand: null intent received, issueing START_SERVICE");
+			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
+		}
 
 		boolean stickyStart = true;
 		final String action = intent.getAction();
