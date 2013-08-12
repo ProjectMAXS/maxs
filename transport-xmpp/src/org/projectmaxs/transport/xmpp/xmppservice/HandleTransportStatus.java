@@ -28,13 +28,11 @@ import android.content.Intent;
 public class HandleTransportStatus extends StateChangeListener {
 
 	private final Context mContext;
-	private final XMPPService mXMPPService;
 
 	private String mStatusString;
 
-	public HandleTransportStatus(Context context, XMPPService xmppService) {
+	public HandleTransportStatus(Context context) {
 		mContext = context;
-		mXMPPService = xmppService;
 		mStatusString = "inactive";
 	}
 

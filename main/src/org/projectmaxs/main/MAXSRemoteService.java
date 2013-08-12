@@ -44,10 +44,7 @@ public class MAXSRemoteService extends Service {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		if (mMAXSService != null) {
-			unbindService(mConnection);
-			mMAXSService = null;
-		}
+		unbindService(mConnection);
 		return false;
 	}
 

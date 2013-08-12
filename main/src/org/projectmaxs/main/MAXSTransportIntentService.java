@@ -82,7 +82,6 @@ public class MAXSTransportIntentService extends IntentService {
 		else if (GlobalConstants.ACTION_PERFORM_COMMAND.equals(action)) {
 			String fullCommand = intent.getStringExtra(TransportConstants.EXTRA_COMMAND);
 			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
-
 			mMAXSLocalService.performCommand(fullCommand, origin);
 		}
 		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
