@@ -48,10 +48,7 @@ public class MAXSIntentService extends IntentService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (mMAXSLocalService != null) {
-			unbindService(mConnection);
-			mMAXSLocalService = null;
-		}
+		unbindService(mConnection);
 	}
 
 	ServiceConnection mConnection = new ServiceConnection() {

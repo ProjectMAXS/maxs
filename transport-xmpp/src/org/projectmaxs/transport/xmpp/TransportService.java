@@ -81,9 +81,19 @@ public class TransportService extends MAXSTransportService {
 		boolean stickyStart = true;
 		final String action = intent.getAction();
 		LOG.d("onStartCommand: action=" + action);
-		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
+			sIsRunning = false;
 			stickyStart = false;
 			stopSelf(startId);
+		}
+		else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+			sIsRunning = true;
+		}
+		// If the service is not running, and we receive something else then
+		// START_SERVICE, then don't start sticky to prevent the service from
+		// running
+		else if (!sIsRunning && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
+			stickyStart = false;
 		}
 		performInServiceHandler(intent);
 		return stickyStart ? START_STICKY : START_NOT_STICKY;
@@ -93,16 +103,17 @@ public class TransportService extends MAXSTransportService {
 	public void onHandleIntent(Intent intent) {
 		final String action = intent.getAction();
 		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
-			sIsRunning = true;
 			mXMPPService.connect();
 		}
 		else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			mXMPPService.disconnect();
-			sIsRunning = false;
 		}
 		else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mXMPPService.setStatus(status);
+		}
+		else if (TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS.equals(action)) {
+			mXMPPService.getHandleTransportStatus().sendStatus();
 		}
 		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
 			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);

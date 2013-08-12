@@ -28,9 +28,14 @@ import android.content.Intent;
 public class HandleTransportStatus extends StateChangeListener {
 
 	private final Context mContext;
+	private final XMPPService mXMPPService;
 
-	public HandleTransportStatus(Context context) {
+	private String mStatusString;
+
+	public HandleTransportStatus(Context context, XMPPService xmppService) {
 		mContext = context;
+		mXMPPService = xmppService;
+		mStatusString = "inactive";
 	}
 
 	@Override
@@ -49,26 +54,31 @@ public class HandleTransportStatus extends StateChangeListener {
 		else {
 			compressionStatus = "uncompressed";
 		}
-		sendStatus(mContext, "connected (" + encryptionStatus + ", " + compressionStatus + ")");
+		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ")");
 	}
 
 	@Override
 	public void disconnected(Connection connection) {
-		sendStatus(mContext, "disconnected");
+		setAndSendStatus("disconnected");
 	}
 
 	public void connecting() {
-		sendStatus(mContext, "connecting");
+		setAndSendStatus("connecting");
 	}
 
 	public void disconnecting() {
-		sendStatus(mContext, "disconnecting");
+		setAndSendStatus("disconnecting");
 	}
 
-	public static void sendStatus(Context context, String status) {
+	protected void setAndSendStatus(String status) {
+		mStatusString = status;
+		sendStatus();
+	}
+
+	public void sendStatus() {
 		Intent intent = new Intent(TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS);
 		intent.putExtra(GlobalConstants.EXTRA_PACKAGE, Constants.PACKAGE);
-		intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
-		context.startService(intent);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mStatusString);
+		mContext.startService(intent);
 	}
 }

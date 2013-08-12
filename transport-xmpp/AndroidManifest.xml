@@ -33,6 +33,7 @@
             android:permission="org.projectmaxs.permission.USE_TRANSPORT" >
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND" />
+                <action android:name="org.projectmaxs.xmpp.REQUEST_TRANSPORT_STATUS" />
             </intent-filter>
         </service>
     </application>

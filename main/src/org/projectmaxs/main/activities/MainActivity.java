@@ -10,6 +10,7 @@ import org.projectmaxs.main.TransportRegistry;
 import org.projectmaxs.main.TransportRegistry.ChangeListener;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
 import android.app.Activity;
@@ -105,6 +106,14 @@ public class MainActivity extends Activity {
 		mTIAdapter = new TransportInformationAdapter(this, mTransportInformationList);
 		mTransportList.setAdapter(mTIAdapter);
 		TransportRegistry.getInstance(this).addChangeListener(mTransportRegistryListener);
+
+		// request all transports to update their status
+		for (TransportInformation ti : mTransportInformationList) {
+			Intent intent = new Intent(TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS);
+			intent.setClassName(ti.getTransportPackage(), ti.getTransportPackage()
+					+ TransportConstants.TRANSPORT_SERVICE);
+			startService(intent);
+		}
 	}
 
 	@Override

@@ -60,6 +60,7 @@ public class XMPPService {
 	private final MessagesTable mMessagesTable;
 	private final Context mContext;
 	private final ConnectivityManager mConnectivityManager;
+	private final HandleTransportStatus mHandleTransportStatus;
 
 	private XMPPStatus mXMPPStatus;
 	private State mState = State.Disconnected;
@@ -87,8 +88,9 @@ public class XMPPService {
 		addListener(new HandleMessagesListener(this));
 		addListener(new XMPPPingManager(this));
 		addListener(new XMPPFileTransfer(context));
-		addListener(new HandleTransportStatus(context));
 
+		mHandleTransportStatus = new HandleTransportStatus(context, this);
+		addListener(mHandleTransportStatus);
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
 		mXMPPStatus = new XMPPStatus(xmppRoster);
@@ -105,6 +107,10 @@ public class XMPPService {
 
 	public boolean isConnected() {
 		return (getCurrentState() == State.Connected);
+	}
+
+	public HandleTransportStatus getHandleTransportStatus() {
+		return mHandleTransportStatus;
 	}
 
 	public void addListener(StateChangeListener listener) {
@@ -355,7 +361,7 @@ public class XMPPService {
 		if (mSettings.getMasterJidCount() == 0) failureReason = "Master JID(s) not configured";
 		if (failureReason != null) {
 			LOG.w("tryToConnect: failureReason=" + failureReason);
-			HandleTransportStatus.sendStatus(mContext, "Unable to connect: " + failureReason);
+			mHandleTransportStatus.setAndSendStatus("Unable to connect: " + failureReason);
 			return;
 		}
 
