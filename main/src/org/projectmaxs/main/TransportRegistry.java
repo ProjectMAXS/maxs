@@ -18,7 +18,7 @@
 package org.projectmaxs.main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,11 +27,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.projectmaxs.main.database.TransportRegistryTable;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
 import android.content.Context;
 
 public class TransportRegistry {
+
+	private static final Log LOG = Log.getLog();
 
 	private static TransportRegistry sTransportRegistry;
 
@@ -40,8 +43,7 @@ public class TransportRegistry {
 		return sTransportRegistry;
 	}
 
-	private final Map<String, TransportInformation> mPackageTransport = new HashMap<String, TransportInformation>();
-
+	private final List<TransportInformation> mTransportList = new ArrayList<TransportInformation>(5);
 	private final Map<String, String> mPackageStatus = new ConcurrentHashMap<String, String>();
 
 	private final Set<ChangeListener> mChangeListeners = new HashSet<ChangeListener>();
@@ -76,7 +78,7 @@ public class TransportRegistry {
 	}
 
 	public synchronized List<TransportInformation> getAllTransports() {
-		return new ArrayList<TransportInformation>(mPackageTransport.values());
+		return Collections.unmodifiableList(mTransportList);
 	}
 
 	public void updateStatus(String transportPackage, String status) {
@@ -87,6 +89,12 @@ public class TransportRegistry {
 
 	public String getStatus(String transportPackage) {
 		return mPackageStatus.get(transportPackage);
+	}
+
+	public synchronized boolean containsTransport(String transportPackage) {
+		for (TransportInformation ti : mTransportList)
+			if (ti.getTransportPackage().equals(transportPackage)) return true;
+		return false;
 	}
 
 	public synchronized void unregisterTransport(String transportPackage) {
@@ -102,8 +110,13 @@ public class TransportRegistry {
 	}
 
 	private void add(TransportInformation transportInformation) {
-		String transportPackage = transportInformation.getTransportPackage();
-		mPackageTransport.put(transportPackage, transportInformation);
+		final String transportPackage = transportInformation.getTransportPackage();
+		if (containsTransport(transportPackage)) {
+			LOG.e("add: trying to add transport " + transportPackage + " thats already there");
+			return;
+		}
+		mTransportList.add(transportInformation);
+		Collections.sort(mTransportList);
 		mPackageStatus.put(transportPackage, "unkown");
 		mTransportRegistryTable.insertOrReplace(transportInformation);
 		for (ChangeListener l : mChangeListeners)
@@ -112,8 +125,12 @@ public class TransportRegistry {
 
 	private void remove(String transportPackage) {
 		updateStatus(transportPackage, "removed");
+		Iterator<TransportInformation> it = mTransportList.iterator();
+		while (it.hasNext()) {
+			TransportInformation ti = it.next();
+			if (transportPackage.equals(ti.getTransportPackage())) it.remove();
+		}
 		mPackageStatus.remove(transportPackage);
-		mPackageTransport.remove(transportPackage);
 		mTransportRegistryTable.deleteTransportInformation(transportPackage);
 		for (ChangeListener l : mChangeListeners)
 			l.transportUnregisted(transportPackage);

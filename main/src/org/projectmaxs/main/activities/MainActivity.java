@@ -41,14 +41,21 @@ public class MainActivity extends Activity {
 	private TransportRegistry.ChangeListener mTransportRegistryListener = new TransportRegistry.ChangeListener() {
 		@Override
 		public void transportUnregisted(String transportPackage) {
-			mTransportInformationList.remove(transportPackage);
-			mTIAdapter.notifyDataSetChanged();
+			notifyAdapter();
 		}
 
 		@Override
 		public void transportRegistered(TransportInformation transportInformation) {
-			mTransportInformationList.add(transportInformation);
-			mTIAdapter.notifyDataSetChanged();
+			notifyAdapter();
+		}
+
+		private void notifyAdapter() {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mTIAdapter.notifyDataSetChanged();
+				}
+			});
 		}
 	};
 
@@ -128,6 +135,8 @@ public class MainActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			if (mData.size() <= position) return null;
+
 			final TransportInformation ti = mData.get(position);
 			final String transportName = ti.getTransportName();
 			final String transportPackage = ti.getTransportPackage();

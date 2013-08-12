@@ -19,13 +19,13 @@ package org.projectmaxs.main.receivers;
 
 import org.projectmaxs.main.ModuleRegistry;
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.util.IntentUtil;
 import org.projectmaxs.shared.global.util.Log;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 public class PackageReceiver extends BroadcastReceiver {
 
@@ -35,7 +35,8 @@ public class PackageReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
-		String packageName = IntentUtil.getOriginPackage(intent);
+		Uri data = intent.getData();
+		String packageName = data.getEncodedSchemeSpecificPart();
 		if (action.equals(android.content.Intent.ACTION_PACKAGE_ADDED)
 				|| action.equals(android.content.Intent.ACTION_PACKAGE_REPLACED)) {
 			onInstalledOrReplaced(context, packageName);

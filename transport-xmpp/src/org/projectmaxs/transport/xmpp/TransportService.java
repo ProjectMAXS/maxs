@@ -23,15 +23,18 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
+import org.projectmaxs.shared.transport.MAXSTransportService;
 import org.projectmaxs.transport.xmpp.util.Constants;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
-import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 
-public class TransportService extends Service {
+public class TransportService extends MAXSTransportService {
+
+	public TransportService() {
+		super("XMPP");
+	}
 
 	// @formatter:off
 	public static final TransportInformation sTransportInformation = new TransportInformation(
@@ -69,12 +72,7 @@ public class TransportService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-				startService(new Intent(TransportConstants.ACTION_START_SERVICE));
-			}
-			else {
-				LOG.w("onStartCommand() null intent with Gingerbread or lower");
-			}
+			startService(new Intent(TransportConstants.ACTION_START_SERVICE));
 			// Returning not sticky here, the start service intent will take
 			// care of starting the service sticky
 			return START_NOT_STICKY;
@@ -84,14 +82,23 @@ public class TransportService extends Service {
 		final String action = intent.getAction();
 		LOG.d("onStartCommand: action=" + action);
 		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+			stickyStart = false;
+			stopSelf(startId);
+		}
+		performInServiceHandler(intent);
+		return stickyStart ? START_STICKY : START_NOT_STICKY;
+	}
+
+	@Override
+	public void onHandleIntent(Intent intent) {
+		final String action = intent.getAction();
+		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			sIsRunning = true;
 			mXMPPService.connect();
 		}
 		else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			mXMPPService.disconnect();
-			stopSelf(startId);
 			sIsRunning = false;
-			stickyStart = false;
 		}
 		else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
@@ -110,7 +117,5 @@ public class TransportService extends Service {
 		else {
 			throw new IllegalStateException("Unkown intent action: " + action);
 		}
-
-		return stickyStart ? START_STICKY : START_NOT_STICKY;
 	}
 }

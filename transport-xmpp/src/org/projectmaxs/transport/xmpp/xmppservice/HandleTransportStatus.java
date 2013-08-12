@@ -20,6 +20,7 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 import org.jivesoftware.smack.Connection;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.transport.xmpp.util.Constants;
 
 import android.content.Context;
 import android.content.Intent;
@@ -66,8 +67,8 @@ public class HandleTransportStatus extends StateChangeListener {
 
 	public static void sendStatus(Context context, String status) {
 		Intent intent = new Intent(TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS);
+		intent.putExtra(GlobalConstants.EXTRA_PACKAGE, Constants.PACKAGE);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
 		context.startService(intent);
 	}
-
 }

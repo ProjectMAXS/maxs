@@ -20,7 +20,6 @@ package org.projectmaxs.main;
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.util.IntentUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
@@ -88,7 +87,7 @@ public class MAXSTransportIntentService extends IntentService {
 			mMAXSLocalService.sendMessage(msg);
 		}
 		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
-			String transportPackage = IntentUtil.getOriginPackage(intent);
+			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mTransportRegistry.updateStatus(transportPackage, status);
 		}
