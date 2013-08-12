@@ -91,7 +91,6 @@ public class TransportService extends MAXSTransportService {
 		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			sIsRunning = false;
 			stickyStart = false;
-			stopSelf(startId);
 		}
 		else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			sIsRunning = true;
@@ -115,6 +114,7 @@ public class TransportService extends MAXSTransportService {
 		}
 		else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			mXMPPService.disconnect();
+			stopSelf();
 		}
 		else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
