@@ -146,11 +146,11 @@ public class TransportRegistry {
 		mPackageStatus.remove(transportPackage);
 		mTransportRegistryTable.deleteTransportInformation(transportPackage);
 		for (ChangeListener l : mChangeListeners)
-			l.transportUnregisted(ti);
+			l.transportUnregistered(ti);
 	}
 
 	public static abstract class ChangeListener {
-		public void transportUnregisted(TransportInformation transportInformation) {
+		public void transportUnregistered(TransportInformation transportInformation) {
 		};
 
 		public void transportRegistered(TransportInformation transportInformation) {

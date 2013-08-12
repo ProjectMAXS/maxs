@@ -40,21 +40,22 @@ public class MainActivity extends Activity {
 	private List<TransportInformation> mTransportInformationList;
 	private TransportRegistry.ChangeListener mTransportRegistryListener = new TransportRegistry.ChangeListener() {
 		@Override
-		public void transportUnregisted(TransportInformation transportInformation) {
-			mTransportInformationList.remove(transportInformation);
-			notifyAdapter();
-		}
-
-		@Override
-		public void transportRegistered(TransportInformation transportInformation) {
-			mTransportInformationList.add(transportInformation);
-			notifyAdapter();
-		}
-
-		private void notifyAdapter() {
+		public void transportUnregistered(final TransportInformation transportInformation) {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					mTransportInformationList.remove(transportInformation);
+					mTIAdapter.notifyDataSetChanged();
+				}
+			});
+		}
+
+		@Override
+		public void transportRegistered(final TransportInformation transportInformation) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mTransportInformationList.add(transportInformation);
 					mTIAdapter.notifyDataSetChanged();
 				}
 			});
@@ -103,7 +104,8 @@ public class MainActivity extends Activity {
 			startService(new Intent(Constants.ACTION_START_SERVICE));
 		}
 
-		// Race condition between getAllTransports and
+		// Race condition between getCopyAddListener and new
+		// TransportInformationAdapter
 		mTransportInformationList = TransportRegistry.getInstance(this).getCopyAddListener(mTransportRegistryListener);
 		mTIAdapter = new TransportInformationAdapter(this, mTransportInformationList);
 		mTransportList.setAdapter(mTIAdapter);

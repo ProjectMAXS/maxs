@@ -97,6 +97,11 @@ public class ModuleRegistry {
 		return new ArrayList<ModuleInformation>(Collections.unmodifiableCollection(mPackageCommands.values()));
 	}
 
+	public synchronized List<ModuleInformation> getCopyAddListener(ChangeListener listener) {
+		addChangeListener(listener);
+		return new ArrayList<ModuleInformation>(mPackageCommands.values());
+	}
+
 	protected synchronized CommandInformation get(String command) {
 		command = mShortCommandMap.containsKey(command) ? mShortCommandMap.get(command) : command;
 		return mCommands.get(command);
@@ -106,7 +111,6 @@ public class ModuleRegistry {
 		if (!mModuleRegistryTable.containsModule(modulePackage)) return;
 		remove(modulePackage);
 		mModuleRegistryTable.deleteModuleInformation(modulePackage);
-		notifyChangeListner();
 	}
 
 	protected synchronized void registerModule(ModuleInformation moduleInformation) {
@@ -114,7 +118,6 @@ public class ModuleRegistry {
 		remove(moduleInformation.getModulePackage());
 		add(moduleInformation);
 		mModuleRegistryTable.insertOrReplace(moduleInformation);
-		notifyChangeListner();
 	}
 
 	private void add(ModuleInformation moduleInformation) {
@@ -143,6 +146,9 @@ public class ModuleRegistry {
 		}
 		mPackageCommands.put(modulePackage, moduleInformation);
 		mPackageShortCommands.put(modulePackage, packageShortCommands);
+
+		for (ChangeListener l : mChangeListeners)
+			l.moduleRegistred(moduleInformation);
 	}
 
 	private void remove(String modulePackage) {
@@ -163,17 +169,15 @@ public class ModuleRegistry {
 			}
 			mPackageShortCommands.remove(modulePackage);
 		}
-
+		ModuleInformation module = mPackageCommands.get(modulePackage);
 		mPackageCommands.remove(modulePackage);
-	}
-
-	private void notifyChangeListner() {
-		for (ChangeListener cl : mChangeListeners) {
-			cl.dataChanged();
-		}
+		for (ChangeListener l : mChangeListeners)
+			l.moduleUnregistred(module);
 	}
 
 	public interface ChangeListener {
-		public void dataChanged();
+		public void moduleRegistred(ModuleInformation module);
+
+		public void moduleUnregistred(ModuleInformation module);
 	}
 }

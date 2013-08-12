@@ -1,6 +1,5 @@
 package org.projectmaxs.main.activities;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.projectmaxs.main.ModuleRegistry;
@@ -22,10 +21,31 @@ import android.widget.TextView;
 public class Modules extends Activity {
 
 	private ListView mModulesList;
+
+	private List<ModuleInformation> mModuleInformationList;
+	private ModuleInformationAdapter mModuleInformationAdapter;
 	private final ModuleRegistry.ChangeListener mChangeListener = new ModuleRegistry.ChangeListener() {
+
 		@Override
-		public void dataChanged() {
-			buildList();
+		public void moduleRegistred(final ModuleInformation module) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mModuleInformationList.add(module);
+					mModuleInformationAdapter.notifyDataSetChanged();
+				}
+			});
+		}
+
+		@Override
+		public void moduleUnregistred(final ModuleInformation module) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mModuleInformationList.remove(module);
+					mModuleInformationAdapter.notifyDataSetChanged();
+				}
+			});
 		}
 	};
 
@@ -34,8 +54,9 @@ public class Modules extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.modules);
 		mModulesList = (ListView) findViewById(R.id.modulesList);
-		buildList();
-		ModuleRegistry.getInstance(this).addChangeListener(mChangeListener);
+		mModuleInformationList = ModuleRegistry.getInstance(this).getCopyAddListener(mChangeListener);
+		mModuleInformationAdapter = new ModuleInformationAdapter(this, mModuleInformationList);
+		mModulesList.setAdapter(mModuleInformationAdapter);
 	}
 
 	@Override
@@ -44,20 +65,11 @@ public class Modules extends Activity {
 		ModuleRegistry.getInstance(this).removeChangeListener(mChangeListener);
 	}
 
-	private void buildList() {
-		List<ModuleInformation> moduleInformationList = ModuleRegistry.getInstance(this).getAllModules();
-		Collections.sort(moduleInformationList);
-		ModuleInformationAdapter adapter = new ModuleInformationAdapter(this, R.id.modulesList, moduleInformationList);
-		mModulesList.setAdapter(adapter);
-	}
-
 	class ModuleInformationAdapter extends ArrayAdapter<ModuleInformation> {
-		final int mResource;
 		final List<ModuleInformation> mData;
 
-		public ModuleInformationAdapter(Context context, int resource, List<ModuleInformation> data) {
-			super(context, resource, data);
-			mResource = resource;
+		public ModuleInformationAdapter(Context context, List<ModuleInformation> data) {
+			super(context, R.layout.modules_listview_row, data);
 			mData = data;
 		}
 
