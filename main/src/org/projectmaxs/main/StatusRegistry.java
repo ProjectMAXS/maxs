@@ -53,6 +53,14 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 		service.setStatus(status);
 	}
 
+	/**
+	 * Add the StatusInformation to the registry. If the value has changed or is
+	 * not null, return the new status String that should get broadcasted to the
+	 * transports.
+	 * 
+	 * @param info
+	 * @return
+	 */
 	public String add(StatusInformation info) {
 		String statusKey = info.getKey();
 		String statusValue = info.getValue();

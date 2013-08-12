@@ -90,6 +90,7 @@ public class MAXSModuleIntentService extends IntentService {
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			StatusInformation info = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
 			String status = StatusRegistry.getInstanceAndInit(this).add(info);
+			// only set the status if something has changed
 			if (status != null) mMAXSLocalService.setStatus(status);
 		}
 		else {

@@ -289,7 +289,18 @@ public class MAXSService extends Service {
 	}
 
 	protected void setStatus(String status) {
-		// TODO set status to all statusable transports
+		List<TransportInformation> transportList = mTransportRegistry.getAllTransports();
+		for (TransportInformation ti : transportList) {
+			if (!ti.supportsStatus()) continue;
+			final String transportPackage = ti.getTransportPackage();
+			final String cls = transportPackage + TransportConstants.TRANSPORT_SERVICE;
+			final Intent intent = new Intent(TransportConstants.ACTION_SET_STATUS);
+			intent.setClassName(transportPackage, cls);
+			intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
+			ComponentName usedTransport = startService(intent);
+			if (usedTransport == null)
+				LOG.w("setSTatus: transport not found package=" + transportPackage + " class=" + cls);
+		}
 	}
 
 	private void sendActionToAllTransportServices(String action) {
