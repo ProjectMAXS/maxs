@@ -5,9 +5,10 @@
     android:versionName="1.0" >
 
     <permission android:name="org.projectmaxs.permission.USE_TRANSPORT" />
-
+    <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" />
+    <usues-permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-sdk android:minSdkVersion="9"/>
