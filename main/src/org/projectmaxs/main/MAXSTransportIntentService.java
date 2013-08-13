@@ -31,6 +31,10 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 
 	private TransportRegistry mTransportRegistry;
 
+	public MAXSTransportIntentService() {
+		super(LOG);
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -59,10 +63,5 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 		else {
 			throw new IllegalStateException("onHandleIntent: unkown action " + action);
 		}
-	}
-
-	@Override
-	public Log getLog() {
-		return LOG;
 	}
 }

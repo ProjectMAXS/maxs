@@ -126,18 +126,25 @@ public class ModuleService extends MAXSModuleIntentService {
 		private final int mCommandId;
 
 		private BluetoothStateReceiver(int commandId) {
+			addPendingAction(this);
 			mCommandId = commandId;
 		}
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String state = stateToString(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1));
+			int stateInt = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+			String state = stateToString(stateInt);
 			String prevState = stateToString(intent.getIntExtra(BluetoothAdapter.EXTRA_PREVIOUS_STATE, -1));
 			LOG.d("Bluetooth adapter changed state from '" + prevState + "' to '" + state + "'");
 			Message msgContent = new Message("Bluetooth adapter changed state from '" + prevState + "' to '" + state
 					+ "'");
-			ModuleService.this.sendMessage(msgContent, mCommandId);
-			ModuleService.this.unregisterReceiver(this);
+			sendMessage(msgContent, mCommandId);
+
+			// unregister this receiver if we have reached an end state
+			if (stateInt == BluetoothAdapter.STATE_OFF || stateInt == BluetoothAdapter.STATE_ON) {
+				unregisterReceiver(this);
+				removePendingAction(this);
+			}
 		}
 	}
 }

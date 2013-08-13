@@ -33,15 +33,19 @@ import android.os.IBinder;
 
 public abstract class MAXSIntentServiceWithMAXSService extends Service {
 	private final Queue<Intent> mQueue = new LinkedList<Intent>();
+	private final Log mLog;
 
 	private MAXSService mMAXSService;
-	private Log mLog;
+
+	public MAXSIntentServiceWithMAXSService(Log log) {
+		super();
+		mLog = log;
+	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		bindService(new Intent(this, MAXSService.class), mConnection, Context.BIND_AUTO_CREATE);
-		mLog = getLog();
 	}
 
 	@Override
@@ -87,8 +91,6 @@ public abstract class MAXSIntentServiceWithMAXSService extends Service {
 	};
 
 	protected abstract void onHandleIntent(MAXSService maxsService, Intent intent);
-
-	protected abstract Log getLog();
 
 	@Override
 	public final IBinder onBind(Intent intent) {

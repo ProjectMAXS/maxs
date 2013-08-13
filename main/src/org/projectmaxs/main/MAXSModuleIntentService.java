@@ -31,6 +31,10 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 
 	private ModuleRegistry mModuleRegistry;
 
+	public MAXSModuleIntentService() {
+		super(LOG);
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -62,10 +66,5 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 		else {
 			throw new IllegalStateException("MAXSModuleIntentService unkown action: " + action);
 		}
-	}
-
-	@Override
-	public Log getLog() {
-		return LOG;
 	}
 }
