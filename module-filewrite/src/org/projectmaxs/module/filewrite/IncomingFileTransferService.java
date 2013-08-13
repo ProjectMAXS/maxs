@@ -25,65 +25,76 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.MAXSIncomingFileTransfer;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.aidl.IMAXSIncomingFileTransferService;
 import org.projectmaxs.shared.global.util.Log;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
+import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 
-public class IncomingFileTransferService extends IntentService {
+public class IncomingFileTransferService extends Service {
 
 	private static final Log LOG = Log.getLog();
-
-	public IncomingFileTransferService() {
-		super("IncomingFileTransferService");
-	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		android.os.Debug.waitForDebugger();
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
-		LOG.d("onHandleIntent");
-		MAXSIncomingFileTransfer mift = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
-
-		String filename = mift.getFilename();
-		InputStream is = mift.getInputStream();
-
-		OutputStream os;
-		try {
-			os = new FileOutputStream(new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, filename));
-		} catch (FileNotFoundException e) {
-			LOG.e("onHandleIntent", e);
-			return;
-		}
-
-		int len;
-		byte[] buf = new byte[1024];
-		try {
-			while ((len = is.read(buf)) > 0) {
-				os.write(buf, 0, len);
-			}
-		} catch (IOException e) {
-			LOG.e("onHandleIntent", e);
-			return;
-		}
-		finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-			}
-			try {
-				os.close();
-			} catch (IOException e) {
-			}
-		}
-
-		sendMessage(new Message("Received file " + filename));
+	public IBinder onBind(Intent intent) {
+		return mBinder;
 	}
+
+	private final IMAXSIncomingFileTransferService.Stub mBinder = new IMAXSIncomingFileTransferService.Stub() {
+
+		@Override
+		public void incomingFileTransfer(String filename, long size, String description, ParcelFileDescriptor pfd)
+				throws RemoteException {
+
+			InputStream is = new ParcelFileDescriptor.AutoCloseInputStream(pfd);
+			OutputStream os;
+			try {
+				os = new FileOutputStream(new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, filename));
+			} catch (FileNotFoundException e) {
+				LOG.e("incomingFileTransfer", e);
+				return;
+			}
+			finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+
+			int len;
+			byte[] buf = new byte[1024];
+			try {
+				while ((len = is.read(buf)) > 0) {
+					os.write(buf, 0, len);
+				}
+			} catch (IOException e) {
+				LOG.e("incomingFileTransfer", e);
+				return;
+			}
+			finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+				try {
+					os.close();
+				} catch (IOException e) {
+				}
+			}
+
+			sendMessage(new Message("Received file " + filename));
+		}
+	};
 
 	public void sendMessage(Message message) {
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);

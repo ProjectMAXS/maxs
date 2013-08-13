@@ -54,6 +54,7 @@ public class ParcelFileDescriptorUtil {
 		final OutputStream mOut;
 
 		TransferThread(InputStream in, OutputStream out) {
+			super("ParcelFileDescriptor Transfer Thread");
 			mIn = in;
 			mOut = out;
 			setDaemon(true);
@@ -68,6 +69,7 @@ public class ParcelFileDescriptorUtil {
 				while ((len = mIn.read(buf)) > 0) {
 					mOut.write(buf, 0, len);
 				}
+				mOut.flush(); // just to be safe
 			} catch (IOException e) {
 				LOG.e("TransferThread", e);
 			}

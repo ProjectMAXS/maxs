@@ -26,9 +26,12 @@
                 <action android:name="org.projectmaxs.ACTION_BIND_FILEWRITE"/>
             </intent-filter>
         </service>
-        <service android:name=".IncomingFileTransferService" android:permission="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE">
+        <service
+            android:name=".IncomingFileTransferService"
+            android:permission="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE" >
+            <!-- This intent filter is required -->
             <intent-filter>
-                <action android:name="org.projectmaxs.INCOMING_FILETRANSFER"/>
+                <action android:name="org.projectmaxs.INCOMING_FILETRANSFER" />
             </intent-filter>
         </service>
     </application>

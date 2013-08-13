@@ -17,8 +17,10 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringBufferInputStream;
 
 import org.jivesoftware.smack.Connection;
@@ -26,15 +28,16 @@ import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.MAXSIncomingFileTransfer;
+import org.projectmaxs.shared.global.aidl.IMAXSIncomingFileTransferService;
+import org.projectmaxs.shared.global.util.AsyncServiceTask;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.ParcelFileDescriptorUtil;
 import org.projectmaxs.transport.xmpp.Settings;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 
 public class XMPPFileTransfer extends StateChangeListener implements FileTransferListener {
 
@@ -70,22 +73,55 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		// long size = request.getFileSize();
 		// String description = request.getDescription();
 
-		String content = "foobar";
+		final String content = "foobar";
+		final String filename = "foo";
+		final String description = "more foobar";
 		InputStream is = new StringBufferInputStream(content);
-		ParcelFileDescriptor pfd;
+		// ParcelFileDescriptor pfd1;
+		// try {
+		// pfd1 = ParcelFileDescriptorUtil.pipeFrom(is);
+		// } catch (IOException e) {
+		// LOG.e("fileTransferRequest", e);
+		// return;
+		// }
+
+		ParcelFileDescriptor[] pfds;
 		try {
-			pfd = ParcelFileDescriptorUtil.pipeFrom(is);
-		} catch (IOException e) {
-			LOG.e("fileTransferRequest", e);
+			pfds = ParcelFileDescriptor.createPipe();
+		} catch (IOException e1) {
+			return;
+		}
+		final ParcelFileDescriptor readSide = pfds[0];
+		final ParcelFileDescriptor writeSide = pfds[1];
+
+		OutputStream os = new FileOutputStream(writeSide.getFileDescriptor());
+		try {
+			os.write(content.getBytes());
+			os.flush();
+		} catch (IOException e1) {
 			return;
 		}
 
-		MAXSIncomingFileTransfer mift = new MAXSIncomingFileTransfer("foo", content.length(), "bar", pfd, requestor);
+		final long size = content.length();
 
-		Intent intent = new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER);
-		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mift);
-		ComponentName cn = mContext.startService(intent);
-		LOG.d(cn.toString());
+		new AsyncServiceTask<IMAXSIncomingFileTransferService>(
+				new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER), mContext) {
+
+			@Override
+			public IMAXSIncomingFileTransferService asInterface(IBinder iBinder) {
+				return IMAXSIncomingFileTransferService.Stub.asInterface(iBinder);
+			}
+
+			@Override
+			public void performTask(IMAXSIncomingFileTransferService iinterface) {
+				try {
+					iinterface.incomingFileTransfer(filename, size, description, readSide);
+				} catch (RemoteException e) {
+					LOG.e("fileTransferRequest", e);
+				}
+			}
+
+		}.go();
 	}
 
 	@Override
