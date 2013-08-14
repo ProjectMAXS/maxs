@@ -20,6 +20,8 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +32,17 @@ import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.aidl.IMAXSIncomingFileTransferService;
+import org.projectmaxs.shared.global.aidl.IMAXSOutgoingFileTransferService;
 import org.projectmaxs.shared.global.util.AsyncServiceTask;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.ParcelFileDescriptorUtil;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.Settings;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,14 +57,12 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	private static final Log LOG = Log.getLog();
 
-	private static Connection sConnection;
+	private static FileTransferManager sFileTransferManager;
 
 	private final Settings mSettings;
 	private final Context mContext;
 	private final WifiManager mWifiManager;
 	private final Socks5Proxy mProxy;
-
-	private FileTransferManager mFileTransferManager;
 
 	private BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -161,18 +165,16 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void connected(Connection connection) {
-		sConnection = connection;
-		mFileTransferManager = new FileTransferManager(connection);
-		mFileTransferManager.addFileTransferListener(this);
+		sFileTransferManager = new FileTransferManager(connection);
+		sFileTransferManager.addFileTransferListener(this);
 		mContext.registerReceiver(mWifiBroadcastReceiver, new IntentFilter(
 				WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION));
 	}
 
 	@Override
 	public void disconnected(Connection connection) {
-		sConnection = null;
-		mFileTransferManager.removeFileTransferListener(this);
-		mFileTransferManager = null;
+		sFileTransferManager.removeFileTransferListener(this);
+		sFileTransferManager = null;
 		mContext.unregisterReceiver(mWifiBroadcastReceiver);
 	}
 
@@ -191,5 +193,43 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		// otherwise addresses will be empty and local S5B proxy
 		// will not be used
 		mProxy.replaceLocalAddresses(addresses);
+	}
+
+	public static class MAXSOutgoingFileTransferService extends Service {
+
+		@Override
+		public IBinder onBind(Intent arg0) {
+			return mBinder;
+		}
+
+		private final IMAXSOutgoingFileTransferService.Stub mBinder = new IMAXSOutgoingFileTransferService.Stub() {
+
+			@Override
+			public ParcelFileDescriptor outgoingFileTransfer(String filename, long size, String description,
+					String toJID) throws RemoteException {
+				if (sFileTransferManager == null) {
+					LOG.e("outgoingFileTransfer: no connection");
+					return null;
+				}
+
+				PipedInputStream is = new PipedInputStream();
+				OutputStream os;
+				ParcelFileDescriptor pfd;
+				try {
+					os = new PipedOutputStream(is);
+					pfd = ParcelFileDescriptorUtil.pipeTo(os);
+				} catch (IOException e) {
+					LOG.e("outgoingFileTransfer: no connection");
+					return null;
+				}
+
+				OutgoingFileTransfer transfer = sFileTransferManager.createOutgoingFileTransfer(toJID);
+				transfer.sendStream(is, filename, size, description);
+
+				return pfd;
+			}
+
+		};
+
 	}
 }

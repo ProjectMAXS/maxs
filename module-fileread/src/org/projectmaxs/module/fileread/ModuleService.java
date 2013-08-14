@@ -17,6 +17,7 @@
 
 package org.projectmaxs.module.fileread;
 
+import org.projectmaxs.module.fileread.cmd.FileCmd;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.aidl.IFileReadModuleService;
 import org.projectmaxs.shared.global.util.Log;
@@ -62,7 +63,12 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	@Override
 	public Message handleCommand(Command command) {
-		return new Message("Not implemented");
+		String subCommand = command.getCommand();
+		if ("send".equals(subCommand)) {
+			String file = command.getArgs();
+			return FileCmd.handleSend(this, file);
+		}
+		return null;
 	}
 
 	@Override

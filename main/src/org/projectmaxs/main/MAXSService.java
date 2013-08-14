@@ -162,6 +162,7 @@ public class MAXSService extends Service {
 	}
 
 	/**
+	 * Entry point for commands provided by transports.
 	 * 
 	 * @param command
 	 * @param origin
@@ -184,6 +185,11 @@ public class MAXSService extends Service {
 
 		int id = Settings.getInstance(this).getNextCommandId();
 		mCommandTable.addCommand(id, command, subCmd, args, origin);
+
+		// block for special 'help' commands.
+		if ("help".equals(command)) {
+
+		}
 
 		CommandInformation ci = mModuleRegistry.get(command);
 		if (ci == null) {

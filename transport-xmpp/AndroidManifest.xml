@@ -6,6 +6,7 @@
 
     <permission android:name="org.projectmaxs.permission.USE_TRANSPORT" />
     <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
+    <permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" />
     <uses-permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
@@ -37,6 +38,14 @@
                 <action android:name="org.projectmaxs.transport.xmpp.NETWORK_STATUS_CHANGED" />
             </intent-filter>
         </service>
+        <service
+            android:name=".xmppservice.XMPPFileTransfer$MAXSOutgoingFileTransferService"
+            android:permission="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" >
+            <intent-filter>
+                <action android:name="org.projectmaxs.OUTGOING_FILETRANSFER" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

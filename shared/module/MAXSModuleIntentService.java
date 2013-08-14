@@ -121,8 +121,15 @@ public abstract class MAXSModuleIntentService extends Service {
 		mLog.d("onHandleIntent: " + intent.getAction());
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
-		org.projectmaxs.shared.global.Message message = handleCommand(command);
-		if (message == null) return;
+		org.projectmaxs.shared.global.Message message;
+
+		if ("help".equals(command.getCommand())) {
+			message = getHelp(command.getSubCommand(), command.getArgs());
+		}
+		else {
+			message = handleCommand(command);
+			if (message == null) return;
+		}
 
 		// make sure the id is set
 		sendMessage(message, command.getId());
@@ -131,6 +138,17 @@ public abstract class MAXSModuleIntentService extends Service {
 	public abstract org.projectmaxs.shared.global.Message handleCommand(Command command);
 
 	public abstract void initLog(Context context);
+
+	/**
+	 * Modules need to override this method to provide help for their commands
+	 * 
+	 * @param command
+	 * @param subCommand
+	 * @return
+	 */
+	public org.projectmaxs.shared.global.Message getHelp(String command, String subCommand) {
+		return new org.projectmaxs.shared.global.Message("Help for '" + command + " " + subCommand + "' not available");
+	}
 
 	public final void sendMessage(org.projectmaxs.shared.global.Message message, int cmdId) {
 		message.setId(cmdId);
