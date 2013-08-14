@@ -21,13 +21,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.aidl.IMAXSIncomingFileTransferService;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.ParcelFileDescriptorUtil;
 
 import android.app.Service;
 import android.content.Intent;
@@ -53,46 +53,26 @@ public class IncomingFileTransferService extends Service {
 	private final IMAXSIncomingFileTransferService.Stub mBinder = new IMAXSIncomingFileTransferService.Stub() {
 
 		@Override
-		public void incomingFileTransfer(String filename, long size, String description, ParcelFileDescriptor pfd)
+		public ParcelFileDescriptor incomingFileTransfer(String filename, long size, String description)
 				throws RemoteException {
 
-			InputStream is = new ParcelFileDescriptor.AutoCloseInputStream(pfd);
 			OutputStream os;
 			try {
 				os = new FileOutputStream(new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, filename));
 			} catch (FileNotFoundException e) {
 				LOG.e("incomingFileTransfer", e);
-				return;
-			}
-			finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
+				return null;
 			}
 
-			int len;
-			byte[] buf = new byte[1024];
+			ParcelFileDescriptor pfd;
 			try {
-				while ((len = is.read(buf)) > 0) {
-					os.write(buf, 0, len);
-				}
+				pfd = ParcelFileDescriptorUtil.pipeTo(os);
 			} catch (IOException e) {
 				LOG.e("incomingFileTransfer", e);
-				return;
+				return null;
 			}
-			finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-				try {
-					os.close();
-				} catch (IOException e) {
-				}
-			}
+			return pfd;
 
-			sendMessage(new Message("Received file " + filename));
 		}
 	};
 

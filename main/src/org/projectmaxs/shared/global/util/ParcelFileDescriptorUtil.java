@@ -77,10 +77,12 @@ public class ParcelFileDescriptorUtil {
 				try {
 					mIn.close();
 				} catch (IOException e) {
+					LOG.e("run", e);
 				}
 				try {
 					mOut.close();
 				} catch (IOException e) {
+					LOG.e("run", e);
 				}
 			}
 		}

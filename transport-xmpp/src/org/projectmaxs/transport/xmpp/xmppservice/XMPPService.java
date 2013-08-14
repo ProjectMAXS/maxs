@@ -396,7 +396,7 @@ public class XMPPService {
 			}
 		} catch (XMPPException e) {
 			LOG.e("tryToConnect: connection configuration failed", e);
-			mState = State.Disconnected;
+			newState(State.Disconnected);
 			return;
 		}
 
