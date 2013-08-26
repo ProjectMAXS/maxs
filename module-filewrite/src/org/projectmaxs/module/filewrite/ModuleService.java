@@ -56,12 +56,6 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		android.os.Debug.waitForDebugger();
-	}
-
-	@Override
 	public Message handleCommand(Command command) {
 		return new Message("Not implemented");
 	}

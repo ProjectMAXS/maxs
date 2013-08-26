@@ -68,7 +68,6 @@ public class TransportService extends MAXSTransportService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		android.os.Debug.waitForDebugger();
 		mSmackAndroid = SmackAndroid.init(this);
 		mXMPPService = XMPPService.getInstance(this);
 	}

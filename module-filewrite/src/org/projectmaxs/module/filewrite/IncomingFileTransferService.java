@@ -40,12 +40,6 @@ public class IncomingFileTransferService extends Service {
 	private static final Log LOG = Log.getLog();
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		android.os.Debug.waitForDebugger();
-	}
-
-	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
