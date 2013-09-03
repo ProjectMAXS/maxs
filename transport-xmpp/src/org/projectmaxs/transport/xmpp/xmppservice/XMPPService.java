@@ -141,15 +141,18 @@ public class XMPPService {
 		// first disconnect if the network type changed and we are now connected
 		// with an now unusable network
 		if ((networkTypeChanged && isConnected()) || !connected) {
+			LOG.d("newConnectivityInformation: calling disconnect() networkTypeChanged=" + networkTypeChanged
+					+ " connected=" + connected + " isConnected=" + isConnected());
 			disconnect();
 		}
 
 		// if we have an connected network but we are not connected, connect
 		if (connected && !isConnected()) {
+			LOG.d("newConnectivityInformation: calling connect()");
 			connect();
 		}
 		else if (!connected) {
-			LOG.d("newConnectivityInformatin: we are not connected any more, changing state to WaitingForNetwork");
+			LOG.d("newConnectivityInformation: we are not connected any more, changing state to WaitingForNetwork");
 			newState(State.WaitingForNetwork);
 		}
 	}
