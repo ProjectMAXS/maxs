@@ -24,6 +24,8 @@ import org.projectmaxs.shared.global.util.Log;
 
 public class XMPPPingManager extends StateChangeListener implements PingFailedListener {
 
+	public static final int PING_INTERVAL_SECONDS = 60 * 30; // 30 minutes
+
 	private static final Log LOG = Log.getLog();
 
 	private final XMPPService mXMPPService;
@@ -32,10 +34,18 @@ public class XMPPPingManager extends StateChangeListener implements PingFailedLi
 		mXMPPService = service;
 	}
 
+	@Override
+	public void newConnection(Connection connection) {
+		// setPingIntervall takes seconds (!) as parameter
+		PingManager.getInstanceFor(connection).setPingIntervall(PING_INTERVAL_SECONDS);
+	}
+
+	@Override
 	public void connected(Connection connection) {
 		PingManager.getInstanceFor(connection).registerPingFailedListener(this);
 	}
 
+	@Override
 	public void disconnected(Connection connection) {
 		PingManager.getInstanceFor(connection).unregisterPingFailedListener(this);
 	}
