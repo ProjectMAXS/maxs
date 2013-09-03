@@ -22,11 +22,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.projectmaxs.main.database.StatusTable;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.content.Context;
 
 public class StatusRegistry extends MAXSService.StartStopListener {
+
+	private static final Log LOG = Log.getLog();
 
 	private static StatusRegistry sStatusRegistry;
 
@@ -64,9 +67,13 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 	public String add(StatusInformation info) {
 		String statusKey = info.getKey();
 		String statusValue = info.getValue();
+		LOG.d("add: statusKey= " + statusKey + " statusValue=" + statusValue);
 
 		String savedStatusValue = mStatusInformation.get(statusKey);
-		if (savedStatusValue != null && savedStatusValue.equals(statusValue)) return null;
+		if (savedStatusValue != null && savedStatusValue.equals(statusValue)) {
+			LOG.d("add: statusValue equals savedStatusValue, not updating");
+			return null;
+		}
 
 		mStatusInformation.put(statusKey, statusValue);
 		mStatusTable.addStatus(info);
