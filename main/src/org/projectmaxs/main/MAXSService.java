@@ -94,7 +94,7 @@ public class MAXSService extends Service {
 			// The service has been killed by Android and we try to restart
 			// the connection. This null intent behavior is only for SDK < 9
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-				startService(new Intent(Constants.ACTION_START_SERVICE));
+				startService();
 			}
 			else {
 				LOG.w("onStartCommand: null intent with Gingerbread or lower");
