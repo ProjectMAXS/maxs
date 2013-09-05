@@ -130,7 +130,6 @@ public class TransportService extends MAXSTransportService {
 		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
 			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
 			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
-
 			mXMPPService.send(message, origin);
 		}
 		else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {

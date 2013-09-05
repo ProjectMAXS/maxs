@@ -158,6 +158,13 @@ public class XMPPService {
 	}
 
 	public void send(org.projectmaxs.shared.global.Message message, CommandOrigin origin) {
+		// If the origin is null, then we are receiving a broadcast message from
+		// main. TODO document that origin can be null
+		if (origin == null) {
+			sendAsMessage(message, null, null);
+			return;
+		}
+
 		String action = origin.getIntentAction();
 		String originId = origin.getOriginId();
 		String originIssuerInfo = origin.getOriginIssuerInfo();
