@@ -88,7 +88,7 @@ public class XMPPService {
 		addListener(mHandleTransportStatus);
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
-		mXMPPStatus = new XMPPStatus(xmppRoster);
+		mXMPPStatus = new XMPPStatus(xmppRoster, context);
 		addListener(mXMPPStatus);
 	}
 

@@ -19,17 +19,21 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.packet.Presence;
+import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPRoster.MasterJidListener;
+
+import android.content.Context;
 
 public class XMPPStatus extends StateChangeListener {
 
 	private final XMPPRoster mXMPPRoster;
+	private final Settings mSettings;
 
 	private Connection mConnection;
 	private String mActiveStatus = null;
-	private String mDesiredStatus = null;
+	private String mDesiredStatus;
 
-	protected XMPPStatus(XMPPRoster xmppRoster) {
+	protected XMPPStatus(XMPPRoster xmppRoster, Context context) {
 		mXMPPRoster = xmppRoster;
 		xmppRoster.addMasterJidListener(new MasterJidListener() {
 			@Override
@@ -37,6 +41,9 @@ public class XMPPStatus extends StateChangeListener {
 				sendStatus();
 			}
 		});
+		mSettings = Settings.getInstance(context);
+		// set the desired status to the last known status,
+		mDesiredStatus = mSettings.getStatus();
 	}
 
 	protected void setStatus(String status) {
@@ -69,5 +76,6 @@ public class XMPPStatus extends StateChangeListener {
 		presence.setPriority(24);
 		mConnection.sendPacket(presence);
 		mActiveStatus = mDesiredStatus;
+		mSettings.setStatus(mActiveStatus);
 	}
 }
