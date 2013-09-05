@@ -69,7 +69,6 @@ public class TransportService extends MAXSTransportService {
 	public void onCreate() {
 		super.onCreate();
 		mSmackAndroid = SmackAndroid.init(this);
-		mXMPPService = XMPPService.getInstance(this);
 	}
 
 	@Override
@@ -107,6 +106,11 @@ public class TransportService extends MAXSTransportService {
 
 	@Override
 	public void onHandleIntent(Intent intent) {
+		// In order to avoid NetworkOnMainThread - some methods like
+		// Socks5Proxy.getSocks5Proxy() do DNS lookups - exceptions, we
+		// initialize the XMPP service here.
+		if (mXMPPService == null) mXMPPService = XMPPService.getInstance(this);
+
 		final String action = intent.getAction();
 		LOG.d("onHandleIntent: " + action);
 		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {

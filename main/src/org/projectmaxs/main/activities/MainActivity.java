@@ -80,7 +80,6 @@ public class MainActivity extends Activity {
 		mStartStopButton = (Button) findViewById(R.id.buttonStartStop);
 		mTransportList = (ListView) findViewById(R.id.transportsList);
 
-		mStartStopButton.requestFocus();
 		mStartStopButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
