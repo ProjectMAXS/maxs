@@ -175,7 +175,9 @@ public class XMPPService {
 
 	private void sendAsMessage(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
-			LOG.w("sendAsMessage: Not connected, adding message to DB");
+			// TODO I think that this could for example happen when the service
+			// is not started but e.g. the SMS receiver get's a new message.
+			LOG.i("sendAsMessage: Not connected, adding message to DB");
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo, originId);
 			return;
 		}
