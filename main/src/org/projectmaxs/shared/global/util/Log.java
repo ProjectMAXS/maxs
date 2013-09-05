@@ -45,20 +45,28 @@ public class Log {
 		sDebugLogSettings = settings;
 	}
 
+	public void i(String msg) {
+		android.util.Log.i(mLogTag, msg);
+	}
+
+	public void i(String msg, Throwable tr) {
+		android.util.Log.i(mLogTag, msg, tr);
+	}
+
 	public void w(String msg) {
 		android.util.Log.w(mLogTag, msg);
 	}
 
-	public void w(String msg, Exception e) {
-		android.util.Log.w(mLogTag, msg, e);
+	public void w(String msg, Throwable tr) {
+		android.util.Log.w(mLogTag, msg, tr);
 	}
 
 	public void e(String msg) {
 		android.util.Log.e(mLogTag, msg);
 	}
 
-	public void e(String msg, Exception e) {
-		android.util.Log.e(mLogTag, msg, e);
+	public void e(String msg, Throwable tr) {
+		android.util.Log.e(mLogTag, msg, tr);
 	}
 
 	public void d(String msg) {
