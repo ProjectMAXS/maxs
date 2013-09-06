@@ -433,7 +433,14 @@ public class XMPPService {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
 				LOG.e("tryToConnect: login failed", e);
-				mState = State.Disconnected;
+				String exceptionMessage = e.getMessage();
+				// Schedule a reconnect on certain exception causes
+				if ("No response from the server.".equals(exceptionMessage)) {
+					scheduleReconnect();
+				}
+				else {
+					newState(State.Disconnected);
+				}
 				return;
 			}
 		}
