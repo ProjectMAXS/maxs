@@ -408,7 +408,14 @@ public class XMPPService {
 			}
 		} catch (XMPPException e) {
 			LOG.e("tryToConnect: connection configuration failed", e);
-			newState(State.Disconnected);
+			String exceptionMessage = e.getMessage();
+			// Schedule a reconnect on certain exception causes
+			if ("DNS lookup failure".equals(exceptionMessage)) {
+				scheduleReconnect();
+			}
+			else {
+				newState(State.Disconnected);
+			}
 			return;
 		}
 
