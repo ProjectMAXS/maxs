@@ -28,13 +28,20 @@ public class StateChangeListener {
 	}
 
 	/**
-	 * Called when we got disconnected or when a connection attempt failed. If
-	 * there has never been any established connection, connection will be null.
+	 * Invoked when we got disconnected from an active connection
 	 * 
 	 * @param connection
 	 *            the connection that got disconnected, may be null
 	 */
 	public void disconnected(Connection connection) {
+	}
+
+	/**
+	 * Invoked when get return to disconnected state, but there was never an
+	 * active connection. For example when something in the connection stage
+	 * went wrong
+	 */
+	public void disconnected() {
 	}
 
 	// These callback methods don't get access to the connection instance

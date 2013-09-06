@@ -278,10 +278,10 @@ public class XMPPService {
 				l.connected(mConnection);
 			break;
 		case Disconnected:
-			// don't call listeners if there was never a connection
-			if (mConnection == null) break;
-			for (StateChangeListener l : mStateChangeListeners)
-				l.disconnected(mConnection);
+			for (StateChangeListener l : mStateChangeListeners) {
+				l.disconnected();
+				if (mConnection != null) l.disconnected(mConnection);
+			}
 			break;
 		case Connecting:
 			for (StateChangeListener l : mStateChangeListeners)

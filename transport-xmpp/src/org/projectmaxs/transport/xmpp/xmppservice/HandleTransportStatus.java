@@ -56,7 +56,7 @@ public class HandleTransportStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void disconnected(Connection connection) {
+	public void disconnected() {
 		setAndSendStatus("disconnected");
 	}
 
