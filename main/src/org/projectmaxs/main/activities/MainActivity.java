@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
 				else {
 					intent = new Intent(Constants.ACTION_START_SERVICE);
 				}
-				MainActivity.this.startService(intent);
+				startService(intent);
 			}
 		});
 		mListener = new StartStopListener() {
