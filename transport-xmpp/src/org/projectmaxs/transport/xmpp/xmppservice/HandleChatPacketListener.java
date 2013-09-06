@@ -26,37 +26,33 @@ import org.projectmaxs.transport.xmpp.Settings;
 
 public class HandleChatPacketListener extends StateChangeListener {
 
-	private XMPPService mXMPPService;
-	private PacketListener mChatPacketListener;
-	private Settings mSettings;
+	private final PacketListener mChatPacketListener;
+	private final XMPPService mXMPPService;
+	private final Settings mSettings;
 
 	public HandleChatPacketListener(XMPPService xmppService) {
 		mXMPPService = xmppService;
 		mSettings = Settings.getInstance(xmppService.getContext());
-	}
-
-	@Override
-	public void connected(Connection connection) {
 		mChatPacketListener = new PacketListener() {
 
 			@Override
 			public void processPacket(Packet packet) {
 				Message message = (Message) packet;
 				String from = message.getFrom();
-
-				if (mSettings.isMasterJID(from)) {
-					mXMPPService.newMessageFromMasterJID(message);
-				}
+				if (mSettings.isMasterJID(from)) mXMPPService.newMessageFromMasterJID(message);
 			}
 
 		};
+	}
+
+	@Override
+	public void connected(Connection connection) {
 		connection.addPacketListener(mChatPacketListener, new MessageTypeFilter(Message.Type.chat));
 	}
 
 	@Override
 	public void disconnected(Connection connection) {
 		connection.removePacketListener(mChatPacketListener);
-		mChatPacketListener = null;
 	}
 
 }
