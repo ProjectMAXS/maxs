@@ -3,10 +3,12 @@
       package="org.projectmaxs.module.smsnotify"
       android:versionCode="1"
       android:versionName="1.0">
+    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
+    <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
+    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
-    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <uses-sdk android:minSdkVersion="10"/>
     <application android:label="@string/app_name">
         <activity android:name=".activities.InfoAndSettings" android:exported="true"/>

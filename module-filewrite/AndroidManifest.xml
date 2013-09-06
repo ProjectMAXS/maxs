@@ -3,8 +3,9 @@
       package="org.projectmaxs.module.filewrite"
       android:versionCode="1"
       android:versionName="1.0">
-      
     <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
+    <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
+    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
     <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
