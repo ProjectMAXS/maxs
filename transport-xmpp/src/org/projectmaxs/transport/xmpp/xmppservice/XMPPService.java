@@ -407,13 +407,15 @@ public class XMPPService {
 				con = mConnection;
 			}
 		} catch (XMPPException e) {
-			LOG.e("tryToConnect: connection configuration failed", e);
 			String exceptionMessage = e.getMessage();
 			// Schedule a reconnect on certain exception causes
 			if ("DNS lookup failure".equals(exceptionMessage)) {
+				LOG.w("tryToConnect: connection configuration failed. Scheduling reconnect. exceptionMessage="
+						+ exceptionMessage);
 				scheduleReconnect();
 			}
 			else {
+				LOG.e("tryToConnect: connection configuration failed. New State: Disconnected", e);
 				newState(State.Disconnected);
 			}
 			return;
@@ -432,13 +434,14 @@ public class XMPPService {
 			try {
 				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
 			} catch (XMPPException e) {
-				LOG.e("tryToConnect: login failed", e);
 				String exceptionMessage = e.getMessage();
 				// Schedule a reconnect on certain exception causes
 				if ("No response from the server.".equals(exceptionMessage)) {
+					LOG.w("tryToConnect: login failed. Scheduling reconnect. exceptionMessage=" + exceptionMessage);
 					scheduleReconnect();
 				}
 				else {
+					LOG.e("tryToConnect: login failed. New State: Disconnected", e);
 					newState(State.Disconnected);
 				}
 				return;
