@@ -64,7 +64,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 	private final WifiManager mWifiManager;
 	private final Socks5Proxy mProxy;
 
-	private BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)
@@ -166,6 +166,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 	@Override
 	public void connected(Connection connection) {
 		sFileTransferManager = new FileTransferManager(connection);
+		LOG.d("connect: created file transfer manager");
 		sFileTransferManager.addFileTransferListener(this);
 		mContext.registerReceiver(mWifiBroadcastReceiver, new IntentFilter(
 				WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION));
@@ -173,8 +174,13 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void disconnected(Connection connection) {
-		sFileTransferManager.removeFileTransferListener(this);
-		sFileTransferManager = null;
+		if (sFileTransferManager != null) {
+			sFileTransferManager.removeFileTransferListener(this);
+			sFileTransferManager = null;
+		}
+		else {
+			LOG.e("disconnect: sFileTransferManager was null");
+		}
 		mContext.unregisterReceiver(mWifiBroadcastReceiver);
 	}
 
