@@ -18,6 +18,7 @@
 package org.projectmaxs.shared.mainmodule;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.projectmaxs.shared.global.util.ParcelUtil;
 
@@ -25,6 +26,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ContactNumber implements Parcelable {
+
+	private static final Pattern numberPattern = Pattern.compile("\\+?\\d+");
 
 	final String mNumber;
 	final NumberType mNumberType;
@@ -37,7 +40,7 @@ public class ContactNumber implements Parcelable {
 	public ContactNumber(NumberType type, String number) {
 		mIsPrimary = false;
 		mNumberType = type;
-		mNumber = number;
+		mNumber = cleanNumber(number);
 	}
 
 	private ContactNumber(Parcel in) {
@@ -120,5 +123,20 @@ public class ContactNumber implements Parcelable {
 			if (number.isPrimary()) return number;
 
 		return numbers.get(0);
+	}
+
+	public static String cleanNumber(String number) {
+		// @formatter:off
+		return number
+				.replace("(", "")
+				.replace(")", "")
+				.replace("-", "")
+				.replace(".", "")
+				.replace(" ", "");
+		// @formatter:on
+	}
+
+	public static boolean isNumber(String s) {
+		return numberPattern.matcher(cleanNumber(s)).matches();
 	}
 }

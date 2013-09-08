@@ -25,5 +25,9 @@
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
             </intent-filter>
         </service>
+        <provider android:name=".MAXSContactProvider"
+            android:authorities="org.projectmaxs.module.contacts"
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+        </provider>
     </application>
 </manifest> 
