@@ -44,6 +44,7 @@ public class HandleConnectionListener extends StateChangeListener {
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
 				LOG.w("connectionClosedOnError");
+				mXMPPService.disconnect();
 				mXMPPService.scheduleReconnect();
 			}
 
