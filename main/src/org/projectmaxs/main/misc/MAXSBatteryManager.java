@@ -18,7 +18,6 @@
 package org.projectmaxs.main.misc;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -85,18 +84,16 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 		if (plugged == mLastPlugged && batteryPct.equals(mLastBatteryPct)) return;
 
-		List<StatusInformation> infos = new ArrayList<StatusInformation>(2);
+		ArrayList<StatusInformation> infos = new ArrayList<StatusInformation>(2);
 		if (plugged != mLastPlugged) infos.add(new StatusInformation("BAT_PLUGGED", getPowerSource(status, plugged)));
 		if (!batteryPct.equals(mLastBatteryPct)) infos.add(new StatusInformation("BAT_PCT", batteryPct + '%'));
 
 		mLastBatteryPct = batteryPct;
 		mLastPlugged = plugged;
 
-		for (StatusInformation info : infos) {
-			Intent replyIntent = new Intent(GlobalConstants.ACTION_UPDATE_STATUS);
-			replyIntent.putExtra(GlobalConstants.EXTRA_CONTENT, info);
-			mContext.startService(replyIntent);
-		}
+		Intent replyIntent = new Intent(GlobalConstants.ACTION_UPDATE_STATUS);
+		replyIntent.putParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT, infos);
+		mContext.startService(replyIntent);
 	}
 
 	private static boolean isCharging(int status) {

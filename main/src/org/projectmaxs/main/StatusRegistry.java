@@ -18,6 +18,7 @@
 package org.projectmaxs.main;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -38,13 +39,13 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 		return sStatusRegistry;
 	}
 
-	private final Map<String, String> mStatusInformation;
+	private final Map<String, String> mStatusInformationMap;
 
 	private final StatusTable mStatusTable;
 
 	private StatusRegistry(Context context) {
 		this.mStatusTable = StatusTable.getInstance(context);
-		this.mStatusInformation = mStatusTable.getAll();
+		this.mStatusInformationMap = mStatusTable.getAll();
 
 		MAXSService.addStartStopListener(this);
 	}
@@ -64,26 +65,32 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 	 * @param info
 	 * @return
 	 */
-	public String add(StatusInformation info) {
-		String statusKey = info.getKey();
-		String statusValue = info.getValue();
-		LOG.d("add: statusKey=" + statusKey + " statusValue=" + statusValue);
+	public String add(List<StatusInformation> infoList) {
+		boolean shouldUpdateStatus = false;
+		for (StatusInformation info : infoList) {
+			String statusKey = info.getKey();
+			String statusValue = info.getValue();
+			LOG.d("add: statusKey=" + statusKey + " statusValue=" + statusValue);
 
-		String savedStatusValue = mStatusInformation.get(statusKey);
-		if (savedStatusValue != null && savedStatusValue.equals(statusValue)) {
-			LOG.d("add: statusValue equals savedStatusValue, not updating");
-			return null;
+			String savedStatusValue = mStatusInformationMap.get(statusKey);
+			if (savedStatusValue != null && savedStatusValue.equals(statusValue)) {
+				LOG.d("add: statusValue equals savedStatusValue, not updating");
+				continue;
+			}
+			else {
+				shouldUpdateStatus = true;
+			}
+
+			mStatusInformationMap.put(statusKey, statusValue);
+			mStatusTable.addStatus(info);
 		}
-
-		mStatusInformation.put(statusKey, statusValue);
-		mStatusTable.addStatus(info);
-		return updateStatus();
+		return shouldUpdateStatus ? updateStatus() : null;
 	}
 
 	private String updateStatus() {
-		if (mStatusInformation.isEmpty()) return null;
+		if (mStatusInformationMap.isEmpty()) return null;
 
-		Iterator<Entry<String, String>> it = mStatusInformation.entrySet().iterator();
+		Iterator<Entry<String, String>> it = mStatusInformationMap.entrySet().iterator();
 
 		StringBuilder sb = new StringBuilder();
 		String value = it.next().getValue();
