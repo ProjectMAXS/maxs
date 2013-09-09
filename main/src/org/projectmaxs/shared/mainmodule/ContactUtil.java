@@ -40,26 +40,37 @@ public class ContactUtil {
 	public static final String CONTACTS_MODULE_PACKAGE = "org.projectmaxs.module.contacts";
 	public static final Uri CONTACTS_MODULE_AUTHORITY = Uri.parse("content://" + CONTACTS_MODULE_PACKAGE);
 
-	// ContactsContract.PhoneLookup.CONTENT_FILTER_URI
-	public static final Uri MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI = Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY,
-			"phone_lookup");
+	/**
+	 * ContactsContract.PhoneLookup.CONTENT_FILTER_URI
+	 */
+	public static final Uri MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI = maxsContactUriFrom(ContactsContract.PhoneLookup.CONTENT_FILTER_URI);
 
-	// ContactsContract.Data.CONTENT_URI
-	public static final Uri MAXS_CONTACTS_CONTRACT_DATA_CONTENT_URI = Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY,
-			"data");
+	/**
+	 * ContactsContract.Data.CONTENT_URI
+	 */
+	public static final Uri MAXS_DATA_CONTENT_URI = maxsContactUriFrom(ContactsContract.Data.CONTENT_URI);
 
-	// ContactsContract.Contacts.CONTENT_URI
-	public static final Uri MAXS_CONTACTS_CONTENT_URI = Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY, "contacts");
+	/**
+	 * ContactsContract.Contacts.CONTENT_URI
+	 */
+	public static final Uri MAXS_CONTACTS_CONTENT_URI = maxsContactUriFrom(ContactsContract.Contacts.CONTENT_URI);
 
-	// ContactsContract.Contacts.CONTENT_LOOKUP_URI
-	public static final Uri MAXS_CONTACTS_CONTENT_LOOKUP_URI = Uri
-			.withAppendedPath(MAXS_CONTACTS_CONTENT_URI, "lookup");
+	/**
+	 * ContactsContract.Contacts.CONTENT_LOOKUP_URI
+	 */
+	public static final Uri MAXS_CONTACTS_CONTENT_LOOKUP_URI = maxsContactUriFrom(ContactsContract.Contacts.CONTENT_LOOKUP_URI);
 
-	// ContactsContract.Contacts.CONTENT_FILTER_URI
-	public static final Uri MAXS_CONTACTS_CONTENT_FILTER_URI = Uri
-			.withAppendedPath(MAXS_CONTACTS_CONTENT_URI, "filter");
+	/**
+	 * ContactsContract.Contacts.CONTENT_FILTER_URI
+	 */
+	public static final Uri MAXS_CONTACTS_CONTENT_FILTER_URI = maxsContactUriFrom(ContactsContract.Contacts.CONTENT_FILTER_URI);
 
 	private static final Log LOG = Log.getLog();
+
+	public static Uri maxsContactUriFrom(Uri uri) {
+		String pathSegment = uri.getPath();
+		return Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY, pathSegment);
+	}
 
 	@SuppressLint("InlinedApi")
 	private static final String DISPLAY_NAME = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? Contacts.DISPLAY_NAME_PRIMARY
@@ -163,7 +174,7 @@ public class ContactUtil {
 	}
 
 	public Contact contactByNickname(String nickname) {
-		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTRACT_DATA_CONTENT_URI, Uri.encode(nickname));
+		Uri uri = Uri.withAppendedPath(MAXS_DATA_CONTENT_URI, Uri.encode(nickname));
 		final String[] projection = new String[] { ContactsContract.Data.LOOKUP_KEY, DISPLAY_NAME };
 		final String selection = ContactsContract.CommonDataKinds.Nickname.DATA + "=?";
 		Cursor c = mContentResolver.query(uri, projection, selection, new String[] { nickname }, null);
@@ -188,7 +199,7 @@ public class ContactUtil {
 	}
 
 	public Collection<Contact> contactsNyNickname(String nickname) {
-		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTRACT_DATA_CONTENT_URI, Uri.encode(nickname));
+		Uri uri = Uri.withAppendedPath(MAXS_DATA_CONTENT_URI, Uri.encode(nickname));
 		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
 		final String selection = ContactsContract.CommonDataKinds.Nickname.DATA + "=?";
 		final String[] selectionArgs = new String[] { nickname };
