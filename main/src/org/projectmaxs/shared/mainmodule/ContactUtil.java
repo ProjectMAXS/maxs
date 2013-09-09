@@ -63,8 +63,7 @@ public class ContactUtil {
 	 */
 	public Contact lookupContact(String phoneNumber) {
 		if (!contactsModuleInstalled()) return null;
-
-		if (!ContactNumber.isNumber(phoneNumber)) throw new IllegalStateException("Not a phone number");
+		if (!ContactNumber.isNumber(phoneNumber)) return null;
 
 		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(phoneNumber));
 		final String[] projection = new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup.NUMBER, PhoneLookup.TYPE,
@@ -98,8 +97,7 @@ public class ContactUtil {
 	 */
 	public Collection<Contact> lookupContacts(String phoneNumber) {
 		if (!contactsModuleInstalled()) return null;
-
-		if (!ContactNumber.isNumber(phoneNumber)) throw new IllegalStateException("Not a phone number");
+		if (!ContactNumber.isNumber(phoneNumber)) return null;
 
 		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(phoneNumber));
 		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, PhoneLookup.DISPLAY_NAME };
