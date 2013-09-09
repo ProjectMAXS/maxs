@@ -174,13 +174,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void disconnected(Connection connection) {
-		if (sFileTransferManager != null) {
-			sFileTransferManager.removeFileTransferListener(this);
-			sFileTransferManager = null;
-		}
-		else {
-			LOG.e("disconnect: sFileTransferManager was null");
-		}
+		sFileTransferManager.removeFileTransferListener(this);
+		sFileTransferManager = null;
 		mContext.unregisterReceiver(mWifiBroadcastReceiver);
 	}
 

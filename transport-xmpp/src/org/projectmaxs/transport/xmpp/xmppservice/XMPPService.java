@@ -61,6 +61,13 @@ public class XMPPService {
 
 	private XMPPStatus mXMPPStatus;
 	private State mState = State.Disconnected;
+
+	/**
+	 * Switch boolean to ensure that the disconnected(Connection) listeners are
+	 * only run if there was a previous connected connection.
+	 */
+	private boolean mConnected = false;
+
 	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
 	private Runnable mReconnectRunnable;
@@ -276,12 +283,14 @@ public class XMPPService {
 		case Connected:
 			for (StateChangeListener l : mStateChangeListeners)
 				l.connected(mConnection);
+			mConnected = true;
 			break;
 		case Disconnected:
 			for (StateChangeListener l : mStateChangeListeners) {
 				l.disconnected();
-				if (mConnection != null) l.disconnected(mConnection);
+				if (mConnection != null && mConnected) l.disconnected(mConnection);
 			}
+			mConnected = false;
 			break;
 		case Connecting:
 			for (StateChangeListener l : mStateChangeListeners)
