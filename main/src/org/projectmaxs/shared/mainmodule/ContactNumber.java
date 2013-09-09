@@ -24,6 +24,7 @@ import org.projectmaxs.shared.global.util.ParcelUtil;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 
 public class ContactNumber implements Parcelable {
 
@@ -31,26 +32,30 @@ public class ContactNumber implements Parcelable {
 
 	final String mNumber;
 	final NumberType mNumberType;
-	final boolean mIsPrimary;
+
+	boolean mIsPrimary = false;
+	String mLabel;
 
 	public ContactNumber(String number) {
 		this(NumberType.UNKOWN, number);
 	}
 
 	public ContactNumber(NumberType type, String number) {
-		mIsPrimary = false;
 		mNumberType = type;
 		mNumber = cleanNumber(number);
+	}
+
+	public ContactNumber(String number, int type, String label) {
+		mNumber = cleanNumber(number);
+		mNumberType = fromInt(type);
+		mLabel = label;
 	}
 
 	private ContactNumber(Parcel in) {
 		mNumberType = in.readParcelable(NumberType.class.getClassLoader());
 		mNumber = in.readString();
 		mIsPrimary = ParcelUtil.readBool(in);
-	}
-
-	public boolean isPrimary() {
-		return mIsPrimary;
+		mLabel = in.readString();
 	}
 
 	@Override
@@ -63,6 +68,7 @@ public class ContactNumber implements Parcelable {
 		dest.writeParcelable(mNumberType, flags);
 		dest.writeString(mNumber);
 		ParcelUtil.writeBool(dest, mIsPrimary);
+		dest.writeString(mLabel);
 	}
 
 	public static final Creator<ContactNumber> CREATOR = new Creator<ContactNumber>() {
@@ -80,7 +86,7 @@ public class ContactNumber implements Parcelable {
 	};
 
 	static enum NumberType implements Parcelable {
-		MOBILE, HOME, WORK, UNKOWN;
+		MOBILE, HOME, WORK, UNKOWN, OTHER;
 
 		@Override
 		public int describeContents() {
@@ -120,7 +126,7 @@ public class ContactNumber implements Parcelable {
 	public static ContactNumber getBest(List<ContactNumber> numbers) {
 		if (numbers.isEmpty()) return null;
 		for (ContactNumber number : numbers)
-			if (number.isPrimary()) return number;
+			if (number.mIsPrimary) return number;
 
 		return numbers.get(0);
 	}
@@ -138,5 +144,20 @@ public class ContactNumber implements Parcelable {
 
 	public static boolean isNumber(String s) {
 		return numberPattern.matcher(cleanNumber(s)).matches();
+	}
+
+	public static NumberType fromInt(int i) {
+		switch (i) {
+		case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+			return NumberType.HOME;
+		case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+			return NumberType.MOBILE;
+		case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+			return NumberType.WORK;
+		case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
+			return NumberType.OTHER;
+		default:
+			return NumberType.UNKOWN;
+		}
 	}
 }

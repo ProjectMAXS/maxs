@@ -18,34 +18,41 @@
 package org.projectmaxs.shared.mainmodule;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Contact implements Parcelable {
-	private final String mName;
+	private final String mDisplayName;
 	private final List<ContactNumber> mNumbers;
 
-	public Contact(String contactNumber) {
-		mName = "";
-		List<ContactNumber> numbers = new ArrayList<ContactNumber>(1);
-		numbers.add(new ContactNumber(contactNumber));
+	private String mLookupKey;
+
+	public Contact(String displayName) {
+		mDisplayName = displayName;
+		mNumbers = new ArrayList<ContactNumber>(1);
+	}
+
+	public Contact(String displayName, List<ContactNumber> numbers) {
+		mDisplayName = displayName;
 		mNumbers = numbers;
 	}
 
-	public Contact(String name, List<ContactNumber> numbers) {
-		this.mName = name;
-		this.mNumbers = numbers;
+	public Contact(String displayName, String lookupKey) {
+		mDisplayName = displayName;
+		mLookupKey = lookupKey;
+		mNumbers = new ArrayList<ContactNumber>();
 	}
 
 	private Contact(Parcel in) {
-		String name = in.readString();
-		ContactNumber[] numbers = (ContactNumber[]) in.readParcelableArray(ContactNumber.class.getClassLoader());
-		List<ContactNumber> numbersList = Arrays.asList(numbers);
-		this.mName = name;
-		this.mNumbers = numbersList;
+		mDisplayName = in.readString();
+		mNumbers = in.createTypedArrayList(ContactNumber.CREATOR);
+		mLookupKey = in.readString();
+	}
+
+	public void addNumber(String number, int type, String label) {
+		mNumbers.add(new ContactNumber(number, type, label));
 	}
 
 	@Override
@@ -55,10 +62,9 @@ public class Contact implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(mName);
-		ContactNumber[] numbers = new ContactNumber[mNumbers.size()];
-		mNumbers.toArray(numbers);
-		dest.writeParcelableArray(numbers, flags);
+		dest.writeString(mDisplayName);
+		dest.writeTypedList(mNumbers);
+		dest.writeString(mLookupKey);
 	}
 
 	public static final Creator<Contact> CREATOR = new Creator<Contact>() {
@@ -75,11 +81,18 @@ public class Contact implements Parcelable {
 
 	};
 
+	public String toPrettyString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(mDisplayName);
+		if (mNumbers.size() == 1) sb.append(" (" + mNumbers.get(0).mNumber + ")");
+		return sb.toString();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Contact ");
-		sb.append("name=" + (mName.equals("") ? "noName" : mName));
+		sb.append("name=" + (mDisplayName.equals("") ? "noName" : mDisplayName));
 
 		ContactNumber number = ContactNumber.getBest(mNumbers);
 		if (number != null) sb.append(" bestNumber='" + number.toString() + "'");

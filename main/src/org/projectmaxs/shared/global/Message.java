@@ -50,6 +50,11 @@ public class Message implements Parcelable {
 		return mId;
 	}
 
+	public Message add(AbstractElement element) {
+		mElements.add(element);
+		return this;
+	}
+
 	public Message add(String string) {
 		AbstractElement last = mElements.get(mElements.size() - 1);
 		if (last instanceof Text) {

@@ -20,6 +20,7 @@ package org.projectmaxs.shared.module;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.Contact;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,13 +45,13 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 
 	public abstract Message onReceiveReturnMessages(Context context, Intent intent);
 
-	public void setRecentContact(Context context, String contactNumber) {
-		if (contactNumber == null) {
-			LOG.e("setRecentContact: contactNumber was null");
+	public void setRecentContact(Context context, Contact contact) {
+		if (contact == null) {
+			LOG.e("setRecentContact: contact was null");
 			return;
 		}
 		final Intent intent = new Intent(GlobalConstants.ACTION_SET_RECENT_CONTACT);
-		intent.putExtra(GlobalConstants.EXTRA_CONTENT, contactNumber);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, contact);
 		context.startService(intent);
 	}
 

@@ -39,8 +39,20 @@ public abstract class AbstractElement implements Parcelable {
 	@Override
 	public abstract void writeToParcel(Parcel dest, int flags);
 
+	/**
+	 * Retrieve a StringBuilder uses to build a human-readable String of the
+	 * content of the element, without any formating or XML elements.
+	 * 
+	 * @return
+	 */
 	public abstract StringBuilder getStringBuilder();
 
+	/**
+	 * Retrieve the raw human-readable content, that is a pure String without
+	 * any formating or XML elements.
+	 * 
+	 * @return
+	 */
 	public String getRawContent() {
 		return getStringBuilder().toString();
 	}

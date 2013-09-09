@@ -21,7 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.mainmodule.ContactUtil;
 import org.projectmaxs.shared.module.MAXSBroadcastReceiver;
 
 import android.content.Context;
@@ -41,13 +44,18 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			return null;
 		}
 
+		Contact contact = null;
 		Message message = new Message("New SMS Received");
 		for (String sender : msg.keySet()) {
-			String shortMessage = msg.get(sender);
-			LOG.d("Received sms from " + sender + ": " + shortMessage);
-			message.add("SMS from " + sender + ": " + shortMessage);
+			String smsBody = msg.get(sender);
+			LOG.d("Received sms from " + sender + ": " + smsBody);
+
+			contact = ContactUtil.getInstance(context).lookupContact(sender);
+			if (contact == null) contact = new Contact(sender);
+
+			message.add(new Sms(contact.toPrettyString(), smsBody));
 		}
-		setRecentContact(context, msg.keySet().iterator().next());
+		setRecentContact(context, contact);
 		return message;
 	}
 

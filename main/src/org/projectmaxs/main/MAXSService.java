@@ -225,11 +225,6 @@ public class MAXSService extends Service {
 		return mRecentContact;
 	}
 
-	protected void setRecentContact(final String contactNumber) {
-		// TODO lookup number in contacts service
-		setRecentContact(new Contact(contactNumber));
-	}
-
 	protected synchronized void setRecentContact(final Contact contact) {
 		LOG.d("setRecentContact: contact=" + contact);
 		if (mRecentContactRunnable != null) {

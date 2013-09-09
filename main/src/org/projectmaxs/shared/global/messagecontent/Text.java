@@ -62,7 +62,7 @@ public class Text extends AbstractElement {
 		StringBuilder sb = new StringBuilder();
 		Iterator<FormatedText> it = mTexts.iterator();
 		while (it.hasNext())
-			sb.append(it.next().getText());
+			sb.append(it.next().getText() + '\n');
 		return sb;
 	}
 

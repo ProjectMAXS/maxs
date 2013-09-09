@@ -22,6 +22,7 @@ import java.util.List;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.Contact;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
 
@@ -56,8 +57,8 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 			maxsService.sendMessage(msg);
 		}
 		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
-			String contactNumber = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
-			maxsService.setRecentContact(contactNumber);
+			Contact contact = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
+			maxsService.setRecentContact(contact);
 		}
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			List<StatusInformation> infoList = intent.getParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT);
