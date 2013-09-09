@@ -28,6 +28,7 @@ public class Contact implements Parcelable {
 	private final List<ContactNumber> mNumbers;
 
 	private String mLookupKey;
+	private String mNickname;
 
 	public Contact(String displayName) {
 		mDisplayName = displayName;
@@ -49,10 +50,19 @@ public class Contact implements Parcelable {
 		mDisplayName = in.readString();
 		mNumbers = in.createTypedArrayList(ContactNumber.CREATOR);
 		mLookupKey = in.readString();
+		mNickname = in.readString();
 	}
 
 	public void addNumber(String number, int type, String label) {
 		mNumbers.add(new ContactNumber(number, type, label));
+	}
+
+	public void setNickname(String nickname) {
+		mNickname = nickname;
+	}
+
+	public String getLookupKey() {
+		return mLookupKey;
 	}
 
 	@Override
@@ -65,6 +75,7 @@ public class Contact implements Parcelable {
 		dest.writeString(mDisplayName);
 		dest.writeTypedList(mNumbers);
 		dest.writeString(mLookupKey);
+		dest.writeString(mNickname);
 	}
 
 	public static final Creator<Contact> CREATOR = new Creator<Contact>() {

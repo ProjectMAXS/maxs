@@ -56,12 +56,10 @@
                 <action android:name="org.projectmaxs.main.UPDATE_TRANSPORT_STATUS"/>
             </intent-filter>
         </service>
-        <service android:name=".MAXSRemoteService"
-            android:permission="org.projectmaxs.permission.USE_MAIN">
-            <intent-filter>
-                <action android:name="org.projectmaxs.main.BIND_SERVICE"/>
-            </intent-filter>
-        </service>
+        <provider android:name=".MAXSContentProvider"
+            android:authorities="org.projectmaxs.main"
+            android:permission="org.projectmaxs.permission.USE_MAIN_AS_MODULE">
+        </provider>
         <receiver android:name=".receivers.PackageReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED"/>

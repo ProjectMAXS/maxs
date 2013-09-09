@@ -19,6 +19,7 @@ package org.projectmaxs.module.bluetooth;
 
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 
+import android.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -40,10 +41,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private SharedPreferences mSharedPreferences;
 
 	private Settings(Context context) {
-		// this.mSharedPreferences =
-		// context.getSharedPreferences(Constants.MAIN_PACKAGE,
-		// Context.MODE_PRIVATE);
-		this.mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 

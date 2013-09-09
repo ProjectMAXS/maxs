@@ -17,6 +17,7 @@
 
 package org.projectmaxs.shared.mainmodule;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,19 +25,45 @@ import java.util.Map;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 
 public class ContactUtil {
 
 	public static final String CONTACTS_MODULE_PACKAGE = "org.projectmaxs.module.contacts";
 	public static final Uri CONTACTS_MODULE_AUTHORITY = Uri.parse("content://" + CONTACTS_MODULE_PACKAGE);
+
+	// ContactsContract.PhoneLookup.CONTENT_FILTER_URI
 	public static final Uri MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI = Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY,
 			"phone_lookup");
 
+	// ContactsContract.Data.CONTENT_URI
+	public static final Uri MAXS_CONTACTS_CONTRACT_DATA_CONTENT_URI = Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY,
+			"data");
+
+	// ContactsContract.Contacts.CONTENT_URI
+	public static final Uri MAXS_CONTACTS_CONTENT_URI = Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY, "contacts");
+
+	// ContactsContract.Contacts.CONTENT_LOOKUP_URI
+	public static final Uri MAXS_CONTACTS_CONTENT_LOOKUP_URI = Uri
+			.withAppendedPath(MAXS_CONTACTS_CONTENT_URI, "lookup");
+
+	// ContactsContract.Contacts.CONTENT_FILTER_URI
+	public static final Uri MAXS_CONTACTS_CONTENT_FILTER_URI = Uri
+			.withAppendedPath(MAXS_CONTACTS_CONTENT_URI, "filter");
+
 	private static final Log LOG = Log.getLog();
+
+	@SuppressLint("InlinedApi")
+	private static final String DISPLAY_NAME = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? Contacts.DISPLAY_NAME_PRIMARY
+			: Contacts.DISPLAY_NAME;
 
 	private static ContactUtil sContactUtil;
 
@@ -47,9 +74,11 @@ public class ContactUtil {
 
 	private ContactUtil(Context context) {
 		mContext = context;
+		mContentResolver = context.getContentResolver();
 	}
 
 	private final Context mContext;
+	private final ContentResolver mContentResolver;
 
 	public boolean contactsModuleInstalled() {
 		return PackageManagerUtil.getInstance(mContext).isPackageInstalled(CONTACTS_MODULE_PACKAGE);
@@ -61,32 +90,34 @@ public class ContactUtil {
 	 * @param phoneNumber
 	 * @return
 	 */
-	public Contact lookupContact(String phoneNumber) {
+	public Contact contactByNumber(String number) {
 		if (!contactsModuleInstalled()) return null;
-		if (!ContactNumber.isNumber(phoneNumber)) return null;
 
-		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(phoneNumber));
-		final String[] projection = new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup.NUMBER, PhoneLookup.TYPE,
+		number = ContactNumber.cleanNumber(number);
+		if (!ContactNumber.isNumber(number)) return null;
+
+		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(number));
+		final String[] projection = new String[] { DISPLAY_NAME, PhoneLookup.NUMBER, PhoneLookup.TYPE,
 				PhoneLookup.LABEL };
-		Cursor c = mContext.getContentResolver().query(uri, projection, null, null, null);
+		Cursor c = mContentResolver.query(uri, projection, null, null, null);
 
 		if (c == null) {
-			LOG.e("lookupContact: returned cursor is null");
+			LOG.e("contactByNumber: returned cursor is null");
 			return null;
 		}
 
-		Contact res = null;
+		Contact contact = null;
 		if (c.moveToFirst()) {
-			String displayName = c.getString(c.getColumnIndexOrThrow(PhoneLookup.DISPLAY_NAME));
-			String number = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
+			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
+			String num = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
 			int type = c.getInt(c.getColumnIndexOrThrow(PhoneLookup.TYPE));
 			String label = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LABEL));
-			res = new Contact(displayName);
-			res.addNumber(number, type, label);
+			contact = new Contact(displayName);
+			contact.addNumber(num, type, label);
 		}
 		c.close();
 
-		return res;
+		return contact;
 	}
 
 	/**
@@ -95,24 +126,27 @@ public class ContactUtil {
 	 * @param phoneNumber
 	 * @return
 	 */
-	public Collection<Contact> lookupContacts(String phoneNumber) {
+	public Collection<Contact> contactsByNumber(String number) {
 		if (!contactsModuleInstalled()) return null;
-		if (!ContactNumber.isNumber(phoneNumber)) return null;
 
-		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(phoneNumber));
-		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, PhoneLookup.DISPLAY_NAME };
-		Cursor c = mContext.getContentResolver().query(uri, projection, null, null, null);
+		number = ContactNumber.cleanNumber(number);
+		if (!ContactNumber.isNumber(number)) return null;
+
+		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(number));
+		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME, PhoneLookup.NUMBER,
+				PhoneLookup.TYPE, PhoneLookup.LABEL };
+		Cursor c = mContentResolver.query(uri, projection, null, null, null);
 
 		if (c == null) {
-			LOG.e("lookupContact: returned cursor is null");
+			LOG.e("contactsByNumber: returned cursor is null");
 			return null;
 		}
 
 		Map<String, Contact> contactMap = new HashMap<String, Contact>();
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			String displayName = c.getString(c.getColumnIndexOrThrow(PhoneLookup.DISPLAY_NAME));
+			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
 			String lookupKey = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LOOKUP_KEY));
-			String number = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
+			String num = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
 			int type = c.getInt(c.getColumnIndexOrThrow(PhoneLookup.TYPE));
 			String label = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LABEL));
 
@@ -121,11 +155,115 @@ public class ContactUtil {
 				contact = new Contact(displayName, lookupKey);
 				contactMap.put(lookupKey, contact);
 			}
-			contact.addNumber(number, type, label);
+			contact.addNumber(num, type, label);
 		}
 		c.close();
 
 		return contactMap.values();
+	}
+
+	public Contact contactByNickname(String nickname) {
+		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTRACT_DATA_CONTENT_URI, Uri.encode(nickname));
+		final String[] projection = new String[] { ContactsContract.Data.LOOKUP_KEY, DISPLAY_NAME };
+		final String selection = ContactsContract.CommonDataKinds.Nickname.DATA + "=?";
+		Cursor c = mContentResolver.query(uri, projection, selection, new String[] { nickname }, null);
+
+		if (c == null) {
+			LOG.e("contactByNickname: returned cursor is null");
+			return null;
+		}
+
+		Contact contact = null;
+		if (c.moveToFirst()) {
+			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
+			String lookupKey = c.getString(c.getColumnIndexOrThrow(ContactsContract.Data.LOOKUP_KEY));
+
+			contact = new Contact(displayName, lookupKey);
+			contact.setNickname(nickname);
+			lookupContactNumbersFor(contact);
+		}
+		c.close();
+
+		return contact;
+	}
+
+	public Collection<Contact> contactsNyNickname(String nickname) {
+		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTRACT_DATA_CONTENT_URI, Uri.encode(nickname));
+		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
+		final String selection = ContactsContract.CommonDataKinds.Nickname.DATA + "=?";
+		final String[] selectionArgs = new String[] { nickname };
+		Cursor c = mContentResolver.query(uri, projection, selection, selectionArgs, null);
+
+		if (c == null) {
+			LOG.e("contactByNickname: returned cursor is null");
+			return null;
+		}
+
+		Collection<Contact> res = new ArrayList<Contact>();
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
+			String lookupKey = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LOOKUP_KEY));
+
+			Contact contact = new Contact(displayName, lookupKey);
+			contact.setNickname(nickname);
+			lookupContactNumbersFor(contact);
+			res.add(contact);
+		}
+		c.close();
+
+		return res;
+	}
+
+	public Contact contactByName(String name) {
+		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
+		final String[] projection = new String[] { ContactsContract.Contacts.LOOKUP_KEY, DISPLAY_NAME };
+		Cursor c = mContentResolver.query(uri, projection, null, null, null);
+
+		Contact contact = null;
+		if (c.moveToFirst()) {
+			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
+			String lookupKey = c.getString(c.getColumnIndexOrThrow(ContactsContract.Data.LOOKUP_KEY));
+			contact = new Contact(displayName, lookupKey);
+			lookupContactNumbersFor(contact);
+		}
+
+		c.close();
+		return contact;
+	}
+
+	public Collection<Contact> contactsByName(String name) {
+		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
+		final String[] projection = new String[] { ContactsContract.Contacts.LOOKUP_KEY, DISPLAY_NAME };
+		Cursor c = mContentResolver.query(uri, projection, null, null, null);
+
+		Collection<Contact> res = new ArrayList<Contact>();
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
+			String lookupKey = c.getString(c.getColumnIndexOrThrow(ContactsContract.Data.LOOKUP_KEY));
+			Contact contact = new Contact(displayName, lookupKey);
+			lookupContactNumbersFor(contact);
+			res.add(contact);
+		}
+
+		c.close();
+		return res;
+	}
+
+	public void lookupContactNumbersFor(Contact contact) {
+		String lookupKey = contact.getLookupKey();
+		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_LOOKUP_URI, lookupKey);
+		final String[] projection = new String[] { PhoneLookup.NUMBER, PhoneLookup.TYPE, PhoneLookup.LABEL };
+		final String selection = ContactsContract.PhoneLookup.LOOKUP_KEY + "=?";
+		final String[] selectionArgs = new String[] { lookupKey };
+		Cursor c = mContentResolver.query(uri, projection, selection, selectionArgs, null);
+
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			String number = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
+			int type = c.getInt(c.getColumnIndexOrThrow(PhoneLookup.TYPE));
+			String label = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LABEL));
+			contact.addNumber(number, type, label);
+		}
+		c.close();
 	}
 
 }

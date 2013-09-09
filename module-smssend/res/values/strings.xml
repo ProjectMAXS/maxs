@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_module_receiver_label">Module Receiver</string>
+    <string name="pref_app_debug_log">Debug Log</string>
+    <string name="pref_app_debug_log_help">Enables extensive logging of debug messages. Useful to find bugs.</string>
+    <string name="pref_notify_send">Send Notifications</string>
+    <string name="pref_notify_send_help">Request notifications if the SMS message has been send</string>
+    <string name="pref_notify_delivered">Delivered Notifications</string>
+    <string name="pref_notify_delivered_help">Request notifications if the SMS message has been delivered</string>
+</resources>
