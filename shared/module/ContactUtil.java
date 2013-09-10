@@ -15,15 +15,18 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.mainmodule;
+package org.projectmaxs.shared.module;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
+import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.mainmodule.ContactNumber;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -37,7 +40,8 @@ import android.provider.ContactsContract.PhoneLookup;
 
 public class ContactUtil {
 
-	public static final String CONTACTS_MODULE_PACKAGE = "org.projectmaxs.module.contacts";
+	public static final String CONTACTS_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".contacts";
+
 	public static final Uri CONTACTS_MODULE_AUTHORITY = Uri.parse("content://" + CONTACTS_MODULE_PACKAGE);
 
 	/**
