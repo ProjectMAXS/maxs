@@ -31,15 +31,15 @@ public class Text extends AbstractElement {
 		mXMLName = "text";
 	}
 
-	public Text(String text) {
+	public Text(String text, boolean newLine) {
 		this();
 		mTexts.add(new FormatedText(text));
+		if (newLine) mTexts.add(NewLine.getInstance());
 	}
 
 	private Text(Parcel in) {
 		this();
 		in.readList(mTexts, getClass().getClassLoader());
-		in.readList(mChildElements, getClass().getClassLoader());
 	}
 
 	@Override
@@ -50,11 +50,15 @@ public class Text extends AbstractElement {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeList(mTexts);
-		dest.writeList(mChildElements);
 	}
 
 	public void add(String string) {
 		mTexts.add(new FormatedText(string));
+	}
+
+	public void addNewLine(String string) {
+		add(string);
+		mTexts.add(NewLine.getInstance());
 	}
 
 	@Override
@@ -62,8 +66,13 @@ public class Text extends AbstractElement {
 		StringBuilder sb = new StringBuilder();
 		Iterator<FormatedText> it = mTexts.iterator();
 		while (it.hasNext())
-			sb.append(it.next().getText() + '\n');
+			sb.append(it.next().toString());
 		return sb;
+	}
+
+	@Override
+	public void addChildElement(AbstractElement element) {
+		throw new IllegalStateException("Text is not allowed to have child elements");
 	}
 
 	public static final Creator<Text> CREATOR = new Creator<Text>() {

@@ -39,7 +39,7 @@ public class Message implements Parcelable {
 
 	public Message(String string, int id) {
 		mId = id;
-		mElements.add(new Text(string));
+		mElements.add(new Text(string, true));
 	}
 
 	public void setId(int id) {
@@ -55,13 +55,19 @@ public class Message implements Parcelable {
 		return this;
 	}
 
-	public Message add(String string) {
+	public Message add(String string, boolean newLine) {
 		AbstractElement last = mElements.get(mElements.size() - 1);
 		if (last instanceof Text) {
-			((Text) last).add(string);
+			Text lastText = (Text) last;
+			if (newLine) {
+				lastText.addNewLine(string);
+			}
+			else {
+				lastText.add(string);
+			}
 		}
 		else {
-			mElements.add(new Text(string));
+			mElements.add(new Text(string, newLine));
 		}
 
 		return this;

@@ -62,7 +62,8 @@ public class FormatedText implements Parcelable {
 		ParcelUtil.writeBool(dest, mIsItalic);
 	}
 
-	public String getText() {
+	@Override
+	public String toString() {
 		return mText;
 	}
 
