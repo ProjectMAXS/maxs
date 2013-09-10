@@ -33,28 +33,33 @@ public class ContactNumber implements Parcelable {
 	final String mNumber;
 	final NumberType mNumberType;
 
-	boolean mIsPrimary = false;
+	boolean mSuperPrimary = false;
 	String mLabel;
 
 	public ContactNumber(String number) {
-		this(NumberType.UNKOWN, number);
+		if (!isNumber(number)) throw new IllegalArgumentException("Not a number: " + number);
+		mNumber = cleanNumber(number);
+		mNumberType = NumberType.UNKOWN;
 	}
 
 	public ContactNumber(NumberType type, String number) {
-		mNumberType = type;
+		if (!isNumber(number)) throw new IllegalArgumentException("Not a number: " + number);
 		mNumber = cleanNumber(number);
+		mNumberType = type;
 	}
 
-	public ContactNumber(String number, int type, String label) {
+	public ContactNumber(String number, int type, String label, boolean superPrimary) {
+		if (!isNumber(number)) throw new IllegalArgumentException("Not a number: " + number);
 		mNumber = cleanNumber(number);
 		mNumberType = fromInt(type);
 		mLabel = label;
+		mSuperPrimary = superPrimary;
 	}
 
 	private ContactNumber(Parcel in) {
 		mNumberType = in.readParcelable(NumberType.class.getClassLoader());
 		mNumber = in.readString();
-		mIsPrimary = ParcelUtil.readBool(in);
+		mSuperPrimary = ParcelUtil.readBool(in);
 		mLabel = in.readString();
 	}
 
@@ -67,7 +72,7 @@ public class ContactNumber implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(mNumberType, flags);
 		dest.writeString(mNumber);
-		ParcelUtil.writeBool(dest, mIsPrimary);
+		ParcelUtil.writeBool(dest, mSuperPrimary);
 		dest.writeString(mLabel);
 	}
 
@@ -85,7 +90,15 @@ public class ContactNumber implements Parcelable {
 
 	};
 
-	static enum NumberType implements Parcelable {
+	public String getNumber() {
+		return mNumber;
+	}
+
+	public NumberType getType() {
+		return mNumberType;
+	}
+
+	public static enum NumberType implements Parcelable {
 		MOBILE, HOME, WORK, UNKOWN, OTHER;
 
 		@Override
@@ -115,18 +128,36 @@ public class ContactNumber implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "ContactNumber number=" + mNumber + " type=" + mNumberType + " primary=" + mIsPrimary;
+		return "ContactNumber number=" + mNumber + " type=" + mNumberType + " primary=" + mSuperPrimary;
 	}
 
 	/**
 	 * 
+	 * Tries to find the best matching number
+	 * 
 	 * @param numbers
+	 * @param numberType
+	 *            type to be searched for, can be null
+	 * 
 	 * @return the best number, or null if none found
 	 */
-	public static ContactNumber getBest(List<ContactNumber> numbers) {
+	public static ContactNumber getBest(List<ContactNumber> numbers, NumberType numberType) {
 		if (numbers.isEmpty()) return null;
+		if (numbers.size() == 1) return numbers.get(0);
+
+		if (numberType != null) {
+			ContactNumber firstMatchingType = null;
+			for (ContactNumber number : numbers) {
+				if (number.getType() == numberType) {
+					if (firstMatchingType == null) firstMatchingType = number;
+					if (number.mSuperPrimary) return number;
+				}
+			}
+			if (firstMatchingType != null) return firstMatchingType;
+		}
+
 		for (ContactNumber number : numbers)
-			if (number.mIsPrimary) return number;
+			if (number.mSuperPrimary) return number;
 
 		return numbers.get(0);
 	}

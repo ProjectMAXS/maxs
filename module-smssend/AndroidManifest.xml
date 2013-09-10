@@ -20,6 +20,14 @@
                 <action android:name="org.projectmaxs.IMPORT_SETTINGS"/>
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".SMSPendingIntentReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="org.projectmaxs.module.smssend.SMS_SENT" />
+                <action android:name="org.projectmaxs.module.smssend.SMS_DELIVERED" />
+            </intent-filter>
+        </receiver>
         <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>

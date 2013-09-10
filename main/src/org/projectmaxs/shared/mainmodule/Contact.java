@@ -30,6 +30,10 @@ public class Contact implements Parcelable {
 	private String mLookupKey;
 	private String mNickname;
 
+	public Contact() {
+		this("");
+	}
+
 	public Contact(String displayName) {
 		mDisplayName = displayName;
 		mNumbers = new ArrayList<ContactNumber>(1);
@@ -53,12 +57,24 @@ public class Contact implements Parcelable {
 		mNickname = in.readString();
 	}
 
-	public void addNumber(String number, int type, String label) {
-		mNumbers.add(new ContactNumber(number, type, label));
+	public void addNumber(String number, int type, String label, boolean superPrimary) {
+		mNumbers.add(new ContactNumber(number, type, label, superPrimary));
+	}
+
+	public void addNumber(String number) {
+		mNumbers.add(new ContactNumber(number));
+	}
+
+	public ContactNumber getBestNumber(ContactNumber.NumberType numberType) {
+		return ContactNumber.getBest(mNumbers, numberType);
 	}
 
 	public void setNickname(String nickname) {
 		mNickname = nickname;
+	}
+
+	public String getDisplayName() {
+		return mDisplayName;
 	}
 
 	public String getLookupKey() {
@@ -93,9 +109,11 @@ public class Contact implements Parcelable {
 	};
 
 	public String toPrettyString() {
+		if (mDisplayName.isEmpty() && mNumbers.size() > 0) return getBestNumber(null).mNumber;
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(mDisplayName);
-		if (mNumbers.size() == 1) sb.append(" (" + mNumbers.get(0).mNumber + ")");
+		if (mNumbers.size() > 0) sb.append(" (" + getBestNumber(null).mNumber + ")");
 		return sb.toString();
 	}
 
@@ -103,9 +121,9 @@ public class Contact implements Parcelable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Contact ");
-		sb.append("name=" + (mDisplayName.equals("") ? "noName" : mDisplayName));
+		sb.append("name=" + (mDisplayName.isEmpty() ? "noName" : mDisplayName));
 
-		ContactNumber number = ContactNumber.getBest(mNumbers);
+		ContactNumber number = getBestNumber(null);
 		if (number != null) sb.append(" bestNumber='" + number.toString() + "'");
 
 		return sb.toString();

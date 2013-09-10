@@ -17,13 +17,26 @@
 
 package org.projectmaxs.module.smssend;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.projectmaxs.module.smssend.database.SmsTable;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
+import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.mainmodule.ContactNumber;
+import org.projectmaxs.shared.mainmodule.ContactUtil;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
+import org.projectmaxs.shared.module.RecentContactUtil;
+import org.projectmaxs.shared.module.RecentContactUtil.RecentContact;
+import org.projectmaxs.shared.module.SmsWriteUtil;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.telephony.SmsManager;
 
 public class ModuleService extends MAXSModuleIntentService {
 
@@ -47,6 +60,10 @@ public class ModuleService extends MAXSModuleIntentService {
 			});
 	// @formatter:on
 
+	public static final String PACKAGE = sMODULE_INFORMATION.getModulePackage();
+	public static final String PART_NUM_EXTRA = "partNum";
+	public static final String CMD_ID_EXTRA = "cmdId";
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -54,16 +71,89 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	@Override
 	public Message handleCommand(Command command) {
+		String subCommand = command.getSubCommand();
+		if (!"send".equals(subCommand)) throw new IllegalStateException("unkown command");
 
-		Message msg;
+		String[] argsSplit = command.getArgs().split("  ", 2);
+		Contact contact;
+		String text;
+		if (argsSplit[1].isEmpty()) {
+			RecentContact recentContact = RecentContactUtil.getRecentContact(this);
+			if (recentContact.mContactInfo == null) return new Message("No recent contact");
+			if (recentContact.mContact != null) {
+				contact = recentContact.mContact;
+			}
+			else {
+				contact = new Contact();
+			}
+			contact.addNumber(recentContact.mContactInfo);
+			text = argsSplit[0];
+		}
+		else {
+			Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(argsSplit[0]);
+			if (contacts == null) {
+				return new Message("Contacts module not installed?");
+			}
+			else if (contacts.size() > 1) {
+				return new Message("Many matching contacts found");
+			}
+			else if (contacts.size() == 0) {
+				return new Message("No matching contact found");
+			}
+			contact = contacts.iterator().next();
+			text = argsSplit[1];
+		}
 
-		msg = new Message("Unkown command");
+		sendSMS(contact, text, command.getId());
 
-		return msg;
+		return new Message("Sending SMS to " + contact + ": " + text);
 	}
 
 	@Override
 	public void initLog(Context context) {
 		LOG.initialize(Settings.getInstance(context));
+	}
+
+	private void sendSMS(Contact contact, String text, int cmdId) {
+		String receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
+		SmsManager smsManager = SmsManager.getDefault();
+		Settings settings = Settings.getInstance(this);
+		ArrayList<PendingIntent> sentIntents = null;
+		ArrayList<PendingIntent> deliveryIntents = null;
+		ArrayList<String> parts = smsManager.divideMessage(text);
+		int partCount = parts.size();
+		SmsTable smsTable = SmsTable.getInstance(this);
+		boolean notifySentEnabled = settings.notifySentEnabled();
+		boolean notifyDeliveredEnabled = settings.notifyDeliveredEnabled();
+
+		if (notifySentEnabled || notifyDeliveredEnabled) {
+			smsTable.addSms(cmdId, receiver, text.substring(0, 20), partCount, notifySentEnabled,
+					notifyDeliveredEnabled);
+			if (notifySentEnabled) {
+				sentIntents = createPendingIntents(partCount, cmdId, SMSPendingIntentReceiver.SMS_SENT_ACTION,
+						settings.getSentIntentRequestCode(partCount));
+			}
+			if (notifyDeliveredEnabled) {
+				deliveryIntents = createPendingIntents(partCount, cmdId, SMSPendingIntentReceiver.SMS_DELIVERED_ACTION,
+						settings.getDeliveredIntentRequestCode(partCount));
+			}
+		}
+
+		smsManager.sendMultipartTextMessage(receiver, null, parts, sentIntents, deliveryIntents);
+		RecentContactUtil.setRecentContact(receiver, contact, this);
+		SmsWriteUtil.insertSmsInSystemDB(contact, text, this);
+	}
+
+	private ArrayList<PendingIntent> createPendingIntents(int size, int cmdId, String action, int requestCodeStart) {
+		ArrayList<PendingIntent> intents = new ArrayList<PendingIntent>(size);
+		for (int i = 0; i < size; i++) {
+			Intent intent = new Intent(action);
+			intent.putExtra(PART_NUM_EXTRA, i);
+			intent.putExtra(CMD_ID_EXTRA, cmdId);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCodeStart, intent,
+					PendingIntent.FLAG_ONE_SHOT);
+			intents.add(pendingIntent);
+		}
+		return intents;
 	}
 }

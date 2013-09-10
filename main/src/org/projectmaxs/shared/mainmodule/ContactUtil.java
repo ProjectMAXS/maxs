@@ -96,6 +96,24 @@ public class ContactUtil {
 	}
 
 	/**
+	 * Magical method that tries to find contacts based on a given String
+	 * 
+	 * Only returns null if the contacts module is not installed or on error
+	 * 
+	 * @param info
+	 * @return
+	 */
+	public Collection<Contact> lookupContacts(String info) {
+		String cleanNumber = ContactNumber.cleanNumber(info);
+		if (ContactNumber.isNumber(cleanNumber)) return contactsByNumber(cleanNumber);
+
+		Collection<Contact> contacts = contactsByNickname(info);
+		if (contacts != null && contacts.size() > 0) return contacts;
+
+		return contactsByName(info);
+	}
+
+	/**
 	 * Lookup exactly one contact for a given number
 	 * 
 	 * @param phoneNumber
@@ -108,8 +126,7 @@ public class ContactUtil {
 		if (!ContactNumber.isNumber(number)) return null;
 
 		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(number));
-		final String[] projection = new String[] { DISPLAY_NAME, PhoneLookup.NUMBER, PhoneLookup.TYPE,
-				PhoneLookup.LABEL };
+		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
 		Cursor c = mContentResolver.query(uri, projection, null, null, null);
 
 		if (c == null) {
@@ -120,11 +137,9 @@ public class ContactUtil {
 		Contact contact = null;
 		if (c.moveToFirst()) {
 			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
-			String num = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
-			int type = c.getInt(c.getColumnIndexOrThrow(PhoneLookup.TYPE));
-			String label = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LABEL));
-			contact = new Contact(displayName);
-			contact.addNumber(num, type, label);
+			String lookupKey = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LOOKUP_KEY));
+			contact = new Contact(displayName, lookupKey);
+			lookupContactNumbersFor(contact);
 		}
 		c.close();
 
@@ -144,8 +159,7 @@ public class ContactUtil {
 		if (!ContactNumber.isNumber(number)) return null;
 
 		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(number));
-		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME, PhoneLookup.NUMBER,
-				PhoneLookup.TYPE, PhoneLookup.LABEL };
+		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
 		Cursor c = mContentResolver.query(uri, projection, null, null, null);
 
 		if (c == null) {
@@ -157,22 +171,28 @@ public class ContactUtil {
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
 			String lookupKey = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LOOKUP_KEY));
-			String num = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
-			int type = c.getInt(c.getColumnIndexOrThrow(PhoneLookup.TYPE));
-			String label = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LABEL));
 
 			Contact contact = contactMap.get(lookupKey);
 			if (contact == null) {
 				contact = new Contact(displayName, lookupKey);
 				contactMap.put(lookupKey, contact);
+				lookupContactNumbersFor(contact);
 			}
-			contact.addNumber(num, type, label);
 		}
 		c.close();
 
 		return contactMap.values();
 	}
 
+	/**
+	 * Lookup a contact by a given nickname.
+	 * 
+	 * The returned contact will come with all known contact numbers and a
+	 * lookup key.
+	 * 
+	 * @param nickname
+	 * @return
+	 */
 	public Contact contactByNickname(String nickname) {
 		Uri uri = Uri.withAppendedPath(MAXS_DATA_CONTENT_URI, Uri.encode(nickname));
 		final String[] projection = new String[] { ContactsContract.Data.LOOKUP_KEY, DISPLAY_NAME };
@@ -198,7 +218,15 @@ public class ContactUtil {
 		return contact;
 	}
 
-	public Collection<Contact> contactsNyNickname(String nickname) {
+	/**
+	 * Get all matching contacts for a given nickname.
+	 * 
+	 * The contacts will come with all known contact numbers and a lookup key.
+	 * 
+	 * @param nickname
+	 * @return
+	 */
+	public Collection<Contact> contactsByNickname(String nickname) {
 		Uri uri = Uri.withAppendedPath(MAXS_DATA_CONTENT_URI, Uri.encode(nickname));
 		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
 		final String selection = ContactsContract.CommonDataKinds.Nickname.DATA + "=?";
@@ -225,6 +253,14 @@ public class ContactUtil {
 		return res;
 	}
 
+	/**
+	 * Get a contact for a given name
+	 * 
+	 * The contact will come with all known contact numbers and a lookup key.
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public Contact contactByName(String name) {
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
 		final String[] projection = new String[] { ContactsContract.Contacts.LOOKUP_KEY, DISPLAY_NAME };
@@ -242,6 +278,14 @@ public class ContactUtil {
 		return contact;
 	}
 
+	/**
+	 * Get all known contacts for a given name
+	 * 
+	 * The contacts will come with all known contact numbers and a lookup key.
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public Collection<Contact> contactsByName(String name) {
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
 		final String[] projection = new String[] { ContactsContract.Contacts.LOOKUP_KEY, DISPLAY_NAME };
@@ -260,19 +304,36 @@ public class ContactUtil {
 		return res;
 	}
 
+	/**
+	 * Lookup the numbers for a given contact.
+	 * 
+	 * Usually this is not needed because most methods already return the
+	 * contacts with all known contact numbers.
+	 * 
+	 * @param contact
+	 */
 	public void lookupContactNumbersFor(Contact contact) {
 		String lookupKey = contact.getLookupKey();
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_LOOKUP_URI, lookupKey);
-		final String[] projection = new String[] { PhoneLookup.NUMBER, PhoneLookup.TYPE, PhoneLookup.LABEL };
+		// @formatter:off
+		final String[] projection = new String[] { 
+				ContactsContract.CommonDataKinds.Phone.NUMBER,
+				ContactsContract.CommonDataKinds.Phone.TYPE,
+				ContactsContract.CommonDataKinds.Phone.LABEL,
+				ContactsContract.CommonDataKinds.Phone.IS_SUPER_PRIMARY
+				};
+		// @formatter:on
 		final String selection = ContactsContract.PhoneLookup.LOOKUP_KEY + "=?";
 		final String[] selectionArgs = new String[] { lookupKey };
 		Cursor c = mContentResolver.query(uri, projection, selection, selectionArgs, null);
 
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			String number = c.getString(c.getColumnIndexOrThrow(PhoneLookup.NUMBER));
-			int type = c.getInt(c.getColumnIndexOrThrow(PhoneLookup.TYPE));
-			String label = c.getString(c.getColumnIndexOrThrow(PhoneLookup.LABEL));
-			contact.addNumber(number, type, label);
+			String number = c.getString(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			int type = c.getInt(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE));
+			String label = c.getString(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL));
+			boolean superPrimary = c.getInt(c
+					.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.IS_SUPER_PRIMARY)) > 0 ? true : false;
+			contact.addNumber(number, type, label, superPrimary);
 		}
 		c.close();
 	}

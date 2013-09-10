@@ -31,6 +31,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String NOTIFY_SEND;
 	private final String NOTIFY_DELIVERED;
 
+	private final String DELIVERED_INTENT_REQUEST_CODE = "DELIVERED_INTENT_REQUEST_CODE";
+	private final String SENT_INTENT_REQUEST_CODE = "SENT_INTENT_REQUEST_CODE";
+
 	private static Settings sSettings;
 
 	public static Settings getInstance(Context context) {
@@ -56,12 +59,24 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
 	}
 
-	public boolean notifySendEnabled() {
+	public boolean notifySentEnabled() {
 		return mSharedPreferences.getBoolean(NOTIFY_SEND, false);
 	}
 
 	public boolean notifyDeliveredEnabled() {
 		return mSharedPreferences.getBoolean(NOTIFY_DELIVERED, false);
+	}
+
+	public synchronized int getDeliveredIntentRequestCode(int howMany) {
+		int current = mSharedPreferences.getInt(DELIVERED_INTENT_REQUEST_CODE, 0);
+		mSharedPreferences.edit().putInt(DELIVERED_INTENT_REQUEST_CODE, current + howMany).commit();
+		return current;
+	}
+
+	public synchronized int getSentIntentRequestCode(int howMany) {
+		int current = mSharedPreferences.getInt(SENT_INTENT_REQUEST_CODE, 0);
+		mSharedPreferences.edit().putInt(SENT_INTENT_REQUEST_CODE, current + howMany).commit();
+		return current;
 	}
 
 	public SharedPreferences getSharedPreferences() {

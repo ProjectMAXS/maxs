@@ -18,30 +18,19 @@
 package org.projectmaxs.shared.module;
 
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PackageManagerUtil;
+import org.projectmaxs.shared.mainmodule.Contact;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 
-public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
+public class SmsWriteUtil {
 
-	private static final Log LOG = Log.getLog();
+	public static final String SMS_WRITE_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".smswrite";
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Message message = onReceiveReturnMessages(context, intent);
-		if (message == null) {
-			LOG.e("onReceive: message was null");
-			return;
-		}
-
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-		context.startService(replyIntent);
+	public static boolean insertSmsInSystemDB(Contact contact, String text, Context context) {
+		if (!PackageManagerUtil.getInstance(context).isPackageInstalled(SMS_WRITE_MODULE_PACKAGE)) return false;
+		// TODO
+		return true;
 	}
-
-	public abstract Message onReceiveReturnMessages(Context context, Intent intent);
 
 }

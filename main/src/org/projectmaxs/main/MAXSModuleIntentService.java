@@ -57,8 +57,9 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 			maxsService.sendMessage(msg);
 		}
 		else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
-			Contact contact = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
-			maxsService.setRecentContact(contact);
+			String usedContactInfo = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			Contact contact = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTACT);
+			maxsService.setRecentContact(usedContactInfo, contact);
 		}
 		else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			List<StatusInformation> infoList = intent.getParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT);

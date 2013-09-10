@@ -46,6 +46,8 @@ public class MAXSService extends Service {
 	private static final Log LOG = Log.getLog();
 	private static boolean sIsRunning = false;
 	private static final List<StartStopListener> sStartStopListeners = new LinkedList<StartStopListener>();
+	private static String sRecentContactInfo;
+	private static Contact sRecentContact;
 
 	public static boolean isRunning() {
 		return sIsRunning;
@@ -59,10 +61,12 @@ public class MAXSService extends Service {
 		sStartStopListeners.remove(listener);
 	}
 
+	public static Contact getRecentContact() {
+		return sRecentContact;
+	}
+
 	private final Handler mHandler = new Handler();
 
-	// private ConnectivityManager mConnectivityManager;
-	private Contact mRecentContact;
 	private Runnable mRecentContactRunnable;
 	private CommandTable mCommandTable;
 	private ModuleRegistry mModuleRegistry;
@@ -221,11 +225,7 @@ public class MAXSService extends Service {
 		startService(intent);
 	}
 
-	protected Contact getRecentContact() {
-		return mRecentContact;
-	}
-
-	protected synchronized void setRecentContact(final Contact contact) {
+	protected synchronized void setRecentContact(final String recentContactInfo, final Contact contact) {
 		LOG.d("setRecentContact: contact=" + contact);
 		if (mRecentContactRunnable != null) {
 			mHandler.removeCallbacks(mRecentContactRunnable);
@@ -234,7 +234,8 @@ public class MAXSService extends Service {
 		mRecentContactRunnable = new Runnable() {
 			@Override
 			public void run() {
-				mRecentContact = contact;
+				sRecentContactInfo = recentContactInfo;
+				sRecentContact = contact;
 				sendMessage(new Message("Recent contact is " + contact));
 			}
 		};

@@ -17,9 +17,13 @@
 
 package org.projectmaxs.main;
 
+import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 
 public class MAXSContentProvider extends ContentProvider {
@@ -31,6 +35,22 @@ public class MAXSContentProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		// Could use UriMatcher here. But since it's not really needed, got with
+		// the simple approach.
+		if (uri.equals(MAXSContentProviderContract.RECENT_CONTACT_URI)) {
+			MatrixCursor c = new MatrixCursor(MAXSContentProviderContract.RECENT_CONTACT_COLUMNS, 1);
+			Contact recentContact = MAXSService.getRecentContact();
+			if (recentContact == null) return c;
+			// If the recent contact is set, the it must always have also a
+			// number attached with it. So no need to check getBestNumber() for
+			// null
+			String number = recentContact.getBestNumber(null).getNumber();
+			String displayName = recentContact.getDisplayName();
+			String lookupKey = recentContact.getLookupKey();
+			c.addRow(new Object[] { number, displayName, lookupKey });
+			return c;
+		}
+
 		return null;
 	}
 

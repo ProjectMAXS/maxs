@@ -121,13 +121,18 @@ public abstract class MAXSModuleIntentService extends Service {
 		mLog.d("onHandleIntent: " + intent.getAction());
 		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
 
-		org.projectmaxs.shared.global.Message message;
+		org.projectmaxs.shared.global.Message message = null;
 
 		if ("help".equals(command.getCommand())) {
 			message = getHelp(command.getSubCommand(), command.getArgs());
 		}
 		else {
-			message = handleCommand(command);
+			try {
+				message = handleCommand(command);
+			} catch (Throwable e) {
+				mLog.e("onHandleIntent", e);
+				message = new org.projectmaxs.shared.global.Message("Exception: " + e.getMessage());
+			}
 			if (message == null) return;
 		}
 
@@ -135,7 +140,16 @@ public abstract class MAXSModuleIntentService extends Service {
 		sendMessage(message, command.getId());
 	}
 
-	public abstract org.projectmaxs.shared.global.Message handleCommand(Command command);
+	/**
+	 * Main entry point for a module to handle it's commands.
+	 * 
+	 * There is no need to add the command id to the message, it will be done
+	 * automatically by MAXSModuleIntentService
+	 * 
+	 * @param command
+	 * @return
+	 */
+	public abstract org.projectmaxs.shared.global.Message handleCommand(Command command) throws Throwable;
 
 	public abstract void initLog(Context context);
 

@@ -26,6 +26,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Contact;
 import org.projectmaxs.shared.mainmodule.ContactUtil;
 import org.projectmaxs.shared.module.MAXSBroadcastReceiver;
+import org.projectmaxs.shared.module.RecentContactUtil;
 
 import android.content.Context;
 import android.content.Intent;
@@ -50,12 +51,12 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			String smsBody = msg.get(sender);
 			LOG.d("Received sms from " + sender + ": " + smsBody);
 
-			contact = ContactUtil.getInstance(context).lookupContact(sender);
+			contact = ContactUtil.getInstance(context).contactByNumber(sender);
 			if (contact == null) contact = new Contact(sender);
 
 			message.add(new Sms(contact.toPrettyString(), smsBody));
 		}
-		setRecentContact(context, contact);
+		RecentContactUtil.setRecentContact(context, contact);
 		return message;
 	}
 
