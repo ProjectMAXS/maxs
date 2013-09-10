@@ -36,7 +36,7 @@ public class Contact implements Parcelable {
 
 	public Contact(String displayName) {
 		mDisplayName = displayName;
-		mNumbers = new ArrayList<ContactNumber>(1);
+		mNumbers = new ArrayList<ContactNumber>(0);
 	}
 
 	public Contact(String displayName, List<ContactNumber> numbers) {
@@ -63,6 +63,15 @@ public class Contact implements Parcelable {
 
 	public void addNumber(String number) {
 		mNumbers.add(new ContactNumber(number));
+	}
+
+	/**
+	 * Check if the contact has at least one number
+	 * 
+	 * @return
+	 */
+	public boolean hasNumbers() {
+		return mNumbers.size() > 0;
 	}
 
 	public ContactNumber getBestNumber(ContactNumber.NumberType numberType) {

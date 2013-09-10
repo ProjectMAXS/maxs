@@ -86,7 +86,18 @@ public class ModuleService extends MAXSModuleIntentService {
 			else {
 				contact = new Contact();
 			}
-			contact.addNumber(recentContact.mContactInfo);
+			if (ContactNumber.isNumber(recentContact.mContactInfo)) {
+				contact.addNumber(recentContact.mContactInfo);
+			}
+			else {
+				// If the contact info is not a number, e.g. because we received
+				// an SMS with a company name as sender, then try to fill in the
+				// missing information
+				ContactUtil.getInstance(this).lookupContactNumbersFor(contact);
+				if (contact.hasNumbers()) {
+					return new Message("No number for contact");
+				}
+			}
 			text = argsSplit[0];
 		}
 		else {
