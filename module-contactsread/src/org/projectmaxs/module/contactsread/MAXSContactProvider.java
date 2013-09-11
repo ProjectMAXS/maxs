@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.contacts;
+package org.projectmaxs.module.contactsread;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;

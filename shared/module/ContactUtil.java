@@ -40,7 +40,7 @@ import android.provider.ContactsContract.PhoneLookup;
 
 public class ContactUtil {
 
-	public static final String CONTACTS_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".contacts";
+	public static final String CONTACTS_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".contactsread";
 
 	public static final Uri CONTACTS_MODULE_AUTHORITY = Uri.parse("content://" + CONTACTS_MODULE_PACKAGE);
 

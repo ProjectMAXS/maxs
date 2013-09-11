@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.contacts;
+package org.projectmaxs.module.contactsread;
 
 import java.util.List;
 
@@ -35,13 +35,13 @@ public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
 	public ModuleService() {
-		super(LOG, "maxs-module-contacts");
+		super(LOG, "maxs-module-contactsread");
 	}
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
-			"org.projectmaxs.module.contacts",      // Package of the Module
-			"contacts",                             // Name of the Module (if omitted, last substring after '.' is used)
+			"org.projectmaxs.module.contactsread",      // Package of the Module
+			"contactsread",                             // Name of the Module (if omitted, last substring after '.' is used)
 			new ModuleInformation.Command[] {        // Array of commands provided by the module
 					new ModuleInformation.Command(
 							"contacts",             // Command name

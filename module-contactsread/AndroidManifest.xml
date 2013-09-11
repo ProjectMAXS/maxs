@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.projectmaxs.module.contacts"
+      package="org.projectmaxs.module.contactsread"
       android:versionCode="1"
       android:versionName="1.0">
     <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
@@ -27,7 +27,7 @@
             </intent-filter>
         </service>
         <provider android:name=".MAXSContactProvider"
-            android:authorities="org.projectmaxs.module.contacts"
+            android:authorities="org.projectmaxs.module.contactsread"
             android:permission="org.projectmaxs.permission.READ_CONTACTS">
         </provider>
     </application>

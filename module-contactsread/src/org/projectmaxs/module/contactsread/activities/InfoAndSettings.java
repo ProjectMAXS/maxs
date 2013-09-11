@@ -1,6 +1,6 @@
-package org.projectmaxs.module.contacts.activities;
+package org.projectmaxs.module.contactsread.activities;
 
-import org.projectmaxs.module.contacts.R;
+import org.projectmaxs.module.contactsread.R;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

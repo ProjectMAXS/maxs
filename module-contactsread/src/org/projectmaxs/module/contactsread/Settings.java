@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.contacts;
+package org.projectmaxs.module.contactsread;
 
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 
