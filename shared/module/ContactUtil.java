@@ -95,7 +95,7 @@ public class ContactUtil {
 	private final Context mContext;
 	private final ContentResolver mContentResolver;
 
-	public boolean contactsModuleInstalled() {
+	public boolean contactsReadModuleInstalled() {
 		return PackageManagerUtil.getInstance(mContext).isPackageInstalled(CONTACTS_MODULE_PACKAGE);
 	}
 
@@ -124,7 +124,7 @@ public class ContactUtil {
 	 * @return
 	 */
 	public Contact contactByNumber(String number) {
-		if (!contactsModuleInstalled()) return null;
+		if (!contactsReadModuleInstalled()) return null;
 
 		number = ContactNumber.cleanNumber(number);
 		if (!ContactNumber.isNumber(number)) return null;
@@ -157,7 +157,7 @@ public class ContactUtil {
 	 * @return
 	 */
 	public Collection<Contact> contactsByNumber(String number) {
-		if (!contactsModuleInstalled()) return null;
+		if (!contactsReadModuleInstalled()) return null;
 
 		number = ContactNumber.cleanNumber(number);
 		if (!ContactNumber.isNumber(number)) return null;
