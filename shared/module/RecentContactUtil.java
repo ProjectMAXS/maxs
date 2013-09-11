@@ -28,7 +28,10 @@ import android.database.Cursor;
 public class RecentContactUtil {
 
 	/**
-	 * Set the recent contact info
+	 * Set the recent contact info.
+	 * 
+	 * Not that if a Contact is provided, all information but the display name
+	 * and lookup key will get stripped.
 	 * 
 	 * @param usedContactInfo
 	 *            some sort of string (e.g. number, e-mail address), most be
@@ -42,7 +45,7 @@ public class RecentContactUtil {
 
 		final Intent intent = new Intent(GlobalConstants.ACTION_SET_RECENT_CONTACT);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, recentContactInfo);
-		intent.putExtra(GlobalConstants.EXTRA_CONTACT, contact);
+		intent.putExtra(GlobalConstants.EXTRA_CONTACT, contact.getMinimal());
 		context.startService(intent);
 	}
 

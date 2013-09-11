@@ -90,6 +90,19 @@ public class Contact implements Parcelable {
 		return mLookupKey;
 	}
 
+	/**
+	 * Get a new Contact with minimal information set. That is, only display
+	 * name and lookup key are set.
+	 * 
+	 * This method needs to have lookup key set or it will throw an Exception.
+	 * 
+	 * @return
+	 */
+	public Contact getMinimal() {
+		if (mLookupKey == null) throw new IllegalStateException("lookup key not set");
+		return new Contact(mDisplayName, mLookupKey);
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
