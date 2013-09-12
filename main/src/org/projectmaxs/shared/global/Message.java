@@ -33,6 +33,9 @@ public class Message implements Parcelable {
 	private final List<AbstractElement> mElements = new LinkedList<AbstractElement>();
 	private int mId;
 
+	public Message() {
+	}
+
 	public Message(String string) {
 		this(string, NO_ID);
 	}
@@ -78,6 +81,9 @@ public class Message implements Parcelable {
 		Iterator<AbstractElement> it = mElements.iterator();
 		while (it.hasNext())
 			sb.append(it.next().getStringBuilder());
+		// Remove the last newline of the message
+		if (sb.charAt(sb.length() - 1) == '\n') sb.setLength(sb.length() - 1);
+
 		return sb.toString();
 	}
 

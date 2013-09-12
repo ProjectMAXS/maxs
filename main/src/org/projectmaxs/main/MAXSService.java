@@ -173,7 +173,7 @@ public class MAXSService extends Service {
 	 *            the transport the command arrived with
 	 */
 	public void performCommand(String fullCommand, CommandOrigin origin) {
-		String[] splitedFullCommand = fullCommand.split(" ");
+		String[] splitedFullCommand = fullCommand.split(" ", 3);
 		String command = splitedFullCommand[0];
 
 		String subCmd = null;

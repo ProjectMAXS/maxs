@@ -17,19 +17,18 @@
 
 package org.projectmaxs.module.contactsread;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.Contact;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
-import org.projectmaxs.shared.mainmodule.aidl.IContactsModuleService;
+import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
@@ -46,16 +45,11 @@ public class ModuleService extends MAXSModuleIntentService {
 					new ModuleInformation.Command(
 							"contacts",             // Command name
 							"c",                    // Short command name
-							"lookup",                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
-							new String[] { "status" }),  // Array of provided subcommands 
+							null,                // Default subcommand without arguments
+							"lookup",                    // Default subcommand with arguments
+							new String[] { "lookup", "lname", "lnum", "lnick" }),  // Array of provided subcommands 
 			});
 	// @formatter:on
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		return mBinder;
-	}
 
 	@Override
 	public void onCreate() {
@@ -63,10 +57,26 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	@Override
+	public void initLog(Context context) {
+		LOG.initialize(Settings.getInstance(context));
+	}
+
+	@Override
 	public Message handleCommand(Command command) {
 		Message msg;
-		if (command.getSubCommand().equals("lookup")) {
-			msg = new Message("TODO contact lookup");
+		String subCmd = command.getSubCommand();
+		String args = command.getArgs();
+		if ("lookup".equals(subCmd)) {
+			msg = lookup(args);
+		}
+		else if ("lname".equals(subCmd)) {
+			msg = lookupByName(args);
+		}
+		else if ("lnum".equals(subCmd)) {
+			msg = lookupByNumber(args);
+		}
+		else if ("lnick".equals(subCmd)) {
+			msg = lookupByNickname(args);
 		}
 		else {
 			msg = new Message("Unkown command");
@@ -74,36 +84,27 @@ public class ModuleService extends MAXSModuleIntentService {
 		return msg;
 	}
 
-	@Override
-	public void initLog(Context context) {
-		LOG.initialize(Settings.getInstance(context));
-	}
+	private Message lookup(String args) {
 
-	private List<Contact> lookupContact(String lookupInfo) {
+		Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(args);
+		Iterator<Contact> it = contacts.iterator();
+		if (!it.hasNext()) return new Message("No Contacts found");
+		Message msg = new Message();
+		while (it.hasNext()) {
+
+		}
 		return null;
 	}
 
-	private List<Contact> lookupContactFromNumber(String number) {
+	private Message lookupByName(String args) {
 		return null;
 	}
 
-	private final IContactsModuleService.Stub mBinder = new IContactsModuleService.Stub() {
+	private Message lookupByNumber(String args) {
+		return null;
+	}
 
-		@Override
-		public List<Contact> lookupContact(String lookupInfo) {
-			return ModuleService.this.lookupContact(lookupInfo);
-		}
-
-		@Override
-		public List<Contact> lookupContactFromNumber(String number) {
-			return ModuleService.this.lookupContactFromNumber(number);
-		}
-
-		@Override
-		public Contact lookupOneContactFromNumber(String number) {
-			List<Contact> contacts = ModuleService.this.lookupContactFromNumber(number);
-			if (contacts == null) return null;
-			return contacts.get(0);
-		}
-	};
+	private Message lookupByNickname(String args) {
+		return null;
+	}
 }

@@ -77,7 +77,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		String[] argsSplit = command.getArgs().split("  ", 2);
 		Contact contact;
 		String text;
-		if (argsSplit[1].isEmpty()) {
+		if (argsSplit.length == 1) {
 			RecentContact recentContact = RecentContactUtil.getRecentContact(this);
 			if (recentContact.mContactInfo == null) return new Message("No recent contact");
 			if (recentContact.mContact != null) {
