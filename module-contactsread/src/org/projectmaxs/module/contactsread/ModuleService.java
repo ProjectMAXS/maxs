@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
-import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
@@ -43,7 +43,7 @@ public class ModuleService extends MAXSModuleIntentService {
 			"contactsread",                             // Name of the Module (if omitted, last substring after '.' is used)
 			new ModuleInformation.Command[] {        // Array of commands provided by the module
 					new ModuleInformation.Command(
-							"contacts",             // Command name
+							"contact",             // Command name
 							"c",                    // Short command name
 							null,                // Default subcommand without arguments
 							"lookup",                    // Default subcommand with arguments

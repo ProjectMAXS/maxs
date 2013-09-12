@@ -17,7 +17,6 @@
 
 package org.projectmaxs.shared.global.messagecontent;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,18 +26,12 @@ public class Text extends AbstractElement {
 
 	private final List<FormatedText> mTexts = new LinkedList<FormatedText>();
 
-	private Text() {
-		mXMLName = "text";
-	}
-
 	public Text(String text, boolean newLine) {
-		this();
 		mTexts.add(new FormatedText(text));
 		if (newLine) mTexts.add(NewLine.getInstance());
 	}
 
 	private Text(Parcel in) {
-		this();
 		in.readList(mTexts, getClass().getClassLoader());
 	}
 
@@ -61,18 +54,8 @@ public class Text extends AbstractElement {
 		mTexts.add(NewLine.getInstance());
 	}
 
-	@Override
-	public StringBuilder getStringBuilder() {
-		StringBuilder sb = new StringBuilder();
-		Iterator<FormatedText> it = mTexts.iterator();
-		while (it.hasNext())
-			sb.append(it.next().toString());
-		return sb;
-	}
-
-	@Override
-	public void addChildElement(AbstractElement element) {
-		throw new IllegalStateException("Text is not allowed to have child elements");
+	public List<FormatedText> getTexts() {
+		return mTexts;
 	}
 
 	public static final Creator<Text> CREATOR = new Creator<Text>() {

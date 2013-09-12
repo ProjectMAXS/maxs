@@ -17,8 +17,8 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
+import org.projectmaxs.shared.mainmodule.RecentContact;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -39,15 +39,15 @@ public class MAXSContentProvider extends ContentProvider {
 		// the simple approach.
 		if (uri.equals(MAXSContentProviderContract.RECENT_CONTACT_URI)) {
 			MatrixCursor c = new MatrixCursor(MAXSContentProviderContract.RECENT_CONTACT_COLUMNS, 1);
-			Contact recentContact = MAXSService.getRecentContact();
+			RecentContact recentContact = MAXSService.getRecentContact();
 			if (recentContact == null) return c;
 			// If the recent contact is set, the it must always have also a
 			// number attached with it. So no need to check getBestNumber() for
 			// null
-			String number = recentContact.getBestNumber(null).getNumber();
-			String displayName = recentContact.getDisplayName();
-			String lookupKey = recentContact.getLookupKey();
-			c.addRow(new Object[] { number, displayName, lookupKey });
+			String contactInfo = recentContact.mContactInfo;
+			String lookupKey = recentContact.mContact.getLookupKey();
+			String displayName = recentContact.mContact.getDisplayName();
+			c.addRow(new Object[] { contactInfo, lookupKey, displayName });
 			return c;
 		}
 

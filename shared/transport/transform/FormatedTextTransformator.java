@@ -15,20 +15,17 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.global.messagecontent;
+package org.projectmaxs.shared.transport.transform;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
 
-public abstract class AbstractElement implements Parcelable {
+import org.projectmaxs.shared.global.messagecontent.AbstractElement;
+import org.projectmaxs.shared.global.messagecontent.FormatedText;
 
-	@Override
-	public abstract int describeContents();
+public class FormatedTextTransformator {
 
-	/**
-	 * Remember to write also mChildElements
-	 */
-	@Override
-	public abstract void writeToParcel(Parcel dest, int flags);
-
+	protected static List<FormatedText> toFormatedText(AbstractElement element) {
+		// TODO
+		return null;
+	}
 }

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.projectmaxs.shared.global.messagecontent.AbstractElement;
 import org.projectmaxs.shared.global.messagecontent.Text;
+import org.projectmaxs.shared.global.util.ParcelUtil;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,18 +32,28 @@ public class Message implements Parcelable {
 	public static final int NO_ID = -1;
 
 	private final List<AbstractElement> mElements = new LinkedList<AbstractElement>();
-	private int mId;
+	private int mId = NO_ID;
+	private boolean mSuccess = true;
 
 	public Message() {
 	}
 
+	public Message(AbstractElement element) {
+		add(element);
+	}
+
 	public Message(String string) {
-		this(string, NO_ID);
+		mElements.add(new Text(string, true));
+	}
+
+	public Message(String string, boolean success) {
+		this(string);
+		mSuccess = success;
 	}
 
 	public Message(String string, int id) {
+		this(string);
 		mId = id;
-		mElements.add(new Text(string, true));
 	}
 
 	public void setId(int id) {
@@ -51,6 +62,14 @@ public class Message implements Parcelable {
 
 	public int getId() {
 		return mId;
+	}
+
+	public void setSuccess(boolean success) {
+		mSuccess = success;
+	}
+
+	public boolean isSuccess() {
+		return mSuccess;
 	}
 
 	public Message add(AbstractElement element) {
@@ -76,18 +95,12 @@ public class Message implements Parcelable {
 		return this;
 	}
 
-	public String getRawContent() {
-		StringBuilder sb = new StringBuilder();
-		Iterator<AbstractElement> it = mElements.iterator();
-		while (it.hasNext())
-			sb.append(it.next().getStringBuilder());
-		// Remove the last newline of the message
-		if (sb.charAt(sb.length() - 1) == '\n') sb.setLength(sb.length() - 1);
-
-		return sb.toString();
+	public Iterator<AbstractElement> getElementsIt() {
+		return mElements.iterator();
 	}
 
 	private Message(Parcel in) {
+		mSuccess = ParcelUtil.readBool(in);
 		mId = in.readInt();
 		in.readList(mElements, getClass().getClassLoader());
 	}
@@ -99,6 +112,7 @@ public class Message implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		ParcelUtil.writeBool(dest, mSuccess);
 		dest.writeInt(mId);
 		dest.writeList(mElements);
 	}

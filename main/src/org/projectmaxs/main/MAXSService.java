@@ -25,9 +25,11 @@ import org.projectmaxs.main.misc.MAXSBatteryManager;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
-import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.shared.mainmodule.RecentContact;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
@@ -46,8 +48,7 @@ public class MAXSService extends Service {
 	private static final Log LOG = Log.getLog();
 	private static boolean sIsRunning = false;
 	private static final List<StartStopListener> sStartStopListeners = new LinkedList<StartStopListener>();
-	private static String sRecentContactInfo;
-	private static Contact sRecentContact;
+	private static RecentContact sRecentContact;
 
 	public static boolean isRunning() {
 		return sIsRunning;
@@ -61,7 +62,7 @@ public class MAXSService extends Service {
 		sStartStopListeners.remove(listener);
 	}
 
-	public static Contact getRecentContact() {
+	public static RecentContact getRecentContact() {
 		return sRecentContact;
 	}
 
@@ -173,48 +174,50 @@ public class MAXSService extends Service {
 	 *            the transport the command arrived with
 	 */
 	public void performCommand(String fullCommand, CommandOrigin origin) {
+		Message errorMsg = null;
+		int id = Settings.getInstance(this).getNextCommandId();
 		String[] splitedFullCommand = fullCommand.split(" ", 3);
-		String command = splitedFullCommand[0];
 
+		String command = splitedFullCommand[0];
 		String subCmd = null;
 		if (splitedFullCommand.length > 1) subCmd = splitedFullCommand[1];
-
 		String args = null;
-		if (splitedFullCommand.length > 2) {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 2; i < splitedFullCommand.length; i++)
-				sb.append(splitedFullCommand[i]);
-			args = sb.toString();
-		}
-
-		int id = Settings.getInstance(this).getNextCommandId();
-		mCommandTable.addCommand(id, command, subCmd, args, origin);
-
-		// block for special 'help' commands.
-		if ("help".equals(command)) {
-
-		}
+		if (splitedFullCommand.length > 2) args = splitedFullCommand[2];
 
 		CommandInformation ci = mModuleRegistry.get(command);
-		if (ci == null) {
-			sendMessage(new Message("Unkown command: " + command, id));
+		if ("help".equals(command)) {
+			// TODO help system
 			return;
 		}
-
-		if (subCmd == null) {
-			subCmd = ci.getDefaultSubCommand();
+		else if (ci == null) {
+			errorMsg = new Message("Unkown command: " + command);
 		}
-		else if (!ci.isKnownSubCommand(subCmd)) {
-			// If subCmd is not known, then maybe it is not really a sub command
-			// but instead arguments. Therefore we have to lookup the
-			// default sub command when arguments are given, but first assign
-			// args to subCmd
-			args = subCmd;
-			subCmd = ci.getDefaultSubcommandWithArgs();
+		else {
+			if (subCmd == null) {
+				subCmd = ci.getDefaultSubCommand();
+				if (subCmd == null) errorMsg = new Message("No default sub command");
+			}
+			else if (!ci.isKnownSubCommand(subCmd)) {
+				subCmd = ci.getDefaultSubcommandWithArgs();
+				if (subCmd == null) {
+					errorMsg = new Message("No default sub command with args");
+				}
+				else {
+					if (splitedFullCommand.length > 2) {
+						args = splitedFullCommand[1] + ' ' + splitedFullCommand[2];
+					}
+					else {
+						args = splitedFullCommand[1];
+					}
+				}
+			}
 		}
 
-		if (subCmd == null) {
-			sendMessage(new Message("Unknown subCommand: " + subCmd == null ? args : subCmd, id));
+		mCommandTable.addCommand(id, command, subCmd, args, origin);
+
+		if (errorMsg != null) {
+			errorMsg.setId(id);
+			sendMessage(errorMsg);
 			return;
 		}
 
@@ -234,9 +237,14 @@ public class MAXSService extends Service {
 		mRecentContactRunnable = new Runnable() {
 			@Override
 			public void run() {
-				sRecentContactInfo = recentContactInfo;
-				sRecentContact = contact;
-				sendMessage(new Message("Recent contact is " + contact));
+				sRecentContact = new RecentContact(recentContactInfo, contact);
+				Element recentContactElement = new Element("recent_contact", recentContactInfo);
+				recentContactElement.addChildElement(contact);
+				Message message = new Message("Recent contact: "
+						+ (contact != null ? contact.getDisplayName() + " ( " + recentContactInfo + " )"
+								: recentContactInfo));
+				message.add(recentContactElement);
+				sendMessage(message);
 			}
 		};
 		mHandler.postDelayed(mRecentContactRunnable, 5000);

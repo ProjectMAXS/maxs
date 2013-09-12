@@ -22,15 +22,16 @@ import java.util.Collection;
 
 import org.projectmaxs.module.smssend.database.SmsTable;
 import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
+import org.projectmaxs.shared.global.messagecontent.Element;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
+import org.projectmaxs.shared.mainmodule.RecentContact;
 import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 import org.projectmaxs.shared.module.RecentContactUtil;
-import org.projectmaxs.shared.module.RecentContactUtil.RecentContact;
 import org.projectmaxs.shared.module.SmsWriteUtil;
 
 import android.app.PendingIntent;
@@ -79,7 +80,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		String text;
 		if (argsSplit.length == 1) {
 			RecentContact recentContact = RecentContactUtil.getRecentContact(this);
-			if (recentContact.mContactInfo == null) return new Message("No recent contact");
+			if (recentContact == null) return new Message("No recent contact");
 			if (recentContact.mContact != null) {
 				contact = recentContact.mContact;
 			}
@@ -115,9 +116,20 @@ public class ModuleService extends MAXSModuleIntentService {
 			text = argsSplit[1];
 		}
 
-		sendSMS(contact, text, command.getId());
+		String receiver = sendSMS(contact, text, command.getId());
 
-		return new Message("Sending SMS to " + contact + ": " + text);
+		Element sendingSMS = new Element("sms_sending");
+		sendingSMS.setText(text);
+		sendingSMS.addChildElement(new Element("receiver", receiver));
+		sendingSMS.addChildElement(contact);
+
+		// Don't set the recent contact if we send a sms with help of the recent
+		// contact. Because then the recent contact wouldn't change
+		if (argsSplit.length != 1) RecentContactUtil.setRecentContact(receiver, contact, this);
+
+		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " ( " + receiver + " )"
+				: receiver;
+		return new Message("Sending SMS to " + contactString + ": " + text);
 	}
 
 	@Override
@@ -125,7 +137,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		LOG.initialize(Settings.getInstance(context));
 	}
 
-	private void sendSMS(Contact contact, String text, int cmdId) {
+	private String sendSMS(Contact contact, String text, int cmdId) {
 		String receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 		SmsManager smsManager = SmsManager.getDefault();
 		Settings settings = Settings.getInstance(this);
@@ -151,8 +163,8 @@ public class ModuleService extends MAXSModuleIntentService {
 		}
 
 		smsManager.sendMultipartTextMessage(receiver, null, parts, sentIntents, deliveryIntents);
-		RecentContactUtil.setRecentContact(receiver, contact, this);
 		SmsWriteUtil.insertSmsInSystemDB(contact, text, this);
+		return receiver;
 	}
 
 	private ArrayList<PendingIntent> createPendingIntents(int size, int cmdId, String action, int requestCodeStart) {

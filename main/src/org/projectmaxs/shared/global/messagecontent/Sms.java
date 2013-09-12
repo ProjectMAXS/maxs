@@ -21,16 +21,20 @@ import android.os.Parcel;
 
 public class Sms extends AbstractElement {
 
-	private final String mContact;
+	private final String mContactString;
 	private final String mBody;
+	private final Direction mDirection;
 
-	public Sms(String contact, String body) {
-		mContact = contact;
+	public Sms(String contact, String body, Direction direction) {
+		mContactString = contact;
 		mBody = body;
+		mDirection = direction;
 	}
 
 	public Sms(Parcel in) {
-		mContact = in.readString();
+		int directionInt = in.readInt();
+		mDirection = Direction.values()[directionInt];
+		mContactString = in.readString();
 		mBody = in.readString();
 	}
 
@@ -41,7 +45,8 @@ public class Sms extends AbstractElement {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(mContact);
+		dest.writeInt(mDirection.ordinal());
+		dest.writeString(mContactString);
 		dest.writeString(mBody);
 	}
 
@@ -58,12 +63,20 @@ public class Sms extends AbstractElement {
 		}
 	};
 
-	@Override
-	public StringBuilder getStringBuilder() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(mContact);
-		sb.append(": ");
-		sb.append(mBody);
-		return sb;
+	public Direction getDirection() {
+		return mDirection;
 	}
+
+	public String getContact() {
+		return mContactString;
+	}
+
+	public String getBody() {
+		return mBody;
+	}
+
+	public static enum Direction {
+		INCOMING, OUTGOING,
+	}
+
 }

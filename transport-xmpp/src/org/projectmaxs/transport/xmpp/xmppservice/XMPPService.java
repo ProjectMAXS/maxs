@@ -34,6 +34,7 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.transport.transform.TransformMessageContent;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.Constants;
@@ -199,7 +200,7 @@ public class XMPPService {
 		String to = originIssuerInfo;
 		Message packet = new Message();
 		packet.setType(Message.Type.chat);
-		packet.setBody(message.getRawContent());
+		packet.setBody(TransformMessageContent.toString(message));
 		packet.setThread(originId);
 
 		if (to == null) {

@@ -20,6 +20,11 @@ package org.projectmaxs.shared.global.messagecontent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * 
+ * Useful to sign that a </br> is needed in XHTML-IM
+ * 
+ */
 public class NewLine extends FormatedText implements Parcelable {
 
 	static final NewLine sInstance = new NewLine();

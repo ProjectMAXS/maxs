@@ -21,38 +21,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
-public class Contact implements Parcelable {
+public class Contact extends AbstractElement {
 	private final String mDisplayName;
-	private final List<ContactNumber> mNumbers;
+	private final List<ContactNumber> mNumbers = new ArrayList<ContactNumber>(1);
 
 	private String mLookupKey;
 	private String mNickname;
 
 	public Contact() {
-		this("");
+		mDisplayName = null;
 	}
 
 	public Contact(String displayName) {
 		mDisplayName = displayName;
-		mNumbers = new ArrayList<ContactNumber>(0);
-	}
-
-	public Contact(String displayName, List<ContactNumber> numbers) {
-		mDisplayName = displayName;
-		mNumbers = numbers;
 	}
 
 	public Contact(String displayName, String lookupKey) {
 		mDisplayName = displayName;
 		mLookupKey = lookupKey;
-		mNumbers = new ArrayList<ContactNumber>();
 	}
 
 	private Contact(Parcel in) {
 		mDisplayName = in.readString();
-		mNumbers = in.createTypedArrayList(ContactNumber.CREATOR);
+		in.readList(mNumbers, ContactNumber.class.getClassLoader());
 		mLookupKey = in.readString();
 		mNickname = in.readString();
 	}
@@ -76,6 +68,10 @@ public class Contact implements Parcelable {
 
 	public ContactNumber getBestNumber(ContactNumber.NumberType numberType) {
 		return ContactNumber.getBest(mNumbers, numberType);
+	}
+
+	public List<ContactNumber> getNumbers() {
+		return mNumbers;
 	}
 
 	public void setNickname(String nickname) {
@@ -130,20 +126,11 @@ public class Contact implements Parcelable {
 
 	};
 
-	public String toPrettyString() {
-		if (mDisplayName.isEmpty() && mNumbers.size() > 0) return getBestNumber(null).mNumber;
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(mDisplayName);
-		if (mNumbers.size() > 0) sb.append(" (" + getBestNumber(null).mNumber + ")");
-		return sb.toString();
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Contact ");
-		sb.append("name=" + (mDisplayName.isEmpty() ? "noName" : mDisplayName));
+		sb.append("name=" + (mDisplayName == null ? "noName" : mDisplayName));
 
 		ContactNumber number = getBestNumber(null);
 		if (number != null) sb.append(" bestNumber='" + number.toString() + "'");

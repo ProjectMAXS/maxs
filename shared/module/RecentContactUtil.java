@@ -20,6 +20,7 @@ package org.projectmaxs.shared.module;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
+import org.projectmaxs.shared.mainmodule.RecentContact;
 
 import android.content.Context;
 import android.content.Intent;
@@ -59,8 +60,8 @@ public class RecentContactUtil {
 	public static RecentContact getRecentContact(Context context) {
 		Cursor c = context.getContentResolver().query(MAXSContentProviderContract.RECENT_CONTACT_URI, null, null, null,
 				null);
-		if (c == null) return null;
-		if (!c.moveToFirst()) throw new IllegalStateException("Recent contact cursor was empty");
+		if (c == null) throw new IllegalStateException("Recent contact cursor was null");
+		if (!c.moveToFirst()) return null;
 
 		String contactInfo = c.getString(c.getColumnIndexOrThrow(MAXSContentProviderContract.CONTACT_INFO));
 		String lookupKey = c.getString(c.getColumnIndex(MAXSContentProviderContract.LOOKUP_KEY));
@@ -68,15 +69,5 @@ public class RecentContactUtil {
 
 		Contact contact = new Contact(displayName, lookupKey);
 		return new RecentContact(contactInfo, contact);
-	}
-
-	public static class RecentContact {
-		public RecentContact(String contactInfo, Contact contact) {
-			mContactInfo = contactInfo;
-			mContact = contact;
-		}
-
-		public final String mContactInfo;
-		public final Contact mContact;
 	}
 }

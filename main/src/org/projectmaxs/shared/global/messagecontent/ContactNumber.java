@@ -26,7 +26,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
 
-public class ContactNumber implements Parcelable {
+public class ContactNumber extends AbstractElement {
 
 	private static final Pattern numberPattern = Pattern.compile("\\+?\\d+");
 
@@ -191,4 +191,5 @@ public class ContactNumber implements Parcelable {
 			return NumberType.UNKOWN;
 		}
 	}
+
 }
