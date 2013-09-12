@@ -25,8 +25,8 @@ import java.util.Map;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
-import org.projectmaxs.shared.mainmodule.Contact;
-import org.projectmaxs.shared.mainmodule.ContactNumber;
+import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;

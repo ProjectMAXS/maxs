@@ -17,7 +17,7 @@
 
 package org.projectmaxs.main;
 
-import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
 
 import android.content.ContentProvider;

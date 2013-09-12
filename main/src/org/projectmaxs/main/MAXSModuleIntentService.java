@@ -22,7 +22,7 @@ import java.util.List;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
 

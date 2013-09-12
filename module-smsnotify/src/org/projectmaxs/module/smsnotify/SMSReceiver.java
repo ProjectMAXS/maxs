@@ -23,7 +23,7 @@ import java.util.Map;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Contact;
+import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSBroadcastReceiver;
 import org.projectmaxs.shared.module.RecentContactUtil;

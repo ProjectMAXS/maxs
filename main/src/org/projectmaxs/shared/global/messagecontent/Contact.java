@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.mainmodule;
+package org.projectmaxs.shared.global.messagecontent;
 
 import java.util.ArrayList;
 import java.util.List;
