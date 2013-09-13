@@ -43,6 +43,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 	private final Context mContext;
 	private final BroadcastReceiver mBatteryBroadcastReceiver;
+
 	private String mLastBatteryPct = "";
 	private int mLastPlugged = -1;
 
@@ -82,11 +83,11 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 		String batteryPct = maybeFloatToRange(level / (float) scale, isCharging);
 
-		if (plugged == mLastPlugged && batteryPct.equals(mLastBatteryPct)) return;
-
 		ArrayList<StatusInformation> infos = new ArrayList<StatusInformation>(2);
 		if (plugged != mLastPlugged) infos.add(new StatusInformation("BAT_PLUGGED", getPowerSource(status, plugged)));
 		if (!batteryPct.equals(mLastBatteryPct)) infos.add(new StatusInformation("BAT_PCT", batteryPct + '%'));
+		// Be done here if there are now new status information to report
+		if (infos.size() == 0) return;
 
 		mLastBatteryPct = batteryPct;
 		mLastPlugged = plugged;
