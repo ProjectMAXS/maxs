@@ -23,8 +23,8 @@ pushd . > /dev/null
 cd libs
 if [[ ! -f $ASMACK_JAR ]]; then
     wget ${ASMACK_JAR_URL} || exit 1
-    sha256sum -c ${ASMACK_JAR_SHA256} || exit 1
 fi
+sha256sum -c ${ASMACK_JAR_SHA256} || exit 1
 popd > /dev/null
 
 # Create the properties file for the container lib. Allows convinitent
