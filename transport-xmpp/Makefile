@@ -16,14 +16,8 @@ all: transport
 transport: asmack shared
 	ant $(ANT_BUILD_TARGET)
 
-asmack: libs-sources libs
+asmack:
 	./asmack.sh
-
-libs-sources:
-	mkdir $@
-
-libs:
-	mkdir $@
 
 deploy: .lastDeployed
 
