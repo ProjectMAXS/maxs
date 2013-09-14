@@ -3,7 +3,9 @@
 .settings
 .lastBuild
 .lastDeployed
+local.properties
 bin/
 gen/
 libs-sources/
 libs/
+
