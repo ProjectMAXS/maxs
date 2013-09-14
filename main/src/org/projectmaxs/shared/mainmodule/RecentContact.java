@@ -20,6 +20,12 @@ package org.projectmaxs.shared.mainmodule;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 
 public class RecentContact {
+
+	public RecentContact(String contactInfo) {
+		mContactInfo = contactInfo;
+		mContact = null;
+	}
+
 	public RecentContact(String contactInfo, Contact contact) {
 		mContactInfo = contactInfo;
 		mContact = contact;

@@ -86,11 +86,13 @@ public class MAXSService extends Service {
 		MAXSBatteryManager.init(this);
 		StatusRegistry.getInstanceAndInit(this);
 
+		Settings settings = Settings.getInstance(this);
 		// Start the service the connection was previously established
-		if (Settings.getInstance(this).getServiceState()) {
+		if (settings.getServiceState()) {
 			LOG.d("onCreate: previous connection state was running, calling startService");
 			startService();
 		}
+		sRecentContact = settings.getRecentContact();
 	}
 
 	@Override
@@ -238,6 +240,8 @@ public class MAXSService extends Service {
 			@Override
 			public void run() {
 				sRecentContact = new RecentContact(recentContactInfo, contact);
+				Settings.getInstance(MAXSService.this).setRecentContact(sRecentContact);
+
 				Element recentContactElement = new Element("recent_contact", recentContactInfo);
 				recentContactElement.addChildElement(contact);
 				Message message = new Message("Recent contact: "

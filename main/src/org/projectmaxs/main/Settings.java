@@ -17,7 +17,9 @@
 
 package org.projectmaxs.main;
 
+import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
+import org.projectmaxs.shared.mainmodule.RecentContact;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,9 +28,11 @@ import android.preference.PreferenceManager;
 
 public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
 
-	private static final String LAST_RECIPIENT = "LAST_RECIPIENT";
 	private static final String CMD_ID = "CMD_ID";
 	private static final String SERVICE_ACTIVE = "SERVICE_ACTIVE";
+	private static final String RECENT_CONTACT_INFO = "RECENT_CONTACT_INFO";
+	private static final String RECENT_CONTACT_DISPLAY_NAME = "RECENT_CONTACT_DISPLAY_NAME";
+	private static final String RECENT_CONTACT_LOOKUP_KEY = "RECENT_CONTACT_LOOKUP_KEY";
 
 	// App settings
 	private final String DEBUG_LOG;
@@ -59,14 +63,6 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
 
-	public void setLastRecipient(String lastRecipient) {
-		mSharedPreferences.edit().putString(LAST_RECIPIENT, lastRecipient).commit();
-	}
-
-	public String getLastRecipient() {
-		return mSharedPreferences.getString(LAST_RECIPIENT, "");
-	}
-
 	public int getNextCommandId() {
 		int id = mSharedPreferences.getInt(CMD_ID, 0);
 		mSharedPreferences.edit().putInt(CMD_ID, id + 1).commit();
@@ -91,6 +87,33 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public boolean isDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
+	}
+
+	public void setRecentContact(RecentContact recentContact) {
+		String recentContactInfo = recentContact.mContactInfo;
+		String displayName = null;
+		String lookupKey = null;
+		if (recentContact.mContact != null) {
+			displayName = recentContact.mContact.getDisplayName();
+			lookupKey = recentContact.mContact.getLookupKey();
+		}
+		mSharedPreferences.edit().putString(RECENT_CONTACT_INFO, recentContactInfo)
+				.putString(RECENT_CONTACT_DISPLAY_NAME, displayName).putString(RECENT_CONTACT_LOOKUP_KEY, lookupKey)
+				.commit();
+	}
+
+	public RecentContact getRecentContact() {
+		String recentContactInfo = mSharedPreferences.getString(RECENT_CONTACT_INFO, null);
+		if (recentContactInfo == null) return null;
+		String displayName = mSharedPreferences.getString(RECENT_CONTACT_DISPLAY_NAME, null);
+		if (displayName == null) {
+			return new RecentContact(recentContactInfo);
+		}
+		else {
+			String lookupKey = mSharedPreferences.getString(RECENT_CONTACT_LOOKUP_KEY, null);
+			Contact contact = new Contact(displayName, lookupKey);
+			return new RecentContact(recentContactInfo, contact);
+		}
 	}
 
 	public SharedPreferences getSharedPreferences() {
