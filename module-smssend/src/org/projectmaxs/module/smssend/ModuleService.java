@@ -25,6 +25,7 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
+import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
@@ -116,20 +117,23 @@ public class ModuleService extends MAXSModuleIntentService {
 			text = argsSplit[1];
 		}
 
-		String receiver = sendSMS(contact, text, command.getId());
-
-		Element sendingSMS = new Element("sms_sending");
-		sendingSMS.setText(text);
-		sendingSMS.addChildElement(new Element("receiver", receiver));
-		sendingSMS.addChildElement(contact);
+		String receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
+		Sms sms = sendSMS(receiver, text, command.getId());
 
 		// Don't set the recent contact if we send a sms with help of the recent
-		// contact. Because then the recent contact wouldn't change
+		// contact. Because then the recent contact wouldn't change and the
+		// Notifications about the recent contact change would just be annoying
 		if (argsSplit.length != 1) RecentContactUtil.setRecentContact(receiver, contact, this);
+
+		Element sendingSMS = new Element("sms_sending");
+		sendingSMS.addChildElement(sms);
+		sendingSMS.addChildElement(contact);
 
 		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " ( " + receiver + " )"
 				: receiver;
-		return new Message("Sending SMS to " + contactString + ": " + text);
+		Message message = new Message("Sending SMS to " + contactString + ": " + text);
+		message.add(sendingSMS);
+		return message;
 	}
 
 	@Override
@@ -137,8 +141,16 @@ public class ModuleService extends MAXSModuleIntentService {
 		LOG.initialize(Settings.getInstance(context));
 	}
 
-	private String sendSMS(Contact contact, String text, int cmdId) {
-		String receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
+	/**
+	 * Sends a SMS and tries to add it to the system inbox if smswrite module is
+	 * installed
+	 * 
+	 * @param receiver
+	 * @param text
+	 * @param cmdId
+	 * @return
+	 */
+	private Sms sendSMS(String receiver, String text, int cmdId) {
 		SmsManager smsManager = SmsManager.getDefault();
 		Settings settings = Settings.getInstance(this);
 		ArrayList<PendingIntent> sentIntents = null;
@@ -162,9 +174,10 @@ public class ModuleService extends MAXSModuleIntentService {
 			}
 		}
 
+		Sms sms = new Sms(receiver, text, Sms.Direction.OUTGOING);
 		smsManager.sendMultipartTextMessage(receiver, null, parts, sentIntents, deliveryIntents);
-		SmsWriteUtil.insertSmsInSystemDB(contact, text, this);
-		return receiver;
+		SmsWriteUtil.insertSmsInSystemDB(sms, this);
+		return sms;
 	}
 
 	private ArrayList<PendingIntent> createPendingIntents(int size, int cmdId, String action, int requestCodeStart) {

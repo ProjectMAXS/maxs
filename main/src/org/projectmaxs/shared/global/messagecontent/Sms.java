@@ -24,11 +24,13 @@ public class Sms extends AbstractElement {
 	private final String mContactString;
 	private final String mBody;
 	private final Direction mDirection;
+	private final long mDate;
 
 	public Sms(String contact, String body, Direction direction) {
 		mContactString = contact;
 		mBody = body;
 		mDirection = direction;
+		mDate = System.currentTimeMillis();
 	}
 
 	public Sms(Parcel in) {
@@ -36,6 +38,7 @@ public class Sms extends AbstractElement {
 		mDirection = Direction.values()[directionInt];
 		mContactString = in.readString();
 		mBody = in.readString();
+		mDate = in.readLong();
 	}
 
 	@Override
@@ -48,6 +51,7 @@ public class Sms extends AbstractElement {
 		dest.writeInt(mDirection.ordinal());
 		dest.writeString(mContactString);
 		dest.writeString(mBody);
+		dest.writeLong(mDate);
 	}
 
 	public static final Creator<Sms> CREATOR = new Creator<Sms>() {
@@ -73,6 +77,10 @@ public class Sms extends AbstractElement {
 
 	public String getBody() {
 		return mBody;
+	}
+
+	public long getDate() {
+		return mDate;
 	}
 
 	public static enum Direction {

@@ -95,6 +95,7 @@ public class SmsTable {
 		if (c.moveToFirst()) {
 			res = c.getString(c.getColumnIndexOrThrow(intentColumn));
 		}
+		c.close();
 		return res;
 	}
 

@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
 
@@ -46,6 +46,11 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 
 	@Override
 	protected void onHandleIntent(MAXSService maxsService, Intent intent) {
+		if (intent == null) {
+			LOG.i("onHandleIntent: null intent");
+			return;
+		}
+
 		String action = intent.getAction();
 		LOG.d("onHandleIntent: action=" + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {

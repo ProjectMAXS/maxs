@@ -6,6 +6,8 @@
     <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
+    <permission android:name="org.projectmaxs.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.WRITE_SMS"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
@@ -23,6 +25,11 @@
         <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+            </intent-filter>
+        </service>
+        <service android:name=".SMSWriteService" android:permission="org.projectmaxs.permission.WRITE_SMS">
+            <intent-filter>
+                <action android:name="org.projectmaxs.module.ACTION_SMS_TO_INBOX"/>
             </intent-filter>
         </service>
     </application>

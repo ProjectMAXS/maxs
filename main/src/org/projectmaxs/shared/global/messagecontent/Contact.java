@@ -107,7 +107,7 @@ public class Contact extends AbstractElement {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mDisplayName);
-		dest.writeTypedList(mNumbers);
+		dest.writeList(mNumbers);
 		dest.writeString(mLookupKey);
 		dest.writeString(mNickname);
 	}

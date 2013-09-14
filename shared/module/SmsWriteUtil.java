@@ -18,18 +18,25 @@
 package org.projectmaxs.shared.module;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
-import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 
 public class SmsWriteUtil {
 
 	public static final String SMS_WRITE_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".smswrite";
 
-	public static boolean insertSmsInSystemDB(Contact contact, String text, Context context) {
+	public static boolean insertSmsInSystemDB(Sms sms, Context context) {
 		if (!PackageManagerUtil.getInstance(context).isPackageInstalled(SMS_WRITE_MODULE_PACKAGE)) return false;
-		// TODO
+
+		Intent intent = new Intent(MainModuleConstants.ACTION_SMS_TO_INBOX);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, sms);
+		ComponentName componentName = context.startService(intent);
+		if (componentName == null) throw new IllegalStateException("Component not found");
 		return true;
 	}
 
