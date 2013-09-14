@@ -16,7 +16,7 @@ all: transport
 transport: asmack shared
 	ant $(ANT_BUILD_TARGET)
 
-asmack: eclipse libs-sources libs
+asmack: libs-sources libs
 	./asmack.sh
 
 libs-sources:
