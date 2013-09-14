@@ -3,7 +3,7 @@
 
 . config
 
-ASMACK_JAR_SHA256=$(ls ./build/hashes/asmack-android-*.jar.sha256)
+ASMACK_JAR_SHA256=$(cd libs && ls ../build/hashes/asmack-android-*.jar.sha256)
 # TODO check that only one asmack sha256 file is found
 
 MIN_SDK_VERSION=$(grep minSdkVersion AndroidManifest.xml | awk -F"\"" '{print $2}')
