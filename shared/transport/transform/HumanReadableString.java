@@ -29,6 +29,12 @@ import org.projectmaxs.shared.global.messagecontent.Text;
 
 public class HumanReadableString {
 
+	private static String sMobile = "Mobile";
+	private static String sHome = "Home";
+	private static String sWork = "Work";
+	private static String sUnkown = "Unkown";
+	private static String sOther = "Other";
+
 	public static StringBuilder toSB(AbstractElement element) {
 		StringBuilder sb;
 
@@ -68,6 +74,27 @@ public class HumanReadableString {
 
 	private static StringBuilder toSB(ContactNumber contactNumber) {
 		StringBuilder sb = new StringBuilder();
+		String numberType;
+		switch (contactNumber.getType()) {
+		case MOBILE:
+			numberType = sMobile;
+			break;
+		case HOME:
+			numberType = sHome;
+			break;
+		case WORK:
+			numberType = sWork;
+			break;
+		case OTHER:
+			numberType = sOther;
+			break;
+		default:
+			numberType = sUnkown;
+			break;
+		}
+		sb.append(numberType);
+		if (contactNumber.getLabel() != null) sb.append(" (" + contactNumber.getLabel() + ")");
+		sb.append(": ");
 		sb.append(contactNumber.getNumber());
 		sb.append('\n');
 		return sb;

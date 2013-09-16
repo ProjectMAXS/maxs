@@ -33,6 +33,8 @@ import android.content.Context;
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
+	private ContactUtil mContactUtil;
+
 	public ModuleService() {
 		super(LOG, "maxs-module-contactsread");
 	}
@@ -47,13 +49,14 @@ public class ModuleService extends MAXSModuleIntentService {
 							"c",                    // Short command name
 							null,                // Default subcommand without arguments
 							"lookup",                    // Default subcommand with arguments
-							new String[] { "lookup", "lname", "lnum", "lnick" }),  // Array of provided subcommands 
+							new String[] { "lookup", "lname", "lnum", "lnick", "mobile" }),  // Array of provided subcommands
 			});
 	// @formatter:on
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mContactUtil = ContactUtil.getInstance(this);
 	}
 
 	@Override
@@ -85,26 +88,32 @@ public class ModuleService extends MAXSModuleIntentService {
 	}
 
 	private Message lookup(String args) {
+		Collection<Contact> contacts = mContactUtil.lookupContacts(args);
+		return processResult(contacts);
+	}
 
-		Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(args);
+	private Message lookupByName(String args) {
+		Collection<Contact> contacts = mContactUtil.contactsByName(args);
+		return processResult(contacts);
+	}
+
+	private Message lookupByNumber(String args) {
+		Collection<Contact> contacts = mContactUtil.contactsByNumber(args);
+		return processResult(contacts);
+	}
+
+	private Message lookupByNickname(String args) {
+		Collection<Contact> contacts = mContactUtil.contactsByNickname(args);
+		return processResult(contacts);
+	}
+
+	private static final Message processResult(Collection<Contact> contacts) {
 		Iterator<Contact> it = contacts.iterator();
 		if (!it.hasNext()) return new Message("No Contacts found");
 		Message msg = new Message();
 		while (it.hasNext()) {
-
+			msg.add(it.next());
 		}
-		return null;
-	}
-
-	private Message lookupByName(String args) {
-		return null;
-	}
-
-	private Message lookupByNumber(String args) {
-		return null;
-	}
-
-	private Message lookupByNickname(String args) {
-		return null;
+		return msg;
 	}
 }

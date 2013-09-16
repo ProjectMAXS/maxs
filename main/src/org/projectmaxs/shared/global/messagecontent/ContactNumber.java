@@ -32,20 +32,23 @@ public class ContactNumber extends AbstractElement {
 
 	final String mNumber;
 	final NumberType mNumberType;
-
-	boolean mSuperPrimary = false;
-	String mLabel;
+	final boolean mSuperPrimary;
+	final String mLabel;
 
 	public ContactNumber(String number) {
 		if (!isNumber(number)) throw new IllegalArgumentException("Not a number: " + number);
 		mNumber = cleanNumber(number);
 		mNumberType = NumberType.UNKOWN;
+		mSuperPrimary = false;
+		mLabel = null;
 	}
 
 	public ContactNumber(NumberType type, String number) {
 		if (!isNumber(number)) throw new IllegalArgumentException("Not a number: " + number);
 		mNumber = cleanNumber(number);
 		mNumberType = type;
+		mSuperPrimary = false;
+		mLabel = null;
 	}
 
 	public ContactNumber(String number, int type, String label, boolean superPrimary) {
@@ -96,6 +99,10 @@ public class ContactNumber extends AbstractElement {
 
 	public NumberType getType() {
 		return mNumberType;
+	}
+
+	public String getLabel() {
+		return mLabel;
 	}
 
 	public static enum NumberType implements Parcelable {
