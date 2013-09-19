@@ -9,12 +9,15 @@ SHARED_MAINTRANSPORT_SOURCE := $(SHARED_SOURCE)/maintransport
 DEBUG_APK := bin/maxs-$(TRANSPORT_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy eclipse shared $(DEBUG_APK)
+.PHONY: all clean deploy eclipse release shared $(DEBUG_APK)
 
 all: transport
 
 transport: asmack shared
 	ant $(ANT_BUILD_TARGET)
+
+release:
+	ANT_BUILD_TARGET=release make transport
 
 asmack:
 	./asmack.sh

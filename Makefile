@@ -17,6 +17,9 @@ clean:
 deploy:
 	TARGET=$@ make $(ALL)
 
+release:
+	TARGET=release make $(ALL)
+
 mindeploy:
 	TARGET=deploy make $(MIN_DEPLOY)
 

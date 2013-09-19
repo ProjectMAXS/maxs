@@ -9,12 +9,15 @@ MODULE_NAME := $(shell basename `pwd`)
 DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy eclipse shared $(DEBUG_APK)
+.PHONY: all clean deploy eclipse release shared $(DEBUG_APK)
 
 all: module
 
 module: shared
 	ant $(ANT_BUILD_TARGET)
+
+release:
+	ANT_BUILD_TARGET=release make module
 
 deploy: .lastDeployed
 

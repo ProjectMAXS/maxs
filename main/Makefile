@@ -1,12 +1,15 @@
 ANT_BUILD_TARGET?=debug
 DEBUG_APK := bin/MAXS-debug.apk
 
-.PHONY: all asmack clean deploy eclipse $(DEBUG_APK)
+.PHONY: all asmack clean deploy eclipse release $(DEBUG_APK)
 
 all: main
 
 main:
 	ant $(ANT_BUILD_TARGET)
+
+release:
+	ant release
 
 deploy: .lastDeployed
 
