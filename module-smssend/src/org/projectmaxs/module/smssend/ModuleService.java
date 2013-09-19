@@ -57,8 +57,14 @@ public class ModuleService extends MAXSModuleIntentService {
 							"sms",             // Command name
 							"s",                    // Short command name
 							null,                // Default subcommand without arguments
-							"send",                    // Default subcommand with arguments
+							null,                    // Default subcommand with arguments
 							new String[] { "send" }),  // Array of provided subcommands 
+					new ModuleInformation.Command(
+							"reply",
+							"r",
+							null,
+							"to",
+							new String[] { "to" }),
 			});
 	// @formatter:on
 
@@ -74,12 +80,11 @@ public class ModuleService extends MAXSModuleIntentService {
 	@Override
 	public Message handleCommand(Command command) {
 		String subCommand = command.getSubCommand();
-		if (!"send".equals(subCommand)) throw new IllegalStateException("unkown command");
 
-		String[] argsSplit = command.getArgs().split("  ", 2);
 		Contact contact;
 		String text;
-		if (argsSplit.length == 1) {
+		String receiver = null;
+		if ("reply".equals(subCommand)) {
 			RecentContact recentContact = RecentContactUtil.getRecentContact(this);
 			if (recentContact == null) return new Message("No recent contact");
 			if (recentContact.mContact != null) {
@@ -100,9 +105,11 @@ public class ModuleService extends MAXSModuleIntentService {
 					return new Message("No number for contact");
 				}
 			}
-			text = argsSplit[0];
+			text = command.getArgs();
+			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 		}
-		else {
+		else if ("send".equals(subCommand)) {
+			String[] argsSplit = command.getArgs().split("  ", 2);
 			Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(argsSplit[0]);
 			if (contacts == null) {
 				return new Message("Contacts module not installed?");
@@ -115,15 +122,14 @@ public class ModuleService extends MAXSModuleIntentService {
 			}
 			contact = contacts.iterator().next();
 			text = argsSplit[1];
+			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
+			RecentContactUtil.setRecentContact(receiver, contact, this);
+		}
+		else {
+			throw new IllegalStateException("unkown sub command");
 		}
 
-		String receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 		Sms sms = sendSMS(receiver, text, command.getId());
-
-		// Don't set the recent contact if we send a sms with help of the recent
-		// contact. Because then the recent contact wouldn't change and the
-		// Notifications about the recent contact change would just be annoying
-		if (argsSplit.length != 1) RecentContactUtil.setRecentContact(receiver, contact, this);
 
 		Element sendingSMS = new Element("sms_sending");
 		sendingSMS.addChildElement(sms);

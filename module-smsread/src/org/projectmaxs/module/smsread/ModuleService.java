@@ -40,9 +40,9 @@ public class ModuleService extends MAXSModuleIntentService {
 					new ModuleInformation.Command(
 							"sms",             // Command name
 							"s",                    // Short command name
-							"read",                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
-							new String[] { "read" }),  // Array of provided subcommands 
+							"show",                // Default subcommand without arguments
+							"show",                    // Default subcommand with arguments
+							new String[] { "show" }),  // Array of provided subcommands
 			});
 	// @formatter:on
 
