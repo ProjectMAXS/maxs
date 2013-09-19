@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.transport.xmpp"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="0.0.1.0" >
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT"/>
     <permission android:name="org.projectmaxs.permission.USE_TRANSPORT" />
