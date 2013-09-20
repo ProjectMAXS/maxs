@@ -49,18 +49,15 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 		if (TransportConstants.ACTION_REGISTER_TRANSPORT.equals(action)) {
 			TransportInformation ti = intent.getParcelableExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION);
 			mTransportRegistry.registerTransport(ti);
-		}
-		else if (GlobalConstants.ACTION_PERFORM_COMMAND.equals(action)) {
+		} else if (GlobalConstants.ACTION_PERFORM_COMMAND.equals(action)) {
 			String fullCommand = intent.getStringExtra(TransportConstants.EXTRA_COMMAND);
 			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			maxsService.performCommand(fullCommand, origin);
-		}
-		else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
+		} else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
 			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mTransportRegistry.updateStatus(transportPackage, status);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("onHandleIntent: unkown action " + action);
 		}
 	}

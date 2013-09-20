@@ -45,8 +45,7 @@ public class FileManager {
 		} catch (IOException e) {
 			LOG.w("saveToFile", e);
 			return e.getMessage();
-		}
-		finally {
+		} finally {
 			if (os != null) {
 				try {
 					os.close();

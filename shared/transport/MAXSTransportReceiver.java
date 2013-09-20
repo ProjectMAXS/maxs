@@ -52,16 +52,13 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(TransportConstants.ACTION_REGISTER_TRANSPORT);
 			replyIntent.putExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION, mTransportInformation);
-		}
-		else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
+		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
-		}
-		else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
+		} else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("MAXSTransportReceiver: unkown action: " + action);
 		}
 		if (replyIntent != null) {

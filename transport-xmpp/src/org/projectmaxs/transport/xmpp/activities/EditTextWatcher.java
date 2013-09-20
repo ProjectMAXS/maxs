@@ -39,8 +39,7 @@ public abstract class EditTextWatcher implements OnFocusChangeListener, TextView
 	public void onFocusChange(View v, boolean hasFocus) {
 		if (hasFocus) {
 			inFocus(v);
-		}
-		else {
+		} else {
 			maybeCallLostFocusOrDone(v);
 		}
 	}

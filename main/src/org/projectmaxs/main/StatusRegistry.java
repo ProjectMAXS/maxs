@@ -76,8 +76,7 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 			if (savedStatusValue != null && savedStatusValue.equals(statusValue)) {
 				LOG.d("add: statusValue equals savedStatusValue, not updating");
 				continue;
-			}
-			else {
+			} else {
 				shouldUpdateStatus = true;
 			}
 

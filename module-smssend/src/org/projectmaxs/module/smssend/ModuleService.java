@@ -89,14 +89,12 @@ public class ModuleService extends MAXSModuleIntentService {
 			if (recentContact == null) return new Message("No recent contact");
 			if (recentContact.mContact != null) {
 				contact = recentContact.mContact;
-			}
-			else {
+			} else {
 				contact = new Contact();
 			}
 			if (ContactNumber.isNumber(recentContact.mContactInfo)) {
 				contact.addNumber(recentContact.mContactInfo);
-			}
-			else {
+			} else {
 				// If the contact info is not a number, e.g. because we received
 				// an SMS with a company name as sender, then try to fill in the
 				// missing information
@@ -107,25 +105,21 @@ public class ModuleService extends MAXSModuleIntentService {
 			}
 			text = command.getArgs();
 			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
-		}
-		else if ("send".equals(subCommand)) {
+		} else if ("send".equals(subCommand)) {
 			String[] argsSplit = command.getArgs().split("  ", 2);
 			Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(argsSplit[0]);
 			if (contacts == null) {
 				return new Message("Contacts module not installed?");
-			}
-			else if (contacts.size() > 1) {
+			} else if (contacts.size() > 1) {
 				return new Message("Many matching contacts found");
-			}
-			else if (contacts.size() == 0) {
+			} else if (contacts.size() == 0) {
 				return new Message("No matching contact found");
 			}
 			contact = contacts.iterator().next();
 			text = argsSplit[1];
 			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 			RecentContactUtil.setRecentContact(receiver, contact, this);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("unkown sub command");
 		}
 

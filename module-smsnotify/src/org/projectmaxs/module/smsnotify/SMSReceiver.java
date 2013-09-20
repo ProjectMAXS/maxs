@@ -58,8 +58,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			String contactString;
 			if (contact == null) {
 				contactString = sender;
-			}
-			else {
+			} else {
 				contactString = contact.getDisplayName() + " (" + sender + ")";
 			}
 
@@ -103,8 +102,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 				// Save string into associative array with sender number
 				// as index
 				msg.put(msgs[i].getOriginatingAddress(), msgs[i].getMessageBody());
-			}
-			else {
+			} else {
 				// Number has been there, add content
 				String previousparts = msg.get(originatinAddress);
 				String msgString = previousparts + msgs[i].getMessageBody();

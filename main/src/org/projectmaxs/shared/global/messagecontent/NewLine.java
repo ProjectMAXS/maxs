@@ -43,8 +43,7 @@ public class NewLine extends FormatedText implements Parcelable {
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-	}
+	public void writeToParcel(Parcel dest, int flags) {}
 
 	public static final Creator<NewLine> CREATOR = new Creator<NewLine>() {
 

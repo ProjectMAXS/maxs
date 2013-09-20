@@ -127,8 +127,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		if (lowerBound != 100) {
 			int upperBound = lowerBound + STEP;
 			return lowerBound + "-" + upperBound;
-		}
-		else {
+		} else {
 			return Integer.toString(lowerBound);
 		}
 	}

@@ -150,13 +150,10 @@ public class TransportRegistry {
 	}
 
 	public static abstract class ChangeListener {
-		public void transportUnregistered(TransportInformation transportInformation) {
-		};
+		public void transportUnregistered(TransportInformation transportInformation) {};
 
-		public void transportRegistered(TransportInformation transportInformation) {
-		};
+		public void transportRegistered(TransportInformation transportInformation) {};
 
-		public void transportStatusChanged(String transportPackage, String status) {
-		};
+		public void transportStatusChanged(String transportPackage, String status) {};
 	}
 }

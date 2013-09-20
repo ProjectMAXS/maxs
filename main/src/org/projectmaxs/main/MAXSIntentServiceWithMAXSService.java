@@ -62,8 +62,7 @@ public abstract class MAXSIntentServiceWithMAXSService extends Service {
 			mQueue.add(intent);
 			// start sticky because there are now intents in the queue to handle
 			return START_STICKY;
-		}
-		else {
+		} else {
 			onHandleIntent(mMAXSService, intent);
 			stopSelf(startId);
 			return START_NOT_STICKY;

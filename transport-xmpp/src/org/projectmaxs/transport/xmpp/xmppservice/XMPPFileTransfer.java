@@ -135,8 +135,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 						}
 					} catch (IOException e) {
 						LOG.e("fleTransferRequest", e);
-					}
-					finally {
+					} finally {
 						try {
 							is.close();
 						} catch (IOException e1) {

@@ -70,22 +70,18 @@ public class ModuleService extends MAXSModuleIntentService {
 			if (res) {
 				msg = new Message("Enabling bluetooth adapter");
 				registerBluetoothReceiver(commandId);
-			}
-			else {
+			} else {
 				msg = new Message("Failed to enable bluetooth adapter");
 			}
-		}
-		else if ("disable".equals(subCommand)) {
+		} else if ("disable".equals(subCommand)) {
 			boolean res = mAdapter.disable();
 			if (res) {
 				msg = new Message("Disabling bluetooth adapter");
 				registerBluetoothReceiver(commandId);
-			}
-			else {
+			} else {
 				msg = new Message("Failed to disable bluetooth adapter");
 			}
-		}
-		else {
+		} else {
 			msg = new Message("Unkown command");
 		}
 		return msg;

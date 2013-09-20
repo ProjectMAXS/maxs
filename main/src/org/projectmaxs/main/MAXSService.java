@@ -102,8 +102,7 @@ public class MAXSService extends Service {
 			// the connection. This null intent behavior is only for SDK < 9
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
 				startService();
-			}
-			else {
+			} else {
 				LOG.w("onStartCommand: null intent with Gingerbread or lower");
 			}
 			// Returning not sticky here, the start service intent will take
@@ -118,21 +117,18 @@ public class MAXSService extends Service {
 		if (action.equals(Constants.ACTION_START_SERVICE)) {
 			if (sIsRunning) {
 				LOG.d("onStartCommand: service already running, nothing to do here");
-			}
-			else {
+			} else {
 				sIsRunning = true;
 				sendActionToAllTransportServices(TransportConstants.ACTION_START_SERVICE);
 				Settings.getInstance(this).setServiceState(true);
 				for (StartStopListener listener : sStartStopListeners)
 					listener.onServiceStart(this);
 			}
-		}
-		else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
+		} else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
 			sticky = false;
 			if (!sIsRunning) {
 				LOG.d("onStartCommand: service already stopped, nothing to do here");
-			}
-			else {
+			} else {
 				sendActionToAllTransportServices(TransportConstants.ACTION_STOP_SERVICE);
 				Settings.getInstance(this).setServiceState(false);
 				for (StartStopListener listener : sStartStopListeners)
@@ -140,8 +136,7 @@ public class MAXSService extends Service {
 				stopSelf(startId);
 				sIsRunning = false;
 			}
-		}
-		else {
+		} else {
 			throw new IllegalStateException("MAXSService unkown action " + action);
 		}
 		return sticky ? START_STICKY : START_NOT_STICKY;
@@ -190,25 +185,20 @@ public class MAXSService extends Service {
 		if ("help".equals(command)) {
 			// TODO help system
 			return;
-		}
-		else if (ci == null) {
+		} else if (ci == null) {
 			errorMsg = new Message("Unkown command: " + command);
-		}
-		else {
+		} else {
 			if (subCmd == null) {
 				subCmd = ci.getDefaultSubCommand();
 				if (subCmd == null) errorMsg = new Message("No default sub command");
-			}
-			else if (!ci.isKnownSubCommand(subCmd)) {
+			} else if (!ci.isKnownSubCommand(subCmd)) {
 				subCmd = ci.getDefaultSubcommandWithArgs();
 				if (subCmd == null) {
 					errorMsg = new Message("No default sub command with args");
-				}
-				else {
+				} else {
 					if (splitedFullCommand.length > 2) {
 						args = splitedFullCommand[1] + ' ' + splitedFullCommand[2];
-					}
-					else {
+					} else {
 						args = splitedFullCommand[1];
 					}
 				}
@@ -279,8 +269,7 @@ public class MAXSService extends Service {
 				LOG.w("sendMessage: transport not found transportPackage=" + origin.getPackage() + " serviceClass="
 						+ origin.getServiceClass());
 			}
-		}
-		else {
+		} else {
 			// Broadcast this message
 			List<TransportInformation> transportList = mTransportRegistry.getAllTransports();
 			for (TransportInformation ti : transportList) {
@@ -331,10 +320,8 @@ public class MAXSService extends Service {
 	}
 
 	public static abstract class StartStopListener {
-		public void onServiceStart(MAXSService service) {
-		}
+		public void onServiceStart(MAXSService service) {}
 
-		public void onServiceStop(MAXSService service) {
-		}
+		public void onServiceStop(MAXSService service) {}
 	}
 }

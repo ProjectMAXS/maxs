@@ -62,8 +62,7 @@ public class CommandInformation {
 			throw new DefaultCommandAlreadySet("Package " + modulePackage
 					+ " is trying to override default sub command " + mDefaultSubCommand + " with " + defSubCmd
 					+ ". Previous def sub command was set by " + getPackageForSubCommand(mDefaultSubCommand));
-		}
-		else if (defSubCmd != null) {
+		} else if (defSubCmd != null) {
 			mDefaultSubCommand = defSubCmd;
 		}
 
@@ -74,8 +73,7 @@ public class CommandInformation {
 					+ " is trying to override default sub command with args " + mDefaultSubCommandWithArgs + " with "
 					+ defSubCmdArgs + ". Previous def sub command with args was set by "
 					+ getPackageForSubCommand(mDefaultSubCommandWithArgs));
-		}
-		else if (defSubCmdArgs != null) {
+		} else if (defSubCmdArgs != null) {
 			mDefaultSubCommandWithArgs = defSubCmdArgs;
 		}
 

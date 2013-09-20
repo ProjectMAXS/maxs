@@ -125,8 +125,7 @@ public abstract class MAXSModuleIntentService extends Service {
 
 		if ("help".equals(command.getCommand())) {
 			message = getHelp(command.getSubCommand(), command.getArgs());
-		}
-		else {
+		} else {
 			try {
 				message = handleCommand(command);
 			} catch (Throwable e) {

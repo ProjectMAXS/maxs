@@ -64,14 +64,12 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 					settings.setLastActiveNetwork(networkTypeName);
 					networkTypeChanged = true;
 				}
-			}
-			else {
+			} else {
 				// we have *no* active data connection
 				connected = false;
 				if (lastActiveNetworkType.length() != 0) {
 					networkTypeChanged = true;
-				}
-				else {
+				} else {
 					networkTypeChanged = false;
 				}
 				settings.setLastActiveNetwork("");

@@ -21,11 +21,9 @@ import org.jivesoftware.smack.Connection;
 
 public class StateChangeListener {
 
-	public void newConnection(Connection connection) {
-	}
+	public void newConnection(Connection connection) {}
 
-	public void connected(Connection connection) {
-	}
+	public void connected(Connection connection) {}
 
 	/**
 	 * Invoked when we got disconnected from an active connection
@@ -33,16 +31,14 @@ public class StateChangeListener {
 	 * @param connection
 	 *            the connection that got disconnected, may be null
 	 */
-	public void disconnected(Connection connection) {
-	}
+	public void disconnected(Connection connection) {}
 
 	/**
 	 * Invoked when get return to disconnected state, but there was never an
 	 * active connection. For example when something in the connection stage
 	 * went wrong
 	 */
-	public void disconnected() {
-	}
+	public void disconnected() {}
 
 	// These callback methods don't get access to the connection instance
 	// because they will be called in the middle of a state change

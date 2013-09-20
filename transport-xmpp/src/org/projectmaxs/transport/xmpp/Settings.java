@@ -208,8 +208,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				int port = Integer.parseInt(mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_PORT, "5222"));
 				String service = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
 				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
-			}
-			else {
+			} else {
 				String service = StringUtils.parseServer(mSharedPreferences.getString(JID, ""));
 				mConnectionConfiguration = new AndroidConnectionConfiguration(service, 1234);
 			}
@@ -222,8 +221,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				mConnectionConfiguration.setTruststoreType("AndroidCAStore");
 				mConnectionConfiguration.setTruststorePassword(null);
 				mConnectionConfiguration.setTruststorePath(null);
-			}
-			else {
+			} else {
 				mConnectionConfiguration.setTruststoreType("BKS");
 				String path = System.getProperty("javax.net.ssl.trustStore");
 				if (path == null) {
@@ -239,8 +237,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			ConnectionConfiguration.SecurityMode securityMode;
 			if (mSharedPreferences.getBoolean(XMPP_STREAM_ENCYPTION, false)) {
 				securityMode = ConnectionConfiguration.SecurityMode.required;
-			}
-			else {
+			} else {
 				securityMode = ConnectionConfiguration.SecurityMode.disabled;
 			}
 			mConnectionConfiguration.setSecurityMode(securityMode);

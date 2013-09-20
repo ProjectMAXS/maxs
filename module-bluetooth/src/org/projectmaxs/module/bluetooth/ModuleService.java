@@ -62,8 +62,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		Message msg;
 		if (command.getSubCommand().equals("status")) {
 			msg = new Message("Bluetooth is enabled: " + mAdapter.isEnabled());
-		}
-		else {
+		} else {
 			msg = new Message("Unkown command");
 		}
 		return msg;

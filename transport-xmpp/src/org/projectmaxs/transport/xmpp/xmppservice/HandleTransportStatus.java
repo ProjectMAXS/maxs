@@ -41,15 +41,13 @@ public class HandleTransportStatus extends StateChangeListener {
 		String encryptionStatus;
 		if (connection.isSecureConnection()) {
 			encryptionStatus = "encrypted";
-		}
-		else {
+		} else {
 			encryptionStatus = "unencrypted";
 		}
 		String compressionStatus;
 		if (connection.isUsingCompression()) {
 			compressionStatus = "compressed";
-		}
-		else {
+		} else {
 			compressionStatus = "uncompressed";
 		}
 		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ")");

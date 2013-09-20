@@ -72,8 +72,7 @@ public class ParcelFileDescriptorUtil {
 				mOut.flush(); // just to be safe
 			} catch (IOException e) {
 				LOG.e("TransferThread", e);
-			}
-			finally {
+			} finally {
 				try {
 					mIn.close();
 				} catch (IOException e) {

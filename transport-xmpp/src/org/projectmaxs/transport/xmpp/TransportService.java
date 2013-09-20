@@ -90,8 +90,7 @@ public class TransportService extends MAXSTransportService {
 		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			sIsRunning = false;
 			stickyStart = false;
-		}
-		else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+		} else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			sIsRunning = true;
 		}
 		// If the service is not running, and we receive something else then
@@ -115,29 +114,23 @@ public class TransportService extends MAXSTransportService {
 		LOG.d("onHandleIntent: " + action);
 		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			mXMPPService.connect();
-		}
-		else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
+		} else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			mXMPPService.disconnect();
 			stopSelf();
-		}
-		else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
+		} else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mXMPPService.setStatus(status);
-		}
-		else if (TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS.equals(action)) {
+		} else if (TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS.equals(action)) {
 			mXMPPService.getHandleTransportStatus().sendStatus();
-		}
-		else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
+		} else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
 			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
 			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			mXMPPService.send(message, origin);
-		}
-		else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
+		} else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
 			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
 			boolean networkTypeChanged = intent.getBooleanExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
 			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("Unkown intent action: " + action);
 		}
 	}

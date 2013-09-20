@@ -42,13 +42,11 @@ public class MAXSIntentService extends IntentService {
 			// use the application context here, otherwise we will get leaked
 			// serviceConnection errors.
 			ImportExportSettings.tryToExport(file, content.getBytes(), getApplicationContext());
-		}
-		else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
+		} else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);
 			if (status == null) return;
 			ImportExportSettings.appendStatus(status);
-		}
-		else {
+		} else {
 			// TODO throw new IllegalStateException();
 		}
 	}

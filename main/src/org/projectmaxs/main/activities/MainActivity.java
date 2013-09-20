@@ -86,8 +86,7 @@ public class MainActivity extends Activity {
 				Intent intent;
 				if (MAXSService.isRunning()) {
 					intent = new Intent(Constants.ACTION_STOP_SERVICE);
-				}
-				else {
+				} else {
 					intent = new Intent(Constants.ACTION_START_SERVICE);
 				}
 				startService(intent);
@@ -165,8 +164,7 @@ public class MainActivity extends Activity {
 				LayoutInflater inflater = MainActivity.this.getLayoutInflater();
 				row = inflater.inflate(R.layout.transports_listview_row, parent, false);
 
-			}
-			else {
+			} else {
 				ChangeListener cl = (ChangeListener) row.getTag();
 				TransportRegistry.getInstance(mContext).removeChangeListener(cl);
 			}

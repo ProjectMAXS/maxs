@@ -38,8 +38,7 @@ public class HandleConnectionListener extends StateChangeListener {
 		mConnectionListener = new ConnectionListener() {
 
 			@Override
-			public void connectionClosed() {
-			}
+			public void connectionClosed() {}
 
 			@Override
 			public void connectionClosedOnError(Exception arg0) {

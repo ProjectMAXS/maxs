@@ -44,16 +44,14 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 				// TODO send 'sms sent' message
 			}
 			// TODO Add mechanism to display sent failure reasons
-		}
-		else if (SMS_DELIVERED_ACTION.equals(action)) {
+		} else if (SMS_DELIVERED_ACTION.equals(action)) {
 			String deliveredIntents = smsTable.getIntents(cmdId, SmsTable.IntentType.DELIVERED);
 			deliveredIntents = markPart(deliveredIntents, partNum, RESULT_NO_ERROR_CHAR);
 			smsTable.updateIntents(cmdId, deliveredIntents, SmsTable.IntentType.DELIVERED);
 			if (allMarkedNoError(deliveredIntents)) {
 				// TODO send 'sms delivered' message
 			}
-		}
-		else {
+		} else {
 			throw new IllegalStateException("Unkown action=" + action + " in SMSPendingIntentReceiver");
 		}
 	}

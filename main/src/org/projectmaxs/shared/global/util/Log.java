@@ -72,8 +72,7 @@ public class Log {
 	public void d(String msg) {
 		if (sDebugLogSettings != null && sDebugLogSettings.isDebugLogEnabled()) {
 			android.util.Log.d(mLogTag, msg);
-		}
-		else {
+		} else {
 			android.util.Log.d(mLogTag, msg);
 		}
 	}

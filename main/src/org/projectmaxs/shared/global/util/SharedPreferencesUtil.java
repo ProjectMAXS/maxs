@@ -112,20 +112,15 @@ public class SharedPreferencesUtil {
 				String text = parser.getText();
 				if (BOOLEAN.equals(name)) {
 					editor.putBoolean(key, Boolean.parseBoolean(text));
-				}
-				else if (FLOAT.equals(name)) {
+				} else if (FLOAT.equals(name)) {
 					editor.putFloat(key, Float.parseFloat(text));
-				}
-				else if (INTEGER.equals(name)) {
+				} else if (INTEGER.equals(name)) {
 					editor.putInt(key, Integer.parseInt(text));
-				}
-				else if (LONG.equals(name)) {
+				} else if (LONG.equals(name)) {
 					editor.putLong(key, Long.parseLong(text));
-				}
-				else if (STRING.equals(name)) {
+				} else if (STRING.equals(name)) {
 					editor.putString(key, text);
-				}
-				else {
+				} else {
 					throw new Exception("Unkown type " + name);
 				}
 				break;

@@ -35,8 +35,7 @@ public class Message implements Parcelable {
 	private int mId = NO_ID;
 	private boolean mSuccess = true;
 
-	public Message() {
-	}
+	public Message() {}
 
 	public Message(AbstractElement element) {
 		add(element);
@@ -83,12 +82,10 @@ public class Message implements Parcelable {
 			Text lastText = (Text) last;
 			if (newLine) {
 				lastText.addNewLine(string);
-			}
-			else {
+			} else {
 				lastText.add(string);
 			}
-		}
-		else {
+		} else {
 			mElements.add(new Text(string, newLine));
 		}
 

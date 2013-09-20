@@ -71,17 +71,13 @@ public class ModuleService extends MAXSModuleIntentService {
 		String args = command.getArgs();
 		if ("lookup".equals(subCmd)) {
 			msg = lookup(args);
-		}
-		else if ("lname".equals(subCmd)) {
+		} else if ("lname".equals(subCmd)) {
 			msg = lookupByName(args);
-		}
-		else if ("lnum".equals(subCmd)) {
+		} else if ("lnum".equals(subCmd)) {
 			msg = lookupByNumber(args);
-		}
-		else if ("lnick".equals(subCmd)) {
+		} else if ("lnick".equals(subCmd)) {
 			msg = lookupByNickname(args);
-		}
-		else {
+		} else {
 			msg = new Message("Unkown command");
 		}
 		return msg;

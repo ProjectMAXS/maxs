@@ -66,8 +66,7 @@ public class XMPPStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void disconnected(Connection connection) {
-	}
+	public void disconnected(Connection connection) {}
 
 	private void sendStatus() {
 		if (mConnection == null || !mConnection.isAuthenticated()) return;

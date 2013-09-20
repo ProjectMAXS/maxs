@@ -75,16 +75,13 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 */
 
 	@Override
-	public void entriesAdded(Collection<String> arg0) {
-	}
+	public void entriesAdded(Collection<String> arg0) {}
 
 	@Override
-	public void entriesDeleted(Collection<String> arg0) {
-	}
+	public void entriesDeleted(Collection<String> arg0) {}
 
 	@Override
-	public void entriesUpdated(Collection<String> arg0) {
-	}
+	public void entriesUpdated(Collection<String> arg0) {}
 
 	@Override
 	public void presenceChanged(Presence presence) {
@@ -190,7 +187,6 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	}
 
 	public static class MasterJidListener {
-		public void masterJidAvailable() {
-		}
+		public void masterJidAvailable() {}
 	}
 }

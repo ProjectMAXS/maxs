@@ -39,8 +39,7 @@ public class PackageReceiver extends BroadcastReceiver {
 		if (action.equals(android.content.Intent.ACTION_PACKAGE_ADDED)
 				|| action.equals(android.content.Intent.ACTION_PACKAGE_REPLACED)) {
 			onInstalledOrReplaced(context, packageName);
-		}
-		else if (action.equals(android.content.Intent.ACTION_PACKAGE_REMOVED)) {
+		} else if (action.equals(android.content.Intent.ACTION_PACKAGE_REMOVED)) {
 			onRemoved(context, packageName);
 		}
 	}

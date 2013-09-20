@@ -108,8 +108,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		String displayName = mSharedPreferences.getString(RECENT_CONTACT_DISPLAY_NAME, null);
 		if (displayName == null) {
 			return new RecentContact(recentContactInfo);
-		}
-		else {
+		} else {
 			String lookupKey = mSharedPreferences.getString(RECENT_CONTACT_LOOKUP_KEY, null);
 			Contact contact = new Contact(displayName, lookupKey);
 			return new RecentContact(recentContactInfo, contact);

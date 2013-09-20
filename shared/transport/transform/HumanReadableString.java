@@ -40,20 +40,15 @@ public class HumanReadableString {
 
 		if (element instanceof Contact) {
 			sb = toSB((Contact) element);
-		}
-		else if (element instanceof ContactNumber) {
+		} else if (element instanceof ContactNumber) {
 			sb = toSB((ContactNumber) element);
-		}
-		else if (element instanceof Element) {
+		} else if (element instanceof Element) {
 			sb = toSB((Element) element);
-		}
-		else if (element instanceof Sms) {
+		} else if (element instanceof Sms) {
 			sb = toSB((Sms) element);
-		}
-		else if (element instanceof Text) {
+		} else if (element instanceof Text) {
 			sb = toSB((Text) element);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("Unkown sublcass of AbstractElement");
 		}
 		return sb;

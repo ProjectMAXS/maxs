@@ -119,8 +119,7 @@ public class ImportExportSettings extends Activity {
 				String status;
 				if (error == null) {
 					status = "exported settings to " + file;
-				}
-				else {
+				} else {
 					status = "could not export settings to " + file + " error: " + error;
 				}
 				appendStatus(status);

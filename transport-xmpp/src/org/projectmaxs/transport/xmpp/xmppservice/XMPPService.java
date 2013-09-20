@@ -158,8 +158,7 @@ public class XMPPService {
 		if (connected && !isConnected()) {
 			LOG.d("newConnectivityInformation: calling connect()");
 			connect();
-		}
-		else if (!connected) {
+		} else if (!connected) {
 			LOG.d("newConnectivityInformation: we are not connected any more, changing state to WaitingForNetwork");
 			newState(State.WaitingForNetwork);
 		}
@@ -179,11 +178,9 @@ public class XMPPService {
 
 		if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)) {
 			sendAsMessage(message, originIssuerInfo, originId);
-		}
-		else if (Constants.ACTION_SEND_AS_IQ.equals(action)) {
+		} else if (Constants.ACTION_SEND_AS_IQ.equals(action)) {
 			sendAsIQ(message, originIssuerInfo, originId);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("XMPPService send: unkown action=" + action);
 		}
 	}
@@ -225,8 +222,7 @@ public class XMPPService {
 				LOG.w("sendAsMessage: MultipleRecipientManager exception", e);
 				return;
 			}
-		}
-		else {
+		} else {
 			packet.setTo(to);
 			mConnection.sendPacket(packet);
 		}
@@ -412,8 +408,7 @@ public class XMPPService {
 			if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings.getConnectionConfiguration()) {
 				con = new XMPPConnection(mSettings.getConnectionConfiguration());
 				newConnection = true;
-			}
-			else {
+			} else {
 				con = mConnection;
 			}
 		} catch (XMPPException e) {
@@ -423,8 +418,7 @@ public class XMPPService {
 				LOG.w("tryToConnect: connection configuration failed. Scheduling reconnect. exceptionMessage="
 						+ exceptionMessage);
 				scheduleReconnect();
-			}
-			else {
+			} else {
 				LOG.e("tryToConnect: connection configuration failed. New State: Disconnected", e);
 				newState(State.Disconnected);
 			}
@@ -449,8 +443,7 @@ public class XMPPService {
 				if ("No response from the server.".equals(exceptionMessage)) {
 					LOG.w("tryToConnect: login failed. Scheduling reconnect. exceptionMessage=" + exceptionMessage);
 					scheduleReconnect();
-				}
-				else {
+				} else {
 					LOG.e("tryToConnect: login failed. New State: Disconnected", e);
 					newState(State.Disconnected);
 				}

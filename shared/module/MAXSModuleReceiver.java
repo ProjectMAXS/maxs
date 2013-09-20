@@ -51,12 +51,10 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
 			replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
-		}
-		else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
+		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
-		}
-		else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
+		} else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
 		}
