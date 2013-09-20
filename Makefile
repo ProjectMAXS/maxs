@@ -31,4 +31,4 @@ $(ALL): $(MODULES_MAKEFILE)
 	cd $@ && $(MAKE) $(TARGET)
 
 module-%/Makefile:
-	 ln -s ../build/module-makefile $@
+	 ln -rs build/module-makefile $@
