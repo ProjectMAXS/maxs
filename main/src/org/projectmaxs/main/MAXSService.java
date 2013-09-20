@@ -245,7 +245,7 @@ public class MAXSService extends Service {
 				Element recentContactElement = new Element("recent_contact", recentContactInfo);
 				recentContactElement.addChildElement(contact);
 				Message message = new Message("Recent contact: "
-						+ (contact != null ? contact.getDisplayName() + " ( " + recentContactInfo + " )"
+						+ (contact != null ? contact.getDisplayName() + " (" + recentContactInfo + ")"
 								: recentContactInfo));
 				message.add(recentContactElement);
 				sendMessage(message);

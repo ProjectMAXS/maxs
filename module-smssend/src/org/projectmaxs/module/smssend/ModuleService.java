@@ -135,7 +135,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		sendingSMS.addChildElement(sms);
 		sendingSMS.addChildElement(contact);
 
-		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " ( " + receiver + " )"
+		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " (" + receiver + ")"
 				: receiver;
 		Message message = new Message("Sending SMS to " + contactString + ": " + text);
 		message.add(sendingSMS);

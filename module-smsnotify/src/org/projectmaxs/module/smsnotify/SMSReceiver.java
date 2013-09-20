@@ -60,7 +60,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 				contactString = sender;
 			}
 			else {
-				contactString = contact.getDisplayName() + " ( " + sender + " )";
+				contactString = contact.getDisplayName() + " (" + sender + ")";
 			}
 
 			message.add(new Sms(contactString, smsBody, Sms.Direction.INCOMING));
