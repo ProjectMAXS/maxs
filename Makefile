@@ -16,6 +16,7 @@ clean:
 
 distclean:
 	TARGET=$@ $(MAKE) $(ALL)
+	[ -d .git ] && git clean -x -d -f
 
 deploy:
 	TARGET=$@ $(MAKE) $(ALL)
