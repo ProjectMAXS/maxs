@@ -6,7 +6,7 @@ ALL := main $(MODULES) $(TRANSPORTS)
 
 .PHONY: all $(ALL) clean distclean eclipse mindeploy parallel release
 
-all: $(ALL)
+all: $(ALL) eclipse
 
 clean:
 	TARGET=$@ $(MAKE) $(ALL)
