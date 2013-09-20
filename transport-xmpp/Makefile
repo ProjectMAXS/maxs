@@ -17,7 +17,7 @@ transport: asmack shared
 	ant $(ANT_BUILD_TARGET)
 
 release:
-	ANT_BUILD_TARGET=release make transport
+	ANT_BUILD_TARGET=release $(MAKE) transport
 
 asmack:
 	./asmack.sh
@@ -25,7 +25,7 @@ asmack:
 deploy: .lastDeployed
 
 $(DEBUG_APK):
-	make transport ANT_BUILD_TARGET=debug
+	$(MAKE) transport ANT_BUILD_TARGET=debug
 
 .lastDeployed: $(DEBUG_APK)
 	touch $@
