@@ -9,7 +9,7 @@ SHARED_MAINTRANSPORT_SOURCE := $(SHARED_SOURCE)/maintransport
 DEBUG_APK := bin/maxs-$(TRANSPORT_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy distclean eclipse release shared $(DEBUG_APK)
+.PHONY: all asmack clean deploy distclean eclipse release shared $(DEBUG_APK)
 
 all: transport
 
