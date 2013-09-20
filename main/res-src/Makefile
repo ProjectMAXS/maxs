@@ -1,5 +1,5 @@
 SVGS := $(shell find . -type f -name '*.svg')
-PNGS := $(SVGS:.svg=.png)
+PNGS := $(foreach png,$(SVGS:.svg=.png),../res/$(png))
 
 .PHONEY: all clean
 
@@ -8,5 +8,6 @@ all: $(PNGS)
 clean:
 	rm -f $(PNGS)
 
-%.png : %.svg
+../res/%.png: %.svg
+	mkdir -p $(dir $@)
 	convert $< $@

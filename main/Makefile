@@ -9,7 +9,7 @@ main: resources
 	ant $(ANT_BUILD_TARGET)
 
 resources:
-	cd res && $(MAKE)
+	cd res-src && $(MAKE)
 
 release:
 	make main ANT_BUILD_TARGET=release
@@ -27,7 +27,7 @@ clean:
 	ant clean
 
 distclean: clean
-	cd res && $(MAKE) clean
+	cd res-src && $(MAKE) clean
 
 
 eclipse: .settings .classpath .project
