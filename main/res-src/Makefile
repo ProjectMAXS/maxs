@@ -10,4 +10,4 @@ clean:
 
 ../res/%.png: %.svg
 	mkdir -p $(dir $@)
-	convert $< $@
+	convert -background none $< $@
