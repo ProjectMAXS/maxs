@@ -26,11 +26,13 @@ public class MAXSContentProviderContract {
 
 	public static final Uri AUTHORITY_URI = Uri.parse("content://" + GlobalConstants.MAIN_PACKAGE);
 
-	public static final Uri RECENT_CONTACT_URI = Uri.withAppendedPath(AUTHORITY_URI, "recent_contact");
+	public static final Uri RECENT_CONTACT_URI = Uri.withAppendedPath(AUTHORITY_URI,
+			"recent_contact");
 
 	public static final String CONTACT_INFO = "contact_info";
 	public static final String LOOKUP_KEY = ContactsContract.Contacts.LOOKUP_KEY;
 	public static final String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
 
-	public static final String[] RECENT_CONTACT_COLUMNS = new String[] { CONTACT_INFO, LOOKUP_KEY, DISPLAY_NAME };
+	public static final String[] RECENT_CONTACT_COLUMNS = new String[] { CONTACT_INFO, LOOKUP_KEY,
+			DISPLAY_NAME };
 }

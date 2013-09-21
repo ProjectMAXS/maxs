@@ -50,6 +50,7 @@ public abstract class MAXSStatusBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
-	public abstract List<StatusInformation> onReceiveReturnStatusInformation(Context context, Intent intent);
+	public abstract List<StatusInformation> onReceiveReturnStatusInformation(Context context,
+			Intent intent);
 
 }

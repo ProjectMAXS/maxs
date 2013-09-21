@@ -54,7 +54,8 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 		String action = intent.getAction();
 		LOG.d("onHandleIntent: action=" + action);
 		if (action.equals(GlobalConstants.ACTION_REGISTER_MODULE)) {
-			ModuleInformation mi = intent.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
+			ModuleInformation mi = intent
+					.getParcelableExtra(GlobalConstants.EXTRA_MODULE_INFORMATION);
 			mModuleRegistry.registerModule(mi);
 		} else if (action.equals(GlobalConstants.ACTION_SEND_MESSAGE)) {
 			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
@@ -64,7 +65,8 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 			Contact contact = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTACT);
 			maxsService.setRecentContact(usedContactInfo, contact);
 		} else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
-			List<StatusInformation> infoList = intent.getParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT);
+			List<StatusInformation> infoList = intent
+					.getParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT);
 			String status = StatusRegistry.getInstanceAndInit(this).add(infoList);
 			// only set the status if something has changed
 			if (status != null) maxsService.setStatus(status);

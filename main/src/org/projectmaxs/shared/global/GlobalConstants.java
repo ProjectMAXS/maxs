@@ -28,7 +28,8 @@ public class GlobalConstants {
 	public static final String TRANSPORT_PACKAGE = PACKAGE + ".transport";
 
 	public static final String FILEWRITE_MODULE_PACKAGE = MODULE_PACKAGE + ".filewrite";
-	public static final String FILEWRITE_MODULE_IFT_SERVICE = FILEWRITE_MODULE_PACKAGE + ".IncomingFileTransferService";
+	public static final String FILEWRITE_MODULE_IFT_SERVICE = FILEWRITE_MODULE_PACKAGE
+			+ ".IncomingFileTransferService";
 
 	public static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
 
@@ -64,7 +65,9 @@ public class GlobalConstants {
 	public static final String PERMISSION_USE_TRANSPORT = PERMISSION + ".USE_TRANSPORT";
 	public static final String PERMISSION_USE_MAIN = PERMISSION + ".USE_MAIN";
 	public static final String PERMISSION_USE_MAIN_AS_MODULE = PERMISSION + ".USE_MAIN_AS_MODULE";
-	public static final String PERMISSION_USE_MAIN_AS_TRANSPORT = PERMISSION + ".USE_MAIN_AS_TRANSPORT";
+	public static final String PERMISSION_USE_MAIN_AS_TRANSPORT = PERMISSION
+			+ ".USE_MAIN_AS_TRANSPORT";
 
-	public static final File MAXS_EXTERNAL_STORAGE = new File(Environment.getExternalStorageDirectory(), "MAXS");
+	public static final File MAXS_EXTERNAL_STORAGE = new File(
+			Environment.getExternalStorageDirectory(), "MAXS");
 }

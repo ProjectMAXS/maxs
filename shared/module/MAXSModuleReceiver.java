@@ -81,14 +81,16 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 			return importExportStatus(e.getMessage());
 		}
 		Intent intent = new Intent(GlobalConstants.ACTION_EXPORT_TO_FILE);
-		intent.putExtra(GlobalConstants.EXTRA_FILE, directory + "/" + mModuleInformation.getModulePackage() + ".xml");
+		intent.putExtra(GlobalConstants.EXTRA_FILE,
+				directory + "/" + mModuleInformation.getModulePackage() + ".xml");
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, writer.toString());
 		return intent;
 	}
 
 	private Intent importSettings(Context context, String settings) {
 		try {
-			SharedPreferencesUtil.importFromReader(getSharedPreferences(context), new StringReader(settings));
+			SharedPreferencesUtil.importFromReader(getSharedPreferences(context), new StringReader(
+					settings));
 		} catch (Exception e) {
 			mLog.e("importSettings", e);
 			return importExportStatus(e.getMessage());
@@ -98,7 +100,8 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 
 	private Intent importExportStatus(String status) {
 		Intent intent = new Intent(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS);
-		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mModuleInformation.getModulePackage() + ": " + status);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mModuleInformation.getModulePackage() + ": "
+				+ status);
 		return intent;
 	}
 }

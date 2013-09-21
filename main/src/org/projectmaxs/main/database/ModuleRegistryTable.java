@@ -66,12 +66,13 @@ public class ModuleRegistryTable {
 		values.put(COLUMN_NAME_MODULE_INFORMATION, ParcelableUtil.marshall(moduleInformation));
 
 		long res = mDatabase.replace(TABLE_NAME, null, values);
-		if (res == -1) throw new IllegalStateException("Could not insert ModuleInformation in database");
+		if (res == -1)
+			throw new IllegalStateException("Could not insert ModuleInformation in database");
 	}
 
 	public boolean containsModule(String modulePackage) {
-		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_MODULE_PACKAGE + "='" + modulePackage + "'", null,
-				null, null, null);
+		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_MODULE_PACKAGE + "='"
+				+ modulePackage + "'", null, null, null, null);
 		boolean exists = c.moveToFirst();
 		c.close();
 		return exists;
@@ -86,7 +87,8 @@ public class ModuleRegistryTable {
 		}
 
 		do {
-			byte[] moduleInformationMarshalled = c.getBlob(c.getColumnIndex(COLUMN_NAME_MODULE_INFORMATION));
+			byte[] moduleInformationMarshalled = c.getBlob(c
+					.getColumnIndex(COLUMN_NAME_MODULE_INFORMATION));
 			Parcel parcel = ParcelableUtil.unmarshall(moduleInformationMarshalled);
 			// ModuleInformation moduleInformation =
 			// ModuleInformation.CREATOR.createFromParcel(parcel);
@@ -99,6 +101,7 @@ public class ModuleRegistryTable {
 	}
 
 	public int deleteModuleInformation(String packageName) {
-		return mDatabase.delete(TABLE_NAME, COLUMN_NAME_MODULE_PACKAGE + "='" + packageName + "'", null);
+		return mDatabase.delete(TABLE_NAME, COLUMN_NAME_MODULE_PACKAGE + "='" + packageName + "'",
+				null);
 	}
 }

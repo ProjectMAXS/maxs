@@ -51,7 +51,8 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 		Intent replyIntent = null;
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(TransportConstants.ACTION_REGISTER_TRANSPORT);
-			replyIntent.putExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION, mTransportInformation);
+			replyIntent.putExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION,
+					mTransportInformation);
 		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
@@ -84,15 +85,16 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 			return importExportStatus(e.getMessage());
 		}
 		Intent intent = new Intent(GlobalConstants.ACTION_EXPORT_TO_FILE);
-		intent.putExtra(GlobalConstants.EXTRA_FILE, directory + "/" + mTransportInformation.getTransportPackage()
-				+ ".xml");
+		intent.putExtra(GlobalConstants.EXTRA_FILE,
+				directory + "/" + mTransportInformation.getTransportPackage() + ".xml");
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, writer.toString());
 		return intent;
 	}
 
 	private Intent importSettings(Context context, String settings) {
 		try {
-			SharedPreferencesUtil.importFromReader(getSharedPreferences(context), new StringReader(settings));
+			SharedPreferencesUtil.importFromReader(getSharedPreferences(context), new StringReader(
+					settings));
 		} catch (Exception e) {
 			mLog.e("importSettings", e);
 			return importExportStatus(e.getMessage());
@@ -102,7 +104,8 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 
 	private Intent importExportStatus(String status) {
 		Intent intent = new Intent(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS);
-		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mTransportInformation.getTransportPackage() + ": " + status);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mTransportInformation.getTransportPackage()
+				+ ": " + status);
 		return intent;
 	}
 }

@@ -34,7 +34,8 @@ public class MAXSContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+			String sortOrder) {
 		// Could use UriMatcher here. But since it's not really needed, got with
 		// the simple approach.
 		if (uri.equals(MAXSContentProviderContract.RECENT_CONTACT_URI)) {

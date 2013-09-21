@@ -34,7 +34,8 @@ public class FileCmd {
 		final File toSend = new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, file);
 
 		/*
-		 * new AsyncServiceTask<IMAXSOutgoingFileTransferService>(GlobalConstants.ACTION_OUTGOING_FILETRANSFER, context)
+		 * new AsyncServiceTask<IMAXSOutgoingFileTransferService>(GlobalConstants.
+		 * ACTION_OUTGOING_FILETRANSFER, context)
 		 * {
 		 * @Override
 		 * public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
@@ -42,7 +43,8 @@ public class FileCmd {
 		 * }
 		 * @Override
 		 * public void performTask(IMAXSOutgoingFileTransferService iinterface) {
-		 * ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(file, size, description, toJID);
+		 * ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(file, size, description,
+		 * toJID);
 		 * }
 		 * }.go();
 		 */

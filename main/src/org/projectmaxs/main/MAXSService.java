@@ -220,7 +220,8 @@ public class MAXSService extends Service {
 		startService(intent);
 	}
 
-	protected synchronized void setRecentContact(final String recentContactInfo, final Contact contact) {
+	protected synchronized void setRecentContact(final String recentContactInfo,
+			final Contact contact) {
 		LOG.d("setRecentContact: contact=" + contact);
 		if (mRecentContactRunnable != null) {
 			mHandler.removeCallbacks(mRecentContactRunnable);
@@ -235,8 +236,8 @@ public class MAXSService extends Service {
 				Element recentContactElement = new Element("recent_contact", recentContactInfo);
 				recentContactElement.addChildElement(contact);
 				Message message = new Message("Recent contact: "
-						+ (contact != null ? contact.getDisplayName() + " (" + recentContactInfo + ")"
-								: recentContactInfo));
+						+ (contact != null ? contact.getDisplayName() + " (" + recentContactInfo
+								+ ")" : recentContactInfo));
 				message.add(recentContactElement);
 				sendMessage(message);
 			}
@@ -266,8 +267,8 @@ public class MAXSService extends Service {
 			intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 			ComponentName usedTransport = startService(intent);
 			if (usedTransport == null) {
-				LOG.w("sendMessage: transport not found transportPackage=" + origin.getPackage() + " serviceClass="
-						+ origin.getServiceClass());
+				LOG.w("sendMessage: transport not found transportPackage=" + origin.getPackage()
+						+ " serviceClass=" + origin.getServiceClass());
 			}
 		} else {
 			// Broadcast this message
@@ -277,13 +278,15 @@ public class MAXSService extends Service {
 				List<TransportComponent> tcList = ti.getAllBroadcastableComponents();
 				for (TransportComponent tc : tcList) {
 					Intent intent = new Intent(tc.getIntentAction());
-					intent.setClassName(transportPackage, transportPackage + TransportConstants.TRANSPORT_SERVICE);
+					intent.setClassName(transportPackage, transportPackage
+							+ TransportConstants.TRANSPORT_SERVICE);
 					intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 					// no originIssuerInfo or originId info available here
 					ComponentName usedTransport = startService(intent);
 					if (usedTransport == null) {
-						LOG.w("sendMessage: transport not found transportPackage=" + transportPackage
-								+ " serviceClass=" + transportPackage + TransportConstants.TRANSPORT_SERVICE);
+						LOG.w("sendMessage: transport not found transportPackage="
+								+ transportPackage + " serviceClass=" + transportPackage
+								+ TransportConstants.TRANSPORT_SERVICE);
 					}
 				}
 
@@ -302,7 +305,8 @@ public class MAXSService extends Service {
 			intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
 			ComponentName usedTransport = startService(intent);
 			if (usedTransport == null)
-				LOG.w("setSTatus: transport not found package=" + transportPackage + " class=" + cls);
+				LOG.w("setSTatus: transport not found package=" + transportPackage + " class="
+						+ cls);
 		}
 	}
 

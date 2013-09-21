@@ -111,7 +111,8 @@ public class MainActivity extends Activity {
 
 		// Race condition between getCopyAddListener and new
 		// TransportInformationAdapter
-		mTransportInformationList = TransportRegistry.getInstance(this).getCopyAddListener(mTransportRegistryListener);
+		mTransportInformationList = TransportRegistry.getInstance(this).getCopyAddListener(
+				mTransportRegistryListener);
 		mTIAdapter = new TransportInformationAdapter(this, mTransportInformationList);
 		mTransportList.setAdapter(mTIAdapter);
 
@@ -157,7 +158,8 @@ public class MainActivity extends Activity {
 			final TransportInformation ti = mData.get(position);
 			final String transportName = ti.getTransportName();
 			final String transportPackage = ti.getTransportPackage();
-			final String transportStatus = TransportRegistry.getInstance(mContext).getStatus(transportPackage);
+			final String transportStatus = TransportRegistry.getInstance(mContext).getStatus(
+					transportPackage);
 			View row = convertView;
 
 			if (row == null) {
@@ -170,14 +172,17 @@ public class MainActivity extends Activity {
 			}
 
 			final TextView textTransportName = (TextView) row.findViewById(R.id.textTransportName);
-			final TextView textTransportPackage = (TextView) row.findViewById(R.id.textTransportPackage);
-			final TextView textTransportStatus = (TextView) row.findViewById(R.id.textTransportStatus);
+			final TextView textTransportPackage = (TextView) row
+					.findViewById(R.id.textTransportPackage);
+			final TextView textTransportStatus = (TextView) row
+					.findViewById(R.id.textTransportStatus);
 			final Button more = (Button) row.findViewById(R.id.buttonTransportMore);
 
 			ChangeListener cl = new ChangeListener() {
 				@Override
 				public void transportStatusChanged(String changedTransportPackage, String status) {
-					if (transportPackage.equals(changedTransportPackage)) setText(textTransportStatus, status);
+					if (transportPackage.equals(changedTransportPackage))
+						setText(textTransportStatus, status);
 				};
 			};
 			row.setTag(cl);

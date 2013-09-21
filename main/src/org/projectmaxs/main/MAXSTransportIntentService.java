@@ -47,11 +47,13 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
 		if (TransportConstants.ACTION_REGISTER_TRANSPORT.equals(action)) {
-			TransportInformation ti = intent.getParcelableExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION);
+			TransportInformation ti = intent
+					.getParcelableExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION);
 			mTransportRegistry.registerTransport(ti);
 		} else if (GlobalConstants.ACTION_PERFORM_COMMAND.equals(action)) {
 			String fullCommand = intent.getStringExtra(TransportConstants.EXTRA_COMMAND);
-			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
+			CommandOrigin origin = intent
+					.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			maxsService.performCommand(fullCommand, origin);
 		} else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
 			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);

@@ -89,17 +89,21 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		// Context.MODE_PRIVATE);
 		this.mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		MANUAL_SERVICE_SETTINGS = context.getString(R.string.pref_manual_service_settings_key);
-		MANUAL_SERVICE_SETTINGS_HOST = context.getString(R.string.pref_manual_service_settings_host_key);
-		MANUAL_SERVICE_SETTINGS_PORT = context.getString(R.string.pref_manual_service_settings_port_key);
-		MANUAL_SERVICE_SETTINGS_SERVICE = context.getString(R.string.pref_manual_service_settings_service_key);
+		MANUAL_SERVICE_SETTINGS_HOST = context
+				.getString(R.string.pref_manual_service_settings_host_key);
+		MANUAL_SERVICE_SETTINGS_PORT = context
+				.getString(R.string.pref_manual_service_settings_port_key);
+		MANUAL_SERVICE_SETTINGS_SERVICE = context
+				.getString(R.string.pref_manual_service_settings_service_key);
 		XMPP_STREAM_COMPRESSION = context.getString(R.string.pref_xmpp_stream_compression_key);
 		XMPP_STREAM_ENCYPTION = context.getString(R.string.pref_xmpp_stream_encryption_key);
 		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
 
 		XMPP_CONNECTION_SETTINGS = new HashSet<String>(Arrays.asList(new String[] { JID, PASSWORD,
-				MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST, MANUAL_SERVICE_SETTINGS_PORT,
-				MANUAL_SERVICE_SETTINGS_SERVICE, XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION }));
+				MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST,
+				MANUAL_SERVICE_SETTINGS_PORT, MANUAL_SERVICE_SETTINGS_SERVICE,
+				XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION }));
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
@@ -205,7 +209,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		if (mConnectionConfiguration == null) {
 			if (mSharedPreferences.getBoolean(MANUAL_SERVICE_SETTINGS, false)) {
 				String host = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_HOST, "");
-				int port = Integer.parseInt(mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_PORT, "5222"));
+				int port = Integer.parseInt(mSharedPreferences.getString(
+						MANUAL_SERVICE_SETTINGS_PORT, "5222"));
 				String service = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
 				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
 			} else {
@@ -225,14 +230,14 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				mConnectionConfiguration.setTruststoreType("BKS");
 				String path = System.getProperty("javax.net.ssl.trustStore");
 				if (path == null) {
-					path = System.getProperty("java.home") + File.separator + "etc" + File.separator + "security"
-							+ File.separator + "cacerts.bks";
+					path = System.getProperty("java.home") + File.separator + "etc"
+							+ File.separator + "security" + File.separator + "cacerts.bks";
 				}
 				mConnectionConfiguration.setTruststorePath(path);
 			}
 
-			mConnectionConfiguration.setCompressionEnabled(mSharedPreferences
-					.getBoolean(XMPP_STREAM_COMPRESSION, false));
+			mConnectionConfiguration.setCompressionEnabled(mSharedPreferences.getBoolean(
+					XMPP_STREAM_COMPRESSION, false));
 
 			ConnectionConfiguration.SecurityMode securityMode;
 			if (mSharedPreferences.getBoolean(XMPP_STREAM_ENCYPTION, false)) {
@@ -258,7 +263,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		for (String s : XMPP_CONNECTION_SETTINGS)
 			if (s.equals(key)) mConnectionConfiguration = null;
 
-		if (key.equals(XMPP_DEBUG)) Connection.DEBUG_ENABLED = sharedPreferences.getBoolean(XMPP_DEBUG, false);
+		if (key.equals(XMPP_DEBUG))
+			Connection.DEBUG_ENABLED = sharedPreferences.getBoolean(XMPP_DEBUG, false);
 	}
 
 	private void saveMasterJids(Set<String> newMasterJids) {

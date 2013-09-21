@@ -77,8 +77,10 @@ public class ImportExportSettings extends Activity {
 	public void exportAll(View view) {
 		sImportExportStatus.setText("");
 
-		if (!PackageManagerUtil.getInstance(this).isPackageInstalled(GlobalConstants.FILEWRITE_MODULE_PACKAGE)) {
-			appendStatus("Required module " + GlobalConstants.FILEWRITE_MODULE_PACKAGE + " is not installed");
+		if (!PackageManagerUtil.getInstance(this).isPackageInstalled(
+				GlobalConstants.FILEWRITE_MODULE_PACKAGE)) {
+			appendStatus("Required module " + GlobalConstants.FILEWRITE_MODULE_PACKAGE
+					+ " is not installed");
 			return;
 		}
 
@@ -88,7 +90,8 @@ public class ImportExportSettings extends Activity {
 		final String file = mainOutFile.getAbsolutePath();
 		Writer writer = new CharArrayWriter();
 		try {
-			SharedPreferencesUtil.export(Settings.getInstance(this).getSharedPreferences(), writer, null);
+			SharedPreferencesUtil.export(Settings.getInstance(this).getSharedPreferences(), writer,
+					null);
 			final byte[] bytes = writer.toString().getBytes();
 			tryToExport(file, bytes, this);
 		} catch (IOException e1) {
@@ -101,7 +104,8 @@ public class ImportExportSettings extends Activity {
 	}
 
 	public static void tryToExport(final String file, final byte[] bytes, Context context) {
-		new AsyncServiceTask<IFileWriteModuleService>(new Intent(GlobalConstants.ACTION_BIND_FILEWRITE), context) {
+		new AsyncServiceTask<IFileWriteModuleService>(new Intent(
+				GlobalConstants.ACTION_BIND_FILEWRITE), context) {
 
 			@Override
 			public IFileWriteModuleService asInterface(IBinder iBinder) {

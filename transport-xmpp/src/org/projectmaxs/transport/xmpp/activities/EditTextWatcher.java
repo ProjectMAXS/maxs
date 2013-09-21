@@ -24,7 +24,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public abstract class EditTextWatcher implements OnFocusChangeListener, TextView.OnEditorActionListener {
+public abstract class EditTextWatcher implements OnFocusChangeListener,
+		TextView.OnEditorActionListener {
 	protected final EditText mEditText;
 	protected String mBeforeText;
 	private boolean mInUse = false;

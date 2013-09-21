@@ -47,8 +47,8 @@ public class IncomingFileTransferService extends Service {
 	private final IMAXSIncomingFileTransferService.Stub mBinder = new IMAXSIncomingFileTransferService.Stub() {
 
 		@Override
-		public ParcelFileDescriptor incomingFileTransfer(String filename, long size, String description)
-				throws RemoteException {
+		public ParcelFileDescriptor incomingFileTransfer(String filename, long size,
+				String description) throws RemoteException {
 
 			OutputStream os;
 			try {

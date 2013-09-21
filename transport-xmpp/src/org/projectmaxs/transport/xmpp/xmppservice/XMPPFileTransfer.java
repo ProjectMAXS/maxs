@@ -108,8 +108,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		// final InputStream is = new StringBufferInputStream(content);
 		// final long size = content.length();
 
-		new AsyncServiceTask<IMAXSIncomingFileTransferService>(
-				new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER), mContext) {
+		new AsyncServiceTask<IMAXSIncomingFileTransferService>(new Intent(
+				GlobalConstants.ACTION_INCOMING_FILETRANSFER), mContext) {
 
 			@Override
 			public IMAXSIncomingFileTransferService asInterface(IBinder iBinder) {
@@ -119,7 +119,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 			@Override
 			public void performTask(IMAXSIncomingFileTransferService iinterface) {
 				try {
-					ParcelFileDescriptor pfd = iinterface.incomingFileTransfer(filename, size, description);
+					ParcelFileDescriptor pfd = iinterface.incomingFileTransfer(filename, size,
+							description);
 					if (pfd == null) {
 						LOG.e("fileTranferRequest: PFD from incomingFileTransfer is null");
 						return;
@@ -205,8 +206,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		private final IMAXSOutgoingFileTransferService.Stub mBinder = new IMAXSOutgoingFileTransferService.Stub() {
 
 			@Override
-			public ParcelFileDescriptor outgoingFileTransfer(String filename, long size, String description,
-					String toJID) throws RemoteException {
+			public ParcelFileDescriptor outgoingFileTransfer(String filename, long size,
+					String description, String toJID) throws RemoteException {
 				if (sFileTransferManager == null) {
 					LOG.e("outgoingFileTransfer: no connection");
 					return null;
@@ -223,7 +224,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 					return null;
 				}
 
-				OutgoingFileTransfer transfer = sFileTransferManager.createOutgoingFileTransfer(toJID);
+				OutgoingFileTransfer transfer = sFileTransferManager
+						.createOutgoingFileTransfer(toJID);
 				transfer.sendStream(is, filename, size, description);
 
 				return pfd;

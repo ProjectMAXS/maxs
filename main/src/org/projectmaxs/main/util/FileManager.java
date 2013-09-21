@@ -25,14 +25,16 @@ import org.projectmaxs.shared.global.GlobalConstants;
 
 public class FileManager {
 
-	private static final File mMAXSSettingsDirectory = new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, "Settings");
+	private static final File mMAXSSettingsDirectory = new File(
+			GlobalConstants.MAXS_EXTERNAL_STORAGE, "Settings");
 
 	public static File createFile(String file) throws IOException {
 		File res = new File(file);
 		if (res.exists()) {
 			if (!res.delete()) throw new IOException("Can not delete " + res.getAbsolutePath());
 		}
-		if (!res.createNewFile()) throw new IOException("Can not create file " + res.getAbsolutePath());
+		if (!res.createNewFile())
+			throw new IOException("Can not create file " + res.getAbsolutePath());
 		return res;
 	}
 

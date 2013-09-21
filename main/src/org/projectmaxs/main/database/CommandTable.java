@@ -102,7 +102,8 @@ public class CommandTable {
 		}
 		String pkg = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_PACKAGE));
 		String action = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_INTENT_ACTION));
-		String originIssuerInfo = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_ISSUER_INFO));
+		String originIssuerInfo = c.getString(c
+				.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_ISSUER_INFO));
 		String originId = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ORIGIN_ID));
 
 		return new CommandOrigin(pkg, action, originIssuerInfo, originId);
@@ -154,8 +155,8 @@ public class CommandTable {
 		Timestamp timestmap = Timestamp.valueOf(timestampStr);
 
 		c.close();
-		return new FullEntry(id, timestmap, command, subCmd, args, new CommandOrigin(pkg, action, originIssuerInfo,
-				originId));
+		return new FullEntry(id, timestmap, command, subCmd, args, new CommandOrigin(pkg, action,
+				originIssuerInfo, originId));
 	}
 
 	public static class Entry {
@@ -174,7 +175,8 @@ public class CommandTable {
 		public final String mSubCmd;
 		public final String mArgs;
 
-		FullEntry(int id, Timestamp timestamp, String command, String subCmd, String args, CommandOrigin origin) {
+		FullEntry(int id, Timestamp timestamp, String command, String subCmd, String args,
+				CommandOrigin origin) {
 			super(id, origin);
 			this.mTimestamp = timestamp;
 			this.mCommand = command;
@@ -185,7 +187,8 @@ public class CommandTable {
 	}
 
 	private void purgeOldEntries() {
-		String oldTimestamp = (new Timestamp(System.currentTimeMillis() - OLD_ENTRIES_AGE)).toString();
+		String oldTimestamp = (new Timestamp(System.currentTimeMillis() - OLD_ENTRIES_AGE))
+				.toString();
 		mDatabase.delete(TABLE_NAME, COLUMN_NAME_TIMESTAMP + " < \"" + oldTimestamp + "\"", null);
 		mHandler.postDelayed(new Runnable() {
 			@Override

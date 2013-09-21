@@ -61,6 +61,7 @@ public class FileManager {
 	public static void checkCreateDir(File dir) throws IOException {
 		if (!dir.exists()) dir.mkdirs();
 
-		if (!dir.isDirectory()) throw new IOException(dir.getAbsolutePath() + " is not a directory");
+		if (!dir.isDirectory())
+			throw new IOException(dir.getAbsolutePath() + " is not a directory");
 	}
 }

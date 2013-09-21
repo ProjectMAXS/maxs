@@ -35,7 +35,8 @@ public class StatusInformation implements Parcelable {
 
 	public StatusInformation(String statusKey, String statusValue) {
 		if (statusKey.contains(" "))
-			throw new IllegalStateException("StatusInformation key='" + statusKey + "' must not contain whitespace");
+			throw new IllegalStateException("StatusInformation key='" + statusKey
+					+ "' must not contain whitespace");
 		this.mStatusKey = statusKey;
 		this.mStatusValue = statusValue;
 	}

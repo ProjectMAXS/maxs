@@ -122,13 +122,16 @@ public class TransportService extends MAXSTransportService {
 			mXMPPService.setStatus(status);
 		} else if (TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS.equals(action)) {
 			mXMPPService.getHandleTransportStatus().sendStatus();
-		} else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action) || (Constants.ACTION_SEND_AS_IQ.equals(action))) {
+		} else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)
+				|| (Constants.ACTION_SEND_AS_IQ.equals(action))) {
 			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
-			CommandOrigin origin = intent.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
+			CommandOrigin origin = intent
+					.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			mXMPPService.send(message, origin);
 		} else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
 			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
-			boolean networkTypeChanged = intent.getBooleanExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
+			boolean networkTypeChanged = intent.getBooleanExtra(
+					Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
 			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
 		} else {
 			throw new IllegalStateException("Unkown intent action: " + action);

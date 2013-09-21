@@ -49,7 +49,8 @@ public abstract class MAXSModuleIntentService extends Service {
 	private final Log mLog;
 	private volatile Looper mServiceLooper;
 	private volatile ServiceHandler mServiceHandler;
-	private volatile Set<Object> mPendingActions = Collections.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
+	private volatile Set<Object> mPendingActions = Collections
+			.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
 	private String mName;
 
 	private final class ServiceHandler extends Handler {
@@ -61,8 +62,8 @@ public abstract class MAXSModuleIntentService extends Service {
 		public void handleMessage(Message msg) {
 			onHandleIntent((Intent) msg.obj);
 			if (!hasMessages(WHAT) && mPendingActions.isEmpty()) {
-				mLog.d("handleMessage: stopSelf hasMessasges=" + hasMessages(WHAT) + " actionsEmpty="
-						+ mPendingActions.isEmpty() + " startId=" + msg.arg1);
+				mLog.d("handleMessage: stopSelf hasMessasges=" + hasMessages(WHAT)
+						+ " actionsEmpty=" + mPendingActions.isEmpty() + " startId=" + msg.arg1);
 				stopSelf(msg.arg1);
 			}
 		}
@@ -111,7 +112,8 @@ public abstract class MAXSModuleIntentService extends Service {
 	public final void removePendingAction(Object action) {
 		mPendingActions.remove(action);
 		if (!mServiceHandler.hasMessages(WHAT) && mPendingActions.isEmpty()) {
-			mLog.d("removePendingAction: stopSelf hasMessasges=" + mServiceHandler.hasMessages(WHAT) + " actionsEmpty="
+			mLog.d("removePendingAction: stopSelf hasMessasges="
+					+ mServiceHandler.hasMessages(WHAT) + " actionsEmpty="
 					+ mPendingActions.isEmpty());
 			stopSelf();
 		}
@@ -148,7 +150,8 @@ public abstract class MAXSModuleIntentService extends Service {
 	 * @param command
 	 * @return
 	 */
-	public abstract org.projectmaxs.shared.global.Message handleCommand(Command command) throws Throwable;
+	public abstract org.projectmaxs.shared.global.Message handleCommand(Command command)
+			throws Throwable;
 
 	public abstract void initLog(Context context);
 
@@ -160,7 +163,8 @@ public abstract class MAXSModuleIntentService extends Service {
 	 * @return
 	 */
 	public org.projectmaxs.shared.global.Message getHelp(String command, String subCommand) {
-		return new org.projectmaxs.shared.global.Message("Help for '" + command + " " + subCommand + "' not available");
+		return new org.projectmaxs.shared.global.Message("Help for '" + command + " " + subCommand
+				+ "' not available");
 	}
 
 	public final void sendMessage(org.projectmaxs.shared.global.Message message, int cmdId) {

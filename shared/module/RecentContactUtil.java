@@ -42,7 +42,8 @@ public class RecentContactUtil {
 	 * @param context
 	 */
 	public static void setRecentContact(String recentContactInfo, Contact contact, Context context) {
-		if (recentContactInfo == null) throw new IllegalArgumentException("recentContactInfo must not be null");
+		if (recentContactInfo == null)
+			throw new IllegalArgumentException("recentContactInfo must not be null");
 
 		final Intent intent = new Intent(GlobalConstants.ACTION_SET_RECENT_CONTACT);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, recentContactInfo);
@@ -58,14 +59,16 @@ public class RecentContactUtil {
 	 * @return
 	 */
 	public static RecentContact getRecentContact(Context context) {
-		Cursor c = context.getContentResolver().query(MAXSContentProviderContract.RECENT_CONTACT_URI, null, null, null,
-				null);
+		Cursor c = context.getContentResolver().query(
+				MAXSContentProviderContract.RECENT_CONTACT_URI, null, null, null, null);
 		if (c == null) throw new IllegalStateException("Recent contact cursor was null");
 		if (!c.moveToFirst()) return null;
 
-		String contactInfo = c.getString(c.getColumnIndexOrThrow(MAXSContentProviderContract.CONTACT_INFO));
+		String contactInfo = c.getString(c
+				.getColumnIndexOrThrow(MAXSContentProviderContract.CONTACT_INFO));
 		String lookupKey = c.getString(c.getColumnIndex(MAXSContentProviderContract.LOOKUP_KEY));
-		String displayName = c.getString(c.getColumnIndexOrThrow(MAXSContentProviderContract.DISPLAY_NAME));
+		String displayName = c.getString(c
+				.getColumnIndexOrThrow(MAXSContentProviderContract.DISPLAY_NAME));
 
 		Contact contact = new Contact(displayName, lookupKey);
 		return new RecentContact(contactInfo, contact);

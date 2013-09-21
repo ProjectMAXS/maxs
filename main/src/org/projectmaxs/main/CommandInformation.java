@@ -55,13 +55,15 @@ public class CommandInformation {
 		return mSubCommands.containsKey(subCommand);
 	}
 
-	public void addSubAndDefCommands(Command command, String modulePackage) throws CommandClashException {
+	public void addSubAndDefCommands(Command command, String modulePackage)
+			throws CommandClashException {
 		String defSubCmd = command.getDefaultSubCommand();
 		if (mDefaultSubCommand != null && defSubCmd != null
 				&& !modulePackage.equals(getPackageForSubCommand(mDefaultSubCommand))) {
 			throw new DefaultCommandAlreadySet("Package " + modulePackage
-					+ " is trying to override default sub command " + mDefaultSubCommand + " with " + defSubCmd
-					+ ". Previous def sub command was set by " + getPackageForSubCommand(mDefaultSubCommand));
+					+ " is trying to override default sub command " + mDefaultSubCommand + " with "
+					+ defSubCmd + ". Previous def sub command was set by "
+					+ getPackageForSubCommand(mDefaultSubCommand));
 		} else if (defSubCmd != null) {
 			mDefaultSubCommand = defSubCmd;
 		}
@@ -70,8 +72,9 @@ public class CommandInformation {
 		if (mDefaultSubCommandWithArgs != null && defSubCmdArgs != null
 				&& !modulePackage.equals(getPackageForSubCommand(mDefaultSubCommandWithArgs))) {
 			throw new DefaultCommandArgsAlreadySet("Package " + modulePackage
-					+ " is trying to override default sub command with args " + mDefaultSubCommandWithArgs + " with "
-					+ defSubCmdArgs + ". Previous def sub command with args was set by "
+					+ " is trying to override default sub command with args "
+					+ mDefaultSubCommandWithArgs + " with " + defSubCmdArgs
+					+ ". Previous def sub command with args was set by "
 					+ getPackageForSubCommand(mDefaultSubCommandWithArgs));
 		} else if (defSubCmdArgs != null) {
 			mDefaultSubCommandWithArgs = defSubCmdArgs;
@@ -80,7 +83,8 @@ public class CommandInformation {
 		Set<String> subCmds = command.getSubCommands();
 		for (String s : subCmds) {
 			if (mSubCommands.containsKey(s) && !modulePackage.equals(getPackageForSubCommand(s)))
-				throw new CommandAlreadyDefined("Package " + modulePackage + " is tyring to override command " + s
+				throw new CommandAlreadyDefined("Package " + modulePackage
+						+ " is tyring to override command " + s
 						+ " which was previously defined by " + getPackageForSubCommand(s));
 			mSubCommands.put(s, modulePackage);
 		}
@@ -105,7 +109,8 @@ public class CommandInformation {
 			if (packageName.equals(entryPackageName)) {
 				String subCommand = entry.getKey();
 				if (subCommand.equals(mDefaultSubCommand)) mDefaultSubCommand = null;
-				if (subCommand.equals(mDefaultSubCommandWithArgs)) mDefaultSubCommandWithArgs = null;
+				if (subCommand.equals(mDefaultSubCommandWithArgs))
+					mDefaultSubCommandWithArgs = null;
 				it.remove();
 			}
 		}

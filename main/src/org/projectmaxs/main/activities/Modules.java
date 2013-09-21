@@ -60,7 +60,8 @@ public class Modules extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.modules);
 		mModulesList = (ListView) findViewById(R.id.modulesList);
-		mModuleInformationList = ModuleRegistry.getInstance(this).getCopyAddListener(mChangeListener);
+		mModuleInformationList = ModuleRegistry.getInstance(this).getCopyAddListener(
+				mChangeListener);
 		mModuleInformationAdapter = new ModuleInformationAdapter(this, mModuleInformationList);
 		mModulesList.setAdapter(mModuleInformationAdapter);
 	}

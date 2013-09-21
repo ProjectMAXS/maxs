@@ -43,9 +43,11 @@ import android.provider.ContactsContract.PhoneLookup;
 
 public class ContactUtil {
 
-	public static final String CONTACTS_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".contactsread";
+	public static final String CONTACTS_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE
+			+ ".contactsread";
 
-	public static final Uri CONTACTS_MODULE_AUTHORITY = Uri.parse("content://" + CONTACTS_MODULE_PACKAGE);
+	public static final Uri CONTACTS_MODULE_AUTHORITY = Uri.parse("content://"
+			+ CONTACTS_MODULE_PACKAGE);
 
 	/**
 	 * ContactsContract.PhoneLookup.CONTENT_FILTER_URI
@@ -206,10 +208,11 @@ public class ContactUtil {
 	 */
 	public Contact contactByNickname(String nickname) {
 		final String[] projection = new String[] { Data.LOOKUP_KEY, DISPLAY_NAME, Nickname.NAME };
-		final String selection = Nickname.NAME + "=?" + AND + Data.MIMETYPE + "='" + Nickname.CONTENT_ITEM_TYPE + "'"
-				+ LIMIT_1;
+		final String selection = Nickname.NAME + "=?" + AND + Data.MIMETYPE + "='"
+				+ Nickname.CONTENT_ITEM_TYPE + "'" + LIMIT_1;
 		final String[] selectionArgs = new String[] { nickname };
-		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection, selectionArgs, null);
+		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection,
+				selectionArgs, null);
 
 		if (c == null) {
 			LOG.e("lookupKeyByNickanme: returned cursor is null");
@@ -240,9 +243,11 @@ public class ContactUtil {
 	 */
 	public Collection<Contact> contactsByNickname(String nickname) {
 		final String[] projection = new String[] { Data.LOOKUP_KEY, DISPLAY_NAME, Nickname.NAME };
-		final String selection = Nickname.NAME + "=?" + AND + Data.MIMETYPE + "='" + Nickname.CONTENT_ITEM_TYPE + "'";
+		final String selection = Nickname.NAME + "=?" + AND + Data.MIMETYPE + "='"
+				+ Nickname.CONTENT_ITEM_TYPE + "'";
 		final String[] selectionArgs = new String[] { nickname };
-		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection, selectionArgs, null);
+		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection,
+				selectionArgs, null);
 
 		if (c == null) {
 			LOG.e("lookupKesyByNickanme: returned cursor is null");
@@ -333,17 +338,23 @@ public class ContactUtil {
 				Phone.IS_SUPER_PRIMARY
 				};
 		// @formatter:on
-		final String selection = ContactsContract.PhoneLookup.LOOKUP_KEY + "=?" + AND + ContactsContract.Data.MIMETYPE
-				+ "='" + Phone.CONTENT_ITEM_TYPE + "'";
+		final String selection = ContactsContract.PhoneLookup.LOOKUP_KEY + "=?" + AND
+				+ ContactsContract.Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "'";
 		final String[] selectionArgs = new String[] { lookupKey };
-		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection, selectionArgs, null);
+		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection,
+				selectionArgs, null);
 
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			String number = c.getString(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-			int type = c.getInt(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE));
-			String label = c.getString(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL));
-			boolean superPrimary = c.getInt(c
-					.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.IS_SUPER_PRIMARY)) > 0 ? true : false;
+			String number = c.getString(c
+					.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			int type = c.getInt(c
+					.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE));
+			String label = c.getString(c
+					.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL));
+			boolean superPrimary = c
+					.getInt(c
+							.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.IS_SUPER_PRIMARY)) > 0 ? true
+					: false;
 			contact.addNumber(number, type, label, superPrimary);
 		}
 		c.close();

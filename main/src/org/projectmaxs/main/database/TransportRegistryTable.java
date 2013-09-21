@@ -49,7 +49,8 @@ public class TransportRegistryTable {
 	private static TransportRegistryTable sTransportRegistryTable;
 
 	public static TransportRegistryTable getInstance(Context context) {
-		if (sTransportRegistryTable == null) sTransportRegistryTable = new TransportRegistryTable(context);
+		if (sTransportRegistryTable == null)
+			sTransportRegistryTable = new TransportRegistryTable(context);
 		return sTransportRegistryTable;
 	}
 
@@ -66,7 +67,8 @@ public class TransportRegistryTable {
 		values.put(COLUMN_NAME_TRANSPORT_INFORMATION, ParcelableUtil.marshall(transportInformation));
 
 		long res = mDatabase.replace(TABLE_NAME, null, values);
-		if (res == -1) throw new IllegalStateException("Could not insert TransportInformation in database");
+		if (res == -1)
+			throw new IllegalStateException("Could not insert TransportInformation in database");
 	}
 
 	public boolean containsTransport(String transportPackage) {
@@ -86,7 +88,8 @@ public class TransportRegistryTable {
 		}
 
 		do {
-			byte[] TransportInformationMarshalled = c.getBlob(c.getColumnIndex(COLUMN_NAME_TRANSPORT_INFORMATION));
+			byte[] TransportInformationMarshalled = c.getBlob(c
+					.getColumnIndex(COLUMN_NAME_TRANSPORT_INFORMATION));
 			Parcel parcel = ParcelableUtil.unmarshall(TransportInformationMarshalled);
 			TransportInformation transportInformation = new TransportInformation(parcel);
 			res.add(transportInformation);
@@ -97,6 +100,7 @@ public class TransportRegistryTable {
 	}
 
 	public int deleteTransportInformation(String packageName) {
-		return mDatabase.delete(TABLE_NAME, COLUMN_NAME_TRANSPORT_PACKAGE + "= ?", new String[] { packageName });
+		return mDatabase.delete(TABLE_NAME, COLUMN_NAME_TRANSPORT_PACKAGE + "= ?",
+				new String[] { packageName });
 	}
 }

@@ -32,8 +32,8 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 	private final boolean mSupportsStatus;
 	private final List<TransportComponent> mComponents;
 
-	public TransportInformation(String transportPackage, String transportName, boolean supportsStatus,
-			TransportComponent... components) {
+	public TransportInformation(String transportPackage, String transportName,
+			boolean supportsStatus, TransportComponent... components) {
 		mTransportPackage = transportPackage;
 		mTransportName = transportName;
 		mSupportsStatus = supportsStatus;

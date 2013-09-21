@@ -50,16 +50,16 @@ public class XMPPSocketFactory extends SocketFactory {
 	}
 
 	@Override
-	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException,
-			UnknownHostException {
+	public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
+			throws IOException, UnknownHostException {
 		socket = sDefaultFactory.createSocket(host, port, localHost, localPort);
 		setSockOpt(socket);
 		return socket;
 	}
 
 	@Override
-	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort)
-			throws IOException {
+	public Socket createSocket(InetAddress address, int port, InetAddress localAddress,
+			int localPort) throws IOException {
 		socket = sDefaultFactory.createSocket(address, port, localAddress, localPort);
 		setSockOpt(socket);
 		return socket;

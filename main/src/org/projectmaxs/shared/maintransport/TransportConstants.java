@@ -24,13 +24,16 @@ public class TransportConstants {
 	public static final String TRANSPORT_PACKAGE = GlobalConstants.TRANSPORT_PACKAGE;
 	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
 
-	public static final String MAIN_TRANSPORT_SERVICE = MAIN_PACKAGE + ".MAXSTransportIntentService";
+	public static final String MAIN_TRANSPORT_SERVICE = MAIN_PACKAGE
+			+ ".MAXSTransportIntentService";
 	public static final String TRANSPORT_SERVICE = ".TransportService";
 
 	public static final String ACTION_REGISTER_TRANSPORT = MAIN_PACKAGE + ".REGISTER_TRANSPORT";
-	public static final String ACTION_UPDATE_TRANSPORT_STATUS = MAIN_PACKAGE + ".UPDATE_TRANSPORT_STATUS";
+	public static final String ACTION_UPDATE_TRANSPORT_STATUS = MAIN_PACKAGE
+			+ ".UPDATE_TRANSPORT_STATUS";
 
-	public static final String ACTION_REQUEST_TRANSPORT_STATUS = TRANSPORT_PACKAGE + ".REQUEST_TRANSPORT_STATUS";
+	public static final String ACTION_REQUEST_TRANSPORT_STATUS = TRANSPORT_PACKAGE
+			+ ".REQUEST_TRANSPORT_STATUS";
 	public static final String ACTION_START_SERVICE = TRANSPORT_PACKAGE + ".START_SERVICE";
 	public static final String ACTION_STOP_SERVICE = TRANSPORT_PACKAGE + ".STOP_SERVICE";
 	public static final String ACTION_SET_STATUS = TRANSPORT_PACKAGE + ".SET_STATUS";
@@ -38,6 +41,7 @@ public class TransportConstants {
 	public static final String EXTRA_COMMAND = TRANSPORT_PACKAGE + ".COMMAND";
 	public static final String EXTRA_COMMAND_ORIGIN = TRANSPORT_PACKAGE + ".COMMAND_ORIGIN";
 
-	public static final String EXTRA_TRANSPORT_INFORMATION = TRANSPORT_PACKAGE + ".TRANSPORT_INFORMATION";
+	public static final String EXTRA_TRANSPORT_INFORMATION = TRANSPORT_PACKAGE
+			+ ".TRANSPORT_INFORMATION";
 
 }

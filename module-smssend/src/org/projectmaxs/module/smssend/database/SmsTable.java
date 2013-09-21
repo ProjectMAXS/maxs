@@ -59,15 +59,16 @@ public class SmsTable {
 		mDatabase = SMSSendDatabase.getInstance(context).getWritableDatabase();
 	}
 
-	public void addSms(int cmdId, String receiver, String shortText, int partCount, boolean createSentIntents,
-			boolean createDeliveredIntents) {
+	public void addSms(int cmdId, String receiver, String shortText, int partCount,
+			boolean createSentIntents, boolean createDeliveredIntents) {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_CMD_ID, cmdId);
 		values.put(COLUMN_NAME_RECEIVER, receiver);
 		values.put(COLUMN_NAME_SHORT_TEXT, shortText);
 		values.put(COLUMN_NAME_PART_COUNT, partCount);
 		if (createSentIntents) values.put(COLUMN_NAME_SENT_INTENTS, createIntentEntry(partCount));
-		if (createDeliveredIntents) values.put(COLUMN_NAME_DELIVERED_INTENTS, createIntentEntry(partCount));
+		if (createDeliveredIntents)
+			values.put(COLUMN_NAME_DELIVERED_INTENTS, createIntentEntry(partCount));
 
 		long res = mDatabase.insert(TABLE_NAME, null, values);
 		if (res == -1) throw new IllegalStateException("Could not insert status info in database");
@@ -89,7 +90,8 @@ public class SmsTable {
 		final String intentColumn = getColumnFor(intentType);
 		final String[] columns = new String[] { intentColumn };
 		final String[] selectionArgs = new String[] { Integer.toString(cmdId) };
-		Cursor c = mDatabase.query(TABLE_NAME, columns, COLUMN_NAME_CMD_ID + "=?", selectionArgs, null, null, null);
+		Cursor c = mDatabase.query(TABLE_NAME, columns, COLUMN_NAME_CMD_ID + "=?", selectionArgs,
+				null, null, null);
 
 		String res = null;
 		if (c.moveToFirst()) {

@@ -60,7 +60,8 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	@Override
 	public Message handleCommand(Command command) {
-		if (mAdapter == null) return new Message("BT Adapter is null. Maybe this device does not support bluetooth?");
+		if (mAdapter == null)
+			return new Message("BT Adapter is null. Maybe this device does not support bluetooth?");
 
 		Message msg;
 		final String subCommand = command.getSubCommand();
@@ -130,10 +131,11 @@ public class ModuleService extends MAXSModuleIntentService {
 		public void onReceive(Context context, Intent intent) {
 			int stateInt = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
 			String state = stateToString(stateInt);
-			String prevState = stateToString(intent.getIntExtra(BluetoothAdapter.EXTRA_PREVIOUS_STATE, -1));
+			String prevState = stateToString(intent.getIntExtra(
+					BluetoothAdapter.EXTRA_PREVIOUS_STATE, -1));
 			LOG.d("Bluetooth adapter changed state from '" + prevState + "' to '" + state + "'");
-			Message msgContent = new Message("Bluetooth adapter changed state from '" + prevState + "' to '" + state
-					+ "'");
+			Message msgContent = new Message("Bluetooth adapter changed state from '" + prevState
+					+ "' to '" + state + "'");
 			sendMessage(msgContent, mCommandId);
 
 			// unregister this receiver if we have reached an end state

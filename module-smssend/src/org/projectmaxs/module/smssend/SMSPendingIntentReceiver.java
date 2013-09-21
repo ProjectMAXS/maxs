@@ -52,7 +52,8 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 				// TODO send 'sms delivered' message
 			}
 		} else {
-			throw new IllegalStateException("Unkown action=" + action + " in SMSPendingIntentReceiver");
+			throw new IllegalStateException("Unkown action=" + action
+					+ " in SMSPendingIntentReceiver");
 		}
 	}
 

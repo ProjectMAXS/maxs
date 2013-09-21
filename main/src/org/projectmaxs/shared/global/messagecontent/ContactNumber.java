@@ -135,7 +135,8 @@ public class ContactNumber extends AbstractElement {
 
 	@Override
 	public String toString() {
-		return "ContactNumber number=" + mNumber + " type=" + mNumberType + " primary=" + mSuperPrimary;
+		return "ContactNumber number=" + mNumber + " type=" + mNumberType + " primary="
+				+ mSuperPrimary;
 	}
 
 	/**

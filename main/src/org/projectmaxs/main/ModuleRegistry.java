@@ -94,7 +94,8 @@ public class ModuleRegistry {
 	}
 
 	public synchronized List<ModuleInformation> getAllModules() {
-		return new ArrayList<ModuleInformation>(Collections.unmodifiableCollection(mPackageCommands.values()));
+		return new ArrayList<ModuleInformation>(Collections.unmodifiableCollection(mPackageCommands
+				.values()));
 	}
 
 	public synchronized List<ModuleInformation> getCopyAddListener(ChangeListener listener) {

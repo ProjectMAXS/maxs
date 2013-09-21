@@ -36,7 +36,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Settings settings = Settings.getInstance(context);
 
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (settings.isNetworkDebugLogEnabled()) {
 			for (NetworkInfo networkInfo : cm.getAllNetworkInfo())
@@ -60,7 +61,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 				connected = true;
 				networkTypeChanged = false;
 				if (!networkTypeName.equals(lastActiveNetworkType)) {
-					LOG.d("networkTypeChanged current=" + networkTypeName + " last=" + lastActiveNetworkType);
+					LOG.d("networkTypeChanged current=" + networkTypeName + " last="
+							+ lastActiveNetworkType);
 					settings.setLastActiveNetwork(networkTypeName);
 					networkTypeChanged = true;
 				}
@@ -74,7 +76,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 				}
 				settings.setLastActiveNetwork("");
 			}
-			LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed=" + networkTypeChanged);
+			LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed="
+					+ networkTypeChanged);
 			Intent i = new Intent(Constants.ACTION_NETWORK_STATUS_CHANGED);
 			i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
 			i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);

@@ -50,8 +50,8 @@ public class XMPPStatus extends StateChangeListener {
 		mDesiredStatus = status;
 		// prevent status form being send, when there is no active connection or
 		// if the status message hasn't changed
-		if (!mXMPPRoster.isMasterJidAvailable() || (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus)))
-			return;
+		if (!mXMPPRoster.isMasterJidAvailable()
+				|| (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus))) return;
 		sendStatus();
 	}
 

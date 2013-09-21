@@ -28,10 +28,12 @@ import android.content.Intent;
 
 public class SmsWriteUtil {
 
-	public static final String SMS_WRITE_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE + ".smswrite";
+	public static final String SMS_WRITE_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE
+			+ ".smswrite";
 
 	public static boolean insertSmsInSystemDB(Sms sms, Context context) {
-		if (!PackageManagerUtil.getInstance(context).isPackageInstalled(SMS_WRITE_MODULE_PACKAGE)) return false;
+		if (!PackageManagerUtil.getInstance(context).isPackageInstalled(SMS_WRITE_MODULE_PACKAGE))
+			return false;
 
 		Intent intent = new Intent(MainModuleConstants.ACTION_SMS_TO_INBOX);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, sms);

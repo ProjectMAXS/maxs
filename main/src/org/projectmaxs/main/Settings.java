@@ -58,7 +58,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 		CONNECT_ON_MAIN_SCREEN = context.getString(R.string.pref_app_connect_on_main_screen_key);
-		CONNECT_ON_BOOT_COMPLETED = context.getString(R.string.pref_app_connect_on_boot_completed_key);
+		CONNECT_ON_BOOT_COMPLETED = context
+				.getString(R.string.pref_app_connect_on_boot_completed_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -98,8 +99,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			lookupKey = recentContact.mContact.getLookupKey();
 		}
 		mSharedPreferences.edit().putString(RECENT_CONTACT_INFO, recentContactInfo)
-				.putString(RECENT_CONTACT_DISPLAY_NAME, displayName).putString(RECENT_CONTACT_LOOKUP_KEY, lookupKey)
-				.commit();
+				.putString(RECENT_CONTACT_DISPLAY_NAME, displayName)
+				.putString(RECENT_CONTACT_LOOKUP_KEY, lookupKey).commit();
 	}
 
 	public RecentContact getRecentContact() {

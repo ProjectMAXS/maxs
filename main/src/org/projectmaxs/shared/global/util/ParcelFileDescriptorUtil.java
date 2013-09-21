@@ -33,7 +33,8 @@ public class ParcelFileDescriptorUtil {
 		ParcelFileDescriptor writeSide = pipe[1];
 
 		// start the transfer thread
-		new TransferThread(inputStream, new ParcelFileDescriptor.AutoCloseOutputStream(writeSide)).start();
+		new TransferThread(inputStream, new ParcelFileDescriptor.AutoCloseOutputStream(writeSide))
+				.start();
 
 		return readSide;
 	}
@@ -44,7 +45,8 @@ public class ParcelFileDescriptorUtil {
 		ParcelFileDescriptor writeSide = pipe[1];
 
 		// start the transfer thread
-		new TransferThread(new ParcelFileDescriptor.AutoCloseInputStream(readSide), outputStream).start();
+		new TransferThread(new ParcelFileDescriptor.AutoCloseInputStream(readSide), outputStream)
+				.start();
 
 		return writeSide;
 	}

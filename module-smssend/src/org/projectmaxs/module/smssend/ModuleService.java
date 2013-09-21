@@ -107,7 +107,8 @@ public class ModuleService extends MAXSModuleIntentService {
 			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 		} else if ("send".equals(subCommand)) {
 			String[] argsSplit = command.getArgs().split("  ", 2);
-			Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(argsSplit[0]);
+			Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(
+					argsSplit[0]);
 			if (contacts == null) {
 				return new Message("Contacts module not installed?");
 			} else if (contacts.size() > 1) {
@@ -129,8 +130,8 @@ public class ModuleService extends MAXSModuleIntentService {
 		sendingSMS.addChildElement(sms);
 		sendingSMS.addChildElement(contact);
 
-		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " (" + receiver + ")"
-				: receiver;
+		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " ("
+				+ receiver + ")" : receiver;
 		Message message = new Message("Sending SMS to " + contactString + ": " + text);
 		message.add(sendingSMS);
 		return message;
@@ -165,11 +166,13 @@ public class ModuleService extends MAXSModuleIntentService {
 			smsTable.addSms(cmdId, receiver, text.substring(0, 20), partCount, notifySentEnabled,
 					notifyDeliveredEnabled);
 			if (notifySentEnabled) {
-				sentIntents = createPendingIntents(partCount, cmdId, SMSPendingIntentReceiver.SMS_SENT_ACTION,
+				sentIntents = createPendingIntents(partCount, cmdId,
+						SMSPendingIntentReceiver.SMS_SENT_ACTION,
 						settings.getSentIntentRequestCode(partCount));
 			}
 			if (notifyDeliveredEnabled) {
-				deliveryIntents = createPendingIntents(partCount, cmdId, SMSPendingIntentReceiver.SMS_DELIVERED_ACTION,
+				deliveryIntents = createPendingIntents(partCount, cmdId,
+						SMSPendingIntentReceiver.SMS_DELIVERED_ACTION,
 						settings.getDeliveredIntentRequestCode(partCount));
 			}
 		}
@@ -180,14 +183,15 @@ public class ModuleService extends MAXSModuleIntentService {
 		return sms;
 	}
 
-	private ArrayList<PendingIntent> createPendingIntents(int size, int cmdId, String action, int requestCodeStart) {
+	private ArrayList<PendingIntent> createPendingIntents(int size, int cmdId, String action,
+			int requestCodeStart) {
 		ArrayList<PendingIntent> intents = new ArrayList<PendingIntent>(size);
 		for (int i = 0; i < size; i++) {
 			Intent intent = new Intent(action);
 			intent.putExtra(PART_NUM_EXTRA, i);
 			intent.putExtra(CMD_ID_EXTRA, cmdId);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCodeStart, intent,
-					PendingIntent.FLAG_ONE_SHOT);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCodeStart,
+					intent, PendingIntent.FLAG_ONE_SHOT);
 			intents.add(pendingIntent);
 		}
 		return intents;

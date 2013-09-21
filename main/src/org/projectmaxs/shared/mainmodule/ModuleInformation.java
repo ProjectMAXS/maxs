@@ -139,21 +139,22 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 		private final String mDefaultSubCommandWithArgs;
 		private Set<String> mSubCommands;
 
-		private Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs) {
+		private Command(String command, String shortCommand, String defaultSubCommand,
+				String defaultSubcommandWithArgs) {
 			this.mCommand = command;
 			this.mShortCommand = shortCommand;
 			this.mDefaultSubCommand = defaultSubCommand;
 			this.mDefaultSubCommandWithArgs = defaultSubcommandWithArgs;
 		}
 
-		public Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs,
-				Set<String> subCommands) {
+		public Command(String command, String shortCommand, String defaultSubCommand,
+				String defaultSubcommandWithArgs, Set<String> subCommands) {
 			this(command, shortCommand, defaultSubCommand, defaultSubcommandWithArgs);
 			this.mSubCommands = subCommands;
 		}
 
-		public Command(String command, String shortCommand, String defaultSubCommand, String defaultSubcommandWithArgs,
-				String... subCommands) {
+		public Command(String command, String shortCommand, String defaultSubCommand,
+				String defaultSubcommandWithArgs, String... subCommands) {
 			this(command, shortCommand, defaultSubCommand, defaultSubcommandWithArgs);
 			Set<String> subCmdSet = new HashSet<String>();
 			for (String s : subCommands)

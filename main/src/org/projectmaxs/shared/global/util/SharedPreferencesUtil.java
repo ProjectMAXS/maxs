@@ -43,8 +43,8 @@ public class SharedPreferencesUtil {
 	private static final String NAME = "name";
 	private static final String PREFERENCES = "preferences";
 
-	public static void exportToFile(SharedPreferences sharedPreferences, File outFile, Set<String> doNotExport)
-			throws IOException {
+	public static void exportToFile(SharedPreferences sharedPreferences, File outFile,
+			Set<String> doNotExport) throws IOException {
 		export(sharedPreferences, new FileWriter(outFile), doNotExport);
 	}
 
@@ -58,8 +58,8 @@ public class SharedPreferencesUtil {
 	 *            a set of keys that should not get exported (passwords, etc.),
 	 *            may be null
 	 */
-	public static void export(SharedPreferences sharedPreferences, Writer writer, Set<String> doNotExport)
-			throws IOException {
+	public static void export(SharedPreferences sharedPreferences, Writer writer,
+			Set<String> doNotExport) throws IOException {
 		XmlSerializer serializer = Xml.newSerializer();
 		serializer.setOutput(writer);
 		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
@@ -83,7 +83,8 @@ public class SharedPreferencesUtil {
 		writer.close();
 	}
 
-	public static boolean importFromFile(SharedPreferences sharedPreferences, File inFile) throws Exception {
+	public static boolean importFromFile(SharedPreferences sharedPreferences, File inFile)
+			throws Exception {
 		return importFromReader(sharedPreferences, new FileReader(inFile));
 	}
 
@@ -94,7 +95,8 @@ public class SharedPreferencesUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean importFromReader(SharedPreferences sharedPreferences, Reader in) throws Exception {
+	public static boolean importFromReader(SharedPreferences sharedPreferences, Reader in)
+			throws Exception {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		XmlPullParser parser = Xml.newPullParser();
 		parser.setInput(in);

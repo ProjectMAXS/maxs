@@ -35,7 +35,8 @@ public class SMSWriteUtil {
 
 	public static final Uri SMS_INBOX_CONTENT_URI = Uri.withAppendedPath(SMS_CONTENT_URI, "inbox");
 
-	public static final Uri SMS_CONVERSATIONS_CONTENT_URI = Uri.withAppendedPath(SMS_CONTENT_URI, "conversations");
+	public static final Uri SMS_CONVERSATIONS_CONTENT_URI = Uri.withAppendedPath(SMS_CONTENT_URI,
+			"conversations");
 
 	public static final void addSmsToSentBox(Sms sms, Context context) {
 		ContentResolver resolver = context.getContentResolver();
@@ -50,7 +51,8 @@ public class SMSWriteUtil {
 		ContentResolver resolver = context.getContentResolver();
 		ContentValues values = new ContentValues();
 		values.put("read", "1");
-		return resolver.update(SMS_INBOX_CONTENT_URI, values, "read=0 AND address=?", new String[] { address });
+		return resolver.update(SMS_INBOX_CONTENT_URI, values, "read=0 AND address=?",
+				new String[] { address });
 	}
 
 	// TODO delete (by number, by conversation id, by in-/out-box etc.)

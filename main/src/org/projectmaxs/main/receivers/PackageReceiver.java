@@ -45,7 +45,8 @@ public class PackageReceiver extends BroadcastReceiver {
 	}
 
 	private void onInstalledOrReplaced(Context context, String packageName) {
-		LOG.d("onInstalledOrReplaced: packageName=" + packageName + " intent=" + GlobalConstants.ACTION_REGISTER);
+		LOG.d("onInstalledOrReplaced: packageName=" + packageName + " intent="
+				+ GlobalConstants.ACTION_REGISTER);
 		for (String receiver : sReceivers) {
 			Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
 			intent.setClassName(packageName, packageName + '.' + receiver);

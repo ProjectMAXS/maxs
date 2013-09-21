@@ -57,7 +57,8 @@ public class InfoAndSettings extends Activity {
 			public void lostFocusOrDone(View v) {
 				String text = mJID.getText().toString();
 				if (!XMPPUtil.isValidBareJid(text)) {
-					Toast.makeText(InfoAndSettings.this, "This is not a valid bare JID", Toast.LENGTH_LONG).show();
+					Toast.makeText(InfoAndSettings.this, "This is not a valid bare JID",
+							Toast.LENGTH_LONG).show();
 					mJID.setText(mLastJidText);
 					return;
 				}
@@ -120,7 +121,8 @@ public class InfoAndSettings extends Activity {
 			// an attempt to change an empty master jid to an invalid jid. abort
 			// here and leave the original value untouched
 			if (!XMPPUtil.isValidBareJid(text)) {
-				Toast.makeText(InfoAndSettings.this, "This is not a valid bare JID", Toast.LENGTH_LONG).show();
+				Toast.makeText(InfoAndSettings.this, "This is not a valid bare JID",
+						Toast.LENGTH_LONG).show();
 				mEditText.setText(mBeforeText);
 			}
 			// an empty master jid was change to a valid jid

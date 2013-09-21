@@ -60,7 +60,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 	@Override
 	public void onServiceStart(MAXSService service) {
-		mContext.registerReceiver(mBatteryBroadcastReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		mContext.registerReceiver(mBatteryBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_BATTERY_CHANGED));
 	}
 
 	@Override
@@ -84,8 +85,10 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		String batteryPct = maybeFloatToRange(level / (float) scale, isCharging);
 
 		ArrayList<StatusInformation> infos = new ArrayList<StatusInformation>(2);
-		if (plugged != mLastPlugged) infos.add(new StatusInformation("BAT_PLUGGED", getPowerSource(status, plugged)));
-		if (!batteryPct.equals(mLastBatteryPct)) infos.add(new StatusInformation("BAT_PCT", batteryPct + '%'));
+		if (plugged != mLastPlugged)
+			infos.add(new StatusInformation("BAT_PLUGGED", getPowerSource(status, plugged)));
+		if (!batteryPct.equals(mLastBatteryPct))
+			infos.add(new StatusInformation("BAT_PCT", batteryPct + '%'));
 		// Be done here if there are now new status information to report
 		if (infos.size() == 0) return;
 
@@ -98,7 +101,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 	}
 
 	private static boolean isCharging(int status) {
-		return status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+		return status == BatteryManager.BATTERY_STATUS_CHARGING
+				|| status == BatteryManager.BATTERY_STATUS_FULL;
 	}
 
 	private static String getPowerSource(int status, int plugged) {

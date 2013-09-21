@@ -84,7 +84,8 @@ public class XMPPService {
 		mContext = context;
 		mSettings = Settings.getInstance(context);
 		mMessagesTable = MessagesTable.getInstance(context);
-		mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
@@ -149,8 +150,9 @@ public class XMPPService {
 		// first disconnect if the network type changed and we are now connected
 		// with an now unusable network
 		if ((networkTypeChanged && isConnected()) || !connected) {
-			LOG.d("newConnectivityInformation: calling disconnect() networkTypeChanged=" + networkTypeChanged
-					+ " connected=" + connected + " isConnected=" + isConnected());
+			LOG.d("newConnectivityInformation: calling disconnect() networkTypeChanged="
+					+ networkTypeChanged + " connected=" + connected + " isConnected="
+					+ isConnected());
 			disconnect();
 		}
 
@@ -185,12 +187,14 @@ public class XMPPService {
 		}
 	}
 
-	private void sendAsMessage(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String originId) {
+	private void sendAsMessage(org.projectmaxs.shared.global.Message message,
+			String originIssuerInfo, String originId) {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			// TODO I think that this could for example happen when the service
 			// is not started but e.g. the SMS receiver get's a new message.
 			LOG.i("sendAsMessage: Not connected, adding message to DB");
-			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo, originId);
+			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
+					originId);
 			return;
 		}
 
@@ -211,7 +215,8 @@ public class XMPPService {
 					// Don't send messages to GTalk Android devices
 					// It would be nice if there was a better way to detect
 					// an Android gTalk XMPP client, but currently there is none
-					if (resource != null && !resource.equals("") && (!resource.startsWith("android"))) {
+					if (resource != null && !resource.equals("")
+							&& (!resource.startsWith("android"))) {
 						toList.add(fullJID);
 					}
 				}
@@ -230,7 +235,8 @@ public class XMPPService {
 		return;
 	}
 
-	private void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo, String issuerId) {
+	private void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo,
+			String issuerId) {
 		// in a not so far future
 	}
 
@@ -245,7 +251,8 @@ public class XMPPService {
 		LOG.d("newMessageFromMasterJID: command=" + command + " from=" + issuerInfo);
 
 		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
-		CommandOrigin origin = new CommandOrigin(Constants.PACKAGE, Constants.ACTION_SEND_AS_MESSAGE, issuerInfo, null);
+		CommandOrigin origin = new CommandOrigin(Constants.PACKAGE,
+				Constants.ACTION_SEND_AS_MESSAGE, issuerInfo, null);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 		intent.setClassName(GlobalConstants.MAIN_PACKAGE, TransportConstants.MAIN_TRANSPORT_SERVICE);
@@ -373,8 +380,8 @@ public class XMPPService {
 			}
 			break;
 		default:
-			throw new IllegalStateException("changeState: Unkown state change combination. mState=" + mState
-					+ ", desiredState=" + desiredState);
+			throw new IllegalStateException("changeState: Unkown state change combination. mState="
+					+ mState + ", desiredState=" + desiredState);
 		}
 	}
 
@@ -405,7 +412,8 @@ public class XMPPService {
 		boolean newConnection = false;
 
 		try {
-			if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings.getConnectionConfiguration()) {
+			if (mConnectionConfiguration == null
+					|| mConnectionConfiguration != mSettings.getConnectionConfiguration()) {
 				con = new XMPPConnection(mSettings.getConnectionConfiguration());
 				newConnection = true;
 			} else {
@@ -441,7 +449,8 @@ public class XMPPService {
 				String exceptionMessage = e.getMessage();
 				// Schedule a reconnect on certain exception causes
 				if ("No response from the server.".equals(exceptionMessage)) {
-					LOG.w("tryToConnect: login failed. Scheduling reconnect. exceptionMessage=" + exceptionMessage);
+					LOG.w("tryToConnect: login failed. Scheduling reconnect. exceptionMessage="
+							+ exceptionMessage);
 					scheduleReconnect();
 				} else {
 					LOG.e("tryToConnect: login failed. New State: Disconnected", e);

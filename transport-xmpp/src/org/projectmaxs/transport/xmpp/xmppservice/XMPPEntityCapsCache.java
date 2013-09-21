@@ -71,7 +71,8 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
 	@Override
 	public void replay() throws IOException {
-		Iterator<Entry<String, String>> it = mXMPPEntityCapsTable.getDiscoverInfos().entrySet().iterator();
+		Iterator<Entry<String, String>> it = mXMPPEntityCapsTable.getDiscoverInfos().entrySet()
+				.iterator();
 		while (it.hasNext()) {
 			Entry<String, String> entry = it.next();
 			String node = entry.getKey();
