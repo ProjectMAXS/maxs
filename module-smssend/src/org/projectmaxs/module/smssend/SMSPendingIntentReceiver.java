@@ -17,7 +17,7 @@
 
 package org.projectmaxs.module.smssend;
 
-import org.projectmaxs.module.smssend.database.SmsTable;
+import org.projectmaxs.module.smssend.database.SMSTable;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,19 +35,19 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 		int partNum = intent.getIntExtra(ModuleService.PART_NUM_EXTRA, -1);
 		int cmdId = intent.getIntExtra(ModuleService.CMD_ID_EXTRA, -1);
 		int res = getResultCode();
-		SmsTable smsTable = SmsTable.getInstance(context);
+		SMSTable smsTable = SMSTable.getInstance(context);
 		if (SMS_SENT_ACTION.equals(action)) {
-			String sentIntents = smsTable.getIntents(cmdId, SmsTable.IntentType.SENT);
+			String sentIntents = smsTable.getIntents(cmdId, SMSTable.IntentType.SENT);
 			sentIntents = markPart(sentIntents, partNum, smsResultToChar(res));
-			smsTable.updateIntents(cmdId, sentIntents, SmsTable.IntentType.SENT);
+			smsTable.updateIntents(cmdId, sentIntents, SMSTable.IntentType.SENT);
 			if (allMarkedNoError(sentIntents)) {
 				// TODO send 'sms sent' message
 			}
 			// TODO Add mechanism to display sent failure reasons
 		} else if (SMS_DELIVERED_ACTION.equals(action)) {
-			String deliveredIntents = smsTable.getIntents(cmdId, SmsTable.IntentType.DELIVERED);
+			String deliveredIntents = smsTable.getIntents(cmdId, SMSTable.IntentType.DELIVERED);
 			deliveredIntents = markPart(deliveredIntents, partNum, RESULT_NO_ERROR_CHAR);
-			smsTable.updateIntents(cmdId, deliveredIntents, SmsTable.IntentType.DELIVERED);
+			smsTable.updateIntents(cmdId, deliveredIntents, SMSTable.IntentType.DELIVERED);
 			if (allMarkedNoError(deliveredIntents)) {
 				// TODO send 'sms delivered' message
 			}

@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.projectmaxs.shared.global.messagecontent.AbstractElement;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
@@ -35,40 +37,34 @@ public class HumanReadableString {
 	private static String sUnkown = "Unkown";
 	private static String sOther = "Other";
 
-	public static StringBuilder toSB(AbstractElement element) {
-		StringBuilder sb;
-
+	public static void toSB(AbstractElement element, StringBuilder sb) {
 		if (element instanceof Contact) {
-			sb = toSB((Contact) element);
+			toSB((Contact) element, sb);
 		} else if (element instanceof ContactNumber) {
-			sb = toSB((ContactNumber) element);
+			toSB((ContactNumber) element, sb);
 		} else if (element instanceof Element) {
-			sb = toSB((Element) element);
+			toSB((Element) element, sb);
 		} else if (element instanceof Sms) {
-			sb = toSB((Sms) element);
+			toSB((Sms) element, sb);
 		} else if (element instanceof Text) {
-			sb = toSB((Text) element);
+			toSB((Text) element, sb);
+		} else if (element instanceof CommandHelp) {
+			toSB((CommandHelp) element, sb);
 		} else {
 			throw new IllegalStateException("Unkown sublcass of AbstractElement");
 		}
-		return sb;
 	}
 
-	private static StringBuilder toSB(Contact contact) {
-		StringBuilder sb = new StringBuilder();
+	private static void toSB(Contact contact, StringBuilder sb) {
 		sb.append(contact.getDisplayName());
 		sb.append('\n');
 
 		List<ContactNumber> numbers = contact.getNumbers();
-		for (ContactNumber number : numbers) {
-			sb.append(toSB(number));
-		}
-
-		return sb;
+		for (ContactNumber number : numbers)
+			toSB(number, sb);
 	}
 
-	private static StringBuilder toSB(ContactNumber contactNumber) {
-		StringBuilder sb = new StringBuilder();
+	private static void toSB(ContactNumber contactNumber, StringBuilder sb) {
 		String numberType;
 		switch (contactNumber.getType()) {
 		case MOBILE:
@@ -92,37 +88,47 @@ public class HumanReadableString {
 		sb.append(": ");
 		sb.append(contactNumber.getNumber());
 		sb.append('\n');
-		return sb;
 	}
 
-	private static StringBuilder toSB(Element element) {
-		if (!element.isHumanReadable()) return new StringBuilder(0);
+	private static void toSB(Element element, StringBuilder sb) {
+		if (!element.isHumanReadable()) return;
 
-		StringBuilder sb = new StringBuilder();
 		sb.append(element.getHumanReadableName());
 		sb.append('\n');
 
 		Iterator<AbstractElement> it = element.getChildElementIterator();
 		while (it.hasNext())
-			sb.append(toSB(it.next()));
-		return sb;
+			toSB(it.next(), sb);
 	}
 
-	private static StringBuilder toSB(Sms sms) {
-		StringBuilder sb = new StringBuilder();
+	private static void toSB(Sms sms, StringBuilder sb) {
 		sb.append(sms.getContact());
 		sb.append(": ");
 		sb.append(sms.getBody());
-		return sb;
+		sb.append('\n');
 	}
 
-	private static StringBuilder toSB(Text text) {
-		StringBuilder sb = new StringBuilder();
+	private static void toSB(Text text, StringBuilder sb) {
 		List<org.projectmaxs.shared.global.messagecontent.FormatedText> texts = text.getTexts();
-		for (org.projectmaxs.shared.global.messagecontent.FormatedText ft : texts) {
+		for (org.projectmaxs.shared.global.messagecontent.FormatedText ft : texts)
 			sb.append(ft.toString());
+
+		sb.append('\n');
+	}
+
+	private static void toSB(CommandHelp commandHelp, StringBuilder sb) {
+		sb.append(commandHelp.mCommand);
+		sb.append(' ');
+		sb.append(commandHelp.mSubCommand);
+		sb.append(' ');
+		if (commandHelp.mArgType == ArgType.OTHER_STRING) {
+			sb.append(commandHelp.mArgString);
+		} else {
+			sb.append(commandHelp.mArgType);
 		}
-		return sb;
+		sb.append(' ');
+		sb.append(commandHelp.mHelp);
+		sb.append('\n');
 	}
 
 }

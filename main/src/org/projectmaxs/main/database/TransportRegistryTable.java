@@ -39,7 +39,7 @@ public class TransportRegistryTable {
 	public static final String CREATE_TABLE =
 		"CREATE TABLE " + TABLE_NAME +
 		" (" +
-		 COLUMN_NAME_TRANSPORT_PACKAGE + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_TRANSPORT_PACKAGE + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + ',' +
 		 COLUMN_NAME_TRANSPORT_INFORMATION + MAXSDatabase.BLOB_TYPE + MAXSDatabase.NOT_NULL +
 		" )";
 	// @formatter:on

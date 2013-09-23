@@ -31,7 +31,7 @@ public class TransformMessageContent {
 		StringBuilder sb = new StringBuilder();
 		Iterator<AbstractElement> it = message.getElementsIt();
 		while (it.hasNext())
-			sb.append(HumanReadableString.toSB(it.next()));
+			HumanReadableString.toSB(it.next(), sb);
 		// Remove the last newline of the message
 		if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') sb.setLength(sb.length() - 1);
 

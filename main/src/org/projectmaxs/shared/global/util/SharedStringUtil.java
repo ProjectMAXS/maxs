@@ -52,4 +52,12 @@ public class SharedStringUtil {
 				(ip >> 24 & 0xff));
 		// @formatter:on
 	}
+
+	public static String[] toStringArray(int[] intArray) {
+		String[] res = new String[intArray.length];
+		for (int i = 0; i < intArray.length; i++) {
+			res[i] = Integer.toString(intArray[i]);
+		}
+		return res;
+	}
 }

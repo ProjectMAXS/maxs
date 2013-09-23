@@ -27,7 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.projectmaxs.main.CommandInformation.CommandClashException;
+import org.projectmaxs.main.database.CommandHelpTable;
 import org.projectmaxs.main.database.ModuleRegistryTable;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.content.Context;
@@ -66,6 +68,7 @@ public class ModuleRegistry {
 
 	private Context mContext;
 	private ModuleRegistryTable mModuleRegistryTable;
+	private CommandHelpTable mCommandHelpTable;
 
 	/**
 	 * Constructor for ModuleRegistry. Loads the ModuleInformation from database
@@ -78,6 +81,7 @@ public class ModuleRegistry {
 	private ModuleRegistry(Context context) {
 		mContext = context;
 		mModuleRegistryTable = ModuleRegistryTable.getInstance(context);
+		mCommandHelpTable = CommandHelpTable.getInstance(context);
 
 		// Load the module information from the database
 		Iterator<ModuleInformation> it = mModuleRegistryTable.getAll().iterator();
@@ -119,6 +123,10 @@ public class ModuleRegistry {
 		remove(moduleInformation.getModulePackage());
 		add(moduleInformation);
 		mModuleRegistryTable.insertOrReplace(moduleInformation);
+		Set<CommandHelp> help = moduleInformation.getHelp();
+		if (help.size() > 0) {
+			mCommandHelpTable.addCommandHelp(moduleInformation.getModulePackage(), help);
+		}
 	}
 
 	private void add(ModuleInformation moduleInformation) {
@@ -174,6 +182,8 @@ public class ModuleRegistry {
 		mPackageCommands.remove(modulePackage);
 		for (ChangeListener l : mChangeListeners)
 			l.moduleUnregistred(module);
+
+		mCommandHelpTable.deleteEntriesOf(modulePackage);
 	}
 
 	public interface ChangeListener {

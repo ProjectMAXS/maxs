@@ -24,6 +24,13 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".PurgeOldCommandsReceiver"
+            android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.PURGE_OLD_COMMANDS"/>
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".SMSPendingIntentReceiver"
             android:exported="false" >
             <intent-filter>

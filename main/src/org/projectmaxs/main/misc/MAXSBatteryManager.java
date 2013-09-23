@@ -48,7 +48,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 	private int mLastPlugged = -1;
 
 	private MAXSBatteryManager(Context context) {
-		this.mContext = context;
+		mContext = context;
 		mBatteryBroadcastReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {

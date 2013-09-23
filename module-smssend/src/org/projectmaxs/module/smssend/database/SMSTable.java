@@ -17,12 +17,15 @@
 
 package org.projectmaxs.module.smssend.database;
 
+import org.projectmaxs.shared.global.util.SharedStringUtil;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
-public class SmsTable {
+public class SMSTable {
 	private static final String TABLE_NAME = "sms";
 	private static final String COLUMN_NAME_CMD_ID = "cmdID";
 	private static final String COLUMN_NAME_RECEIVER = "receiver";
@@ -46,16 +49,16 @@ public class SmsTable {
 
 	public static final String DELETE_TABLE = SMSSendDatabase.DROP_TABLE + TABLE_NAME;
 
-	private static SmsTable sSmsTable;
+	private static SMSTable sSmsTable;
 
-	public static SmsTable getInstance(Context context) {
-		if (sSmsTable == null) sSmsTable = new SmsTable(context);
+	public static SMSTable getInstance(Context context) {
+		if (sSmsTable == null) sSmsTable = new SMSTable(context);
 		return sSmsTable;
 	}
 
 	private final SQLiteDatabase mDatabase;
 
-	private SmsTable(Context context) {
+	private SMSTable(Context context) {
 		mDatabase = SMSSendDatabase.getInstance(context).getWritableDatabase();
 	}
 
@@ -103,6 +106,12 @@ public class SmsTable {
 
 	public void emptyTable() {
 		mDatabase.delete(TABLE_NAME, null, null);
+	}
+
+	public void purgeEntries(int[] commandIds) {
+		String[] commandIdsStrings = SharedStringUtil.toStringArray(commandIds);
+		mDatabase.delete(TABLE_NAME, COLUMN_NAME_CMD_ID + "IN ( ? )",
+				new String[] { TextUtils.join(",", commandIdsStrings) });
 	}
 
 	private static String createIntentEntry(int intentCount) {

@@ -20,7 +20,7 @@ package org.projectmaxs.module.smssend;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.projectmaxs.module.smssend.database.SmsTable;
+import org.projectmaxs.module.smssend.database.SMSTable;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
@@ -158,7 +158,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		ArrayList<PendingIntent> deliveryIntents = null;
 		ArrayList<String> parts = smsManager.divideMessage(text);
 		int partCount = parts.size();
-		SmsTable smsTable = SmsTable.getInstance(this);
+		SMSTable smsTable = SMSTable.getInstance(this);
 		boolean notifySentEnabled = settings.notifySentEnabled();
 		boolean notifyDeliveredEnabled = settings.notifyDeliveredEnabled();
 

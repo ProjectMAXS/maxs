@@ -17,10 +17,13 @@
 
 package org.projectmaxs.shared.mainmodule;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.projectmaxs.shared.global.messagecontent.CommandHelp;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 
 import android.os.Parcel;
@@ -30,6 +33,7 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 	private final String mModulePackage;
 	private final String mModuleName;
 	private final Set<Command> mCommands;
+	private final Set<CommandHelp> mHelp = new HashSet<CommandHelp>();;
 
 	public ModuleInformation(String modulePackage, String moduleName) {
 		this.mModulePackage = modulePackage;
@@ -70,11 +74,12 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 	public ModuleInformation(Parcel in) {
 		mModulePackage = in.readString();
 		mModuleName = in.readString();
-
-		int cmdCount = in.readInt();
-		Command[] cmds = new Command[cmdCount];
-		in.readTypedArray(cmds, Command.CREATOR);
-		mCommands = new HashSet<Command>(Arrays.asList(cmds));
+		@SuppressWarnings("unchecked")
+		List<Command> cmds = in.readArrayList(getClass().getClassLoader());
+		mCommands = new HashSet<Command>(cmds);
+		@SuppressWarnings("unchecked")
+		List<CommandHelp> help = in.readArrayList(getClass().getClassLoader());
+		mHelp.addAll(help);
 	}
 
 	@Override
@@ -86,11 +91,8 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mModulePackage);
 		dest.writeString(mModuleName);
-		int cmdCount = mCommands.size();
-		Command[] cmds = new Command[cmdCount];
-		cmds = mCommands.toArray(cmds);
-		dest.writeInt(cmdCount);
-		dest.writeTypedArray(cmds, flags);
+		dest.writeList(new ArrayList<Command>(mCommands));
+		dest.writeList(new ArrayList<CommandHelp>(mHelp));
 	}
 
 	public String getModulePackage() {
@@ -107,6 +109,21 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 
 	public String toString() {
 		return "Package: " + mModulePackage;
+	}
+
+	public void addHelp(List<CommandHelp> help, boolean clear) {
+		if (clear) mHelp.clear();
+		for (CommandHelp ch : help)
+			addHelp(ch);
+	}
+
+	public void addHelp(CommandHelp help) {
+		if (mHelp.contains(help)) throw new IllegalStateException("CommandHelp already added");
+		mHelp.add(help);
+	}
+
+	public Set<CommandHelp> getHelp() {
+		return mHelp;
 	}
 
 	public static final Creator<ModuleInformation> CREATOR = new Creator<ModuleInformation>() {

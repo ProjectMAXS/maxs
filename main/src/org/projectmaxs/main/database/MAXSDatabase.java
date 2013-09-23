@@ -34,7 +34,6 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 	public static final String BLOB_TYPE = " BLOB";
 	public static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
 	public static final String NOT_NULL = " NOT NULL";
-	public static final String COMMA_SEP = ",";
 	public static final String SEMICOLON_SEP = ";";
 
 	// @formatter:off
@@ -42,13 +41,15 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 				CommandTable.CREATE_TABLE,
 				ModuleRegistryTable.CREATE_TABLE,
 				StatusTable.CREATE_TABLE,
-				TransportRegistryTable.CREATE_TABLE
+				TransportRegistryTable.CREATE_TABLE,
+				CommandHelpTable.CREATE_TABLE,
 	};
 	private static final String[] SQL_DELETE_ENTRIES = new String[] {
 		CommandTable.DELETE_TABLE,
 		ModuleRegistryTable.DELETE_TABLE,
 		StatusTable.DELETE_TABLE,
-		TransportRegistryTable.DELETE_TABLE
+		TransportRegistryTable.DELETE_TABLE,
+		CommandHelpTable.DELETE_TABLE,
 	};
 	// @formatter:on
 

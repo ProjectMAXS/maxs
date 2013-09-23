@@ -56,6 +56,7 @@
                 <action android:name="org.projectmaxs.main.UPDATE_TRANSPORT_STATUS"/>
             </intent-filter>
         </service>
+        <service android:name=".PurgeOldCommandsService" android:exported="false" />
         <provider android:name=".MAXSContentProvider"
             android:authorities="org.projectmaxs.main"
             android:permission="org.projectmaxs.permission.USE_MAIN_AS_MODULE">

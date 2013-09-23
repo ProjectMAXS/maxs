@@ -19,13 +19,14 @@ package org.projectmaxs.main.database;
 
 import java.sql.Timestamp;
 
+import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Handler;
+import android.text.TextUtils;
 
 public class CommandTable {
 	private static final long OLD_ENTRIES_AGE = 1000 * 60 * 60 * 24 * 3;
@@ -45,14 +46,14 @@ public class CommandTable {
 	public static final String CREATE_TABLE =
 		"CREATE TABLE " +  TABLE_NAME +
 		" (" +
-		 COLUMN_NAME_COMMAND_ID + MAXSDatabase.INTEGER_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_TIMESTAMP + MAXSDatabase.TIMESTAMP_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_COMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_SUBCOMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_ARGS + MAXSDatabase.TEXT_TYPE + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_ORIGIN_PACKAGE + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
- 		 COLUMN_NAME_ORIGIN_INTENT_ACTION + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
-		 COLUMN_NAME_ORIGIN_ISSUER_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_COMMAND_ID + MAXSDatabase.INTEGER_TYPE + " PRIMARY KEY" + ',' +
+		 COLUMN_NAME_TIMESTAMP + MAXSDatabase.TIMESTAMP_TYPE + MAXSDatabase.NOT_NULL + ',' +
+		 COLUMN_NAME_COMMAND + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + ',' +
+		 COLUMN_NAME_SUBCOMMAND + MAXSDatabase.TEXT_TYPE + ',' +
+		 COLUMN_NAME_ARGS + MAXSDatabase.TEXT_TYPE + ',' +
+		 COLUMN_NAME_ORIGIN_PACKAGE + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + ',' +
+		 COLUMN_NAME_ORIGIN_INTENT_ACTION + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + ',' +
+		 COLUMN_NAME_ORIGIN_ISSUER_INFO + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL + ',' +
 		 COLUMN_NAME_ORIGIN_ID + MAXSDatabase.TEXT_TYPE +
 		" )";
 	// @formatter:on
@@ -67,12 +68,9 @@ public class CommandTable {
 	}
 
 	private final SQLiteDatabase mDatabase;
-	private final Handler mHandler;
 
 	private CommandTable(Context context) {
 		mDatabase = MAXSDatabase.getInstance(context).getWritableDatabase();
-		mHandler = new Handler();
-		purgeOldEntries();
 	}
 
 	public void addCommand(int id, String command, String subCmd, String args, CommandOrigin origin) {
@@ -159,6 +157,32 @@ public class CommandTable {
 				originIssuerInfo, originId));
 	}
 
+	public int[] getOldEntries() {
+		final String oldTimestamp = (new Timestamp(System.currentTimeMillis() - OLD_ENTRIES_AGE))
+				.toString();
+		Cursor c = mDatabase.query(TABLE_NAME, new String[] { COLUMN_NAME_COMMAND_ID },
+				COLUMN_NAME_TIMESTAMP + "<?", new String[] { oldTimestamp }, null, null, null);
+		final int count = c.getCount();
+		if (count == 0) {
+			c.close();
+			return null;
+		}
+
+		int i = 0;
+		int[] res = new int[count];
+		while (c.moveToNext()) {
+			res[i++] = c.getInt(c.getColumnIndexOrThrow(COLUMN_NAME_COMMAND_ID));
+		}
+
+		return res;
+	}
+
+	public void purgeEntries(int[] commandIds) {
+		String[] commandIdsStrings = SharedStringUtil.toStringArray(commandIds);
+		mDatabase.delete(TABLE_NAME, COLUMN_NAME_COMMAND_ID + "IN ( ? )",
+				new String[] { TextUtils.join(",", commandIdsStrings) });
+	}
+
 	public static class Entry {
 		public final int mId;
 		public final CommandOrigin mOrigin;
@@ -184,17 +208,5 @@ public class CommandTable {
 			this.mArgs = args;
 
 		}
-	}
-
-	private void purgeOldEntries() {
-		String oldTimestamp = (new Timestamp(System.currentTimeMillis() - OLD_ENTRIES_AGE))
-				.toString();
-		mDatabase.delete(TABLE_NAME, COLUMN_NAME_TIMESTAMP + " < \"" + oldTimestamp + "\"", null);
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				purgeOldEntries();
-			}
-		}, OLD_ENTRIES_AGE);
 	}
 }

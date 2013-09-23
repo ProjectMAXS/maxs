@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.projectmaxs.main.database.CommandTable;
+import org.projectmaxs.main.misc.ComposeHelp;
 import org.projectmaxs.main.misc.MAXSBatteryManager;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -84,6 +85,7 @@ public class MAXSService extends Service {
 		mTransportRegistry = TransportRegistry.getInstance(this);
 
 		MAXSBatteryManager.init(this);
+		PurgeOldCommandsService.init(this);
 		StatusRegistry.getInstanceAndInit(this);
 
 		Settings settings = Settings.getInstance(this);
@@ -172,6 +174,8 @@ public class MAXSService extends Service {
 	 */
 	public void performCommand(String fullCommand, CommandOrigin origin) {
 		Message errorMsg = null;
+		Message helpMsg = null;
+		CommandInformation ci = null;
 		int id = Settings.getInstance(this).getNextCommandId();
 		String[] splitedFullCommand = fullCommand.split(" ", 3);
 
@@ -181,43 +185,51 @@ public class MAXSService extends Service {
 		String args = null;
 		if (splitedFullCommand.length > 2) args = splitedFullCommand[2];
 
-		CommandInformation ci = mModuleRegistry.get(command);
 		if ("help".equals(command)) {
-			// TODO help system
-			return;
-		} else if (ci == null) {
-			errorMsg = new Message("Unkown command: " + command);
+			helpMsg = ComposeHelp.getHelp(subCmd, args, this);
 		} else {
-			if (subCmd == null) {
-				subCmd = ci.getDefaultSubCommand();
-				if (subCmd == null) errorMsg = new Message("No default sub command");
-			} else if (!ci.isKnownSubCommand(subCmd)) {
-				subCmd = ci.getDefaultSubcommandWithArgs();
+			ci = mModuleRegistry.get(command);
+			if (ci == null) {
+				errorMsg = new Message("Unkown command: " + command);
+			} else {
 				if (subCmd == null) {
-					errorMsg = new Message("No default sub command with args");
-				} else {
-					if (splitedFullCommand.length > 2) {
-						args = splitedFullCommand[1] + ' ' + splitedFullCommand[2];
+					// User sent just a command without a subcommand, find the default one
+					subCmd = ci.getDefaultSubCommand();
+					if (subCmd == null) errorMsg = new Message("No default sub command");
+				} else if (!ci.isKnownSubCommand(subCmd)) {
+					// User sent a String that is not know as subcommand, try to get the default
+					// subcommand with arguments
+					subCmd = ci.getDefaultSubcommandWithArgs();
+					if (subCmd == null) {
+						errorMsg = new Message("No default sub command with args");
 					} else {
-						args = splitedFullCommand[1];
+						if (splitedFullCommand.length > 2) {
+							args = splitedFullCommand[1] + ' ' + splitedFullCommand[2];
+						} else {
+							args = splitedFullCommand[1];
+						}
 					}
 				}
 			}
 		}
 
+		// No matter what happened (normal command, help command or error message), always add the
+		// received command to the command table
 		mCommandTable.addCommand(id, command, subCmd, args, origin);
 
 		if (errorMsg != null) {
 			errorMsg.setId(id);
 			sendMessage(errorMsg);
-			return;
+		} else if (helpMsg != null) {
+			helpMsg.setId(id);
+			sendMessage(helpMsg);
+		} else if (ci != null) {
+			String modulePackage = ci.getPackageForSubCommand(subCmd);
+			Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
+			intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
+			intent.setClassName(modulePackage, modulePackage + ".ModuleService");
+			startService(intent);
 		}
-
-		String modulePackage = ci.getPackageForSubCommand(subCmd);
-		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
-		intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
-		intent.setClassName(modulePackage, modulePackage + ".ModuleService");
-		startService(intent);
 	}
 
 	protected synchronized void setRecentContact(final String recentContactInfo,

@@ -36,7 +36,7 @@ public class StatusTable {
 	public static final String CREATE_TABLE =
 		"CREATE TABLE " +  TABLE_NAME +
 		" (" +
-		 COLUMN_NAME_KEY + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + MAXSDatabase.COMMA_SEP +
+		 COLUMN_NAME_KEY + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + ',' +
 		 COLUMN_NAME_STATUS + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL +
 		" )";
 	// @formatter:on

@@ -20,9 +20,12 @@ package org.projectmaxs.shared.module;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
@@ -50,6 +53,9 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 		Intent replyIntent = null;
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
+			List<CommandHelp> help = new LinkedList<CommandHelp>();
+			addHelp(help, context);
+			mModuleInformation.addHelp(help, true);
 			replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
 		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
@@ -67,6 +73,8 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 	public abstract void initLog(Context context);
 
 	public abstract SharedPreferences getSharedPreferences(Context context);
+
+	public void addHelp(List<CommandHelp> help, Context context) {}
 
 	public Set<String> doNotExport() {
 		return null;

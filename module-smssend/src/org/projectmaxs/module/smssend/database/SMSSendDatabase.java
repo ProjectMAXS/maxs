@@ -39,11 +39,11 @@ public class SMSSendDatabase extends SQLiteOpenHelper {
 
 	// @formatter:off
 	private static final String[] SQL_CREATE_ENTRIES = new String[] {
-				SmsTable.CREATE_TABLE,
+				SMSTable.CREATE_TABLE,
 
 	};
 	private static final String[] SQL_DELETE_ENTRIES = new String[] {
-		SmsTable.DELETE_TABLE,
+		SMSTable.DELETE_TABLE,
 	};
 	// @formatter:on
 
