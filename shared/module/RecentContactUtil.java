@@ -47,7 +47,7 @@ public class RecentContactUtil {
 
 		final Intent intent = new Intent(GlobalConstants.ACTION_SET_RECENT_CONTACT);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, recentContactInfo);
-		intent.putExtra(GlobalConstants.EXTRA_CONTACT, contact.getMinimal());
+		if (contact != null) intent.putExtra(GlobalConstants.EXTRA_CONTACT, contact.getMinimal());
 		context.startService(intent);
 	}
 
