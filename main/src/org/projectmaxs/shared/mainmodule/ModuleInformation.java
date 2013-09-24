@@ -119,7 +119,17 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 
 	public void addHelp(CommandHelp help) {
 		if (mHelp.contains(help)) throw new IllegalStateException("CommandHelp already added");
+		if (!provides(help.mCommand, help.mSubCommand))
+			throw new IllegalStateException("ModuleInformation does not provide this command");
 		mHelp.add(help);
+	}
+
+	public boolean provides(String command, String subCommand) {
+		for (Command cmd : mCommands)
+			if (cmd.getCommand().equals(command) && cmd.mSubCommands.contains(subCommand))
+				return true;
+
+		return false;
 	}
 
 	public Set<CommandHelp> getHelp() {
