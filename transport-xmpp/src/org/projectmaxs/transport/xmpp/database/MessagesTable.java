@@ -30,6 +30,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * Don't get confused by the name of the Table. It's meant for XMPP messages and IQ packets.
+ * 
+ */
 public class MessagesTable {
 
 	private static final String TABLE_NAME = "messages";
