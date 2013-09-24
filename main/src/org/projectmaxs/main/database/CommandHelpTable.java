@@ -92,7 +92,7 @@ public class CommandHelpTable {
 			return null;
 		}
 		List<CommandHelp> res = new ArrayList<CommandHelp>(c.getCount());
-		while (c.moveToNext()) {
+		do {
 			CommandHelp.ArgType argType = CommandHelp.ArgType.values()[c.getInt(c
 					.getColumnIndexOrThrow(COLUMN_NAME_ARG_TYPE))];
 			String help = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_HELP));
@@ -105,7 +105,7 @@ public class CommandHelpTable {
 			} else {
 				res.add(new CommandHelp(command, subCommand, argType, help));
 			}
-		}
+		} while (c.moveToNext());
 		c.close();
 		return res;
 	}
@@ -120,7 +120,7 @@ public class CommandHelpTable {
 			return null;
 		}
 		List<CommandHelp> res = new ArrayList<CommandHelp>(c.getCount());
-		while (c.moveToNext()) {
+		do {
 			CommandHelp.ArgType argType = CommandHelp.ArgType.values()[c.getInt(c
 					.getColumnIndexOrThrow(COLUMN_NAME_ARG_TYPE))];
 			String help = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_HELP));
@@ -132,7 +132,7 @@ public class CommandHelpTable {
 			} else {
 				res.add(new CommandHelp(command, subCommand, argType, help));
 			}
-		}
+		} while (c.moveToNext());
 		c.close();
 		return res;
 	}
