@@ -112,8 +112,7 @@ public class HumanReadableString {
 		List<org.projectmaxs.shared.global.messagecontent.FormatedText> texts = text.getTexts();
 		for (org.projectmaxs.shared.global.messagecontent.FormatedText ft : texts)
 			sb.append(ft.toString());
-
-		sb.append('\n');
+		// Don't append \n here. Text has it's own ways of adding them
 	}
 
 	private static void toSB(CommandHelp commandHelp, StringBuilder sb) {
