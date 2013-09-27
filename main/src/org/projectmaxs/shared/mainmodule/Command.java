@@ -41,6 +41,11 @@ public class Command implements Parcelable {
 		return mSubCommand;
 	}
 
+	/**
+	 * Retrieve the arguments that the user send with the command. May be null
+	 * 
+	 * @return arguments given by user, may be null
+	 */
 	public String getArgs() {
 		return mArgs;
 	}

@@ -12,18 +12,33 @@
     <uses-sdk android:minSdkVersion="10"/>
     <application android:label="@string/app_name">
         <activity android:name=".activities.InfoAndSettings" android:exported="true"/>
-        <receiver android:name=".ModuleReceiver"
-            android:label="@string/app_module_receiver_label" android:permission="org.projectmaxs.permission.USE_MODULE">
+        <receiver
+            android:name=".ModuleReceiver"
+            android:label="@string/app_module_receiver_label"
+            android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER"/>
                 <action android:name="org.projectmaxs.EXPORT_SETTINGS"/>
                 <action android:name="org.projectmaxs.IMPORT_SETTINGS"/>
             </intent-filter>
         </receiver>
-        <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
+        <service
+            android:name=".ModuleService"
+            android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
             </intent-filter>
         </service>
+        <service
+            android:name=".SetCWDService"
+            android:permission="org.projectmaxs.permission.USE_MODULE">
+            <intent-filter>
+                <action android:name="org.projectmaxs.module.fileread.ACTION_SET_CWD"/>
+            </intent-filter>
+        </service>
+        <provider
+            android:name=".MAXSFilereadProvider"
+            android:authorities="org.projectmaxs.module.fileread"
+            android:permission="org.projectmaxs.permission.USE_MODULE"/>
     </application>
 </manifest> 

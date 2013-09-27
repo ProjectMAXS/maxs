@@ -17,6 +17,9 @@
 
 package org.projectmaxs.module.fileread;
 
+import java.io.File;
+
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 
 import android.content.Context;
@@ -27,6 +30,8 @@ import android.preference.PreferenceManager;
 public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
 	// App settings
 	private final String DEBUG_LOG;
+
+	private final String CURRENT_WORKING_DIRECTORY = "CURRENT_WORKING_DIRECTORY";
 
 	private static Settings sSettings;
 
@@ -48,6 +53,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+	}
+
+	public void setCwd(File cwd) {
+		mSharedPreferences.edit().putString(CURRENT_WORKING_DIRECTORY, cwd.getAbsolutePath());
+	}
+
+	public File getCwd() {
+		final String cwd = mSharedPreferences.getString(CURRENT_WORKING_DIRECTORY,
+				GlobalConstants.MAXS_EXTERNAL_STORAGE.getAbsolutePath());
+		return new File(cwd);
 	}
 
 	public boolean isDebugLogEnabled() {

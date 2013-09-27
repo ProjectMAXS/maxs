@@ -26,28 +26,27 @@ import org.projectmaxs.shared.global.util.AsyncServiceTask;
 
 import android.content.Context;
 import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
 
 public class FileCmd {
 
 	public final static Message handleSend(Context context, String file) {
 		final File toSend = new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, file);
 
-		/*
-		 * new AsyncServiceTask<IMAXSOutgoingFileTransferService>(GlobalConstants.
-		 * ACTION_OUTGOING_FILETRANSFER, context)
-		 * {
-		 * @Override
-		 * public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
-		 * return IMAXSOutgoingFileTransferService.Stub.asInterface(iBinder);
-		 * }
-		 * @Override
-		 * public void performTask(IMAXSOutgoingFileTransferService iinterface) {
-		 * ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(file, size, description,
-		 * toJID);
-		 * }
-		 * }.go();
-		 */
+		new AsyncServiceTask<IMAXSOutgoingFileTransferService>(
+				GlobalConstants.ACTION_OUTGOING_FILETRANSFER, context) {
+			@Override
+			public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
+				return IMAXSOutgoingFileTransferService.Stub.asInterface(iBinder);
+			}
+
+			@Override
+			public void performTask(IMAXSOutgoingFileTransferService iinterface) {
+				// ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(file, size,
+				// description,
+				// toJID);
+			}
+		}.go();
+
 		return null;
 	}
 }
