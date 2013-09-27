@@ -80,4 +80,9 @@ public class Command implements Parcelable {
 
 	};
 
+	@Override
+	public String toString() {
+		return '\'' + mCommand + ' ' + mSubCommand + ' ' + mArgs + "(cmdId=" + mId + ")'";
+	}
+
 }

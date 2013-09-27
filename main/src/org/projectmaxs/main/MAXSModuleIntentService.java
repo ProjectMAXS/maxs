@@ -59,7 +59,7 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 			mModuleRegistry.registerModule(mi);
 		} else if (action.equals(GlobalConstants.ACTION_SEND_MESSAGE)) {
 			Message msg = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
-			maxsService.sendMessage(msg);
+			maxsService.send(msg);
 		} else if (action.equals(GlobalConstants.ACTION_SET_RECENT_CONTACT)) {
 			String usedContactInfo = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			Contact contact = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTACT);

@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.projectmaxs.shared.global.messagecontent.Contact;
+
 public class SharedStringUtil {
 	public static String getSubstringAfter(String s, char c) {
 		return s.substring(s.lastIndexOf(c) + 1).trim();
@@ -59,5 +61,29 @@ public class SharedStringUtil {
 			res[i] = Integer.toString(intArray[i]);
 		}
 		return res;
+	}
+
+	public static String shorten(String string, int maxSize) {
+		String res;
+		if (string.length() < maxSize) {
+			res = string;
+		} else {
+			res = string.substring(0, maxSize) + "...";
+		}
+		return res;
+	}
+
+	/**
+	 * Pretty print contact information. This either prints just contactString or, if contact is not
+	 * null, the display name of the contact with the contactString in parentheses.
+	 * 
+	 * @param contactString
+	 * @param contact
+	 *            , optional
+	 * @return
+	 */
+	public static final String prettyPrint(String contactString, Contact contact) {
+		return contact != null ? contact.getDisplayName() + " (" + contactString + ")"
+				: contactString;
 	}
 }

@@ -136,7 +136,7 @@ public class ModuleService extends MAXSModuleIntentService {
 			LOG.d("Bluetooth adapter changed state from '" + prevState + "' to '" + state + "'");
 			Message msgContent = new Message("Bluetooth adapter changed state from '" + prevState
 					+ "' to '" + state + "'");
-			sendMessage(msgContent, mCommandId);
+			send(msgContent, mCommandId);
 
 			// unregister this receiver if we have reached an end state
 			if (stateInt == BluetoothAdapter.STATE_OFF || stateInt == BluetoothAdapter.STATE_ON) {

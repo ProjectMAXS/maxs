@@ -18,7 +18,15 @@
 package org.projectmaxs.module.smssend;
 
 import org.projectmaxs.module.smssend.database.SMSTable;
+import org.projectmaxs.module.smssend.database.SMSTable.SMSInfo;
+import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
+import org.projectmaxs.shared.module.ContactUtil;
+import org.projectmaxs.shared.module.MainUtil;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,22 +34,31 @@ import android.telephony.SmsManager;
 
 public class SMSPendingIntentReceiver extends BroadcastReceiver {
 
-	public static final String SMS_SENT_ACTION = ModuleService.PACKAGE + "SMS_SENT";
-	public static final String SMS_DELIVERED_ACTION = ModuleService.PACKAGE + "SMS_DELIVERED";
+	public static final String SMS_SENT_ACTION = ModuleService.PACKAGE + ".SMS_SENT";
+	public static final String SMS_DELIVERED_ACTION = ModuleService.PACKAGE + ".SMS_DELIVERED";
+
+	private static final Log LOG = Log.getLog();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Message message = null;
 		String action = intent.getAction();
 		int partNum = intent.getIntExtra(ModuleService.PART_NUM_EXTRA, -1);
 		int cmdId = intent.getIntExtra(ModuleService.CMD_ID_EXTRA, -1);
 		int res = getResultCode();
+		LOG.d("onReceive: action=" + action + " partNum=" + partNum + " cmdId=" + cmdId + " res="
+				+ res);
 		SMSTable smsTable = SMSTable.getInstance(context);
+		SMSInfo smsInfo = smsTable.getSMSInfo(cmdId);
+		Contact contact = ContactUtil.getInstance(context).contactByNumber(smsInfo.mReceiver);
 		if (SMS_SENT_ACTION.equals(action)) {
 			String sentIntents = smsTable.getIntents(cmdId, SMSTable.IntentType.SENT);
 			sentIntents = markPart(sentIntents, partNum, smsResultToChar(res));
 			smsTable.updateIntents(cmdId, sentIntents, SMSTable.IntentType.SENT);
 			if (allMarkedNoError(sentIntents)) {
-				// TODO send 'sms sent' message
+				message = new Message("SMS sent to "
+						+ SharedStringUtil.prettyPrint(smsInfo.mReceiver, contact) + ": "
+						+ smsInfo.mShortText);
 			}
 			// TODO Add mechanism to display sent failure reasons
 		} else if (SMS_DELIVERED_ACTION.equals(action)) {
@@ -49,12 +66,15 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 			deliveredIntents = markPart(deliveredIntents, partNum, RESULT_NO_ERROR_CHAR);
 			smsTable.updateIntents(cmdId, deliveredIntents, SMSTable.IntentType.DELIVERED);
 			if (allMarkedNoError(deliveredIntents)) {
-				// TODO send 'sms delivered' message
+				message = new Message("SMS delivered to "
+						+ SharedStringUtil.prettyPrint(smsInfo.mReceiver, contact) + ": "
+						+ smsInfo.mShortText);
 			}
 		} else {
 			throw new IllegalStateException("Unkown action=" + action
 					+ " in SMSPendingIntentReceiver");
 		}
+		if (message != null) MainUtil.send(message, context);
 	}
 
 	private static String markPart(String intents, int partNum, char mark) {
@@ -79,7 +99,7 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 
 	private static char smsResultToChar(int res) {
 		switch (res) {
-		case 0:
+		case Activity.RESULT_OK:
 			return RESULT_NO_ERROR_CHAR;
 		case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 			return RESULT_ERROR_GENERIC_FAILURE_CHAR;

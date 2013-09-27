@@ -27,6 +27,7 @@ import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.mainmodule.RecentContact;
@@ -79,12 +80,12 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	@Override
 	public Message handleCommand(Command command) {
-		String subCommand = command.getSubCommand();
+		final String cmd = command.getCommand();
 
 		Contact contact;
 		String text;
 		String receiver = null;
-		if ("reply".equals(subCommand)) {
+		if ("reply".equals(cmd) || "r".equals(cmd)) {
 			RecentContact recentContact = RecentContactUtil.getRecentContact(this);
 			if (recentContact == null) return new Message("No recent contact");
 			if (recentContact.mContact != null) {
@@ -105,23 +106,29 @@ public class ModuleService extends MAXSModuleIntentService {
 			}
 			text = command.getArgs();
 			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
-		} else if ("send".equals(subCommand)) {
+		} else if ("sms".equals(cmd) || "s".equals(cmd)) {
 			String[] argsSplit = command.getArgs().split("  ", 2);
-			Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(
-					argsSplit[0]);
-			if (contacts == null) {
-				return new Message("Contacts module not installed?");
-			} else if (contacts.size() > 1) {
-				return new Message("Many matching contacts found");
-			} else if (contacts.size() == 0) {
-				return new Message("No matching contact found");
+			if (ContactNumber.isNumber(argsSplit[0])) {
+				contact = ContactUtil.getInstance(this).contactByNumber(argsSplit[0]);
+				if (contact == null) receiver = argsSplit[0];
+			} else {
+				Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(
+						argsSplit[0]);
+				if (contacts == null) {
+					return new Message("Contacts module not installed?");
+				} else if (contacts.size() > 1) {
+					return new Message("Many matching contacts found");
+				} else if (contacts.size() == 0) {
+					return new Message("No matching contact found");
+				}
+				contact = contacts.iterator().next();
 			}
-			contact = contacts.iterator().next();
+			if (contact != null)
+				receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 			text = argsSplit[1];
-			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 			RecentContactUtil.setRecentContact(receiver, contact, this);
 		} else {
-			throw new IllegalStateException("unkown sub command");
+			throw new IllegalStateException("unkown command: " + command);
 		}
 
 		Sms sms = sendSMS(receiver, text, command.getId());
@@ -130,9 +137,8 @@ public class ModuleService extends MAXSModuleIntentService {
 		sendingSMS.addChildElement(sms);
 		sendingSMS.addChildElement(contact);
 
-		String contactString = contact.getDisplayName() != null ? contact.getDisplayName() + " ("
-				+ receiver + ")" : receiver;
-		Message message = new Message("Sending SMS to " + contactString + ": " + text);
+		Message message = new Message("Sending SMS to "
+				+ SharedStringUtil.prettyPrint(receiver, contact) + ": " + text);
 		message.add(sendingSMS);
 		return message;
 	}
@@ -163,8 +169,8 @@ public class ModuleService extends MAXSModuleIntentService {
 		boolean notifyDeliveredEnabled = settings.notifyDeliveredEnabled();
 
 		if (notifySentEnabled || notifyDeliveredEnabled) {
-			smsTable.addSms(cmdId, receiver, text.substring(0, 20), partCount, notifySentEnabled,
-					notifyDeliveredEnabled);
+			smsTable.addSms(cmdId, receiver, SharedStringUtil.shorten(text, 20), partCount,
+					notifySentEnabled, notifyDeliveredEnabled);
 			if (notifySentEnabled) {
 				sentIntents = createPendingIntents(partCount, cmdId,
 						SMSPendingIntentReceiver.SMS_SENT_ACTION,
@@ -190,7 +196,7 @@ public class ModuleService extends MAXSModuleIntentService {
 			Intent intent = new Intent(action);
 			intent.putExtra(PART_NUM_EXTRA, i);
 			intent.putExtra(CMD_ID_EXTRA, cmdId);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCodeStart,
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCodeStart + i,
 					intent, PendingIntent.FLAG_ONE_SHOT);
 			intents.add(pendingIntent);
 		}

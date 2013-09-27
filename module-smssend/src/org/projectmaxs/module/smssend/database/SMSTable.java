@@ -104,6 +104,22 @@ public class SMSTable {
 		return res;
 	}
 
+	public SMSInfo getSMSInfo(int cmdId) {
+		final String[] columns = new String[] { COLUMN_NAME_RECEIVER, COLUMN_NAME_SHORT_TEXT };
+		final String[] selectionArgs = new String[] { Integer.toString(cmdId) };
+		Cursor c = mDatabase.query(TABLE_NAME, columns, COLUMN_NAME_CMD_ID + "=?", selectionArgs,
+				null, null, null);
+
+		SMSInfo res = null;
+		if (c.moveToFirst()) {
+			String receiver = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_RECEIVER));
+			String shortText = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_SHORT_TEXT));
+			res = new SMSInfo(receiver, shortText);
+		}
+		c.close();
+		return res;
+	}
+
 	public void emptyTable() {
 		mDatabase.delete(TABLE_NAME, null, null);
 	}
@@ -129,6 +145,16 @@ public class SMSTable {
 			return COLUMN_NAME_DELIVERED_INTENTS;
 		default:
 			throw new IllegalStateException();
+		}
+	}
+
+	public static class SMSInfo {
+		public final String mReceiver;
+		public final String mShortText;
+
+		public SMSInfo(String receiver, String shortText) {
+			mReceiver = receiver;
+			mShortText = shortText;
 		}
 	}
 }

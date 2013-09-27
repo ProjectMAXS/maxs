@@ -138,7 +138,7 @@ public abstract class MAXSModuleIntentService extends Service {
 		}
 
 		// make sure the id is set
-		sendMessage(message, command.getId());
+		send(message, command.getId());
 	}
 
 	/**
@@ -167,12 +167,12 @@ public abstract class MAXSModuleIntentService extends Service {
 				+ "' not available");
 	}
 
-	public final void sendMessage(org.projectmaxs.shared.global.Message message, int cmdId) {
+	public final void send(org.projectmaxs.shared.global.Message message, int cmdId) {
 		message.setId(cmdId);
-		sendMessage(message);
+		send(message);
 	}
 
-	public final void sendMessage(org.projectmaxs.shared.global.Message message) {
+	public final void send(org.projectmaxs.shared.global.Message message) {
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
 		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 		startService(replyIntent);

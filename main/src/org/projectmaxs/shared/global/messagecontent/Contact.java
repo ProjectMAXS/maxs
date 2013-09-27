@@ -53,8 +53,9 @@ public class Contact extends AbstractElement {
 		mNumbers.add(new ContactNumber(number, type, label, superPrimary));
 	}
 
-	public void addNumber(String number) {
+	public Contact addNumber(String number) {
 		mNumbers.add(new ContactNumber(number));
+		return this;
 	}
 
 	/**

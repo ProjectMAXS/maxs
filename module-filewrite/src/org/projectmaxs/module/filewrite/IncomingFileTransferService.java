@@ -70,7 +70,7 @@ public class IncomingFileTransferService extends Service {
 		}
 	};
 
-	public void sendMessage(Message message) {
+	public void send(Message message) {
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
 		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 		startService(replyIntent);
