@@ -24,10 +24,19 @@ import android.provider.ContactsContract;
 
 public class MAXSContentProviderContract {
 
-	public static final Uri AUTHORITY_URI = Uri.parse("content://" + GlobalConstants.MAIN_PACKAGE);
+	public static final String AUTHORITY = GlobalConstants.MAIN_PACKAGE;
+
+	public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
+
+	public static final String RECENT_CONTACT_PATH = "recent_contact";
+
+	public static final String OUTGOING_FILETRANSFER_PATH = "outgoing_filetransfer";
 
 	public static final Uri RECENT_CONTACT_URI = Uri.withAppendedPath(AUTHORITY_URI,
-			"recent_contact");
+			RECENT_CONTACT_PATH);
+
+	public static final Uri OUTGOING_FILE_TRANSFER_URI = Uri.withAppendedPath(AUTHORITY_URI,
+			OUTGOING_FILETRANSFER_PATH);
 
 	public static final String CONTACT_INFO = "contact_info";
 	public static final String LOOKUP_KEY = ContactsContract.Contacts.LOOKUP_KEY;
@@ -35,4 +44,10 @@ public class MAXSContentProviderContract {
 
 	public static final String[] RECENT_CONTACT_COLUMNS = new String[] { CONTACT_INFO, LOOKUP_KEY,
 			DISPLAY_NAME };
+
+	public static final String OUTGOING_FILETRANSFER_SERVICE = "outgoing_filetransfer";
+	public static final String RECEIVER_INFO = "receiver_info";
+
+	public static final String[] OUTGOING_FILETRANSFER_COLUMNS = new String[] {
+			OUTGOING_FILETRANSFER_SERVICE, RECEIVER_INFO };
 }

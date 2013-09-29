@@ -26,6 +26,10 @@ public class Text extends AbstractElement {
 
 	private final List<FormatedText> mTexts = new LinkedList<FormatedText>();
 
+	public Text(String text) {
+		this(text, true);
+	}
+
 	public Text(String text, boolean newLine) {
 		mTexts.add(new FormatedText(text));
 		if (newLine) mTexts.add(NewLine.getInstance());
@@ -45,13 +49,37 @@ public class Text extends AbstractElement {
 		dest.writeList(mTexts);
 	}
 
-	public void add(String string) {
+	public Text add(String string) {
 		mTexts.add(new FormatedText(string));
+		return this;
 	}
 
-	public void addNewLine(String string) {
+	public Text addNL(String string) {
 		add(string);
 		mTexts.add(NewLine.getInstance());
+		return this;
+	}
+
+	public Text addBold(String string) {
+		mTexts.add(new FormatedText(string).makeBold());
+		return this;
+	}
+
+	public Text addBoldNL(String string) {
+		addBold(string);
+		mTexts.add(NewLine.getInstance());
+		return this;
+	}
+
+	public Text addItalic(String string) {
+		mTexts.add(new FormatedText(string).makeItalic());
+		return this;
+	}
+
+	public Text addItalicNL(String string) {
+		addItalic(string);
+		mTexts.add(NewLine.getInstance());
+		return this;
 	}
 
 	public List<FormatedText> getTexts() {

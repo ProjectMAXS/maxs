@@ -49,6 +49,16 @@ public class FormatedText implements Parcelable {
 		mIsItalic = ParcelUtil.readBool(in);
 	}
 
+	public FormatedText makeBold() {
+		mIsBold = true;
+		return this;
+	}
+
+	public FormatedText makeItalic() {
+		mIsItalic = true;
+		return this;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;

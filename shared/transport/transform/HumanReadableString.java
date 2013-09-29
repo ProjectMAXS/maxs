@@ -93,8 +93,7 @@ public class HumanReadableString {
 	private static void toSB(Element element, StringBuilder sb) {
 		if (!element.isHumanReadable()) return;
 
-		sb.append(element.getHumanReadableName());
-		sb.append('\n');
+		toSB(element.getHumanReadableName(), sb);
 
 		Iterator<AbstractElement> it = element.getChildElementIterator();
 		while (it.hasNext())

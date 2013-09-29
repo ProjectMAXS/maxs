@@ -48,7 +48,6 @@ public class TransportRegistry {
 	private final Set<ChangeListener> mChangeListeners = Collections
 			.newSetFromMap(new ConcurrentHashMap<ChangeListener, Boolean>());
 
-	private final Context mContext;
 	private final TransportRegistryTable mTransportRegistryTable;
 
 	/**
@@ -60,7 +59,6 @@ public class TransportRegistry {
 	 * @param context
 	 */
 	private TransportRegistry(Context context) {
-		mContext = context;
 		mTransportRegistryTable = TransportRegistryTable.getInstance(context);
 
 		// Load the Transport information from the database
@@ -83,7 +81,7 @@ public class TransportRegistry {
 
 	public synchronized List<TransportInformation> getCopyAddListener(ChangeListener listener) {
 		addChangeListener(listener);
-		return new ArrayList(mTransportList);
+		return new ArrayList<TransportInformation>(mTransportList);
 	}
 
 	public void updateStatus(String transportPackage, String status) {
@@ -94,6 +92,13 @@ public class TransportRegistry {
 
 	public String getStatus(String transportPackage) {
 		return mPackageStatus.get(transportPackage);
+	}
+
+	public String getFiletransferService(String pkg) {
+		for (TransportInformation ti : mTransportList) {
+			if (ti.getTransportPackage().equals(pkg)) return ti.getOutgoingFiletransferService();
+		}
+		return null;
 	}
 
 	public synchronized boolean containsTransport(String transportPackage) {

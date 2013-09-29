@@ -27,9 +27,9 @@ public class Element extends AbstractElement {
 
 	protected final List<AbstractElement> mChildElements = new LinkedList<AbstractElement>();
 
-	private final String mHumanReadableName;
+	private final Text mHumanReadableName;
+	private final String mXMLName;
 
-	private String mXMLName;
 	private String mText;
 
 	public Element(String xmlName) {
@@ -42,18 +42,22 @@ public class Element extends AbstractElement {
 		setText(text);
 	}
 
+	public Element(String xmlName, String text, Text humanReadableDescription) {
+		mXMLName = xmlName;
+		mHumanReadableName = humanReadableDescription;
+		setText(text);
+	}
+
 	/**
 	 * Note that text is only meant to be shown in XML, not in human readable
 	 * format. Put all information in humanReadableName.
 	 * 
 	 * @param xmlName
-	 * @param humanReadableName
 	 * @param text
+	 * @param humanReadableDescription
 	 */
-	public Element(String xmlName, String humanReadableName, String text) {
-		mXMLName = xmlName;
-		mHumanReadableName = humanReadableName;
-		setText(text);
+	public Element(String xmlName, String text, String humanReadableDescription) {
+		this(xmlName, text, new Text(humanReadableDescription));
 	}
 
 	public void setText(String text) {
@@ -68,13 +72,13 @@ public class Element extends AbstractElement {
 		return mHumanReadableName != null;
 	}
 
-	public String getHumanReadableName() {
+	public Text getHumanReadableName() {
 		return mHumanReadableName;
 	}
 
 	private Element(Parcel in) {
 		mXMLName = in.readString();
-		mHumanReadableName = in.readString();
+		mHumanReadableName = in.readParcelable(getClass().getClassLoader());
 		mText = in.readString();
 		in.readList(mChildElements, AbstractElement.class.getClassLoader());
 	}
@@ -87,7 +91,7 @@ public class Element extends AbstractElement {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mXMLName);
-		dest.writeString(mHumanReadableName);
+		dest.writeParcelable(mHumanReadableName, flags);
 		dest.writeString(mText);
 		dest.writeList(mChildElements);
 	}

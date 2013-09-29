@@ -40,7 +40,6 @@ public class GlobalConstants {
 	public static final String ACTION_EXPORT_SETTINGS = PACKAGE + ".EXPORT_SETTINGS";
 	public static final String ACTION_IMPORT_SETTINGS = PACKAGE + ".IMPORT_SETTINGS";
 	public static final String ACTION_INCOMING_FILETRANSFER = PACKAGE + ".INCOMING_FILETRANSFER";
-	public static final String ACTION_OUTGOING_FILETRANSFER = PACKAGE + ".OUTGOING_FILETRANSFER";
 	public static final String ACTION_BIND_FILEREAD = PACKAGE + ".ACTION_BIND_FILEREAD";
 	public static final String ACTION_BIND_FILEWRITE = PACKAGE + ".ACTION_BIND_FILEWRITE";
 	public static final String ACTION_PURGE_OLD_COMMANDS = PACKAGE + ".PURGE_OLD_COMMANDS";

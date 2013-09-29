@@ -44,10 +44,9 @@
             android:name=".xmppservice.XMPPFileTransfer$MAXSOutgoingFileTransferService"
             android:permission="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" >
             <intent-filter>
-                <action android:name="org.projectmaxs.OUTGOING_FILETRANSFER" />
+                <action android:name="org.projectmaxs.transport.xmpp.OUTGOING_FILETRANSFER_SERVICE" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
+    <uses-permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE"/>
     <uses-sdk android:minSdkVersion="10"/>
     <application android:label="@string/app_name">
         <activity android:name=".activities.InfoAndSettings" android:exported="true"/>

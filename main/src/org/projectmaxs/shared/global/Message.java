@@ -81,7 +81,7 @@ public class Message implements Parcelable {
 		if (last instanceof Text) {
 			Text lastText = (Text) last;
 			if (newLine) {
-				lastText.addNewLine(string);
+				lastText.addNL(string);
 			} else {
 				lastText.add(string);
 			}

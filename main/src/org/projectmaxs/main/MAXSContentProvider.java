@@ -17,16 +17,25 @@
 
 package org.projectmaxs.main;
 
+import org.projectmaxs.main.database.CommandTable;
+import org.projectmaxs.main.database.CommandTable.Entry;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
 import org.projectmaxs.shared.mainmodule.RecentContact;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 
 public class MAXSContentProvider extends ContentProvider {
+
+	private static final UriMatcher sUriMatcher;
+
+	private static final int RECENT_CONTACT = 1;
+
+	private static final int OUTGOING_FILETRANSFER = 2;
 
 	@Override
 	public boolean onCreate() {
@@ -36,10 +45,10 @@ public class MAXSContentProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
 			String sortOrder) {
-		// Could use UriMatcher here. But since it's not really needed, got with
-		// the simple approach.
-		if (uri.equals(MAXSContentProviderContract.RECENT_CONTACT_URI)) {
-			MatrixCursor c = new MatrixCursor(MAXSContentProviderContract.RECENT_CONTACT_COLUMNS, 1);
+		MatrixCursor c;
+		switch (sUriMatcher.match(uri)) {
+		case RECENT_CONTACT:
+			c = new MatrixCursor(MAXSContentProviderContract.RECENT_CONTACT_COLUMNS, 1);
 			RecentContact recentContact = MAXSService.getRecentContact();
 			if (recentContact == null) return c;
 			// If the recent contact is set, the it must always have also a
@@ -49,10 +58,21 @@ public class MAXSContentProvider extends ContentProvider {
 			String lookupKey = recentContact.mContact.getLookupKey();
 			String displayName = recentContact.mContact.getDisplayName();
 			c.addRow(new Object[] { contactInfo, lookupKey, displayName });
-			return c;
+			break;
+		case OUTGOING_FILETRANSFER:
+			int cmdId = Integer.valueOf(uri.getPathSegments().get(1));
+			Entry entry = CommandTable.getInstance(getContext()).geEntry(cmdId);
+			String service = TransportRegistry.getInstance(getContext()).getFiletransferService(
+					entry.mOrigin.getPackage());
+			String receiverInfo = entry.mOrigin.getOriginIssuerInfo();
+			c = new MatrixCursor(MAXSContentProviderContract.OUTGOING_FILETRANSFER_COLUMNS);
+			c.addRow(new Object[] { service, receiverInfo });
+			break;
+		default:
+			throw new IllegalArgumentException("Unkown URI " + uri);
 		}
 
-		return null;
+		return c;
 	}
 
 	@Override
@@ -73,6 +93,16 @@ public class MAXSContentProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw new IllegalStateException("MAXSContentProvider is a read-only provider");
+	}
+
+	static {
+		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+		sUriMatcher.addURI(MAXSContentProviderContract.AUTHORITY,
+				MAXSContentProviderContract.RECENT_CONTACT_PATH, RECENT_CONTACT);
+		sUriMatcher.addURI(MAXSContentProviderContract.AUTHORITY,
+				MAXSContentProviderContract.OUTGOING_FILETRANSFER_PATH + "/#",
+				OUTGOING_FILETRANSFER);
+
 	}
 
 }

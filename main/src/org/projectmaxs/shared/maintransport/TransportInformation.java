@@ -30,13 +30,16 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 	private final String mTransportPackage;
 	private final String mTransportName;
 	private final boolean mSupportsStatus;
+	private final String mTransportOutgoingFiletransferService;
 	private final List<TransportComponent> mComponents;
 
 	public TransportInformation(String transportPackage, String transportName,
-			boolean supportsStatus, TransportComponent... components) {
+			boolean supportsStatus, String transportOutgoingFiletransferService,
+			TransportComponent... components) {
 		mTransportPackage = transportPackage;
 		mTransportName = transportName;
 		mSupportsStatus = supportsStatus;
+		mTransportOutgoingFiletransferService = transportOutgoingFiletransferService;
 		mComponents = new ArrayList<TransportComponent>(2);
 		for (TransportComponent c : components)
 			mComponents.add(c);
@@ -47,6 +50,7 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 		mTransportPackage = in.readString();
 		mTransportName = in.readString();
 		mSupportsStatus = ParcelUtil.readBool(in);
+		mTransportOutgoingFiletransferService = in.readString();
 		mComponents = in.readArrayList(getClass().getClassLoader());
 	}
 
@@ -60,6 +64,7 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 		dest.writeString(mTransportPackage);
 		dest.writeString(mTransportName);
 		ParcelUtil.writeBool(dest, mSupportsStatus);
+		dest.writeString(mTransportOutgoingFiletransferService);
 		dest.writeList(mComponents);
 	}
 
@@ -69,6 +74,10 @@ public class TransportInformation implements Parcelable, Comparable<TransportInf
 
 	public String getTransportName() {
 		return mTransportName;
+	}
+
+	public String getOutgoingFiletransferService() {
+		return mTransportOutgoingFiletransferService;
 	}
 
 	public boolean supportsStatus() {
