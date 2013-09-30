@@ -23,6 +23,7 @@ import java.util.List;
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.misc.ComposeHelp;
 import org.projectmaxs.main.misc.MAXSBatteryManager;
+import org.projectmaxs.main.misc.StartStopIntentBroadcast;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
@@ -84,6 +85,7 @@ public class MAXSService extends Service {
 		mModuleRegistry = ModuleRegistry.getInstance(this);
 		mTransportRegistry = TransportRegistry.getInstance(this);
 
+		StartStopIntentBroadcast.init();
 		MAXSBatteryManager.init(this);
 		PurgeOldCommandsService.init(this);
 		StatusRegistry.getInstanceAndInit(this);

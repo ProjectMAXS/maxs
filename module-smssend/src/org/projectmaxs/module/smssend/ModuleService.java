@@ -31,7 +31,7 @@ import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.mainmodule.RecentContact;
-import org.projectmaxs.shared.mainmodule.ContactUtil;
+import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 import org.projectmaxs.shared.module.RecentContactUtil;
 import org.projectmaxs.shared.module.SmsWriteUtil;

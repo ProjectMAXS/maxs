@@ -25,7 +25,7 @@ import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
-import org.projectmaxs.shared.mainmodule.ContactUtil;
+import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
 import android.content.Context;

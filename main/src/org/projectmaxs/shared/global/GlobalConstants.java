@@ -43,6 +43,8 @@ public class GlobalConstants {
 	public static final String ACTION_BIND_FILEREAD = PACKAGE + ".ACTION_BIND_FILEREAD";
 	public static final String ACTION_BIND_FILEWRITE = PACKAGE + ".ACTION_BIND_FILEWRITE";
 	public static final String ACTION_PURGE_OLD_COMMANDS = PACKAGE + ".PURGE_OLD_COMMANDS";
+	public static final String ACTION_SERVICE_STARTED = PACKAGE + ".SERVICE_STARTED";
+	public static final String ACTION_SERVICE_STOPED = PACKAGE + ".SERVICE_STOPPED";
 
 	public static final String ACTION_BIND_SERVICE = MAIN_PACKAGE + ".BIND_SERVICE";
 	public static final String ACTION_REGISTER_MODULE = MAIN_PACKAGE + ".REGISTER_MODULE";
