@@ -15,11 +15,10 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.module;
+package org.projectmaxs.shared.global;
 
 import java.io.File;
 
-import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
 

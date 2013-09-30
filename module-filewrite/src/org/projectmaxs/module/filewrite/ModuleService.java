@@ -18,16 +18,12 @@
 package org.projectmaxs.module.filewrite;
 
 import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.aidl.IFileWriteModuleService;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
-import android.os.RemoteException;
 
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
@@ -51,11 +47,6 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:on
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		return mBinder;
-	}
-
-	@Override
 	public Message handleCommand(Command command) {
 		return new Message("Not implemented");
 	}
@@ -65,12 +56,4 @@ public class ModuleService extends MAXSModuleIntentService {
 		LOG.initialize(Settings.getInstance(context));
 	}
 
-	private final IFileWriteModuleService.Stub mBinder = new IFileWriteModuleService.Stub() {
-
-		@Override
-		public String writeFileBytes(String file, byte[] bytes) throws RemoteException {
-			return FileManager.saveToFile(file, bytes);
-		}
-
-	};
 }

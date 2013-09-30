@@ -17,7 +17,7 @@
 
 package org.projectmaxs.module.fileread;
 
-import org.projectmaxs.shared.module.FilereadUtil;
+import org.projectmaxs.shared.global.FilereadUtil;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

@@ -70,6 +70,9 @@ public class SharedPreferencesUtil {
 			if (doNotExport != null && doNotExport.contains(key)) continue;
 
 			Object valueObject = entry.getValue();
+			// Skip this entry if the value is null;
+			if (valueObject == null) continue;
+
 			String valueType = valueObject.getClass().getSimpleName();
 			String value = valueObject.toString();
 			serializer.startTag("", valueType);

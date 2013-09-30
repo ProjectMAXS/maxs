@@ -49,8 +49,10 @@ public class ImportExportSettings extends Activity {
 	private static final Handler HANDLER = new Handler();
 	private static final Log LOG = Log.getLog();
 
-	EditText mImportDirectory;
-	static TextView sImportExportStatus;
+	private static TextView sImportExportStatus;
+
+	private EditText mImportDirectory;
+	private PackageManagerUtil mPackageManagerUtil;
 
 	public static void appendStatus(final String string) {
 		// make sure the string is set on the UI (= main) thread
@@ -72,13 +74,13 @@ public class ImportExportSettings extends Activity {
 		setContentView(R.layout.importexportsettings);
 		mImportDirectory = (EditText) findViewById(R.id.importDirectory);
 		sImportExportStatus = (TextView) findViewById(R.id.textImportExportStatus);
+		mPackageManagerUtil = PackageManagerUtil.getInstance(this);
 	}
 
 	public void exportAll(View view) {
 		sImportExportStatus.setText("");
 
-		if (!PackageManagerUtil.getInstance(this).isPackageInstalled(
-				GlobalConstants.FILEWRITE_MODULE_PACKAGE)) {
+		if (!mPackageManagerUtil.isPackageInstalled(GlobalConstants.FILEWRITE_MODULE_PACKAGE)) {
 			appendStatus("Required module " + GlobalConstants.FILEWRITE_MODULE_PACKAGE
 					+ " is not installed");
 			return;
@@ -101,6 +103,21 @@ public class ImportExportSettings extends Activity {
 		final Intent intent = new Intent(GlobalConstants.ACTION_EXPORT_SETTINGS);
 		intent.putExtra(GlobalConstants.EXTRA_FILE, exportDir.getAbsolutePath());
 		sendBroadcast(intent);
+	}
+
+	public void importAll(View view) {
+		sImportExportStatus.setText("");
+
+		if (!mPackageManagerUtil.isPackageInstalled("TODO")) {
+
+		}
+
+		File importDirectory = new File(mImportDirectory.getText().toString());
+		if (!importDirectory.isDirectory()) {
+			appendStatus(importDirectory.getAbsolutePath() + " is not a directory");
+			return;
+		}
+
 	}
 
 	public static void tryToExport(final String file, final byte[] bytes, Context context) {

@@ -7,6 +7,7 @@
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
     <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
+    <permission android:name="org.projectmaxs.permission.FILE_WRITE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
@@ -24,6 +25,11 @@
         <service android:name=".ModuleService" android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+                <action android:name="org.projectmaxs.ACTION_BIND_FILEWRITE"/>
+            </intent-filter>
+        </service>
+        <service android:name=".FileWriteService" android:permission="org.projectmaxs.permission.FILE_WRITE">
+            <intent-filter>
                 <action android:name="org.projectmaxs.ACTION_BIND_FILEWRITE"/>
             </intent-filter>
         </service>

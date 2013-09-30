@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.module;
+package org.projectmaxs.shared.mainmodule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.PackageManagerUtil;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PackageManagerUtil;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
