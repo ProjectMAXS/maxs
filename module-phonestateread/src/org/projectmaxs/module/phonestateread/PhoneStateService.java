@@ -48,6 +48,7 @@ public class PhoneStateService extends Service {
 
 		boolean stickyStart = true;
 		if (intent == null) {
+			LOG.d("onStartCommand: null intent, starting service");
 			startService();
 			return START_STICKY;
 		}
@@ -72,8 +73,10 @@ public class PhoneStateService extends Service {
 		public void onCallStateChanged(int state, String incomingNumber) {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_IDLE:
-				mManageIncoming = true;
-				send(new Message("Stopped calling"));
+				if (!mManageIncoming) {
+					mManageIncoming = true;
+					send(new Message("Stopped calling"));
+				}
 				break;
 			case TelephonyManager.CALL_STATE_OFFHOOK:
 				mManageIncoming = true;
