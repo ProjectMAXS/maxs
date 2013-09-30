@@ -50,9 +50,16 @@ public class IncomingFileTransferService extends Service {
 		public ParcelFileDescriptor incomingFileTransfer(String filename, long size,
 				String description) throws RemoteException {
 
+			if (!GlobalConstants.MAXS_EXTERNAL_STORAGE.mkdirs()) {
+				LOG.e("incomingFileTransfer: Could not create storage dir");
+				return null;
+			}
+
+			final File inFile = new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, filename);
+
 			OutputStream os;
 			try {
-				os = new FileOutputStream(new File(GlobalConstants.MAXS_EXTERNAL_STORAGE, filename));
+				os = new FileOutputStream(inFile);
 			} catch (FileNotFoundException e) {
 				LOG.e("incomingFileTransfer", e);
 				return null;

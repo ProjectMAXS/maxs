@@ -102,12 +102,6 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		}
 		final InputStream is = isTmp;
 
-		// final String content = "foobartest\ntest\n123\n";
-		// final String filename = "foo";
-		// final String description = "more foobar";
-		// final InputStream is = new StringBufferInputStream(content);
-		// final long size = content.length();
-
 		new AsyncServiceTask<IMAXSIncomingFileTransferService>(new Intent(
 				GlobalConstants.ACTION_INCOMING_FILETRANSFER), mContext) {
 
