@@ -4,7 +4,7 @@ MODULES_MAKEFILE := $(foreach mod, $(MODULES), $(mod)/Makefile)
 MIN_DEPLOY := main module-bluetooth transport-xmpp
 ALL := main $(MODULES) $(TRANSPORTS)
 
-.PHONY: all $(ALL) clean distclean eclipse mindeploy parallel release
+.PHONY: all $(ALL) clean distclean eclipse makefiles mindeploy parallel release
 
 all: $(ALL) eclipse
 
@@ -30,7 +30,9 @@ parallel:
 release:
 	TARGET=release $(MAKE) $(ALL)
 
-$(ALL): $(MODULES_MAKEFILE)
+makefiles: $(MODULES_MAKEFILE)
+
+$(ALL): makefiles
 	cd $@ && $(MAKE) $(TARGET)
 
 module-%/Makefile:
