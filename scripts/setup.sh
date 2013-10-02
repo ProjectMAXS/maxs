@@ -2,6 +2,7 @@
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASEDIR="$(cd ${SCRIPTDIR}/.. && pwd)"
+HOMEPAGE="${BASEDIR}/homepage"
 
 if [[ ! -f ${BASEDIR}/config ]]; then
     echo "config not found"

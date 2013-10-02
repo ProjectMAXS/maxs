@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. setup.sh
+. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
 
 if [[ -z $1 ]]; then
     echo "version not set"
