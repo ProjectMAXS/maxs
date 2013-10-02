@@ -231,9 +231,18 @@ public class XMPPService {
 
 			try {
 				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
-			} catch (XMPPException e) {
-				LOG.w("sendAsMessage: MultipleRecipientManager exception", e);
+			} catch (XMPPException e1) {
+				LOG.w("sendAsMessage: MultipleRecipientManager exception", e1);
 				return;
+			} catch (IllegalStateException e2) {
+				if ("Not connected to server.".equals(e2.getMessage())) {
+					LOG.i("sendAsMessage: Got IllegalStateException (Not connected), adding message to DB");
+					mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE,
+							originIssuerInfo, originId);
+					return;
+				} else {
+					throw e2;
+				}
 			}
 		} else {
 			packet.setTo(to);
