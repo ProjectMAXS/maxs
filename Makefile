@@ -3,8 +3,9 @@ TRANSPORTS := $(shell find -mindepth 1 -maxdepth 1 -type d -name 'transport-*')
 MODULES_MAKEFILE := $(foreach mod, $(MODULES), $(mod)/Makefile)
 MIN_DEPLOY := main module-bluetooth transport-xmpp
 ALL := main $(MODULES) $(TRANSPORTS)
+TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
 
-.PHONY: all $(ALL) clean distclean eclipse makefiles mindeploy parallel release
+.PHONY: all $(ALL) clean distclean eclipse makefiles mindeploy parallel release tabletdeploy
 
 all: $(ALL) eclipse
 
@@ -23,6 +24,9 @@ eclipse:
 
 mindeploy:
 	TARGET=deploy $(MAKE) $(MIN_DEPLOY)
+
+tabletdeploy:
+	TARGET=deploy $(MAKE) $(TABLET_DEPLOY)
 
 parallel:
 	$(MAKE) -j$(shell grep -c ^processor /proc/cpuinfo)
