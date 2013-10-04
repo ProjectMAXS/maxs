@@ -56,7 +56,7 @@ public class PurgeOldCommandsService extends IntentService {
 		commandTable.purgeEntries(oldCommandIds);
 
 		Intent intent = new Intent(GlobalConstants.ACTION_PURGE_OLD_COMMANDS);
-		intent.putExtra(GlobalConstants.EXTRA_CONTACT, oldCommandIds);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, oldCommandIds);
 		sendBroadcast(intent);
 	}
 }
