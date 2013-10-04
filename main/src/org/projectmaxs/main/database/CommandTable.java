@@ -179,7 +179,7 @@ public class CommandTable {
 
 	public void purgeEntries(int[] commandIds) {
 		String[] commandIdsStrings = SharedStringUtil.toStringArray(commandIds);
-		mDatabase.delete(TABLE_NAME, COLUMN_NAME_COMMAND_ID + "IN ( ? )",
+		mDatabase.delete(TABLE_NAME, COLUMN_NAME_COMMAND_ID + " IN ( ? )",
 				new String[] { TextUtils.join(",", commandIdsStrings) });
 	}
 
