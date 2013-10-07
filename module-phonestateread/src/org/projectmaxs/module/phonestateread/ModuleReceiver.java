@@ -20,7 +20,6 @@ package org.projectmaxs.module.phonestateread;
 import java.util.List;
 
 import org.projectmaxs.shared.global.messagecontent.CommandHelp;
-import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.module.MAXSModuleReceiver;
 
@@ -45,8 +44,5 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	}
 
 	@Override
-	public void addHelp(List<CommandHelp> help, Context context) {
-		help.add(new CommandHelp("phonestateread", "status", ArgType.NONE,
-				"Show the current status of the phonestateread adapter"));
-	}
+	public void addHelp(List<CommandHelp> help, Context context) {}
 }

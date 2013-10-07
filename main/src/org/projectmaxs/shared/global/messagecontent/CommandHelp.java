@@ -84,7 +84,7 @@ public class CommandHelp extends AbstractElement {
 	};
 
 	public static enum ArgType {
-		NUMBER, CONTACT_INFO, CONTACT_NICKNAME, CONTACT_NAME, OTHER_STRING, NONE,
+		FILE, PATH, NUMBER, CONTACT_INFO, CONTACT_NICKNAME, CONTACT_NAME, OTHER_STRING, NONE,
 	}
 
 	@Override

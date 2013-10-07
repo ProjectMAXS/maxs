@@ -38,11 +38,11 @@ public class ModuleService extends MAXSModuleIntentService {
 			"phonestateread",                             // Name of the Module (if omitted, last substring after '.' is used)
 			new ModuleInformation.Command[] {        // Array of commands provided by the module
 					new ModuleInformation.Command(
-							"phonestateread",             // Command name
-							"bt",                    // Short command name
-							"status",                // Default subcommand without arguments
+							"TODOphonestateread",             // Command name
+							null,                    // Short command name
+							null,                // Default subcommand without arguments
 							null,                    // Default subcommand with arguments
-							new String[] { "status" }),  // Array of provided subcommands 
+							new String[] { "TODOstatus" }),  // Array of provided subcommands
 			});
 	// @formatter:on
 

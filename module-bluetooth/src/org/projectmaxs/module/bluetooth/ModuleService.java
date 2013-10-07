@@ -47,7 +47,7 @@ public class ModuleService extends MAXSModuleIntentService {
 							"bt",                    // Short command name
 							"status",                // Default subcommand without arguments
 							null,                    // Default subcommand with arguments
-							new String[] { "status" }),  // Array of provided subcommands 
+							new String[] { "status" }),  // Array of provided subcommands
 			});
 	// @formatter:on
 

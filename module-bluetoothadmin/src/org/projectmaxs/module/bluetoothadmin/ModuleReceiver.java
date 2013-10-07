@@ -17,6 +17,10 @@
 
 package org.projectmaxs.module.bluetoothadmin;
 
+import java.util.List;
+
+import org.projectmaxs.shared.global.messagecontent.CommandHelp;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.module.MAXSModuleReceiver;
 
@@ -38,5 +42,13 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	@Override
 	public SharedPreferences getSharedPreferences(Context context) {
 		return Settings.getInstance(context).getSharedPreferences();
+	}
+
+	@Override
+	public void addHelp(List<CommandHelp> help, Context context) {
+		help.add(new CommandHelp("bluetooth", "enable", ArgType.NONE,
+				"Enable the bluetooth adapter"));
+		help.add(new CommandHelp("bluetooth", "disable", ArgType.NONE,
+				"Disable the bluetooth adapter"));
 	}
 }

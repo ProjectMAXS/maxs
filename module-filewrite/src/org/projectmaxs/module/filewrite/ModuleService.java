@@ -38,11 +38,11 @@ public class ModuleService extends MAXSModuleIntentService {
 			"filewrite",                             // Name of the Module (if omitted, last substring after '.' is used)
 			new ModuleInformation.Command[] {        // Array of commands provided by the module
 					new ModuleInformation.Command(
-							"file",             // Command name
-							"f",                    // Short command name
+							"rm",             // Command name
+							null,                    // Short command name
 							null,                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
-							new String[] { "delete" }),  // Array of provided subcommands 
+							"path",                    // Default subcommand with arguments
+							new String[] { "path" }),  // Array of provided subcommands
 			});
 	// @formatter:on
 
