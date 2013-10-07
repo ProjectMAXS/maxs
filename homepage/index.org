@@ -4,19 +4,47 @@
 #+OPTIONS:      H:2 num:nil toc:nil author:nil
 #+OPTIONS:      timestamp:nil
 #+STARTUP:      noindent
-#+INFOJS_OPT:   view:t toc:t ltoc:t mouse:underline buttons:0 path:http://thomasf.github.io/solarized-css/org-info.min.js
+#+INFOJS_OPT:   view:showall toc:nil ltoc:nil mouse:underline buttons:t path:http://thomasf.github.io/solarized-css/org-info.min.js
 #+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
 
-* Project MAXS
+* Introduction / About
 
-foo bar
+#+INCLUDE: ../documentation/introduction.org
 
-* Donate
+* Support / Help
 
-Via Bitcoin:
+Join the [[*Contact][IRC channel]] and ask for help. A full =adb log= will be helpfull.
 
 * Contact
 
-Join #maxs 
+Feel free to join  [[irc://chat.freenode.net/maxs][~#maxs~]] (@freenode). Questions and suggestions are
+welcome, but remeber that this is IRC and it may take a while (~hours,
+days) to get an answer.
 
-Remeber, this is IRC. :)
+* Donate
+
+Via Bitcoin: [[bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt][1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt]]
+
+* Acknowledgements
+
+- [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
+- Thomas Frösasman for the [[http://thomasf.github.io/solarized-css/][Solarized CSS colorschemes]]
+- The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
+
+#+BEGIN_HTML
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["trackPageView"]);
+  _paq.push(["enableLinkTracking"]);
+
+  (function() {
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://piwik.geekplace.eu/";
+    _paq.push(["setTrackerUrl", u+"piwik.php"]);
+    _paq.push(["setSiteId", "1"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Piwik Code -->
+#+END_HTML
