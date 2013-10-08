@@ -4,12 +4,17 @@
 #+OPTIONS:      H:2 num:nil toc:nil author:nil
 #+OPTIONS:      timestamp:nil
 #+STARTUP:      noindent
-#+INFOJS_OPT:   view:showall toc:nil ltoc:nil mouse:underline buttons:t path:http://thomasf.github.io/solarized-css/org-info.min.js
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
 
-* Introduction / About
+* Warning!
 
-#+INCLUDE: ../documentation/introduction.org
+*MAXS development is in an early stage!* MAXS and its components is
+therefore only recommended for advanced and experienced users. We are
+currently looking for beta testers. [[*Contact][Contact us]] if you want to join the
+beta test.
+
+* Documentation
+
+- [[file:../documentation/introduction.org][Introduction]]
 
 * Support / Help
 
@@ -27,9 +32,9 @@ Via Bitcoin: [[bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt][1AUuXzvVUh1HMb2kVYnDW
 
 * Acknowledgements
 
+- The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
 - Thomas Frösasman for the [[http://thomasf.github.io/solarized-css/][Solarized CSS colorschemes]]
-- The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 
 #+BEGIN_HTML
 <!-- Piwik -->
