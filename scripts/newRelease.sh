@@ -38,6 +38,7 @@ for m in $MODULES ; do
     update_version $m $nextVersion
 done
 
+git commit -a -m "MAXS Pre-Release $releaseVersion"
 
 
 
