@@ -6,7 +6,7 @@ DEBUG_APK := bin/MAXS-debug.apk
 all: main
 
 main: resources
-	ant $(ANT_BUILD_TARGET)
+	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
 
 prebuild: resources
 

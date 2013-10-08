@@ -15,7 +15,7 @@ ANT_BUILD_TARGET ?= debug
 all: transport
 
 transport: prebuild
-	ant $(ANT_BUILD_TARGET)
+	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
 
 release:
 	ANT_BUILD_TARGET=release $(MAKE) transport
