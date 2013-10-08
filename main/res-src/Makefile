@@ -1,4 +1,4 @@
-SVGS := $(shell find . -type f -name '*.svg')
+SVGS := $(shell find . -name '*.svg')
 PNGS := $(foreach png,$(SVGS:.svg=.png),../res/$(png))
 
 .PHONEY: all clean

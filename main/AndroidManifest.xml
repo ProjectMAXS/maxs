@@ -14,7 +14,9 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_TRANSPORT"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <application android:label="@string/app_name" android:icon="@drawable/ic_maxs" android:logo="@drawable/ic_maxs">
+    <application android:label="@string/app_name"
+		 android:icon="@drawable/ic_maxs"
+		 android:logo="@drawable/ic_maxs">
         <activity android:name=".activities.MainActivity"
                   android:label="@string/app_name">
             <intent-filter>

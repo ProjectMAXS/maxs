@@ -1,19 +1,20 @@
 BASE := $(shell readlink -f ../)
-MAIN := $(BASE)/main/
-SHARED := $(BASE)/shared/
+MAIN := $(BASE)/main
+SHARED := $(BASE)/shared
 SHARED_SOURCE := src/org/projectmaxs/shared
 SHARED_GLOBAL_SOURCE := $(SHARED_SOURCE)/global
 SHARED_MODULE_SOURCE := $(SHARED_SOURCE)/module
 SHARED_MAINMODULE_SOURCE := $(SHARED_SOURCE)/mainmodule
+SHARED_RES_SRC_MAKEFILE := res-src/Makefile
 MODULE_NAME := $(shell basename `pwd`)
 DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy distclean eclipse release shared $(DEBUG_APK)
+.PHONY: all clean deploy distclean eclipse prebuild release resources shared $(DEBUG_APK)
 
 all: module
 
-module: shared
+module: prebuild
 	ant $(ANT_BUILD_TARGET)
 
 release:
@@ -32,8 +33,14 @@ clean:
 	ant clean
 
 distclean: clean
+	cd res-src && $(MAKE) clean
 
-shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINMODULE_SOURCE) $(SHARED_MODULE_SOURCE)
+prebuild: shared resources
+
+resources: shared
+	cd res-src && $(MAKE)
+
+shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINMODULE_SOURCE) $(SHARED_MODULE_SOURCE) $(SHARED_RES_SRC_MAKEFILE)
 
 $(SHARED_SOURCE):
 	mkdir $@
@@ -46,6 +53,10 @@ $(SHARED_MAINMODULE_SOURCE): | $(SHARED_SOURCE)
 
 $(SHARED_MODULE_SOURCE): | $(SHARED_SOURCE)
 	ln -rs $(SHARED)/module $(SHARED_SOURCE)
+
+$(SHARED_RES_SRC_MAKEFILE): $(MAIN)/res-src/Makefile
+	[ -d res-src ] || mkdir res-src
+	cp $^ $@
 
 eclipse: .settings .classpath .project shared
 
