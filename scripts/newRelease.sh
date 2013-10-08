@@ -9,6 +9,7 @@ if [[ $# -ne 2 ]]; then
     exit 1
 fi
 
+set -x
 set -e
 
 releaseVersion=${1}
@@ -23,9 +24,9 @@ for m in $MODULES ; do
 done
 
 if git diff --exit-code ; then
-    git commit -a -m "MAXS Release $releaseVersion"
-else
     echo "No unstaged changes. Not creating a release commit"
+else
+    git commit -a -m "MAXS Release $releaseVersion"
 fi
 git tag -s -u flo@geekplace.eu -m "MAXS Release $releaseVersion" $releaseVersion
 
