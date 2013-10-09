@@ -132,3 +132,6 @@ system (e.g. XMPP presence status)
 [22:08:20] My Droid is now Available (95-100% - Battery)
 #+END_SRC
 
+* What are the available commands?
+
+Try sending simply =help= as command.

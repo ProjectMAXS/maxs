@@ -50,7 +50,8 @@ Store links:
 
 * Support / Help
 
-Join the [[*Contact][IRC channel]] and ask for help. A full =adb log= will be helpfull.
+Join the [[*Contact][IRC channel]] and ask for help. A full =adb log= will be
+helpful.
 
 * Contact
 
@@ -68,20 +69,4 @@ Via Bitcoin: [[bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt][1AUuXzvVUh1HMb2kVYnDW
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
 - Thomas Frösasman for the [[http://thomasf.github.io/solarized-css/][Solarized CSS colorschemes]]
 
-#+BEGIN_HTML
-<!-- Piwik -->
-<script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(["trackPageView"]);
-  _paq.push(["enableLinkTracking"]);
-
-  (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://piwik.geekplace.eu/";
-    _paq.push(["setTrackerUrl", u+"piwik.php"]);
-    _paq.push(["setSiteId", "1"]);
-    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
-    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<!-- End Piwik Code -->
 #+END_HTML
