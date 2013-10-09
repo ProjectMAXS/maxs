@@ -14,7 +14,39 @@ beta test.
 
 * Documentation
 
-- [[file:../documentation/introduction.org][Introduction]]
+Get an overview about MAXS by having at look at the [[file:../documentation/introduction.org][Introduction]]
+
+* Alpha Testing
+
+As said before, MAXS is currently alpha quality software. If you are
+adventurous enough to test, either grab your release from f-droid or
+[[*Contact][contact us]] to become a member of the Google+ "MAXS Alpha Testers"
+community. Then install the components by using the following Play
+Store links:
+
+*Main*
+
+- [[https://play.google.com/apps/testing/org.projectmaxs.main][org.projectmaxs.main]]
+
+*Transport*
+
+- [[https://play.google.com/apps/testing/org.projectmaxs.transport.xmpp][org.projectmaxs.transport.xmpp]]
+
+*Modules*
+
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.bluetooth][org.projectmaxs.module.bluetooth]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.bluetoothadmin][org.projectmaxs.module.bluetoothadmin]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.clipboard][org.projectmaxs.module.clipboard]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.contactsread][org.projectmaxs.module.contactsread]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.fileread][org.projectmaxs.module.fileread]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.filewrite][org.projectmaxs.module.filewrite]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.phonestateread][org.projectmaxs.module.phonestateread]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.ringermode][org.projectmaxs.module.ringermode]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.smsnotify][org.projectmaxs.module.smsnotify]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.smsread][org.projectmaxs.module.smsread]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
+
 
 * Support / Help
 
