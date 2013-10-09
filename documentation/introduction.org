@@ -7,8 +7,11 @@
 * What is MAXS?
 
 MAXS is an acronym for *M* odular *A* ndroid *X* MPP *S* ervice. It is
-an Android service that creates an XMPP connection and allows some
-predefined JIDs, called /Master JIDs/, to use this service.
+an Android service that creates a XMPP connection and allows some
+predefined JIDs, called /Master JIDs/, to use this service. Simple
+commands, e.g. "bluetooth enable" allow you to control your Android
+device. Furthermore, MAXS will notify you about new events on the
+device, like an incoming phone call or SMS.
 
 MAXS is heavily inspired by GTalkSMS, and hence it shares many ideas
 with GTalkSMS. In fact we hope that MAXS will share the same feature
@@ -114,9 +117,18 @@ for =reply= is =r=. And since =to= is the default sub command for
 #+BEGIN_SRC
 [20:39:48] AndroidDevice: New SMS Received
 Anette Mustermann (+49424242): How are you?
-[20:39:52]: AndroidDevice: Recent contact: Anette Mustermann (+49424242)
+[20:39:52] AndroidDevice: Recent contact: Anette Mustermann (+49424242)
 [20:40:19] User: r Fine thanks :)
 [20:40:22] AndroidDevice: SMS sent to Anette Mustermann (+49424242): Fine thanks :)
 [20:40:27] AndroidDevice: SMS delivered to Anette Mustermann (+49424242): Fine thanks :)
+#+END_SRC
+
+** Display the current battery status
+
+MAXS displays a few status items in the status string of your IM
+system (e.g. XMPP presence status)
+
+#+BEGIN_SRC
+[22:08:20] My Droid is now Available (95-100% - Battery)
 #+END_SRC
 
