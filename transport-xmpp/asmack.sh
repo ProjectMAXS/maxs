@@ -1,7 +1,8 @@
 #!/bin/bash
 [[ $1 == "-d" ]] && set -x
 
-. config
+# config
+ASMACK_RELEASES=http://asmack.freakempire.de/
 
 ASMACK_JAR_SHA256=$(cd libs && ls ../build/hashes/asmack-android-*.jar.sha256)
 # TODO check that only one asmack sha256 file is found
