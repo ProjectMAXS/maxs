@@ -20,14 +20,11 @@ module: prebuild
 release:
 	ANT_BUILD_TARGET=release make module
 
-deploy: .lastDeployed
+deploy: $(DEBUG_APK)
+	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 $(DEBUG_APK):
 	make module ANT_BUILD_TARGET=debug
-
-.lastDeployed: $(DEBUG_APK)
-	touch $@
-	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 clean:
 	ant clean

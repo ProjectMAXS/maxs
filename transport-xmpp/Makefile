@@ -23,14 +23,11 @@ release:
 asmack:
 	./asmack.sh
 
-deploy: .lastDeployed
+deploy: $(DEBUG_APK)
+	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 $(DEBUG_APK):
 	$(MAKE) transport ANT_BUILD_TARGET=debug
-
-.lastDeployed: $(DEBUG_APK)
-	touch $@
-	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 clean:
 	ant clean
