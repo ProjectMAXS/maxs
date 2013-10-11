@@ -467,7 +467,8 @@ public class XMPPService {
 
 		if (!con.isAuthenticated()) {
 			try {
-				con.login(mSettings.getJid(), mSettings.getPassword(), "MAXS");
+				con.login(StringUtils.parseName(mSettings.getJid()), mSettings.getPassword(),
+						"MAXS");
 			} catch (XMPPException e) {
 				String exceptionMessage = e.getMessage();
 				// Schedule a reconnect on certain exception causes
