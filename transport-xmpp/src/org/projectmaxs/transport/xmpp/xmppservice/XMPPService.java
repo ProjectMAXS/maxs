@@ -431,16 +431,16 @@ public class XMPPService {
 
 		newState(State.Connecting);
 
-		XMPPConnection con;
+		XMPPConnection connection;
 		boolean newConnection = false;
 
 		try {
 			if (mConnectionConfiguration == null
 					|| mConnectionConfiguration != mSettings.getConnectionConfiguration()) {
-				con = new XMPPConnection(mSettings.getConnectionConfiguration());
+				connection = new XMPPConnection(mSettings.getConnectionConfiguration());
 				newConnection = true;
 			} else {
-				con = mConnection;
+				connection = mConnection;
 			}
 		} catch (XMPPException e) {
 			String exceptionMessage = e.getMessage();
@@ -458,16 +458,16 @@ public class XMPPService {
 
 		LOG.d("tryToConnect: connect");
 		try {
-			con.connect();
+			connection.connect();
 		} catch (XMPPException e) {
 			LOG.e("tryToConnect: Exception from connect()", e);
 			scheduleReconnect();
 			return;
 		}
 
-		if (!con.isAuthenticated()) {
+		if (!connection.isAuthenticated()) {
 			try {
-				con.login(StringUtils.parseName(mSettings.getJid()), mSettings.getPassword(),
+				connection.login(StringUtils.parseName(mSettings.getJid()), mSettings.getPassword(),
 						"MAXS");
 			} catch (XMPPException e) {
 				String exceptionMessage = e.getMessage();
@@ -486,7 +486,7 @@ public class XMPPService {
 
 		// Login Successful
 
-		mConnection = con;
+		mConnection = connection;
 
 		if (newConnection) {
 			for (StateChangeListener l : mStateChangeListeners) {
