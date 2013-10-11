@@ -1,5 +1,10 @@
 #!/bin/bash
-set -x
+
+. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
+
+cd "${BASEDIR}"
+
+set -e
 
 SRC_NAME=bluetooth
 SRC_MODULE=module-${SRC_NAME}
