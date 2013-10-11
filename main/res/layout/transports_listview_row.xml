@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/textTransportName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Transport Name"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/textTransportPackage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="org.projectmaxs.transport.foobar"
             android:textAppearance="?android:attr/textAppearanceSmall" />
+
         <TextView
             android:id="@+id/textTransportStatus"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="Very long text of the status of the transport. Hopefully the &apos;more&apos; button doesn&apos;t get eaten up by it"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/buttonTransportMore"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_weight="1"
         android:text="More" />
 
 </LinearLayout>
