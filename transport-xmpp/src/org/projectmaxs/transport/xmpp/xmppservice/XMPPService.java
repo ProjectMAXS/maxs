@@ -293,13 +293,19 @@ public class XMPPService {
 		mHandler.postDelayed(mReconnectRunnable, 10000);
 	}
 
+	private void newState(State newState) {
+		newState(newState, "");
+	}
+
 	/**
 	 * Notifies the StateChangeListeners about the new state and sets mState to
 	 * newState. Does not add a log message.
 	 * 
 	 * @param newState
+	 * @param reason
+	 *            the reason for the new state (only used is newState is Disconnected)
 	 */
-	private void newState(State newState) {
+	private void newState(State newState, String reason) {
 		switch (newState) {
 		case Connected:
 			for (StateChangeListener l : mStateChangeListeners)
@@ -308,7 +314,7 @@ public class XMPPService {
 			break;
 		case Disconnected:
 			for (StateChangeListener l : mStateChangeListeners) {
-				l.disconnected();
+				l.disconnected(reason);
 				if (mConnection != null && mConnected) l.disconnected(mConnection);
 			}
 			mConnected = false;
@@ -445,7 +451,7 @@ public class XMPPService {
 				scheduleReconnect();
 			} else {
 				LOG.e("tryToConnect: connection configuration failed. New State: Disconnected", e);
-				newState(State.Disconnected);
+				newState(State.Disconnected, e.getLocalizedMessage());
 			}
 			return;
 		}
@@ -471,7 +477,7 @@ public class XMPPService {
 					scheduleReconnect();
 				} else {
 					LOG.e("tryToConnect: login failed. New State: Disconnected", e);
-					newState(State.Disconnected);
+					newState(State.Disconnected, e.getLocalizedMessage());
 				}
 				return;
 			}

@@ -37,8 +37,10 @@ public class StateChangeListener {
 	 * Invoked when get return to disconnected state, but there was never an
 	 * active connection. For example when something in the connection stage
 	 * went wrong
+	 *
+	 * @param reason
 	 */
-	public void disconnected() {}
+	public void disconnected(String reason) {}
 
 	// These callback methods don't get access to the connection instance
 	// because they will be called in the middle of a state change

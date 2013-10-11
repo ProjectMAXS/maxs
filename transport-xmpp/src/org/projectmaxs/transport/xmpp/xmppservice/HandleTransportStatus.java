@@ -54,8 +54,12 @@ public class HandleTransportStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void disconnected() {
-		setAndSendStatus("disconnected");
+	public void disconnected(String reason) {
+		if (reason.isEmpty()) {
+			setAndSendStatus("disconnected");
+		} else {
+			setAndSendStatus("disconnected: " + reason);
+		}
 	}
 
 	@Override
