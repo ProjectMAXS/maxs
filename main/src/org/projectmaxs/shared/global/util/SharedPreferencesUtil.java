@@ -104,16 +104,18 @@ public class SharedPreferencesUtil {
 		XmlPullParser parser = Xml.newPullParser();
 		parser.setInput(in);
 		int eventType = parser.getEventType();
-		boolean done = false;
 		String name = null;
 		String key = null;
-		while (eventType != XmlPullParser.END_DOCUMENT && !done) {
+		while (eventType != XmlPullParser.END_DOCUMENT) {
 			switch (eventType) {
 			case XmlPullParser.START_TAG:
 				name = parser.getName();
 				key = parser.getAttributeValue("", NAME);
 				break;
 			case XmlPullParser.TEXT:
+				// The parser is reading text outside an element if name is null,
+				// so simply ignore this text part (which is usually something like '\n')
+				if (name == null) break;
 				String text = parser.getText();
 				if (BOOLEAN.equals(name)) {
 					editor.putBoolean(key, Boolean.parseBoolean(text));
@@ -125,13 +127,12 @@ public class SharedPreferencesUtil {
 					editor.putLong(key, Long.parseLong(text));
 				} else if (STRING.equals(name)) {
 					editor.putString(key, text);
-				} else {
+				} else if (!PREFERENCES.equals(name)) {
 					throw new Exception("Unkown type " + name);
 				}
 				break;
 			case XmlPullParser.END_TAG:
-				name = parser.getName();
-				if (PREFERENCES.equals(name)) done = true;
+				name = null;
 				break;
 			}
 			eventType = parser.next();

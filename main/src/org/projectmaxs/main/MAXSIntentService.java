@@ -43,11 +43,11 @@ public class MAXSIntentService extends IntentService {
 			// serviceConnection errors.
 			ImportExportSettings.tryToExport(file, content.getBytes(), getApplicationContext());
 		} else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
-			String status = intent.getStringExtra(GlobalConstants.EXTRA_COMMAND);
+			final String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			if (status == null) return;
 			ImportExportSettings.appendStatus(status);
 		} else {
-			// TODO throw new IllegalStateException();
+			throw new IllegalStateException("unkown intent action: " + intent.getAction());
 		}
 	}
 }

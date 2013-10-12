@@ -6,6 +6,7 @@
     <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
+    <permission android:name="org.projectmaxs.permission.USE_FILEREAD"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
@@ -28,6 +29,11 @@
             android:permission="org.projectmaxs.permission.USE_MODULE">
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+            </intent-filter>
+        </service>
+        <service android:name=".FileReadService" android:permission="org.projectmaxs.permission.USE_FILEREAD">
+            <intent-filter>
+                <action android:name="org.projectmaxs.ACTION_BIND_FILEREAD"/>
             </intent-filter>
         </service>
         <service

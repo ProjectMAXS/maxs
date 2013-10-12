@@ -17,7 +17,6 @@
 
 package org.projectmaxs.module.fileread;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -28,7 +27,6 @@ import java.util.Arrays;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.aidl.IFileReadModuleService;
 import org.projectmaxs.shared.global.aidl.IMAXSOutgoingFileTransferService;
 import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Text;
@@ -44,12 +42,10 @@ import org.projectmaxs.shared.module.UnkownSubcommandException;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
 
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
@@ -86,11 +82,6 @@ public class ModuleService extends MAXSModuleIntentService {
 							new String[] { "~", "path" }),
 			});
 	// @formatter:on
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		return mBinder;
-	}
 
 	@Override
 	public void onCreate() {
@@ -254,46 +245,6 @@ public class ModuleService extends MAXSModuleIntentService {
 			return new File(mSettings.getCwd(), path);
 		}
 	}
-
-	private final IFileReadModuleService.Stub mBinder = new IFileReadModuleService.Stub() {
-
-		@Override
-		public byte[] readFileBytes(String file) throws RemoteException {
-			final File readFrom = new File(file);
-			if (!readFrom.isFile()) {
-				LOG.e("readFileBytes: not a file " + file);
-				return null;
-			}
-			if (readFrom.length() > Integer.MAX_VALUE) {
-				// Even if the file had a size of Integer.MAX_VALUE, it would be to big.
-				LOG.e("readFileBytes: file is to big");
-				return null;
-			}
-
-			int len = 0;
-			byte[] buf = new byte[1024];
-			ByteArrayOutputStream os = null;
-			InputStream is = null;
-			try {
-				os = new ByteArrayOutputStream((int) readFrom.length());
-				is = new FileInputStream(readFrom);
-				while ((len = is.read(buf)) != -1) {
-					os.write(buf, 0, len);
-				}
-			} catch (Exception e) {
-				LOG.e("readFileBytes", e);
-				return null;
-			} finally {
-				if (os != null) try {
-					os.close();
-				} catch (IOException e) {}
-				if (is != null) try {
-					is.close();
-				} catch (IOException e) {}
-			}
-			return os.toByteArray();
-		}
-	};
 
 	private static final Element toElement(File file) {
 		final String path = file.getAbsolutePath();

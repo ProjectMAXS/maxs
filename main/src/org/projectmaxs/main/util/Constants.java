@@ -23,6 +23,13 @@ import java.text.SimpleDateFormat;
 import org.projectmaxs.shared.global.GlobalConstants;
 
 public class Constants {
+	// @formatter:off
+	public static final String[] COMPONENT_RECEIVERS = new String[] { 
+		"ModuleReceiver",
+		"TransportReceiver"
+		};
+	// @formatter:on
+
 	public static final DateFormat ISO8601_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
 
 	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;

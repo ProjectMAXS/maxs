@@ -333,7 +333,8 @@ public class MAXSService extends Service {
 		for (TransportInformation ti : transports) {
 			Intent intent = new Intent(action);
 			String transportPackage = ti.getTransportPackage();
-			intent.setClassName(transportPackage, transportPackage + ".TransportService");
+			intent.setClassName(transportPackage, transportPackage
+					+ TransportConstants.TRANSPORT_SERVICE);
 			ComponentName cn = startService(intent);
 			if (cn == null) {
 				LOG.e("sendActionToAllTransportServices: No service found for " + transportPackage);

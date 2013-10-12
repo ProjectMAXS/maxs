@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -100,6 +101,13 @@ public class ModuleRegistry {
 	public synchronized List<ModuleInformation> getAllModules() {
 		return new ArrayList<ModuleInformation>(Collections.unmodifiableCollection(mPackageCommands
 				.values()));
+	}
+
+	public List<String> getAllModulePackages() {
+		List<String> packages = new LinkedList<String>();
+		for (ModuleInformation mi : getAllModules())
+			packages.add(mi.getModulePackage());
+		return packages;
 	}
 
 	public synchronized List<ModuleInformation> getCopyAddListener(ChangeListener listener) {

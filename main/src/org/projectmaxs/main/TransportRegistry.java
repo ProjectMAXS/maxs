@@ -20,6 +20,7 @@ package org.projectmaxs.main;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,6 +78,13 @@ public class TransportRegistry {
 
 	public synchronized List<TransportInformation> getAllTransports() {
 		return Collections.unmodifiableList(mTransportList);
+	}
+
+	public List<String> getAllTransportPackages() {
+		List<String> packages = new LinkedList<String>();
+		for (TransportInformation ti : getAllTransports())
+			packages.add(ti.getTransportPackage());
+		return packages;
 	}
 
 	public synchronized List<TransportInformation> getCopyAddListener(ChangeListener listener) {

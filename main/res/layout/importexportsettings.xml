@@ -4,22 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textImportDirectory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Import Directory"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <EditText
-        android:id="@+id/importDirectory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal" >
 
         <Button
             android:id="@+id/exportAll"
@@ -33,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="importAll"
-            android:text="Import All (TODO)"/>
+            android:text="Import All"/>
     </LinearLayout>
 
     <TextView
