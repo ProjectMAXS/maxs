@@ -4,8 +4,9 @@ MODULES_MAKEFILE := $(foreach mod, $(MODULES), $(mod)/Makefile)
 MIN_DEPLOY := main module-bluetooth transport-xmpp
 ALL := main $(MODULES) $(TRANSPORTS)
 TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
+CPUS := $(shell grep -c ^processor /proc/cpuinfo)
 
-.PHONY: all $(ALL) clean distclean eclipse makefiles mindeploy parallel release tabletdeploy
+.PHONY: all $(ALL) clean distclean deplyg eclipse makefiles mindeploy parallel pardeploy release tabletdeploy
 
 all: $(ALL) eclipse
 
@@ -19,6 +20,9 @@ distclean:
 deploy:
 	TARGET=$@ $(MAKE) $(ALL)
 
+pardeploy:
+	TARGET=deploy $(MAKE) -j$(CPUS) $(ALL)
+
 eclipse:
 	TARGET=$@ $(MAKE) $(ALL)
 
@@ -29,7 +33,7 @@ tabletdeploy:
 	TARGET=deploy $(MAKE) $(TABLET_DEPLOY)
 
 parallel:
-	$(MAKE) -j$(shell grep -c ^processor /proc/cpuinfo)
+	$(MAKE) -j$(CPUS)
 
 release:
 	TARGET=release $(MAKE) $(ALL)
