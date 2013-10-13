@@ -1,5 +1,5 @@
 ANT_BUILD_TARGET?=debug
-DEBUG_APK := bin/MAXS-debug.apk
+DEBUG_APK := bin/maxs-main-debug.apk
 
 .PHONY: all asmack clean deploy distclean eclipse prebuild release resources $(DEBUG_APK)
 
