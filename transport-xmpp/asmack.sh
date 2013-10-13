@@ -29,13 +29,9 @@ if [[ ! -f $ASMACK_JAR ]]; then
     wget ${ASMACK_JAR_URL} || exit 1
 fi
 sha256sum -c ${ASMACK_JAR_SHA256} || exit 1
-popd > /dev/null
-
 # Create the properties file for the container lib. Allows convinitent
 # browsing of the aSmack source in Eclipse. Thanks to
 # http://stackoverflow.com/a/12639812/194894
-pushd . > /dev/null
-cd libs
 if [[ ! -f $ASMACK_JAR.properties ]]; then
     echo "src=../libs-sources/${ASMACK_SRC}" > $ASMACK_JAR.properties
 fi
