@@ -61,8 +61,7 @@ public class ImportExportSettings extends Activity {
 	private static final String PICK_DIRECTORY_INTENT = "org.openintents.action.PICK_DIRECTORY";
 	private static final String OIFM_PACKAGE = "org.openintents.filemanager";
 	private static final Uri OIFM_MARKET_URI = Uri.parse("market://search?q=pname:" + OIFM_PACKAGE);
-	private static final Uri OIFM_FDROID_URI = Uri
-			.parse("https://f-droid.org/repository/browse/?fdid=" + OIFM_PACKAGE);
+	private static final Uri OIFM_FDROID_URI = Uri.parse("fdroid.app:" + OIFM_PACKAGE);
 	private static final int FILE_REQUEST_CODE = 1;
 
 	private static TextView sImportExportStatus;
@@ -228,11 +227,12 @@ public class ImportExportSettings extends Activity {
 		builder.setPositiveButton("Install from Play Store", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Intent install = new Intent(Intent.ACTION_VIEW, OIFM_MARKET_URI);
+				final Intent install = new Intent(Intent.ACTION_VIEW, OIFM_MARKET_URI);
 				if (mPackageManagerUtil.isIntentAvailable(install)) {
 					startActivity(install);
 				} else {
-					Toast.makeText(ImportExportSettings.this, "Play Store not available",
+					Toast.makeText(ImportExportSettings.this,
+							"No handler for 'market://' links (e.g. Play Store) available.",
 							Toast.LENGTH_LONG).show();
 				}
 				dialog.dismiss();
@@ -241,7 +241,15 @@ public class ImportExportSettings extends Activity {
 		builder.setNeutralButton("Install from F-Droid", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				startActivity(new Intent(Intent.ACTION_VIEW, OIFM_FDROID_URI));
+				final Intent install = new Intent(Intent.ACTION_VIEW, OIFM_FDROID_URI);
+				if (mPackageManagerUtil.isIntentAvailable(install)) {
+					startActivity(install);
+				} else {
+					Toast.makeText(ImportExportSettings.this,
+							"No handler for 'fdroid.app:' links available", Toast.LENGTH_LONG)
+							.show();
+				}
+
 			}
 		});
 		builder.setNegativeButton("Cancel", new OnClickListener() {
