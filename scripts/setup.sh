@@ -15,6 +15,7 @@ FDROIDMETA="${FDROIDDATA}/metadata"
 MAINDIR="${BASEDIR}/main"
 TRANSPORTS="$(find $BASEDIR -mindepth 1 -maxdepth 1 -type d -name 'transport-*')"
 MODULES="$(find $BASEDIR -mindepth 1 -maxdepth 1 -type d -name 'module-*')"
+COMPONENTS="${MAINDIR} ${TRANSPORTS} ${MODULES}"
 
 declare -A MOD2PKG
 
