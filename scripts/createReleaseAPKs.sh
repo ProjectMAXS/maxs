@@ -3,7 +3,17 @@
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
 
 set -e
-set -x
+
+while getopts dt: OPTION "$@"; do
+    case $OPTION in
+	d)
+	    set -x
+	    ;;
+	t)
+	    RELEASE_TAG="${OPTARG}"
+	    ;;
+    esac
+done
 
 KEYSTOREFILE=${KEYSTOREDATA}/release.keystore
 KEYSTOREPASSGPG=${KEYSTOREDATA}/keystore_password.gpg
@@ -37,11 +47,18 @@ EOF
 
 cd ${BASEDIR}
 
+if [[ -n $RELEASE_TAG ]]; then
+    git checkout $RELEASE_TAG
+fi
+
 ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
 
-[[ -d releases ]] || mkdir -p releases
+[[ -d releases/${RELEASE_TAG} ]] || mkdir -p releases/${RELEASE_TAG}
 
 for c in $COMPONENTS; do
-    cp ${c}/bin/*-release.apk releases/
+    cp ${c}/bin/*-release.apk releases/${RELEASE_TAG}
 done
-    
+
+if [[ -n $RELEASE_TAG ]]; then
+    git checkout master
+fi
