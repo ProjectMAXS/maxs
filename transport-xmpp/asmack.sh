@@ -22,6 +22,9 @@ ASMACK_SRC_URL=${ASMACK_RELEASES}/${ASMACK_VER}/${ASMACK_SRC}
 
 pushd . > /dev/null
 cd libs
+# Delete old asmack jars
+TORM=$(find . -type f \( -name 'asmack-android-*.jar' -a ! -name $ASMACK_JAR \))
+[[ -n $TORM ]] && rm $TORM
 if [[ ! -f $ASMACK_JAR ]]; then
     wget ${ASMACK_JAR_URL} || exit 1
 fi
@@ -40,6 +43,9 @@ popd > /dev/null
 
 pushd . > /dev/null
 cd libs-sources
+# Delete old asmack source zips
+TORM=$(find . -type f \( -name 'asmack-android-*.zip' -a ! -name $ASMACK_SRC \))
+[[ -n $TORM ]] && rm $TORM
 if [[ ! -f $ASMACK_SRC ]]; then
     wget ${ASMACK_SRC_URL} || exit 1
     wget ${ASMACK_SRC_URL}.md5 || exit 1
