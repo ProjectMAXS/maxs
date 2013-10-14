@@ -181,9 +181,9 @@ public class MAXSService extends Service {
 		int id = Settings.getInstance(this).getNextCommandId();
 		String[] splitedFullCommand = fullCommand.split(" ", 3);
 
-		String command = splitedFullCommand[0];
+		String command = splitedFullCommand[0].toLowerCase();
 		String subCmd = null;
-		if (splitedFullCommand.length > 1) subCmd = splitedFullCommand[1];
+		if (splitedFullCommand.length > 1) subCmd = splitedFullCommand[1].toLowerCase();
 		String args = null;
 		if (splitedFullCommand.length > 2) args = splitedFullCommand[2];
 
