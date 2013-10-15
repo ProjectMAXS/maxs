@@ -224,10 +224,21 @@ public class XMPPService {
 
 			// (a)Smacks getRoster() is a little bit cranky at the moment. Besides everything XMPP
 			// related being asynchronous, aSmacks getRoster is known to be often empty when the
-			// method is called shortly after the login. We put some efforts into the issue, but
-			// until this is fixed, we have to deal with the situation that toList is empty.
-			// Workaround that problem by sending the message to all known master JIDs.
-			if (toList.isEmpty()) toList.addAll(mSettings.getMasterJids());
+			// method is called shortly after the login. We put some effort into the issue, but
+			// until this is fixed, we have to deal with the situation that toList may be empty
+			// sometimes. But since a broadcast should get delivered to every master JID, it is
+			// not really a problem.
+			for (String jid : mSettings.getMasterJids()) {
+				boolean found = false;
+				for (String toJid : toList) {
+					if (StringUtils.parseBareAddress(toJid).equals(jid)) {
+						found = true;
+						break;
+					}
+				}
+				// Add this master JID, if it isn't already contained in toList
+				if (!found) toList.add(jid);
+			}
 
 			try {
 				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
