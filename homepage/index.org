@@ -76,7 +76,6 @@ community, use these links to install MAXS.
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
 
-
 * Support / Help
 
 Join the [[*Contact][IRC channel]] and ask for help. A full =adb log= will be
@@ -84,9 +83,16 @@ helpful.
 
 * Contact
 
+** IRC
+
 Feel free to join  [[irc://chat.freenode.net/maxs][~#maxs~]] (@freenode). Questions and suggestions are
 welcome, but remeber that this is IRC and it may take a while (~hours,
 days) to get an answer.
+
+** Forum
+
+[[http://forums.geekplace.eu][forums.geekplace.eu]] can be used to submit bug reports, feature
+requests, ask for support or discuss development of MAXS.
 
 * Donate
 
@@ -98,4 +104,6 @@ Via Bitcoin: [[bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt][1AUuXzvVUh1HMb2kVYnDW
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
 - Thomas Frösasman for the [[http://thomasf.github.io/solarized-css/][Solarized CSS colorschemes]]
 
-#+END_HTML
+* Further Links
+
+- [[https://www.ohloh.net/p/maxs][Project MAXS @ ohloh.et]]

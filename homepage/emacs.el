@@ -6,7 +6,7 @@
 (require 'org-publish)  
 
 (defconst my-html-head
-"<link rel=\"stylesheet\" type=\"text/css\" href=\"http://thomasf.github.io/solarized-css/solarized-light.min.css\" />
+"<link rel=\"stylesheet\" type=\"text/css\" href=\"http://projectmaxs.org/homepage/solarized-light.min.css\" />
 <script type=\"text/javascript\">
 var _paq = _paq || [];
 _paq.push([\"trackPageView\"]);
@@ -28,13 +28,19 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
 	 :base-directory "../documentation"
 	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
 	 :publishing-function org-html-publish-to-html
-	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:http://thomasf.github.io/solarized-css/org-info.min.js"
+	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:http://projectmaxs.org/homepage/org-info.min.js"
+	 )
+	("maxs-static"
+	 :base-directory "."
+	 :base-extension "css\\|js\\|png"
+	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/homepage"
+	 :publishing-function org-publish-attachment
 	 )
 	("maxs"
 	 :base-directory "."
 	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/homepage"
 	 :publishing-function org-html-publish-to-html
-	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:http://thomasf.github.io/solarized-css/org-info.min.js"
+	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:http://projectmaxs.org/homepage/org-info.min.js"
 	 )
 	))
 
