@@ -1,79 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollViewMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-    
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+
     <LinearLayout
-        android:id="@+id/masterAddresses"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        <LinearLayout
+            android:id="@+id/masterAddresses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textMasterAddresses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/master_addresses"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/firstMasterAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/hint_jid"
+                android:inputType="textEmailAddress" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="3dp"
+            android:background="@android:color/darker_gray" />
+
         <TextView
-            android:id="@+id/textMasterAddresses"
+            android:id="@+id/textDeviceAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/master_addresses"
+            android:text="@string/device_account"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/firstMasterAddress"
+            android:id="@+id/jid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_jid"
             android:inputType="textEmailAddress" />
 
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="3dp"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-       android:id="@+id/textDeviceAccount"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/device_account"
-       android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <EditText
-        android:id="@+id/jid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hint_jid"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
         <View
-        android:layout_width="fill_parent"
-        android:layout_height="3dp"
-        android:background="@android:color/darker_gray" />
+            android:layout_width="fill_parent"
+            android:layout_height="3dp"
+            android:background="@android:color/darker_gray" />
 
-<Button
-    android:id="@+id/advancedSettings"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:focusableInTouchMode="true"
-    android:onClick="openAdvancedSettings"
-    android:text="@string/advancedSettings"
-    android:textSize="20sp" />
-    
-</LinearLayout>
+        <Button
+            android:id="@+id/advancedSettings"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:onClick="openAdvancedSettings"
+            android:text="@string/advancedSettings"
+            android:textSize="20sp" />
+    </LinearLayout>
+
 </ScrollView>
