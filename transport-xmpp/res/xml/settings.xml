@@ -32,8 +32,10 @@
             android:key="@string/pref_xmpp_stream_compression_key"
             android:summary="@string/pref_xmpp_stream_compression_help"
             android:title="@string/pref_xmpp_stream_compression" />
-        <CheckBoxPreference
-            android:defaultValue="false"
+
+        <ListPreference
+            android:entries="@array/array_xmpp_connection_security_entries"
+            android:entryValues="@array/array_xmpp_connection_security_values"
             android:key="@string/pref_xmpp_stream_encryption_key"
             android:summary="@string/pref_xmpp_stream_encryption_help"
             android:title="@string/pref_xmpp_stream_encryption" />
@@ -52,7 +54,6 @@
             android:key="@string/pref_app_debug_network_key"
             android:summary="@string/pref_app_debug_network_help"
             android:title="@string/pref_app_debug_network" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

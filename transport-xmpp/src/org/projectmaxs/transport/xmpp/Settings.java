@@ -240,10 +240,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 					XMPP_STREAM_COMPRESSION, false));
 
 			ConnectionConfiguration.SecurityMode securityMode;
-			if (mSharedPreferences.getBoolean(XMPP_STREAM_ENCYPTION, false)) {
+			final String securityModeString = mSharedPreferences.getString(XMPP_STREAM_ENCYPTION,
+					"opt");
+			if ("opt".equals(securityModeString)) {
+				securityMode = ConnectionConfiguration.SecurityMode.enabled;
+			} else if ("req".equals(securityModeString)) {
 				securityMode = ConnectionConfiguration.SecurityMode.required;
-			} else {
+			} else if ("dis".equals(securityModeString)) {
 				securityMode = ConnectionConfiguration.SecurityMode.disabled;
+			} else {
+				throw new IllegalArgumentException("Unkown security mode: " + securityModeString);
 			}
 			mConnectionConfiguration.setSecurityMode(securityMode);
 

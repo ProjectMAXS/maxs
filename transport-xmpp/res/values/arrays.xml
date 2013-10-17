@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="array_xmpp_connection_security_values">
+        <item>dis</item>
+        <item>req</item>
+        <item>opt</item>
+    </string-array>
+
+</resources>
