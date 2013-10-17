@@ -3,9 +3,16 @@ package org.projectmaxs.transport.xmpp.activities;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.R;
 import org.projectmaxs.transport.xmpp.Settings;
+import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.XMPPUtil;
 
 import android.app.Activity;
@@ -32,6 +39,59 @@ public class InfoAndSettings extends Activity {
 
 	public void openAdvancedSettings(View view) {
 		startActivity(new Intent(this, AdvancedSettings.class));
+	}
+
+	public void registerAccount(View view) {
+		final String jid = mSettings.getJid();
+		final String password = mSettings.getPassword();
+		if (jid.isEmpty()) {
+			Toast.makeText(this, "Please enter a valid bare JID", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if (password.isEmpty()) {
+			Toast.makeText(this, "Please enter a password", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		(new Thread() {
+
+			@Override
+			public void run() {
+				SmackAndroid.init(InfoAndSettings.this);
+				if (!ConnectivityManagerUtil.hasDataConnection(InfoAndSettings.this)) {
+					showToast("Data connection not available", Toast.LENGTH_SHORT);
+					return;
+				}
+
+				try {
+					final String username = StringUtils.parseName(mSettings.getJid());
+					final String password = mSettings.getPassword();
+					final Connection connection = new XMPPConnection(
+							mSettings.getConnectionConfiguration());
+					showToast("Connecting to server", Toast.LENGTH_SHORT);
+					connection.connect();
+					AccountManager accountManager = new AccountManager(connection);
+					showToast("Connected, trying to create account", Toast.LENGTH_SHORT);
+					accountManager.createAccount(username, password);
+					connection.disconnect();
+				} catch (XMPPException e) {
+					LOG.i("registerAccount", e);
+					showToast("Error creating account: " + e.getLocalizedMessage(),
+							Toast.LENGTH_LONG);
+					return;
+				}
+				showToast("Account created", Toast.LENGTH_SHORT);
+			}
+
+			private final void showToast(final String text, final int duration) {
+				InfoAndSettings.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(InfoAndSettings.this, text, duration).show();
+					}
+				});
+			}
+
+		}).start();
 	}
 
 	@Override

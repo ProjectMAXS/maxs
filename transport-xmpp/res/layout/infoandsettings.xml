@@ -72,6 +72,15 @@
             android:onClick="openAdvancedSettings"
             android:text="@string/advancedSettings"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/registerAccount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:onClick="registerAccount"
+            android:text="@string/registerAccount"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </ScrollView>

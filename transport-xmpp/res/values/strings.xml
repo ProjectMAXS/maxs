@@ -6,6 +6,7 @@
     <string name="hint_jid">user@server.tld</string>
     <string name="password">Password</string>
     <string name="advancedSettings">Advanced Settings</string>
+    <string name="registerAccount">Register Account</string>
     <string name="pref_xmpp_stream_settings">XMPP Stream Settings</string>
     <string name="pref_xmpp_stream_compression">Stream compression</string>
     <string name="pref_xmpp_stream_compression_help">Use XMPP stream compression if supported by server</string>

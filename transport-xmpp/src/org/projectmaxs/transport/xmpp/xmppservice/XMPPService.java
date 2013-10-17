@@ -37,13 +37,13 @@ import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.transport.transform.TransformMessageContent;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
+import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 
 public class XMPPService {
@@ -57,7 +57,6 @@ public class XMPPService {
 	private final Settings mSettings;
 	private final MessagesTable mMessagesTable;
 	private final Context mContext;
-	private final ConnectivityManager mConnectivityManager;
 	private final HandleTransportStatus mHandleTransportStatus;
 
 	private XMPPStatus mXMPPStatus;
@@ -84,8 +83,6 @@ public class XMPPService {
 		mContext = context;
 		mSettings = Settings.getInstance(context);
 		mMessagesTable = MessagesTable.getInstance(context);
-		mConnectivityManager = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
@@ -185,6 +182,10 @@ public class XMPPService {
 		} else {
 			throw new IllegalStateException("XMPPService send: unkown action=" + action);
 		}
+	}
+
+	public void registerAccount(final Activity activity) {
+
 	}
 
 	private void sendAsMessage(org.projectmaxs.shared.global.Message message,
@@ -421,8 +422,8 @@ public class XMPPService {
 
 	private synchronized void tryToConnect() {
 		String failureReason = null;
-		if (mSettings.getPassword().length() == 0) failureReason = "Password not set or empty";
-		if (mSettings.getJid().length() == 0) failureReason = "JID not set or empty";
+		if (mSettings.getPassword().isEmpty()) failureReason = "Password not set or empty";
+		if (mSettings.getJid().isEmpty()) failureReason = "JID not set or empty";
 		if (mSettings.getMasterJidCount() == 0) failureReason = "Master JID(s) not configured";
 		if (failureReason != null) {
 			LOG.w("tryToConnect: failureReason=" + failureReason);
@@ -434,7 +435,7 @@ public class XMPPService {
 			LOG.d("tryToConnect: already connected, nothing to do here");
 			return;
 		}
-		if (!dataConnectionAvailable()) {
+		if (!ConnectivityManagerUtil.hasDataConnection(mContext)) {
 			LOG.d("tryToConnect: no data connection available");
 			newState(State.WaitingForNetwork);
 			return;
@@ -519,12 +520,6 @@ public class XMPPService {
 			}
 			newState(State.Disconnected);
 		}
-	}
-
-	private boolean dataConnectionAvailable() {
-		NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
-		if (activeNetwork == null) return false;
-		return activeNetwork.isConnected();
 	}
 
 }
