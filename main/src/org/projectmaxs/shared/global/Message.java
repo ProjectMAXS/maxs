@@ -17,6 +17,7 @@
 
 package org.projectmaxs.shared.global;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,6 +74,11 @@ public class Message implements Parcelable {
 
 	public Message add(AbstractElement element) {
 		mElements.add(element);
+		return this;
+	}
+
+	public Message addAll(Collection<? extends AbstractElement> elements) {
+		mElements.addAll(elements);
 		return this;
 	}
 

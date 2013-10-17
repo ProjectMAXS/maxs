@@ -28,6 +28,7 @@ import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.messagecontent.Text;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
 
 public class HumanReadableString {
 
@@ -101,7 +102,20 @@ public class HumanReadableString {
 	}
 
 	private static void toSB(Sms sms, StringBuilder sb) {
+		Sms.Type type = sms.getType();
+		switch (type) {
+		case INBOX:
+			sb.append("From ");
+			break;
+		case SENT:
+			sb.append("To ");
+			break;
+		default:
+			break;
+		}
+
 		sb.append(sms.getContact());
+		sb.append(" (").append(SharedStringUtil.toFullDate(sms.getDate())).append(')');
 		sb.append(": ");
 		sb.append(sms.getBody());
 		sb.append('\n');

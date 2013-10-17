@@ -58,7 +58,7 @@ public class ModuleService extends MAXSModuleIntentService {
 							"sms",             // Command name
 							"s",                    // Short command name
 							null,                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
+							"send",                    // Default subcommand with arguments
 							new String[] { "send" }),  // Array of provided subcommands 
 					new ModuleInformation.Command(
 							"reply",
@@ -183,7 +183,7 @@ public class ModuleService extends MAXSModuleIntentService {
 			}
 		}
 
-		Sms sms = new Sms(receiver, text, Sms.Direction.OUTGOING);
+		Sms sms = new Sms(receiver, text, Sms.Type.SENT);
 		smsManager.sendMultipartTextMessage(receiver, null, parts, sentIntents, deliveryIntents);
 		SmsWriteUtil.insertSmsInSystemDB(sms, this);
 		return sms;

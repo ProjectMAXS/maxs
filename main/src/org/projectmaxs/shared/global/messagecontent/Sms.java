@@ -23,19 +23,26 @@ public class Sms extends AbstractElement {
 
 	private final String mContactString;
 	private final String mBody;
-	private final Direction mDirection;
+	private final Type mType;
 	private final long mDate;
 
-	public Sms(String contact, String body, Direction direction) {
+	public Sms(String contact, String body, Type type) {
 		mContactString = contact;
 		mBody = body;
-		mDirection = direction;
+		mType = type;
 		mDate = System.currentTimeMillis();
+	}
+
+	public Sms(String contact, String body, Type type, long date) {
+		mContactString = contact;
+		mBody = body;
+		mType = type;
+		mDate = date;
 	}
 
 	public Sms(Parcel in) {
 		int directionInt = in.readInt();
-		mDirection = Direction.values()[directionInt];
+		mType = Type.values()[directionInt];
 		mContactString = in.readString();
 		mBody = in.readString();
 		mDate = in.readLong();
@@ -48,7 +55,7 @@ public class Sms extends AbstractElement {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(mDirection.ordinal());
+		dest.writeInt(mType.ordinal());
 		dest.writeString(mContactString);
 		dest.writeString(mBody);
 		dest.writeLong(mDate);
@@ -67,8 +74,8 @@ public class Sms extends AbstractElement {
 		}
 	};
 
-	public Direction getDirection() {
-		return mDirection;
+	public Type getType() {
+		return mType;
 	}
 
 	public String getContact() {
@@ -83,8 +90,8 @@ public class Sms extends AbstractElement {
 		return mDate;
 	}
 
-	public static enum Direction {
-		INCOMING, OUTGOING,
+	public static enum Type {
+		ALL, INBOX, SENT, DRAFT, OUTBOX, FAILED, QUEUED
 	}
 
 }

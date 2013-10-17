@@ -17,13 +17,19 @@
 
 package org.projectmaxs.shared.global.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.projectmaxs.shared.global.messagecontent.Contact;
 
 public class SharedStringUtil {
+
+	private static final SimpleDateFormat DATE_FORMAT_FULL = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss");
+
 	public static String getSubstringAfter(String s, char c) {
 		return s.substring(s.lastIndexOf(c) + 1).trim();
 	}
@@ -85,5 +91,37 @@ public class SharedStringUtil {
 	public static final String prettyPrint(String contactString, Contact contact) {
 		return contact != null ? contact.getDisplayName() + " (" + contactString + ")"
 				: contactString;
+	}
+
+	public static final boolean isInteger(String s) {
+		return isInteger(s, 10);
+	}
+
+	public static final boolean isInteger(String s, int radix) {
+		if (s.isEmpty()) return false;
+		for (int i = 0; i < s.length(); i++) {
+			if (i == 0 && s.charAt(i) == '-') {
+				if (s.length() == 1)
+					return false;
+				else
+					continue;
+			}
+			if (Character.digit(s.charAt(i), radix) < 0) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Convert a long to "yyyy-mm-dd HH:mm:ss"
+	 * 
+	 * @param timestamp
+	 * @return
+	 */
+	public static final String toFullDate(long timestamp) {
+		Date date = new Date(timestamp);
+		// SimpleDateFormat is not synchronized
+		synchronized (DATE_FORMAT_FULL) {
+			return DATE_FORMAT_FULL.format(date);
+		}
 	}
 }

@@ -26,6 +26,8 @@ public class Text extends AbstractElement {
 
 	private final List<FormatedText> mTexts = new LinkedList<FormatedText>();
 
+	public Text() {}
+
 	public Text(String text) {
 		this(text, true);
 	}
@@ -100,4 +102,7 @@ public class Text extends AbstractElement {
 
 	};
 
+	public static Text get() {
+		return new Text();
+	}
 }
