@@ -142,14 +142,13 @@ Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
 #+BEGIN_HTML
 <a
 href="https://flattr.com/submit/auto?user_id=Flowdalic&url=https%3A%2F%2Fprojectmaxs.org"
-target="_blank"><img
-src="//api.flattr.com/button/flattr-badge-large.png" alt="Flattr this"
-title="Flattr Project MAXS" border="0"></a>
+target="_blank">
+Flattr Project MAXS
+</a>
 #+END_HTML
 
 * Acknowledgements
 
 - The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
-- Thomas Frösasman for the [[http://thomasf.github.io/solarized-css/][Solarized CSS colorschemes]]
 
