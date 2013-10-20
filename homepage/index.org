@@ -1,7 +1,7 @@
 #+TITLE:        Project MAXS
 #+AUTHOR:       Florian Schmaus
 #+EMAIL:        flo@geekplace.eu
-#+OPTIONS:      H:2 num:nil author:nil
+#+OPTIONS:      H:2 num:nil author:nil toc:nil
 #+OPTIONS:      timestamp:nil
 #+STARTUP:      noindent
 
