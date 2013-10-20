@@ -14,7 +14,8 @@ beta test.
 
 * Documentation
 
-Get an overview about MAXS by having at look at the [[file:../documentation/introduction.org][Introduction]]
+Get an overview and idea about MAXS by having a look at the
+[[file:../documentation/introduction.org][Introduction]].
 
 * Alpha Testing
 
@@ -76,11 +77,17 @@ community, use these links to install MAXS.
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
 
+
 * Support / Help
 
-Join the [[*Contact][IRC channel]] and ask for help. A full =adb log= will be
-helpful.
+See [[*Contact][contact]] on how to contact us and ask for help. A full =adb log=
+will be helpful.
 
+* Development
+
+- Source code is hosted on [[https://bitbucket.org/projectmaxs/][bitbucket]]: https://bitbucket.org/projectmaxs/maxs
+- [[https://www.ohloh.net/p/maxs][Project MAXS @ ohloh.et]]
+ 
 * Contact
 
 ** IRC
@@ -96,9 +103,37 @@ If you don't want to idle around in IRC, please don't hesitate to use
 MAXS. It's also the right place where bug reports or feature requests
 should get posted.
 
+** Microblog / News Feeds
+
+MAXS has a [[http://www.gnu.org/software/social/][GNU Social]] microblog account that can be found at
+[[https://social.geekplace.eu/maxs]]. This microblog also allows you to
+subscripte to feeds in various formats to keep informed about the
+latest news:
+
+- [[https://social.geekplace.eu/api/statuses/user_timeline/3.atom][Atom]]
+- [[https://social.geekplace.eu/api/statuses/user_timeline/3.as][Activity Streams]]
+- [[https://social.geekplace.eu/maxs/rss][RSS 1.0]]
+- [[https://social.geekplace.eu/api/statuses/user_timeline/3.rss][RSS 2.0]]
+
 * Donate
 
-Via Bitcoin: [[bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt][1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt]]
+** Bitcoin
+
+#+BEGIN_HTML
+<a href="bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt">
+Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
+</a>
+#+END_HTML
+
+** Flattr
+
+#+BEGIN_HTML
+<a
+href="https://flattr.com/submit/auto?user_id=Flowdalic&url=https%3A%2F%2Fprojectmaxs.org"
+target="_blank"><img
+src="//api.flattr.com/button/flattr-badge-large.png" alt="Flattr this"
+title="Flattr Project MAXS" border="0"></a>
+#+END_HTML
 
 * Acknowledgements
 
@@ -106,6 +141,3 @@ Via Bitcoin: [[bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt][1AUuXzvVUh1HMb2kVYnDW
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
 - Thomas Frösasman for the [[http://thomasf.github.io/solarized-css/][Solarized CSS colorschemes]]
 
-* Further Links
-
-- [[https://www.ohloh.net/p/maxs][Project MAXS @ ohloh.et]]
