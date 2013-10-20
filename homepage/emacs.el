@@ -10,9 +10,9 @@
 <script type=\"text/javascript\">
 var _paq = _paq || [];
 _paq.push([\"trackPageView\"]);
-_paq.push([\"enableLinkTracking\"])
+_paq.push([\"enableLinkTracking\"]);
 (function() {
-var u=((\"https:\" == document.location.protocol) ? \"https\" : \"http\") + \"://piwik.geekplace.eu/\";\" )
+var u=((\"https:\" == document.location.protocol) ? \"https\" : \"http\") + \"://piwik.geekplace.eu/\";
 _paq.push([\"setTrackerUrl\", u+\"piwik.php\"]);
 _paq.push([\"setSiteId\", \"1\"]);
 var d=document, g=d.createElement(\"script\"), s=d.getElementsByTagName(\"script\")[0]; g.type=\"text/javascript\";
@@ -29,6 +29,9 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
 	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
 	 :publishing-function org-html-publish-to-html
 	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:/homepage/org-info.min.js"
+	 :auto-sitemap t
+	 :sitemap-sort-files "alphabetically"
+	 :sitemap-title "MAXS Documentation"
 	 )
 	("maxs-static"
 	 :base-directory "."

@@ -6,12 +6,25 @@
 
 * What is MAXS?
 
-MAXS is an acronym for *M* odular *A* ndroid *X* MPP *S* ervice. It is
-an Android service that creates a XMPP connection and allows some
-predefined JIDs, called /Master JIDs/, to use this service. Simple
-commands, e.g. "bluetooth enable" allow you to control your Android
-device. Furthermore, MAXS will notify you about new events on the
-device, like an incoming phone call or SMS.
+MAXS is an acronym for *M* odular *A* ndroid *X* MPP *S* ervice and
+consists of /modules/, /transports/ and the /main/ application.
+
+/Modules/ provide the specialized functionality. For example the
+bluetoothadmin module allows you to enable or disable the Bluetooth
+adapter. It therefore requests the according Android permission to do
+so. Usually, every module is specialized by a particular Android
+permission.
+
+/Modules/ are able to interact together. For example, having alone the
+smsnotify module installed, will only show new SMS notifications with
+the sender number, but not the name of the sender, since the smsnotify
+module is unable to read your contacts. But if you install the
+contactsread module, the smsnotify module will be able to query your
+contacts for one with the given number.
+
+/Transports/ send notifications to the user and receive commands.
+
+/MAXS main/ glues together the different /modules/ and /transports/.
 
 MAXS is heavily inspired by GTalkSMS, and hence it shares many ideas
 with GTalkSMS. In fact we hope that MAXS will share the same feature
@@ -35,7 +48,7 @@ examples include
 
 You are also able to control most aspects of your Android device. For
 example:
-- Send SMS nessages
+- Send SMS messages
 - Disable or enable the Bluetooth Adapter
 - Query the contacts
 - Set or retrieve the clipboard content
@@ -78,13 +91,13 @@ device's clipboard
 ** Receiving and sending SMS
 
 #+BEGIN_SRC
-[17:20:49] User: sms send Anette Mustermann  Have fun, see you later :)
-[17:21:02] AndroidDevice: Sending SMS to Anette Mustermann (+49424242):
+[17:20:49] User: sms send Jane Doe  Have fun, see you later :)
+[17:21:02] AndroidDevice: Sending SMS to Jane Doe (+49424242):
 Have fun, see you later :)
-[17:21:05] AndroidDevice: SMS sent to Anette Mustermann (+49424242): Have
+[17:21:05] AndroidDevice: SMS sent to Jane Doe (+49424242): Have
 fun, see you...
-[17:21:07] AndroidDevice: Recent contact: Anette Mustermann (+49424242)
-[17:21:14] AndroidDevice: SMS delivered to Anette Mustermann (+49424242):
+[17:21:07] AndroidDevice: Recent contact: Jane Doe (+49424242)
+[17:21:14] AndroidDevice: SMS delivered to Jane Doe (+49424242):
 Have fun, see you...
 #+END_SRC
 
@@ -94,18 +107,18 @@ command. Notice that *after the name, there are two spaces, to
 distinguish the receivers name from the SMS body.
 
 Also notice that sending a SMS also sets the /recent contact/ to the
-receiver. The recent contact is used to remeber the last contact the
+receiver. The recent contact is used to remember the last contact the
 user interacted with. It is, for example, also set when a new SMS
 arrives and makes it easy to reply to the SMS message with the =reply
 to= command/sub command.
 
 #+BEGIN_SRC
 [20:39:48] AndroidDevice: New SMS Received
-Anette Mustermann (+49424242): How are you?
-[20:39:52]: AndroidDevice: Recent contact: Anette Mustermann (+49424242)
+Jane Doe (+49424242): How are you?
+[20:39:52]: AndroidDevice: Recent contact: Jane Doe (+49424242)
 [20:40:19] User: reply to Fine thanks :)
-[20:40:22] AndroidDevice: SMS sent to Anette Mustermann (+49424242): Fine thanks :)
-[20:40:27] AndroidDevice: SMS delivered to Anette Mustermann (+49424242): Fine thanks :)
+[20:40:22] AndroidDevice: SMS sent to Jane Doe (+49424242): Fine thanks :)
+[20:40:27] AndroidDevice: SMS delivered to Jane Doe (+49424242): Fine thanks :)
 #+END_SRC
 
 Note that some commands have default sub commands if there is none
@@ -116,11 +129,11 @@ for =reply= is =r=. And since =to= is the default sub command for
 
 #+BEGIN_SRC
 [20:39:48] AndroidDevice: New SMS Received
-Anette Mustermann (+49424242): How are you?
-[20:39:52] AndroidDevice: Recent contact: Anette Mustermann (+49424242)
+Jane Doe (+49424242): How are you?
+[20:39:52] AndroidDevice: Recent contact: Jane Doe (+49424242)
 [20:40:19] User: r Fine thanks :)
-[20:40:22] AndroidDevice: SMS sent to Anette Mustermann (+49424242): Fine thanks :)
-[20:40:27] AndroidDevice: SMS delivered to Anette Mustermann (+49424242): Fine thanks :)
+[20:40:22] AndroidDevice: SMS sent to Jane Doe (+49424242): Fine thanks :)
+[20:40:27] AndroidDevice: SMS delivered to Jane Doe (+49424242): Fine thanks :)
 #+END_SRC
 
 ** Display the current battery status
@@ -135,3 +148,6 @@ system (e.g. XMPP presence status)
 * What are the available commands?
 
 Try sending simply =help= as command.
+
+#  LocalWords:  odular ndroid MPP ervice bluetoothadmin smsnotify sms
+#  LocalWords:  contactsread GTalkSMS bluetooth AndroidDevice

@@ -1,0 +1,20 @@
+#+TITLE:        MAXS User FAQ
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      H:2 num:nil author:nil
+#+OPTIONS:      timestamp:nil
+#+STARTUP:      noindent
+
+* MAXS main does not show any modules or transport, although they are installed
+
+Try to re-install the modules and transports. This seems to be caused
+by Android accepting permissions only if an App defining this
+permission is already installed.
+
+* MAXS does take a long time (~minutes) to react on a command
+
+In order to save energy, Android devices enter a sleep mode after some
+idle time. If a device is in this mode, the processing of commands may
+be delayed a bit. We could prevent that with MAXS, but the effects on battery
+lifetime would likely be catastrophic.
+
