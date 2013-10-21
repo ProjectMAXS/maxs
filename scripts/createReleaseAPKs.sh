@@ -4,16 +4,26 @@
 
 set -e
 
-while getopts dt: OPTION "$@"; do
+PUBLISH=false
+
+while getopts dpt: OPTION "$@"; do
     case $OPTION in
 	d)
 	    set -x
+	    ;;
+	p)
+	    PUBLISH=true
 	    ;;
 	t)
 	    RELEASE_TAG="${OPTARG}"
 	    ;;
     esac
 done
+
+if $PUBLISH && [[ -z $RELEASE_TAG ]]; then
+    echo "error: publishing (-p), but no release tag specified (-t)"
+    exit 1
+fi
 
 KEYSTOREFILE=${KEYSTOREDATA}/release.keystore
 KEYSTOREPASSGPG=${KEYSTOREDATA}/keystore_password.gpg
@@ -61,4 +71,11 @@ done
 
 if [[ -n $RELEASE_TAG ]]; then
     git checkout master
+fi
+
+if $PUBLISH; then
+    cat <<EOF | sftp $RELEASE_HOST
+mkdir ${RELEASE_DIR}/${RELEASE_TAG}
+put releases/${RELEASE_TAG}/* ${RELEASE_DIR}/${RELEASE_TAG}
+EOF
 fi

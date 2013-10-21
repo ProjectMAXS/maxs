@@ -36,33 +36,6 @@ adventurous enough to test, either grab your release from [[*F-Droid][F-Droid]] 
 [[*Contact][contact us]] to become a member of the Google+ "MAXS Alpha Testers"
 community.
 
-** F-Droid
-
-*Main*
-
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.main][org.projectmaxs.main]]
-
-*Transport*
-
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.transport.xmpp][org.projectmaxs.transport.xmpp]]
-
-*Modules*
-
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.bluetooth][org.projectmaxs.module.bluetooth]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.bluetoothadmin][org.projectmaxs.module.bluetoothadmin]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.clipboard][org.projectmaxs.module.clipboard]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.contactsread][org.projectmaxs.module.contactsread]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.fileread][org.projectmaxs.module.fileread]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.filewrite][org.projectmaxs.module.filewrite]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.phonestateread][org.projectmaxs.module.phonestateread]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.ringermode][org.projectmaxs.module.ringermode]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smsnotify][org.projectmaxs.module.smsnotify]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smsread][org.projectmaxs.module.smsread]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
-- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
-
-** Play Store (Alpha Testing)
-
 After you became a member of the Google+ "MAXS alpah Testers"
 community, use these links to install MAXS.
 
@@ -89,6 +62,42 @@ community, use these links to install MAXS.
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
 
+* Get MAXS
+
+** Play Store
+
+Offical non alpha/beta release pending. [[*Alpha%20Testing][Alpha/Beta testers welcome]] :)
+
+** F-Droid
+
+*Main*
+
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.main][org.projectmaxs.main]]
+
+*Transport*
+
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.transport.xmpp][org.projectmaxs.transport.xmpp]]
+
+*Modules*
+
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.bluetooth][org.projectmaxs.module.bluetooth]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.bluetoothadmin][org.projectmaxs.module.bluetoothadmin]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.clipboard][org.projectmaxs.module.clipboard]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.contactsread][org.projectmaxs.module.contactsread]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.fileread][org.projectmaxs.module.fileread]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.filewrite][org.projectmaxs.module.filewrite]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.phonestateread][org.projectmaxs.module.phonestateread]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.ringermode][org.projectmaxs.module.ringermode]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smsnotify][org.projectmaxs.module.smsnotify]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smsread][org.projectmaxs.module.smsread]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
+
+** Direct download (not recommened)
+
+MAXS =.apk='s, signed with the same key as the Play Store releases,
+can be directly downloaded from [[../releases/][this location.]] Use this method of
+obtaining MAXS, only if you really have to
 
 * Support / Help
 
