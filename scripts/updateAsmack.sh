@@ -49,6 +49,6 @@ rm libs-sources/asmack-*
 
 git rm $OLD_ASMACK_SHA
 git add build/hashes/asmack-android-${MIN_SDK}-${RELEASE}.jar.sha256
-git commit -m "Changed aSmack version to ${RELEASE}"
+git commit -m "transport-xmpp: Changed aSmack version to ${RELEASE}"
 
 make asmack
