@@ -106,8 +106,6 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 	}
 
 	private static String getPowerSource(int status, int plugged) {
-		if (!isCharging(status)) return BAT;
-
 		String powerSource;
 		switch (plugged) {
 		case BatteryManager.BATTERY_PLUGGED_AC:
@@ -115,6 +113,9 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 			break;
 		case BatteryManager.BATTERY_PLUGGED_USB:
 			powerSource = USB;
+			break;
+		case 0:
+			powerSource = BAT;
 			break;
 		default:
 			powerSource = "Unkown";
