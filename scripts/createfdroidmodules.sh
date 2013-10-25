@@ -10,6 +10,8 @@ Category:System
 License:GPLv3
 Web Site:http://projectmaxs.org
 Source Code:https://bitbucket.org/projectmaxs/maxs/
+Issue Tracker:https://projectmaxs.atlassian.net
+FlattrID:2148361
 Bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
 
 Auto Name:MAXS Module ${moduleName}
@@ -28,8 +30,8 @@ Current Version:0.0.1.0
 Current Version Code:1
 
 Build Version:0.0.1.0,1,0.0.1.0,\\
-init=(cd .. && make ${m}/Makefile),\\
+init=cd .. && make ${m}/Makefile,\\
 subdir=${m},\\
-prebuild=make shared
+prebuild=make prebuild
 EOF
 done
