@@ -4,6 +4,4 @@
 
 cd $HOMEPAGE
 
-../scripts/getAssets.sh -f assets.db
-
 emacs --batch -l emacs.el -f org-publish-all
