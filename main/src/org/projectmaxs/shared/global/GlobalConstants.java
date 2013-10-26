@@ -22,7 +22,9 @@ import java.io.File;
 import android.os.Environment;
 
 public class GlobalConstants {
-	public static final String PACKAGE = "org.projectmaxs";
+
+	public static final String NAME = "projectmaxs";
+	public static final String PACKAGE = "org." + NAME;
 	public static final String MAIN_PACKAGE = PACKAGE + ".main";
 	public static final String MODULE_PACKAGE = PACKAGE + ".module";
 	public static final String TRANSPORT_PACKAGE = PACKAGE + ".transport";

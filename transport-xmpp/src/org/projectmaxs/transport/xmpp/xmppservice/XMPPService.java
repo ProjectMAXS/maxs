@@ -87,6 +87,7 @@ public class XMPPService {
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
 		addListener(new HandleMessagesListener(this));
+		addListener(new XMPPServiceDiscoveryManager());
 		addListener(new XMPPPingManager(this));
 		addListener(new XMPPFileTransfer(context));
 
