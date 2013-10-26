@@ -2,7 +2,7 @@
 .project
 .settings
 .lastBuild
-.lastDeployed
+local.properties
 local.properties
 bin/
 gen/

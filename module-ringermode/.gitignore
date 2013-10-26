@@ -1,7 +1,7 @@
 .classpath
 .project
 .settings
-.lastDeployed
+local.properties
 Makefile
 bin/
 gen/
