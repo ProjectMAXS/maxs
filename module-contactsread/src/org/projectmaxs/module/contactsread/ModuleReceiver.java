@@ -46,11 +46,10 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 
 	@Override
 	public void addHelp(List<CommandHelp> help, Context context) {
-		help.add(new CommandHelp("contact", "lookup", ArgType.OTHER_STRING, "Lookup a contact"));
-		help.add(new CommandHelp("contact", "lname", ArgType.OTHER_STRING, "Lookup by name"));
-		help.add(new CommandHelp("contact", "lnum", ArgType.OTHER_STRING, "Lookup by number"));
-		help.add(new CommandHelp("contact", "lnick", ArgType.OTHER_STRING, "Lookup by nickname"));
-		help.add(new CommandHelp("contact", "mobile", ArgType.OTHER_STRING,
-				"Lookup my mobile number"));
+		help.add(new CommandHelp("contact", "lookup", ArgType.CONTACT_INFO, "Lookup a contact"));
+		help.add(new CommandHelp("contact", "lname", ArgType.CONTACT_NAME, "Lookup by name"));
+		help.add(new CommandHelp("contact", "lnum", ArgType.NUMBER, "Lookup by number"));
+		help.add(new CommandHelp("contact", "lnick", ArgType.CONTACT_NICKNAME, "Lookup by nickname"));
+		help.add(new CommandHelp("contact", "mobile", ArgType.NUMBER, "Lookup my mobile number"));
 	}
 }

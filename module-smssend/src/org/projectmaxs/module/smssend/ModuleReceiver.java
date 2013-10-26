@@ -46,7 +46,7 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 
 	@Override
 	public void addHelp(List<CommandHelp> help, Context context) {
-		help.add(new CommandHelp("sms", "send", ArgType.OTHER_STRING,
+		help.add(new CommandHelp("sms", "send", "[contact name]  <sms content>",
 				"Send a sms. The contact needs to be seperated from the sms body with two spaces."));
 		help.add(new CommandHelp("reply", "to", ArgType.NONE, "Send a sms to the recent contact"));
 	}

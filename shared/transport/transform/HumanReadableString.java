@@ -38,6 +38,13 @@ public class HumanReadableString {
 	private static String sUnkown = "Unkown";
 	private static String sOther = "Other";
 
+	private static String sFile = "file";
+	private static String sPath = "path";
+	private static String sNumber = "number";
+	private static String sContactInfo = "contact info";
+	private static String sContactNickname = "contact nickname";
+	private static String sContactName = "contact name";
+
 	public static void toSB(AbstractElement element, StringBuilder sb) {
 		if (element instanceof Contact) {
 			toSB((Contact) element, sb);
@@ -132,15 +139,38 @@ public class HumanReadableString {
 		sb.append(commandHelp.mCommand);
 		sb.append(' ');
 		sb.append(commandHelp.mSubCommand);
-		sb.append(' ');
-		if (commandHelp.mArgType == ArgType.OTHER_STRING) {
-			sb.append(commandHelp.mArgString);
-		} else {
-			sb.append(commandHelp.mArgType);
+		if (commandHelp.mArgType != ArgType.NONE) {
+			sb.append(" <");
+			switch (commandHelp.mArgType) {
+			case FILE:
+				sb.append(sFile);
+				break;
+			case PATH:
+				sb.append(sPath);
+				break;
+			case NUMBER:
+				sb.append(sNumber);
+				break;
+			case CONTACT_INFO:
+				sb.append(sContactInfo);
+				break;
+			case CONTACT_NICKNAME:
+				sb.append(sContactNickname);
+				break;
+			case CONTACT_NAME:
+				sb.append(sContactName);
+				break;
+			case OTHER_STRING:
+				sb.append(commandHelp.mArgString);
+				break;
+			default:
+				throw new IllegalArgumentException("Unkown ArgType: " + commandHelp.mArgType);
+			}
+			sb.append('>');
 		}
-		sb.append(' ');
+
+		sb.append(" - ");
 		sb.append(commandHelp.mHelp);
 		sb.append('\n');
 	}
-
 }

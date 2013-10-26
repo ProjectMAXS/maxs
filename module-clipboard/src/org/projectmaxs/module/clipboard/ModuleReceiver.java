@@ -48,7 +48,7 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	public void addHelp(List<CommandHelp> help, Context context) {
 		help.add(new CommandHelp("clipboard", "get", ArgType.NONE,
 				"Show the content of the clipboard"));
-		help.add(new CommandHelp("clipboard", "set", ArgType.OTHER_STRING,
+		help.add(new CommandHelp("clipboard", "set", "clipboard content",
 				"Set the clipboard to the given text"));
 	}
 }
