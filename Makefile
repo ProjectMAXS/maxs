@@ -6,12 +6,15 @@ ALL := main $(MODULES) $(TRANSPORTS)
 TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
 CPUS := $(shell grep -c ^processor /proc/cpuinfo)
 
-.PHONY: all $(ALL) clean distclean deplyg eclipse makefiles mindeploy parallel pardeploy parrelease release tabletdeploy
+.PHONY: all $(ALL) clean distclean deplyg eclipse makefiles mindeploy parallel parclean pardeploy parrelease release tabletdeploy
 
 all: $(ALL) eclipse
 
 clean:
 	TARGET=$@ $(MAKE) $(ALL)
+
+parclean:
+	TARGET=clean $(MAKE) -j$(CPUS) $(ALL)
 
 distclean:
 	TARGET=$@ $(MAKE) $(ALL)
