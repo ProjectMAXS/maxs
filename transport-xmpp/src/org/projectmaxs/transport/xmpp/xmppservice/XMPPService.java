@@ -30,6 +30,8 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
+import org.jivesoftware.smackx.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.packet.DiscoverInfo;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
@@ -62,6 +64,11 @@ public class XMPPService {
 	private XMPPStatus mXMPPStatus;
 	private State mState = State.Disconnected;
 
+	static {
+		ServiceDiscoveryManager.setDefaultIdentity(new DiscoverInfo.Identity("client",
+				GlobalConstants.NAME, "bot"));
+	}
+
 	/**
 	 * Switch boolean to ensure that the disconnected(Connection) listeners are
 	 * only run if there was a previous connected connection.
@@ -87,7 +94,6 @@ public class XMPPService {
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
 		addListener(new HandleMessagesListener(this));
-		addListener(new XMPPServiceDiscoveryManager());
 		addListener(new XMPPPingManager(this));
 		addListener(new XMPPFileTransfer(context));
 
