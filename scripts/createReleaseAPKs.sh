@@ -86,7 +86,7 @@ ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
 # defined a release tag. It's still a good idea to copy the apks to
 # one location.
 if $REMOTE; then
-    TARGET_DIR=$(date +"%Y-%m-%d_-_%H:%m_%Z")
+    TARGET_DIR=$(date +"%Y-%m-%d_-_%H:%M_%Z")
 else
     TARGET_DIR=${RELEASE_TAG}
 fi
