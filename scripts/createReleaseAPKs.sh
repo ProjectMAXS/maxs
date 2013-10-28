@@ -5,14 +5,18 @@
 set -e
 
 PUBLISH=false
+REMOTE=false
 
-while getopts dpt: OPTION "$@"; do
+while getopts dprt: OPTION "$@"; do
     case $OPTION in
 	d)
 	    set -x
 	    ;;
 	p)
 	    PUBLISH=true
+	    ;;
+	r)
+	    REMOTE=true
 	    ;;
 	t)
 	    RELEASE_TAG="${OPTARG}"
@@ -25,28 +29,40 @@ if $PUBLISH && [[ -z $RELEASE_TAG ]]; then
     exit 1
 fi
 
-KEYSTOREFILE=${KEYSTOREDATA}/release.keystore
-KEYSTOREPASSGPG=${KEYSTOREDATA}/keystore_password.gpg
-
-if [[ ! -d ${KEYSTOREDATA} ]]; then
-    echo "${KEYSTOREDATA} does not exist or is not a directory"
-    exit 1
-fi
-
-if [[ ! -f ${KEYSTOREFILE} ]]; then
-    echo "${KEYSTOREFILE} does not exist or is not a file"
-    exit 1
-fi
-
-if [[ ! -f ${KEYSTOREPASSGPG} ]]; then
-    echo "${KEYSTOREPASSGPG} does not exist or is not a file"
-    exit 1
-fi
-
 TMPDIR=$(mktemp -d)
 trap "rm -rf ${TMPDIR}" EXIT
 
-KEYSTOREPASS=$(cat ${KEYSTOREPASSGPG} | gpg -d)
+if ! $REMOTE; then
+    KEYSTOREFILE=${KEYSTOREDATA}/release.keystore
+    KEYSTOREPASSGPG=${KEYSTOREDATA}/keystore_password.gpg
+
+    if [[ ! -d ${KEYSTOREDATA} ]]; then
+	echo "${KEYSTOREDATA} does not exist or is not a directory"
+	exit 1
+    fi
+
+    if [[ ! -f ${KEYSTOREFILE} ]]; then
+	echo "${KEYSTOREFILE} does not exist or is not a file"
+	exit 1
+    fi
+
+    if [[ ! -f ${KEYSTOREPASSGPG} ]]; then
+	echo "${KEYSTOREPASSGPG} does not exist or is not a file"
+	exit 1
+    fi
+    KEYSTOREPASS=$(cat ${KEYSTOREPASSGPG} | gpg -d)
+else
+    if [[ -z $KEYSTOREPASS ]]; then
+	echo "error: \$KEYSTOREPASS not set"
+	exit 1
+    fi
+    if [[ -z $KEYSTOREURL ]]; then
+	echo "error: \$KEYSTORERUL not set"
+	exit 1
+    fi
+    KEYSTOREFILE=$TMPDIR/release.keystore
+    wget -O $KEYSTOREFILE $KEYSTOREURL 2>&1 || exit 1
+fi
 
 cat <<EOF > ${TMPDIR}/ant.properties
 key.store=${KEYSTOREFILE}
@@ -66,10 +82,16 @@ ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
 # It doesn't matter that $RELEASE_TAG may be empty in case we havn't
 # defined a release tag. It's still a good idea to copy the apks to
 # one location.
-[[ -d releases/${RELEASE_TAG} ]] || mkdir -p releases/${RELEASE_TAG}
+if $REMOTE; then
+    TARGET_DIR=$(date +"%Y-%m-%d_-_%H:%m_%Z")
+else
+    TARGET_DIR=${RELEASE_TAG}
+fi
+
+[[ -d releases/${TARGET_DIR} ]] || mkdir -p releases/${TARGET_DIR}
 
 for c in $COMPONENTS; do
-    cp ${c}/bin/*-release.apk releases/${RELEASE_TAG}
+    cp ${c}/bin/*-release.apk releases/${TARGET_DIR}
 done
 
 if [[ -n $RELEASE_TAG ]]; then
