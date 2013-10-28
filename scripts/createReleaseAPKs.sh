@@ -63,6 +63,9 @@ fi
 
 ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
 
+# It doesn't matter that $RELEASE_TAG may be empty in case we havn't
+# defined a release tag. It's still a good idea to copy the apks to
+# one location.
 [[ -d releases/${RELEASE_TAG} ]] || mkdir -p releases/${RELEASE_TAG}
 
 for c in $COMPONENTS; do
