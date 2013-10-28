@@ -50,10 +50,10 @@ if ! $REMOTE; then
 	echo "${KEYSTOREPASSGPG} does not exist or is not a file"
 	exit 1
     fi
-    KEYSTOREPASS=$(cat ${KEYSTOREPASSGPG} | gpg -d)
+    KEYSTOREPASSWORD=$(cat ${KEYSTOREPASSGPG} | gpg -d)
 else
-    if [[ -z $KEYSTOREPASS ]]; then
-	echo "error: \$KEYSTOREPASS not set"
+    if [[ -z $KEYSTOREPASSWORD ]]; then
+	echo "error: \$KEYSTOREPASSWORD not set"
 	exit 1
     fi
     if [[ -z $KEYSTOREURL ]]; then
@@ -67,8 +67,8 @@ fi
 cat <<EOF > ${TMPDIR}/ant.properties
 key.store=${KEYSTOREFILE}
 key.alias=maxs
-key.store.password=${KEYSTOREPASS}
-key.alias.password=${KEYSTOREPASS}
+key.store.password=${KEYSTOREPASSWORD}
+key.alias.password=${KEYSTOREPASSWORD}
 EOF
 
 cd ${BASEDIR}

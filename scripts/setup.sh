@@ -9,17 +9,16 @@ TRANSPORTS="$(find $BASEDIR -mindepth 1 -maxdepth 1 -type d -name 'transport-*')
 MODULES="$(find $BASEDIR -mindepth 1 -maxdepth 1 -type d -name 'module-*')"
 COMPONENTS="${MAINDIR} ${TRANSPORTS} ${MODULES}"
 
-declare -A MOD2PKG
+if command -v xml &> /dev/null; then
+    declare -A MOD2PKG
+    for m in $MODULES ; do
+	module_name=$(basename $m)
+	module_package=$(xml sel -t -v "//manifest/@package" ${m}/AndroidManifest.xml)
+	MOD2PKG[${module_name}]=${module_package}
+    done
+fi
 
-for m in $MODULES ; do
-    module_name=$(basename $m)
-    module_package=$(xml sel -t -v "//manifest/@package" ${m}/AndroidManifest.xml)
-    MOD2PKG[${module_name}]=${module_package}
-done
-
-if [[ ! -f ${BASEDIR}/config ]]; then
-    echo "config not found"
-else
+if [[ -f ${BASEDIR}/config ]]; then
     # config is there, source it
     . ${BASEDIR}/config
     # and set further env variables based on the config
