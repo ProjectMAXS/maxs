@@ -52,6 +52,9 @@ if ! $REMOTE; then
     fi
     KEYSTOREPASSWORD=$(cat ${KEYSTOREPASSGPG} | gpg -d)
 else
+    if [[ -n $bamboo_KEYSTOREPASSWORD ]]; then
+	KEYSTOREPASSWORD=$bamboo_KEYSTOREPASSWORD
+    fi
     if [[ -z $KEYSTOREPASSWORD ]]; then
 	echo "error: \$KEYSTOREPASSWORD not set"
 	exit 1
