@@ -64,7 +64,7 @@ else
 	exit 1
     fi
     KEYSTOREFILE=$TMPDIR/release.keystore
-    wget -O $KEYSTOREFILE $KEYSTOREURL 2>&1 || exit 1
+    wget -q -O $KEYSTOREFILE $KEYSTOREURL 2>&1 || exit 1
 fi
 
 cat <<EOF > ${TMPDIR}/ant.properties
