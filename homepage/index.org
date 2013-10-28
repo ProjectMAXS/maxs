@@ -18,16 +18,19 @@ over certain transports (XMPP, …). For example you can write SMS on
 your desktop/laptop by sending a command over XMPP to MAXS running on
 your smartphone.
 
-MAXS is designed modular, that means that the functionality is split
-across components,i.e. Android applications. /Modules/ provide the
-notifications and commands, which exchanged between MAXS and the user
-over so called /transports/. MAXS modules and transports are glued
-together with the so called MAXS /main/ application.
+MAXS is dedicated to users privacy and choice, that is why it's
+designed modular. This means that the functionality is split across
+components, i.e. Android applications, which can be categorized in
+three types: /Modules/, /Transports/ and the /main/
+component. /Modules/ provide the notifications and commands, which
+exchanged between MAXS and the user over so called /transports/. MAXS
+modules and transports are glued together with the so called MAXS
+/main/ application.
 
 Get an overview about MAXS by having a look at the
 [[file:../documentation/introduction.org][Introduction]].
 
-[[file:../documentation/sitemap.org][There is even more Documentation available.]]
+[[file:../documentation/sitemap.org][There is more Documentation available.]]
 
 * Alpha Testing
 
@@ -97,7 +100,7 @@ Offical non alpha/beta release pending. [[*Alpha%20Testing][Alpha/Beta testers w
 
 MAXS =.apk='s, signed with the same key as the Play Store releases,
 can be directly downloaded from [[../releases/][this location.]] Use this method of
-obtaining MAXS, only if you really have to
+obtaining MAXS, only if you really have to.
 
 * Support / Help
 
@@ -106,8 +109,19 @@ will be helpful.
 
 * Development
 
-- Source code is hosted on [[https://bitbucket.org/projectmaxs/][bitbucket]]: https://bitbucket.org/projectmaxs/maxs
+- Source code: http://projectmaxs.org/source
+- Issue tracker: http://projectmaxs.org/issues
+- Continues Integration: http://projectmaxs.org/ci
+
 - [[https://www.ohloh.net/p/maxs][Project MAXS @ ohloh.et]]
+
+** MAXS Nightlies
+
+Nightlies signed with the release key can be found as Artifacts of the
+[[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE/][MAXS Nightly Release]] build plan. Select the recent build → Artifacts →
+Release APKs.
+
+For example for [[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE-5][build #5]]: [[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE-5/artifact][Artifacts]] → [[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE-5/artifact/JOB1/Release-APKs/][Release APKs]]
  
 * Contact
 
@@ -160,4 +174,3 @@ Flattr Project MAXS
 
 - The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
-
