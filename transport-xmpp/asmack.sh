@@ -26,7 +26,7 @@ cd libs
 TORM=$(find . -type f \( -name 'asmack-android-*.jar' -a ! -name $ASMACK_JAR \))
 [[ -n $TORM ]] && rm $TORM
 if [[ ! -f $ASMACK_JAR ]]; then
-    wget ${ASMACK_JAR_URL} || exit 1
+    wget ${ASMACK_JAR_URL} 2>&1 || exit 1
 fi
 sha256sum -c ${ASMACK_JAR_SHA256} || exit 1
 # Create the properties file for the container lib. Allows convinitent
@@ -43,8 +43,8 @@ cd libs-sources
 TORM=$(find . -type f \( -name 'asmack-android-*.zip' -a ! -name $ASMACK_SRC \))
 [[ -n $TORM ]] && rm $TORM
 if [[ ! -f $ASMACK_SRC ]]; then
-    wget ${ASMACK_SRC_URL} || exit 1
-    wget ${ASMACK_SRC_URL}.md5 || exit 1
+    wget ${ASMACK_SRC_URL} 2>&1 || exit 1
+    wget ${ASMACK_SRC_URL}.md5 2>&1 || exit 1
     md5sum -c ${ASMACK_SRC}.md5 || exit 1
     rm ${ASMACK_SRC}.md5
 fi
