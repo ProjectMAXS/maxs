@@ -36,11 +36,10 @@ Get an overview about MAXS by having a look at the
 
 As said before, MAXS is currently alpha quality software. If you are
 adventurous enough to test, either grab your release from [[*F-Droid][F-Droid]] or
-[[*Contact][contact us]] to become a member of the Google+ "MAXS Alpha Testers"
-community.
+become a member of the Google+ "MAXS Alpha Testers" community.
 
-After you became a member of the Google+ "MAXS alpah Testers"
-community, use these links to install MAXS.
+After you became a member of the [[https://plus.google.com/communities/113412970285014663139][Google+ "MAXS Alpha Testers"
+community]], use these links to install MAXS.
 
 *Main*
 
@@ -69,7 +68,8 @@ community, use these links to install MAXS.
 
 ** Play Store
 
-Offical non alpha/beta release pending. [[*Alpha%20Testing][Alpha/Beta testers welcome]] :)
+Official release pending. [[*Alpha%20Testing][Alpha/Beta releases on Play Store
+availabe. Testers welcome]] :)
 
 ** F-Droid
 
@@ -109,19 +109,11 @@ will be helpful.
 
 * Development
 
-- Source code: http://projectmaxs.org/source
-- Issue tracker: http://projectmaxs.org/issues
+- Source Code: http://projectmaxs.org/source
+- Issue Tracker: http://projectmaxs.org/issues
 - Continues Integration: http://projectmaxs.org/ci
-
 - [[https://www.ohloh.net/p/maxs][Project MAXS @ ohloh.et]]
-
-** MAXS Nightlies
-
-Nightlies signed with the release key can be found as Artifacts of the
-[[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE/][MAXS Nightly Release]] build plan. Select the recent build → Artifacts →
-Release APKs.
-
-For example for [[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE-5][build #5]]: [[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE-5/artifact][Artifacts]] → [[https://projectmaxs.atlassian.net/builds/browse/MAXS-RELEASE-5/artifact/JOB1/Release-APKs/][Release APKs]]
+- [[http://projectmaxs.org/releases/nightlies/][MAXS Nightlies (signed with release key)]]
  
 * Contact
 
