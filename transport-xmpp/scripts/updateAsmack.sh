@@ -19,7 +19,7 @@ if [[ -z $RELEASE ]]; then
     exit 1
 fi
 
-. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
+. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../scripts/setup.sh"
 
 XMPP_TRANSPORT_DIR=${BASEDIR}/transport-xmpp
 
