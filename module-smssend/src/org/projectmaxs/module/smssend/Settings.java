@@ -36,7 +36,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	private static Settings sSettings;
 
-	public static Settings getInstance(Context context) {
+	public static synchronized Settings getInstance(Context context) {
 		if (sSettings == null) {
 			sSettings = new Settings(context);
 		}
