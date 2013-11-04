@@ -29,9 +29,10 @@ Update Check Mode:Tags
 Current Version:0.0.1.0
 Current Version Code:1
 
-Build Version:0.0.1.0,1,0.0.1.0,\\
-init=cd .. && make ${m}/Makefile,\\
-subdir=${m},\\
-prebuild=make prebuild
+Build Version:0.0.1.0,1
+    commit=0.0.1.0
+    subdir=${m}
+    init=cd .. && make ${m}/Makefile
+    prebuild=make prebuild
 EOF
 done
