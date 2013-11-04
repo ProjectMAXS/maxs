@@ -6,7 +6,7 @@
 
 * What is MAXS?
 
-MAXS is an acronym for *M* odular *A* ndroid *X* MPP *S* ervice and
+MAXS is an acronym for *M* odular *A* ndroid *X* MPP *S* uite and
 consists of /modules/, /transports/ and the /main/ application.
 
 /Modules/ provide the specialized functionality. For example the
