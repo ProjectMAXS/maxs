@@ -6,3 +6,4 @@ Makefile
 bin/
 gen/
 libs/
+build.xml

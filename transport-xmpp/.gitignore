@@ -4,6 +4,7 @@
 .lastBuild
 local.properties
 local.properties
+build.xml
 bin/
 gen/
 libs-sources/

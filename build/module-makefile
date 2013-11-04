@@ -26,13 +26,17 @@ deploy: $(DEBUG_APK)
 $(DEBUG_APK):
 	make module ANT_BUILD_TARGET=debug
 
-clean:
+clean: build.xml
 	ant clean
 
 distclean: clean
 	cd res-src && $(MAKE) clean
+	rm -f build.xml
 
-prebuild: shared resources
+prebuild: build.xml resources shared
+
+build.xml:
+	android update project -p . -n maxs-$(MODULE_NAME)
 
 resources: shared
 	cd res-src && $(MAKE)

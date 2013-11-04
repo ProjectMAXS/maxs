@@ -5,10 +5,13 @@ DEBUG_APK := bin/maxs-main-debug.apk
 
 all: main
 
-main: resources
+main: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
 
-prebuild: resources
+prebuild: build.xml resources
+
+build.xml:
+	android update project -p . -n maxs-main
 
 resources:
 	cd res-src && $(MAKE)
@@ -27,7 +30,7 @@ clean:
 
 distclean: clean
 	cd res-src && $(MAKE) clean
-
+	rm -f build.xml
 
 eclipse: .settings .classpath .project
 

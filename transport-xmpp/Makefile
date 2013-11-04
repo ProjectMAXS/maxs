@@ -29,13 +29,17 @@ deploy: $(DEBUG_APK)
 $(DEBUG_APK):
 	$(MAKE) transport ANT_BUILD_TARGET=debug
 
-clean:
+clean: build.xml
 	ant clean
 
 distclean: clean
 	cd res-src && $(MAKE) clean
+	rm -f build.xml
 
-prebuild: asmack resources shared
+prebuild: asmack build.xml resources shared
+
+build.xml:
+	android update project -p . -n maxs-$(TRANSPORT_NAME)
 
 resources: shared
 	cd res-src && $(MAKE)
