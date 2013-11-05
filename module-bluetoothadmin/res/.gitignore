@@ -1,1 +1,3 @@
+values/shared*.xml
 drawable-mdpi/
+values-*/

@@ -10,7 +10,7 @@ MODULE_NAME := $(shell basename `pwd`)
 DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy distclean eclipse prebuild release resources shared $(DEBUG_APK)
+.PHONY: all clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
 all: module
 
@@ -38,7 +38,7 @@ prebuild: build.xml resources shared
 build.xml:
 	android update project -p . -n maxs-$(MODULE_NAME)
 
-resources: shared
+resources: shared setupResourceLinks
 	cd res-src && $(MAKE)
 
 shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINMODULE_SOURCE) $(SHARED_MODULE_SOURCE) $(SHARED_RES_SRC_MAKEFILE)
@@ -58,6 +58,9 @@ $(SHARED_MODULE_SOURCE): | $(SHARED_SOURCE)
 $(SHARED_RES_SRC_MAKEFILE): $(MAIN)/res-src/Makefile
 	[ -d res-src ] || mkdir res-src
 	cp $^ $@
+
+setupResourceLinks:
+	$(BASE)/scripts/setupResourceLinks.sh -c $(MODULE_NAME)
 
 eclipse: .settings .classpath .project shared
 

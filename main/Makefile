@@ -1,7 +1,8 @@
-ANT_BUILD_TARGET?=debug
+BASE := $(shell readlink -f ../)
 DEBUG_APK := bin/maxs-main-debug.apk
+ANT_BUILD_TARGET ?= debug
 
-.PHONY: all asmack clean deploy distclean eclipse prebuild release resources $(DEBUG_APK)
+.PHONY: all asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks $(DEBUG_APK)
 
 all: main
 
@@ -13,7 +14,7 @@ prebuild: build.xml resources
 build.xml:
 	android update project -p . -n maxs-main
 
-resources:
+resources: setupResourceLinks
 	cd res-src && $(MAKE)
 
 release:
@@ -24,6 +25,9 @@ deploy: $(DEBUG_APK)
 
 $(DEBUG_APK):
 	make main ANT_BUILD_TARGET=debug
+
+setupResourceLinks:
+	$(BASE)/scripts/setupResourceLinks.sh -c main
 
 clean:
 	ant clean

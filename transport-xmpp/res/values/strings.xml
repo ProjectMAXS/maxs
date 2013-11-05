@@ -22,8 +22,6 @@
     <string name="pref_manual_service_settings_service">XMPP Service Name</string>
     <string name="pref_manual_service_settings_service_help">Usually the domain part of your JID</string>
     <string name="pref_app_settings">Application Settings</string>
-    <string name="pref_app_debug_log">Debug Log</string>
-    <string name="pref_app_debug_log_help">Enables extensive logging of debug messages. Useful to find bugs.</string>
     <string name="pref_app_xmpp_debug">XMPP Debug</string>
     <string name="pref_app_xmpp_debug_help">Log all XMPP stanzas</string>
     <string name="pref_app_debug_network">Network Debug</string>

@@ -10,7 +10,7 @@ SHARED_RES_SRC_MAKEFILE := res-src/Makefile
 DEBUG_APK := bin/maxs-$(TRANSPORT_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all asmack clean deploy distclean eclipse prebuild release resources shared $(DEBUG_APK)
+.PHONY: all asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
 all: transport
 
@@ -41,7 +41,7 @@ prebuild: asmack build.xml resources shared
 build.xml:
 	android update project -p . -n maxs-$(TRANSPORT_NAME)
 
-resources: shared
+resources: shared setupResourceLinks
 	cd res-src && $(MAKE)
 
 shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINTRANSPORT_SOURCE) $(SHARED_TRANSPORT_SOURCE) $(SHARED_RES_SRC_MAKEFILE)
@@ -61,6 +61,9 @@ $(SHARED_TRANSPORT_SOURCE): | $(SHARED_SOURCE)
 $(SHARED_RES_SRC_MAKEFILE): $(MAIN)/res-src/Makefile
 	[ -d res-src ] || mkdir res-src
 	cp $^ $@
+
+setupResourceLinks:
+	$(BASE)/scripts/setupResourceLinks.sh -c $(TRANSPORT_NAME)
 
 eclipse: .settings .classpath .project shared
 
