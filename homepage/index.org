@@ -33,6 +33,9 @@ Get an overview about MAXS by having a look at the
 [[file:../documentation/sitemap.org][There is more Documentation available.]]
 
 * Alpha Testing
+  :PROPERTIES:
+  :CUSTOM_ID: alpha
+  :END:
 
 MAXS is currently alpha quality software. If you are adventurous
 enough to test, either grab your release from [[*F-Droid][F-Droid]] or become a
@@ -68,7 +71,7 @@ community]], use these links to install MAXS.
 
 ** Play Store
 
-Official release pending. [[#play%20testing][Alpha channel available.]] Testers welcome.
+Official release pending. [[#alpha][Alpha channel available]].
 
 ** F-Droid
 
@@ -165,3 +168,4 @@ Flattr Project MAXS
 
 - The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
+
