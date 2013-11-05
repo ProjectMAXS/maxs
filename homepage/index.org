@@ -33,9 +33,6 @@ Get an overview about MAXS by having a look at the
 [[file:../documentation/sitemap.org][There is more Documentation available.]]
 
 * Alpha Testing
-  :PROPERTIES:
-  :CUSTOM_ID: play testing
-  :END:
 
 MAXS is currently alpha quality software. If you are adventurous
 enough to test, either grab your release from [[*F-Droid][F-Droid]] or become a
