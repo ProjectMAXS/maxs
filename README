@@ -1,1 +1,24 @@
-Inital README file
+Project MAXS
+============
+
+MAXS (Modular Android XMPP Suite) allows you to control your Android
+device (Ringermode, Send SMS, Query contacts, …) and receive
+notifications from that device (Incoming SMS, Battery Status, …).
+
+For more information visit the project's homepage:
+http://projectmaxs.org
+
+Resources
+=========
+
+- Source: http://projectmaxs.org/source
+- Issues: http://projectmaxs.org/issues
+- Forums: http://projectmaxs.org/forums
+- CI:     http://projectmaxs.org/ci
+
+Bug reports and feature requests
+================================
+
+Please use the offical forum (http://projectmaxs.org/forums) to submit
+bug reports and feature requests. New issues in the bug tracker can
+only be created by team members.
