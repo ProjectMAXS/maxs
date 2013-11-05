@@ -12,9 +12,9 @@ test.
 
 * What is MAXS? / Documentation
 
-MAXS (Modular Android XMPP Suite) is a Android service that allows you
-to receive notifications (incoming calls, new SMS messages, …) and
-control your Android device over certain transports (XMPP, …). For
+MAXS (Modular Android XMPP Suite) allows you to control your Android
+device (Ringermode, Send SMS, Query contacts, …) and receive
+notifications from that device (Incoming SMS, Battery Status, …). For
 example you can write SMS on your desktop/laptop by sending a command
 over XMPP to MAXS running on your smartphone.
 
