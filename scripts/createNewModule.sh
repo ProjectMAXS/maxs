@@ -56,11 +56,6 @@ rm -rf ${DEST_MODULE}/gen/*
 rm -rf ${DEST_MODULE}/Makefile
 mv ${DEST_MODULE}/src/org/projectmaxs/module/${SRC_NAME} ${DEST_MODULE}/src/org/projectmaxs/module/${DEST_NAME}
 
-# Copying relative symbolic links does not work, so we have to
-# re-create those
-rm ${DEST_MODULE}/res-src/drawable-mdpi/ic_maxs.svg
-ln -rs ${BASEDIR}/main/res-src/drawable-mdpi/ic_maxs.svg ${DEST_MODULE}/res-src/drawable-mdpi/
-
 # substitute the module name for the new one
 find $DEST_MODULE -type f | xargs sed -i "s/${SRC_NAME}/${DEST_NAME}/"
 
