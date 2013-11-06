@@ -6,7 +6,6 @@ SHARED_SOURCE := src/org/projectmaxs/shared
 SHARED_GLOBAL_SOURCE := $(SHARED_SOURCE)/global
 SHARED_TRANSPORT_SOURCE := $(SHARED_SOURCE)/transport
 SHARED_MAINTRANSPORT_SOURCE := $(SHARED_SOURCE)/maintransport
-SHARED_RES_SRC_MAKEFILE := res-src/Makefile
 DEBUG_APK := bin/maxs-$(TRANSPORT_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
@@ -33,7 +32,7 @@ clean: build.xml
 	ant clean
 
 distclean: clean
-	cd res-src && $(MAKE) clean
+	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f build.xml
 
 prebuild: asmack build.xml resources shared
@@ -44,7 +43,7 @@ build.xml:
 resources: shared setupResourceLinks
 	cd res-src && $(MAKE)
 
-shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINTRANSPORT_SOURCE) $(SHARED_TRANSPORT_SOURCE) $(SHARED_RES_SRC_MAKEFILE)
+shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINTRANSPORT_SOURCE) $(SHARED_TRANSPORT_SOURCE)
 
 $(SHARED_SOURCE):
 	mkdir $@
@@ -58,12 +57,8 @@ $(SHARED_MAINTRANSPORT_SOURCE): | $(SHARED_SOURCE)
 $(SHARED_TRANSPORT_SOURCE): | $(SHARED_SOURCE)
 	ln -rs $(SHARED)/transport $(SHARED_SOURCE)
 
-$(SHARED_RES_SRC_MAKEFILE): $(MAIN)/res-src/Makefile
-	[ -d res-src ] || mkdir res-src
-	cp $^ $@
-
 setupResourceLinks:
-	$(BASE)/scripts/setupResourceLinks.sh -c $(TRANSPORT_NAME)
+	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
 eclipse: .settings .classpath .project shared
 

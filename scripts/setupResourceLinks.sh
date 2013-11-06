@@ -5,7 +5,7 @@ set -e
 while getopts c:d OPTION "$@"; do
     case $OPTION in
 	c)
-	    COMPONENT=${OPTARG}
+	    COMPONENTDIR=${OPTARG}
 	    ;;
 	d)
 	    set -x
@@ -13,8 +13,22 @@ while getopts c:d OPTION "$@"; do
     esac
 done
 
-if [[ -z "$COMPONENT" ]]; then
-    echo "usage: `basename $0` [-d] -c <component>"
+createRelativeSymlinks() {
+    local sourceDir=$(readlink -e $1)
+    local destDir=$(readlink -e $2)
+
+    cd $destDir
+    for file in $(find $sourceDir -type f) ; do
+	local relPath=${file#${sourceDir}/}
+	[ -h $relPath ] && continue
+	local relDir=$(dirname $relPath)
+	mkdir -p ${relDir}
+	ln -rs $file $relPath
+    done
+}
+
+if [[ -z "$COMPONENTDIR" ]]; then
+    echo "usage: `basename $0` [-d] -c <componentDirectory>"
     exit 1
 fi
 
@@ -24,21 +38,14 @@ IS_MAIN=false
 IS_MODULE=false
 IS_TRANSPORT=false
 
+COMPONENT=$(basename $COMPONENTDIR)
 [[ $COMPONENT == main ]] && IS_MAIN=true
 [[ $COMPONENT == module-* ]] && IS_MODULE=true
 [[ $COMPONETN == transport-* ]] && IS_TRANSPORT=true
 
-cd $BASEDIR/$COMPONENT/res/
-
 # Phase 1: The global shared resources
+createRelativeSymlinks ${BASEDIR}/shared/res-global $COMPONENTDIR/res
 
-for valueDir in $(find ${BASEDIR}/shared/res-values-global/ -mindepth 1 -maxdepth 1 -type d); do
-    # Make sure that the directory exists
-    [[ ! -d $valueDir ]] && mkdir $valueDir
-    for resFile in ${valueDir}/*; do
-	TARGET=$(basename $valueDir)/$(basename $resFile)
-	# Symlink is already in place
-	[[ -h $TARGET ]] && continue;
-	ln -rs $resFile $TARGET
-    done
-done
+# Phase2: The global shared source resources
+[[ ! -d $COMPONENTDIR/res-src ]] && mkdir $COMPONENTDIR/res-src
+createRelativeSymlinks ${BASEDIR}/shared/res-src-global $COMPONENTDIR/res-src

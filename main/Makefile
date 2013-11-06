@@ -27,9 +27,9 @@ $(DEBUG_APK):
 	make main ANT_BUILD_TARGET=debug
 
 setupResourceLinks:
-	$(BASE)/scripts/setupResourceLinks.sh -c main
+	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
-clean:
+clean: build.xml
 	ant clean
 
 distclean: clean

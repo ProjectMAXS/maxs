@@ -6,7 +6,7 @@ ALL := main $(MODULES) $(TRANSPORTS)
 TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
 CPUS := $(shell grep -c ^processor /proc/cpuinfo)
 
-.PHONY: all $(ALL) clean distclean deplyg eclipse makefiles mindeploy parallel parclean pardeploy parrelease release tabletdeploy
+.PHONY: all $(ALL) clean distclean deplyg eclipse makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
 
 all: $(ALL) eclipse
 
@@ -18,7 +18,7 @@ parclean:
 
 distclean:
 	TARGET=$@ $(MAKE) $(ALL)
-	[ -d .git ] && git clean -x -d -f
+	[ ! -d .git ] || git clean -x -d -f
 
 deploy:
 	TARGET=$@ $(MAKE) $(ALL)
@@ -43,6 +43,9 @@ release:
 
 parrelease:
 	TARGET=release $(MAKE) -j$(CPUS) $(ALL)
+
+prebuild:
+	TARGET=prebuild $(MAKE) $(ALL)
 
 makefiles: $(MODULES_MAKEFILE)
 

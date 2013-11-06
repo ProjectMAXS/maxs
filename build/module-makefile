@@ -1,11 +1,17 @@
+CONTRIB := $(shell test -d ../maxs && echo true)
+
+ifeq ($(CONTRIB), true)
+BASE := $(shell readlink -f ../)/maxs
+else
 BASE := $(shell readlink -f ../)
+endif
+
 MAIN := $(BASE)/main
 SHARED := $(BASE)/shared
 SHARED_SOURCE := src/org/projectmaxs/shared
 SHARED_GLOBAL_SOURCE := $(SHARED_SOURCE)/global
 SHARED_MODULE_SOURCE := $(SHARED_SOURCE)/module
 SHARED_MAINMODULE_SOURCE := $(SHARED_SOURCE)/mainmodule
-SHARED_RES_SRC_MAKEFILE := res-src/Makefile
 MODULE_NAME := $(shell basename `pwd`)
 DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
@@ -30,7 +36,7 @@ clean: build.xml
 	ant clean
 
 distclean: clean
-	cd res-src && $(MAKE) clean
+	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f build.xml
 
 prebuild: build.xml resources shared
@@ -41,7 +47,7 @@ build.xml:
 resources: shared setupResourceLinks
 	cd res-src && $(MAKE)
 
-shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINMODULE_SOURCE) $(SHARED_MODULE_SOURCE) $(SHARED_RES_SRC_MAKEFILE)
+shared: $(SHARED_GLOBAL_SOURCE) $(SHARED_MAINMODULE_SOURCE) $(SHARED_MODULE_SOURCE)
 
 $(SHARED_SOURCE):
 	mkdir $@
@@ -55,12 +61,8 @@ $(SHARED_MAINMODULE_SOURCE): | $(SHARED_SOURCE)
 $(SHARED_MODULE_SOURCE): | $(SHARED_SOURCE)
 	ln -rs $(SHARED)/module $(SHARED_SOURCE)
 
-$(SHARED_RES_SRC_MAKEFILE): $(MAIN)/res-src/Makefile
-	[ -d res-src ] || mkdir res-src
-	cp $^ $@
-
 setupResourceLinks:
-	$(BASE)/scripts/setupResourceLinks.sh -c $(MODULE_NAME)
+	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
 eclipse: .settings .classpath .project shared
 
