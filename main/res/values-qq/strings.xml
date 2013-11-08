@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="startService">Label of the button to start the MAXS service</string>
+    <string name="stopService">Label of the button to stop the MAXS service</string>
+    <string name="pref_app_settings">Application Settings group</string>
+    <string name="pref_advanced_settings">Advanced Settings group</string>
+    <string name="pref_app_start_stop_options">Label of the group of options related to MAXS start/stop behavior</string>
+    <string name="pref_app_connect_on_main_screen">Text for preference that controls if MAXS should connect if the MainActivity appears on screen</string>
+    <string name="pref_app_connect_on_main_screen_help">Extended help text for preference, that controls if MAXS should connect if the MainActivity appears on screen</string>
+    <string name="pref_app_connect_on_boot_completed">Text for preference that controls if MAXS should start and connect after the Android divces has succesfully booted</string>
+    <string name="pref_app_connect_on_boot_completed_help">Extended help text for preference that controls if MAXS should start and connect after the Android divces has succesfully booted</string>
+</resources>

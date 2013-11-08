@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="master_addresses">Label for \'master addresses\' group.</string>
+    <string name="device_account">Label for the preference group for XMPP account of MAXS</string>
+    <string name="hint_jid">Hint for a typical jabber ID (JID) format, the address format used by XMPP</string>
+    <string name="password">Password</string>
+    <string name="advancedSettings">Label for \'Advanced Settings\' preference group</string>
+    <string name="registerAccount">Label for the \'Register Account\' button</string>
+    <string name="pref_xmpp_stream_settings">Label for \'XMPP Stream Settings\' preference group</string>
+    <string name="pref_xmpp_stream_compression">Label for \'Stream compression\' preference</string>
+    <string name="pref_xmpp_stream_compression_help">Extended help text for \'Stream compression\' preference</string>
+    <string name="pref_xmpp_stream_encryption">Label for \'Stream encryption\' preference</string>
+    <string name="pref_xmpp_stream_encryption_help">Extended help text for \'Stream encryption\' preference</string>
+    <string name="pref_xmpp_service_settings">Label for \'XMPP Service Settings\' preference group</string>
+    <string name="pref_manual_service_settings">Label for \'Manual service settings\' preference group</string>
+    <string name="pref_manual_service_settings_help">Extended help text for \'Manual service settings\' preference group</string>
+    <string name="pref_manual_service_settings_host">Label for \'Host\' preference</string>
+    <string name="pref_manual_service_settings_host_help">Extended help text for \'Host\' preferenc</string>
+    <string name="pref_manual_service_settings_port">Label for \'Port" preference</string>
+    <string name="pref_manual_service_settings_port_help">Extended help text for \'Port" preference</string>
+    <string name="pref_manual_service_settings_service">Label for \'XMPP Service Name\' preference</string>
+    <string name="pref_manual_service_settings_service_help">Extended help text for \'XMPP Service Name\' preference</string>
+    <string name="pref_app_settings">Label for \'Application Settings\' preference group</string>
+    <string name="pref_app_xmpp_debug">Label for \'XMPP Debug\' preference</string>
+    <string name="pref_app_xmpp_debug_help">Extended help text for \'XMPP Debug\' preference</string>
+    <string name="pref_app_debug_network">Label for \'Network Debug\' preference</string>
+    <string name="pref_app_debug_network_help">Extended help text for \'Network Debug\' preference</string>
+
+    <string-array name="array_xmpp_connection_security_entries">
+        <item>Disabled</item>
+        <item>Required</item>
+        <item>Optional</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_module_receiver_label">Label text of the module receiver.</string>
+    <string name="pref_notify_send">Lable for the enable/disable \'SMS send notification\' setting</string>
+    <string name="pref_notify_send_help">Extended help text for the enable/disable \'SMS send notification\' setting</string>
+    <string name="pref_notify_delivered">Lable for the enable/disable \'SMS delivered notification\' setting</string>
+    <string name="pref_notify_delivered_help">Extended help text for the enable/disable \'SMS delivered notification\' setting</string>
+</resources>

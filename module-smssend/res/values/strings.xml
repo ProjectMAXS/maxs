@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_module_receiver_label">Module Receiver</string>
+    <string name="app_module_receiver_label">MAXS smsend Module Receiver</string>
     <string name="pref_notify_send">Send Notifications</string>
     <string name="pref_notify_send_help">Request notifications if the SMS message has been send</string>
     <string name="pref_notify_delivered">Delivered Notifications</string>
