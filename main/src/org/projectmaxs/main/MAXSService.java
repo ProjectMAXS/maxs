@@ -141,7 +141,7 @@ public class MAXSService extends Service {
 				sIsRunning = false;
 			}
 		} else {
-			throw new IllegalStateException("MAXSService unkown action " + action);
+			throw new IllegalStateException("MAXSService unknown action " + action);
 		}
 		return sticky ? START_STICKY : START_NOT_STICKY;
 	}

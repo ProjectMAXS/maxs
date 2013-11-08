@@ -60,7 +60,7 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mTransportRegistry.updateStatus(transportPackage, status);
 		} else {
-			throw new IllegalStateException("onHandleIntent: unkown action " + action);
+			throw new IllegalStateException("onHandleIntent: unknown action " + action);
 		}
 	}
 }
