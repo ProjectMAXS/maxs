@@ -4,7 +4,7 @@ ANT_BUILD_TARGET ?= debug
 
 .PHONY: all asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks $(DEBUG_APK)
 
-all: main
+all: main eclipse
 
 main: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
@@ -33,7 +33,7 @@ clean: build.xml
 	ant clean
 
 distclean: clean
-	cd res-src && $(MAKE) clean
+	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f build.xml
 
 eclipse: .settings .classpath .project

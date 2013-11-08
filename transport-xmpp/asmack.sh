@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 [[ $1 == "-d" ]] && set -x
 
 # config
@@ -50,8 +52,7 @@ if [[ ! -f $ASMACK_SRC ]]; then
 fi
 popd > /dev/null
 
-make eclipse
 sed -i \
     -e "s/asmack-android-.*jar/${ASMACK_JAR}/" \
     -e "s/sources\/asmack-android-.*zip/sources\/${ASMACK_SRC}/" \
-    .classpath
+    build/eclipse/classpath

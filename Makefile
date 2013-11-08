@@ -8,7 +8,7 @@ CPUS := $(shell grep -c ^processor /proc/cpuinfo)
 
 .PHONY: all $(ALL) clean distclean deplyg eclipse makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
 
-all: $(ALL) eclipse
+all: $(ALL)
 
 clean:
 	TARGET=$@ $(MAKE) $(ALL)
@@ -50,7 +50,7 @@ prebuild:
 makefiles: $(MODULES_MAKEFILE)
 
 $(ALL): makefiles
-	cd $@ && $(MAKE) $(TARGET)
+	$(MAKE) -C $@ $(TARGET)
 
 module-%/Makefile:
 	 ln -rs build/module-makefile $@

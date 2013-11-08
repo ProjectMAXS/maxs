@@ -11,7 +11,7 @@ ANT_BUILD_TARGET ?= debug
 
 .PHONY: all asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
-all: transport
+all: transport eclipse
 
 transport: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
@@ -60,7 +60,7 @@ $(SHARED_TRANSPORT_SOURCE): | $(SHARED_SOURCE)
 setupResourceLinks:
 	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
-eclipse: .settings .classpath .project shared
+eclipse: .settings .classpath .project prebuild
 
 .settings:
 	ln -s ../build/eclipse/settings .settings
