@@ -60,7 +60,7 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
 		} else {
-			throw new IllegalStateException("MAXSTransportReceiver: unkown action: " + action);
+			throw new IllegalStateException("MAXSTransportReceiver: unknown action: " + action);
 		}
 		if (replyIntent != null) {
 			mLog.d("onReceive: replying with action=" + replyIntent.getAction());

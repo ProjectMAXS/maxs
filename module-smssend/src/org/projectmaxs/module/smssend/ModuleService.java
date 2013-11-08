@@ -128,7 +128,7 @@ public class ModuleService extends MAXSModuleIntentService {
 			text = argsSplit[1];
 			RecentContactUtil.setRecentContact(receiver, contact, this);
 		} else {
-			throw new IllegalStateException("unkown command: " + command);
+			throw new IllegalStateException("unknown command: " + command);
 		}
 
 		Sms sms = sendSMS(receiver, text, command.getId());

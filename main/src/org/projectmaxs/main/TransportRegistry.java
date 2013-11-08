@@ -135,7 +135,7 @@ public class TransportRegistry {
 		}
 		mTransportList.add(transportInformation);
 		Collections.sort(mTransportList);
-		mPackageStatus.put(transportPackage, "unkown");
+		mPackageStatus.put(transportPackage, "unknown");
 		mTransportRegistryTable.insertOrReplace(transportInformation);
 		for (ChangeListener l : mChangeListeners)
 			l.transportRegistered(transportInformation);

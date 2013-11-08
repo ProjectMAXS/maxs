@@ -71,7 +71,7 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 			// only set the status if something has changed
 			if (status != null) maxsService.setStatus(status);
 		} else {
-			throw new IllegalStateException("MAXSModuleIntentService unkown action: " + action);
+			throw new IllegalStateException("MAXSModuleIntentService unknown action: " + action);
 		}
 	}
 }

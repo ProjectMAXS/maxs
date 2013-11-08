@@ -188,7 +188,7 @@ public class XMPPService {
 		} else if (Constants.ACTION_SEND_AS_IQ.equals(action)) {
 			sendAsIQ(message, originIssuerInfo, originId);
 		} else {
-			throw new IllegalStateException("XMPPService send: unkown action=" + action);
+			throw new IllegalStateException("XMPPService send: unknown action=" + action);
 		}
 	}
 

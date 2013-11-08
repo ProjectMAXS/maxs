@@ -110,7 +110,7 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 		case SmsManager.RESULT_ERROR_RADIO_OFF:
 			return RESULT_ERROR_RADIO_OFF_CHAR;
 		default:
-			throw new IllegalStateException("unkown res=" + res);
+			throw new IllegalStateException("unknown res=" + res);
 		}
 	}
 }

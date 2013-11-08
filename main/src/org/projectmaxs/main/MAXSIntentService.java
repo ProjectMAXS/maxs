@@ -47,7 +47,7 @@ public class MAXSIntentService extends IntentService {
 			if (status == null) return;
 			ImportExportSettings.appendStatus(status);
 		} else {
-			throw new IllegalStateException("unkown intent action: " + intent.getAction());
+			throw new IllegalStateException("unknown intent action: " + intent.getAction());
 		}
 	}
 }
