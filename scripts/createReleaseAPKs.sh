@@ -7,10 +7,20 @@ set -e
 PUBLISH=false
 REMOTE=false
 
-while getopts dprt: OPTION "$@"; do
+while getopts dhprt: OPTION "$@"; do
     case $OPTION in
 	d)
 	    set -x
+	    ;;
+	h)
+	    cat <<EOF
+usage: `basename $0` [-d] [-p] [-r] [-t <tag>]
+	-d: debug output
+	-p: publish
+	-r: get keystore data from remote location
+	-t <tag>: prepare release of version <tag>
+EOF
+	    exit
 	    ;;
 	p)
 	    PUBLISH=true
@@ -37,17 +47,17 @@ if ! $REMOTE; then
     KEYSTOREPASSGPG=${KEYSTOREDATA}/keystore_password.gpg
 
     if [[ ! -d ${KEYSTOREDATA} ]]; then
-	echo "${KEYSTOREDATA} does not exist or is not a directory"
+	echo "KEYSTOREDATA=${KEYSTOREDATA} does not exist or is not a directory"
 	exit 1
     fi
 
     if [[ ! -f ${KEYSTOREFILE} ]]; then
-	echo "${KEYSTOREFILE} does not exist or is not a file"
+	echo "KEYSTOREFILE=${KEYSTOREFILE} does not exist or is not a file"
 	exit 1
     fi
 
     if [[ ! -f ${KEYSTOREPASSGPG} ]]; then
-	echo "${KEYSTOREPASSGPG} does not exist or is not a file"
+	echo "KEYSTOREPASSGPG=${KEYSTOREPASSGPG} does not exist or is not a file"
 	exit 1
     fi
     KEYSTOREPASSWORD=$(cat ${KEYSTOREPASSGPG} | gpg -d)
