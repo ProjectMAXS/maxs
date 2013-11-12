@@ -50,11 +50,10 @@ import android.os.ParcelFileDescriptor;
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
-	private final Settings mSettings;
+	private Settings mSettings;
 
 	public ModuleService() {
 		super(LOG, "maxs-module-fileread");
-		mSettings = Settings.getInstance(this);
 	}
 
 	// @formatter:off
@@ -86,6 +85,9 @@ public class ModuleService extends MAXSModuleIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		// Do not try to initialize settings in the ModuleService's constructor, as the context will
+		// not be available, resulting in an NPE.
+		mSettings = Settings.getInstance(this);
 	}
 
 	@Override
