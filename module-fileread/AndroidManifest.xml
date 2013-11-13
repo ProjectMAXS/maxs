@@ -14,7 +14,9 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
     <uses-permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" />
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
     <application
         android:icon="@drawable/ic_maxs"

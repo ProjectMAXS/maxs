@@ -17,7 +17,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
     <application
         android:icon="@drawable/ic_maxs"

@@ -15,7 +15,9 @@
     <uses-permission android:name="org.projectmaxs.permission.READ_CONTACTS" />
     <uses-permission android:name="org.projectmaxs.permission.WRITE_SMS" />
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
     <uses-feature
         android:name="android.hardware.telephony"
