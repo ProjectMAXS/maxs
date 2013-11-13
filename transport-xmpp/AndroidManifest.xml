@@ -3,28 +3,38 @@
     package="org.projectmaxs.transport.xmpp"
     android:versionCode="6"
     android:versionName="0.0.1.5" >
-    <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
-    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT"/>
+
+    <permission android:name="org.projectmaxs.permission.USE_MAIN" />
+    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" />
     <permission android:name="org.projectmaxs.permission.USE_TRANSPORT" />
-    <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
-    <permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE"/>
+    <permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE" />
+    <permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" />
+
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" />
-    <uses-permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"/>
+    <uses-permission android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-sdk android:minSdkVersion="10"/>
 
-    <application android:label="@string/app_name" android:icon="@drawable/ic_maxs">
-        <activity android:name=".activities.InfoAndSettings" android:exported="true" />
+    <uses-sdk android:minSdkVersion="10" />
+
+    <application
+        android:icon="@drawable/ic_maxs"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".activities.InfoAndSettings"
+            android:exported="true" />
         <activity android:name=".activities.AdvancedSettings" />
-        <receiver android:name=".TransportReceiver"
-            android:label="Transport Receiver" android:permission="org.projectmaxs.permission.USE_TRANSPORT">
+
+        <receiver
+            android:name=".TransportReceiver"
+            android:label="Transport Receiver"
+            android:permission="org.projectmaxs.permission.USE_TRANSPORT" >
             <intent-filter>
-                <action android:name="org.projectmaxs.REGISTER"/>
-                <action android:name="org.projectmaxs.EXPORT_SETTINGS"/>
-                <action android:name="org.projectmaxs.IMPORT_SETTINGS"/>
+                <action android:name="org.projectmaxs.REGISTER" />
+                <action android:name="org.projectmaxs.EXPORT_SETTINGS" />
+                <action android:name="org.projectmaxs.IMPORT_SETTINGS" />
             </intent-filter>
         </receiver>
         <receiver android:name=".receivers.NetworkConnectivityReceiver" >
@@ -32,10 +42,12 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".TransportService"
             android:permission="org.projectmaxs.permission.USE_TRANSPORT" >
             <intent-filter>
+
                 <!-- This is the only filter needed, all other intents are sent with setClassName() -->
                 <action android:name="org.projectmaxs.transport.xmpp.NETWORK_STATUS_CHANGED" />
             </intent-filter>

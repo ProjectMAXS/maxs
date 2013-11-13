@@ -1,51 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.projectmaxs.module.fileread"
-      android:versionCode="6"
-      android:versionName="0.0.1.5">
-    <permission android:name="org.projectmaxs.permission.USE_MODULE"/>
-    <permission android:name="org.projectmaxs.permission.USE_MAIN"/>
-    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
-    <permission android:name="org.projectmaxs.permission.USE_FILEREAD"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN"/>
-    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"/>
-    <uses-permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE"/>
-    <uses-sdk android:minSdkVersion="10"/>
-    <application android:label="@string/app_name" android:icon="@drawable/ic_maxs">
-        <activity android:name=".activities.InfoAndSettings" android:exported="true"/>
+    package="org.projectmaxs.module.fileread"
+    android:versionCode="6"
+    android:versionName="0.0.1.5" >
+
+    <permission android:name="org.projectmaxs.permission.USE_MODULE" />
+    <permission android:name="org.projectmaxs.permission.USE_MAIN" />
+    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
+    <permission android:name="org.projectmaxs.permission.USE_FILEREAD" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
+    <uses-permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" />
+
+    <uses-sdk android:minSdkVersion="10" />
+
+    <application
+        android:icon="@drawable/ic_maxs"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".activities.InfoAndSettings"
+            android:exported="true" />
+
         <receiver
             android:name=".ModuleReceiver"
             android:label="@string/app_module_receiver_label"
-            android:permission="org.projectmaxs.permission.USE_MODULE">
+            android:permission="org.projectmaxs.permission.USE_MODULE" >
             <intent-filter>
-                <action android:name="org.projectmaxs.REGISTER"/>
-                <action android:name="org.projectmaxs.EXPORT_SETTINGS"/>
-                <action android:name="org.projectmaxs.IMPORT_SETTINGS"/>
+                <action android:name="org.projectmaxs.REGISTER" />
+                <action android:name="org.projectmaxs.EXPORT_SETTINGS" />
+                <action android:name="org.projectmaxs.IMPORT_SETTINGS" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".ModuleService"
-            android:permission="org.projectmaxs.permission.USE_MODULE">
+            android:permission="org.projectmaxs.permission.USE_MODULE" >
             <intent-filter>
-                <action android:name="org.projectmaxs.PERFORM_COMMAND"/>
+                <action android:name="org.projectmaxs.PERFORM_COMMAND" />
             </intent-filter>
         </service>
-        <service android:name=".FileReadService" android:permission="org.projectmaxs.permission.USE_FILEREAD">
+        <service
+            android:name=".FileReadService"
+            android:permission="org.projectmaxs.permission.USE_FILEREAD" >
             <intent-filter>
-                <action android:name="org.projectmaxs.ACTION_BIND_FILEREAD"/>
+                <action android:name="org.projectmaxs.ACTION_BIND_FILEREAD" />
             </intent-filter>
         </service>
         <service
             android:name=".SetCWDService"
-            android:permission="org.projectmaxs.permission.USE_MODULE">
+            android:permission="org.projectmaxs.permission.USE_MODULE" >
             <intent-filter>
-                <action android:name="org.projectmaxs.module.fileread.ACTION_SET_CWD"/>
+                <action android:name="org.projectmaxs.module.fileread.ACTION_SET_CWD" />
             </intent-filter>
         </service>
+
         <provider
             android:name=".MAXSFilereadProvider"
             android:authorities="org.projectmaxs.module.fileread"
-            android:permission="org.projectmaxs.permission.USE_MODULE"/>
+            android:permission="org.projectmaxs.permission.USE_MODULE" />
     </application>
-</manifest> 
+
+</manifest>
