@@ -95,14 +95,19 @@ public class MainActivity extends Activity {
 		mListener = new StartStopListener() {
 			@Override
 			public void onServiceStart(final MAXSService service) {
-				status(service.getString(R.string.stopService));
+				serviceRunning();
 			}
 
 			public void onServiceStop(final MAXSService service) {
-				status(service.getString(R.string.startService));
+				serviceNotRunning();
 			}
 		};
 		MAXSService.addStartStopListener(mListener);
+		if (MAXSService.isRunning()) {
+			serviceRunning();
+		} else {
+			serviceNotRunning();
+		}
 
 		if (mSettings.connectOnMainScreen() && MAXSService.isRunning()) {
 			LOG.d("connectOnMainScreen enabled and service not running, calling startService");
@@ -211,6 +216,22 @@ public class MainActivity extends Activity {
 				textView.setText(text);
 			}
 		});
+	}
+
+	/**
+	 * Take actions for MainActivity if the service is running. This includes:
+	 * - Set the text of the start/stop button to 'stop'
+	 */
+	private void serviceRunning() {
+		status(getString(R.string.stopService));
+	}
+
+	/**
+	 * Take actions for MainActivity if the service is not running. This includes:
+	 * - Set the text of the start/stop button to 'start'
+	 */
+	private void serviceNotRunning() {
+		status(getString(R.string.startService));
 	}
 
 	public void openAdvancedSettings(View view) {
