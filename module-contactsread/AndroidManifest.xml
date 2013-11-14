@@ -46,6 +46,7 @@
         <provider
             android:name=".MAXSContactProvider"
             android:authorities="org.projectmaxs.module.contactsread"
+            android:exported="true"
             android:permission="org.projectmaxs.permission.READ_CONTACTS" >
         </provider>
     </application>

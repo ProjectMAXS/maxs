@@ -83,6 +83,7 @@
         <provider
             android:name=".MAXSContentProvider"
             android:authorities="org.projectmaxs.main"
+            android:exported="true"
             android:permission="org.projectmaxs.permission.USE_MAIN_AS_MODULE" >
         </provider>
 

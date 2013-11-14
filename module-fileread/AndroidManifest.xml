@@ -61,6 +61,7 @@
         <provider
             android:name=".MAXSFilereadProvider"
             android:authorities="org.projectmaxs.module.fileread"
+            android:exported="true"
             android:permission="org.projectmaxs.permission.USE_MODULE" />
     </application>
 
