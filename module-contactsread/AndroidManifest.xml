@@ -18,6 +18,7 @@
         android:targetSdkVersion="19" />
 
     <application
+        android:allowBackup="true"
         android:icon="@drawable/ic_maxs"
         android:label="@string/app_name" >
         <activity
