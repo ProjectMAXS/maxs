@@ -37,8 +37,8 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	private static final Log LOG = Log.getLog();
 
 	@Override
-	public Message onReceiveReturnMessages(Context context, Intent intent) {
-		LOG.d("onReceiveReturnMessages()");
+	public Message onReceiveReturnMessage(Context context, Intent intent) {
+		LOG.d("onReceiveReturnMessage()");
 		Map<String, String> msg = RetrieveMessages(intent);
 		if (msg == null) {
 			LOG.w("Could not retrieve short messages");

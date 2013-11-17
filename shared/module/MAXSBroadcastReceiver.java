@@ -31,7 +31,7 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Message message = onReceiveReturnMessages(context, intent);
+		Message message = onReceiveReturnMessage(context, intent);
 		if (message == null) {
 			LOG.e("onReceive: message was null");
 			return;
@@ -42,6 +42,6 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 		context.startService(replyIntent);
 	}
 
-	public abstract Message onReceiveReturnMessages(Context context, Intent intent);
+	public abstract Message onReceiveReturnMessage(Context context, Intent intent);
 
 }
