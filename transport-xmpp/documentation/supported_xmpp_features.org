@@ -1,0 +1,6 @@
+* [[http://xmpp.org/extensions/xep-0030.html][XEP-0030]] Service Discovery
+* [[http://xmpp.org/extensions/xep-0115.html][XEP-0115]] Entity Capabilities
+* [[http://xmpp.org/extensions/xep-0184.html][XEP-0184]] Message Delivery Receipts
+
+Tip: Get [[http://gajim.org][Gajim]] 0.16 and set [[https://trac.gajim.org/ticket/7341][positive_184_acks]] to true in Gajim's
+"Advanced Configuration Editor" to get the most out of XEP-0184 :)
