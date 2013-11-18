@@ -1,3 +1,10 @@
+#+TITLE:        Supported XMPP Features
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      H:2 num:nil author:nil toc:nil
+#+OPTIONS:      timestamp:nil
+#+STARTUP:      noindent
+
 * [[http://xmpp.org/extensions/xep-0030.html][XEP-0030]] Service Discovery
 * [[http://xmpp.org/extensions/xep-0115.html][XEP-0115]] Entity Capabilities
 * [[http://xmpp.org/extensions/xep-0184.html][XEP-0184]] Message Delivery Receipts
