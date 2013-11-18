@@ -30,7 +30,7 @@ modules and transports are glued together with the so called MAXS
 Get an overview about MAXS by having a look at the
 [[file:../documentation/introduction.org][Introduction]].
 
-[[file:../documentation/sitemap.org][There is more Documentation available.]]
+[[../documentation/index.org][There is more Documentation available.]]
 
 * Alpha Testing
   :PROPERTIES:
