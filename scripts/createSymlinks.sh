@@ -13,7 +13,8 @@ done
 cd $DOCDIR
 
 for c in $COMPONENTS; do
-    if [ -d ${c}/documentation ]; then
-	ln -rs ${c}/documentation $(basename ${c})
+    BASENAME_COMPONENT=$(basename ${c})
+    if [ -d ${c}/documentation ] && [ ! -L $BASENAME_COMPONENT ]; then
+	ln -rs ${c}/documentation $BASENAME_COMPONENT
     fi
 done

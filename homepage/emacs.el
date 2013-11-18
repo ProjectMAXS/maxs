@@ -33,6 +33,7 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
 	 :sitemap-sort-files "alphabetically"
 	 :sitemap-title "MAXS Documentation"
 	 :sitemap-filename "index.org"
+	 :recursive t
 	 )
 	("maxs-static"
 	 :base-directory "."
