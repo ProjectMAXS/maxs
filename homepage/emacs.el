@@ -30,7 +30,7 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
 	 :publishing-function org-html-publish-to-html
 	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:/homepage/org-info.js"
 	 :auto-sitemap t
-	 :sitemap-sort-files "alphabetically"
+	 :sitemap-sort-folders "last"
 	 :sitemap-title "MAXS Documentation"
 	 :sitemap-filename "index.org"
 	 :recursive t
