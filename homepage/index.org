@@ -30,7 +30,7 @@ modules and transports are glued together with the so called MAXS
 Get an overview about MAXS by having a look at the
 [[file:../documentation/introduction.org][Introduction]].
 
-[[../documentation/index.org][There is more Documentation available.]]
+[[../documentation/index.org][There is more Documentation available under projectmaxs.org/docs]]
 
 * Alpha Testing
   :PROPERTIES:
@@ -113,9 +113,10 @@ will be helpful.
 
 - Source Code: http://projectmaxs.org/source
 - Issue Tracker: http://projectmaxs.org/issues
-- Continues Integration: http://projectmaxs.org/ci
-- [[https://www.ohloh.net/p/maxs][Project MAXS @ ohloh.et]]
-- [[http://projectmaxs.org/releases/nightlies/][MAXS Nightlies (signed with release key)]]
+- Developer Documentation: http://projectmaxs.org/docs
+- Continuous Integration: http://projectmaxs.org/ci
+- MAXS Nightlies and Releases, signed with release key: [[http://projectmaxs.org/releases/nightlies/][http://projectmaxs.org/releases]]
+- Project MAXS at ohloh.net: https://www.ohloh.net/p/maxs
  
 * Contact
 
