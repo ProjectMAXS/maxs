@@ -17,6 +17,7 @@
     <permission android:name="org.projectmaxs.permission.USE_FILEREAD" />
 
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
+    <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MODULE" />
     <uses-permission android:name="org.projectmaxs.permission.USE_TRANSPORT" />
     <uses-permission android:name="org.projectmaxs.permission.USE_FILEWRITE" />
