@@ -54,7 +54,6 @@ public class DialogUtil {
 							"No handler for 'market://' links (e.g. Play Store) available.",
 							Toast.LENGTH_LONG).show();
 				}
-				dialog.dismiss();
 			}
 		});
 		builder.setNeutralButton("Install from F-Droid", new OnClickListener() {
@@ -67,7 +66,6 @@ public class DialogUtil {
 					Toast.makeText(context, "No handler for 'fdroid.app:' links available",
 							Toast.LENGTH_LONG).show();
 				}
-
 			}
 		});
 		builder.setNegativeButton("Cancel", new OnClickListener() {
