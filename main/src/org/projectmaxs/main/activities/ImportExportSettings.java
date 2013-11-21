@@ -35,24 +35,20 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.aidl.IFileReadModuleService;
 import org.projectmaxs.shared.global.aidl.IFileWriteModuleService;
 import org.projectmaxs.shared.global.util.AsyncServiceTask;
+import org.projectmaxs.shared.global.util.DialogUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
 import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ImportExportSettings extends Activity {
 
@@ -60,8 +56,6 @@ public class ImportExportSettings extends Activity {
 	private static final Log LOG = Log.getLog();
 	private static final String PICK_DIRECTORY_INTENT = "org.openintents.action.PICK_DIRECTORY";
 	private static final String OIFM_PACKAGE = "org.openintents.filemanager";
-	private static final Uri OIFM_MARKET_URI = Uri.parse("market://search?q=pname:" + OIFM_PACKAGE);
-	private static final Uri OIFM_FDROID_URI = Uri.parse("fdroid.app:" + OIFM_PACKAGE);
 	private static final int FILE_REQUEST_CODE = 1;
 
 	private static TextView sImportExportStatus;
@@ -94,8 +88,10 @@ public class ImportExportSettings extends Activity {
 		sImportExportStatus.setText("");
 
 		if (!mPackageManagerUtil.isPackageInstalled(GlobalConstants.FILEWRITE_MODULE_PACKAGE)) {
-			appendStatus("Required module " + GlobalConstants.FILEWRITE_MODULE_PACKAGE
-					+ " is not installed");
+			DialogUtil
+					.displayPackageInstallDialog(
+							"The filewrite module,  which is required to read the data,  is not installed.",
+							GlobalConstants.FILEWRITE_MODULE_PACKAGE, this);
 			return;
 		}
 
@@ -122,7 +118,16 @@ public class ImportExportSettings extends Activity {
 		sImportExportStatus.setText("");
 		final Intent intent = new Intent(PICK_DIRECTORY_INTENT);
 		if (!mPackageManagerUtil.isIntentAvailable(intent)) {
-			displayFileManagerInstallDialog();
+			DialogUtil
+					.displayPackageInstallDialog(
+							"OI File Manager, which is required to select a directory to import settings from, is not installed.",
+							OIFM_PACKAGE, this);
+			return;
+		}
+		if (!mPackageManagerUtil.isPackageInstalled(GlobalConstants.FILEREAD_MODULE_PACKAGE)) {
+			DialogUtil.displayPackageInstallDialog(
+					"The fileread module,  which is required to read the data,  is not installed.",
+					GlobalConstants.FILEREAD_MODULE_PACKAGE, this);
 			return;
 		}
 		startActivityForResult(intent, FILE_REQUEST_CODE);
@@ -219,46 +224,6 @@ public class ImportExportSettings extends Activity {
 
 			}.go();
 		}
-	}
-
-	private final void displayFileManagerInstallDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("OI File Manager, which is required to select a directory to import settings from, is not installed.");
-		builder.setPositiveButton("Install from Play Store", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				final Intent install = new Intent(Intent.ACTION_VIEW, OIFM_MARKET_URI);
-				if (mPackageManagerUtil.isIntentAvailable(install)) {
-					startActivity(install);
-				} else {
-					Toast.makeText(ImportExportSettings.this,
-							"No handler for 'market://' links (e.g. Play Store) available.",
-							Toast.LENGTH_LONG).show();
-				}
-				dialog.dismiss();
-			}
-		});
-		builder.setNeutralButton("Install from F-Droid", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				final Intent install = new Intent(Intent.ACTION_VIEW, OIFM_FDROID_URI);
-				if (mPackageManagerUtil.isIntentAvailable(install)) {
-					startActivity(install);
-				} else {
-					Toast.makeText(ImportExportSettings.this,
-							"No handler for 'fdroid.app:' links available", Toast.LENGTH_LONG)
-							.show();
-				}
-
-			}
-		});
-		builder.setNegativeButton("Cancel", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		builder.show();
 	}
 
 	public static void tryToExport(final String file, final byte[] bytes, Context context) {
