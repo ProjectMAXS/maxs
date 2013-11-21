@@ -145,7 +145,7 @@ latest news:
 - [[https://social.geekplace.eu/maxs/rss][RSS 1.0]]
 - [[https://social.geekplace.eu/api/statuses/user_timeline/3.rss][RSS 2.0]]
 
-* Donate
+* <<<Donate>>>
 
 ** Bitcoin
 
