@@ -11,13 +11,18 @@ import org.projectmaxs.main.TransportRegistry;
 import org.projectmaxs.main.TransportRegistry.ChangeListener;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.DialogUtil;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PackageManagerUtil;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -249,5 +254,41 @@ public class MainActivity extends Activity {
 	public void discoverComponents(View view) {
 		Intent intent = new Intent(GlobalConstants.ACTION_REGISTER);
 		sendBroadcast(intent);
+	}
+
+	public void donate(View view) {
+		final Intent BTC_INTENT = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt"));
+		final Intent DONATE_INTENT = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("http://projectmaxs.org/homepage/index.html#Donate"));
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Do you want to donate directly with help of an Android Bitcoin Client, or do you want to view the \"Donate\" section on projectmaxs.org in a browser?");
+		builder.setPositiveButton("Bitcoin", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (PackageManagerUtil.getInstance(MainActivity.this).isIntentAvailable(BTC_INTENT)) {
+					startActivity(BTC_INTENT);
+				} else {
+					DialogUtil
+							.displayPackageInstallDialog(
+									"No Bitcoin Client found. Please consider installing \"Bitcoin Wallet\"",
+									"de.schildbach.wallet", MainActivity.this);
+				}
+			}
+		});
+		builder.setNeutralButton("View \"Donate\" section", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				startActivity(DONATE_INTENT);
+			}
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		builder.show();
 	}
 }
