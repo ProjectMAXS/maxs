@@ -17,12 +17,14 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -53,8 +55,8 @@ public class XMPPService {
 
 	private static XMPPService sXMPPService;
 
-	private final Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
-	private final Handler mHandler = new Handler();
+	private final Set<StateChangeListener> mStateChangeListeners = Collections
+			.synchronizedSet(new HashSet<StateChangeListener>());
 
 	private final Settings mSettings;
 	private final MessagesTable mMessagesTable;
@@ -78,6 +80,7 @@ public class XMPPService {
 	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
 	private Runnable mReconnectRunnable;
+	private Handler mReconnectHandler;
 
 	public static synchronized XMPPService getInstance(Context context) {
 		if (sXMPPService == null) sXMPPService = new XMPPService(context);
@@ -192,6 +195,10 @@ public class XMPPService {
 		}
 	}
 
+	public Connection getConnection() {
+		return mConnection;
+	}
+
 	public void registerAccount(final Activity activity) {
 
 	}
@@ -302,7 +309,8 @@ public class XMPPService {
 	protected void scheduleReconnect() {
 		newState(State.WaitingForRetry);
 		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
-		mHandler.removeCallbacks(mReconnectRunnable);
+		if (mReconnectHandler == null) mReconnectHandler = new Handler();
+		mReconnectHandler.removeCallbacks(mReconnectRunnable);
 		mReconnectRunnable = new Runnable() {
 			@Override
 			public void run() {
@@ -310,7 +318,7 @@ public class XMPPService {
 				tryToConnect();
 			}
 		};
-		mHandler.postDelayed(mReconnectRunnable, 10000);
+		mReconnectHandler.postDelayed(mReconnectRunnable, 10000);
 	}
 
 	private void newState(State newState) {

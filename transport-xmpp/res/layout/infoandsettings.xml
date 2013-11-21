@@ -81,6 +81,15 @@
             android:onClick="registerAccount"
             android:text="@string/registerAccount"
             android:textSize="20sp" />
+
+        <Button
+            android:enabled="false"
+            android:id="@+id/pingServer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:text="Ping Server"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </ScrollView>

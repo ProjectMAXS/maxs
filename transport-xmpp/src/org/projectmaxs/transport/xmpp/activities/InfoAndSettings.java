@@ -9,17 +9,22 @@ import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.R;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.XMPPUtil;
+import org.projectmaxs.transport.xmpp.xmppservice.StateChangeListener;
+import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -30,6 +35,7 @@ public class InfoAndSettings extends Activity {
 	private static final Log LOG = Log.getLog();
 
 	private Settings mSettings;
+	private PingServerButtonHandler mPingServerButtonHandler;
 
 	private LinearLayout mMasterAddresses;
 	private EditText mFirstMasterAddress;
@@ -148,6 +154,17 @@ public class InfoAndSettings extends Activity {
 		if (!mSettings.getJid().equals("")) mJID.setText(mSettings.getJid());
 		if (!mSettings.getPassword().equals("")) mPassword.setText(mSettings.getPassword());
 
+		mPingServerButtonHandler = new PingServerButtonHandler(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// Removing this handler yields actually a problem: If onDestroy() is called shortly after
+		// onCreate() and the XMPPService was not yet initialized/constructed, then this call may
+		// lead to network IO and an NetworkOnMainThreadException. But a fix wouldn't be trivial
+		// and this is a corner case.
+		XMPPService.getInstance(this).removeListener(mPingServerButtonHandler);
 	}
 
 	private final EditText addEmptyMasterJidEditText() {
@@ -201,5 +218,80 @@ public class InfoAndSettings extends Activity {
 			return;
 		}
 
+	}
+
+	class PingServerButtonHandler extends StateChangeListener implements OnClickListener {
+
+		private final Button mPingServerButton;
+
+		private volatile PingManager mPingManager;
+
+		public PingServerButtonHandler(Activity activity) {
+			mPingServerButton = (Button) activity.findViewById(R.id.pingServer);
+			mPingServerButton.setOnClickListener(this);
+
+			// Ugly workaround for NetworkOnMainThreadException, because XMPPService's constructor
+			// call leads to a call to Socks5Proxy.getSocks5Proxy, which does
+			// InetAddress.getLocalHost().getHostAddress() which finally leads to some network IO.
+			new AsyncTask<Activity, Void, XMPPService>() {
+				@Override
+				protected XMPPService doInBackground(Activity... activities) {
+					return XMPPService.getInstance(activities[0]);
+				}
+
+				@Override
+				protected void onPostExecute(XMPPService xmppService) {
+					if (xmppService.isConnected()) {
+						PingServerButtonHandler.this.mPingManager = PingManager
+								.getInstanceFor(xmppService.getConnection());
+						mPingServerButton.setEnabled(true);
+					}
+					xmppService.addListener(PingServerButtonHandler.this);
+				}
+			}.execute(activity);
+		}
+
+		/**
+		 * This onClick() method can only be called when we are connected, because otherwise the
+		 * button will be disabled. Therefore there is no need to check mPingManager for null.
+		 */
+		@Override
+		public synchronized void onClick(View v) {
+			new AsyncTask<PingManager, Void, Boolean>() {
+				@Override
+				protected Boolean doInBackground(PingManager... pingManagers) {
+					return pingManagers[0].pingMyServer();
+				}
+
+				@Override
+				protected void onPostExecute(Boolean result) {
+					String text;
+					if (result) {
+						text = "Ping successful";
+					} else {
+						text = "Ping failed!";
+					}
+					Toast.makeText(InfoAndSettings.this, text, Toast.LENGTH_SHORT).show();
+				}
+			}.execute(mPingManager);
+		}
+
+		@Override
+		public synchronized void connected(Connection connection) {
+			mPingManager = PingManager.getInstanceFor(connection);
+			mPingServerButton.setEnabled(true);
+		}
+
+		@Override
+		public synchronized void disconnected(Connection connection) {
+			mPingManager = null;
+			mPingServerButton.setEnabled(false);
+		}
+
+		@Override
+		public synchronized void disconnected(String reason) {
+			mPingManager = null;
+			mPingServerButton.setEnabled(false);
+		}
 	}
 }
