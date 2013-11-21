@@ -157,13 +157,7 @@ Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
 
 ** Flattr
 
-#+BEGIN_HTML
-<a
-href="https://flattr.com/submit/auto?user_id=Flowdalic&url=https%3A%2F%2Fprojectmaxs.org"
-target="_blank">
-Flattr Project MAXS
-</a>
-#+END_HTML
+[[https://flattr.com/thing/2148361][Flattr Project MAXS]]
 
 * Acknowledgements
 
