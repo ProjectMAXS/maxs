@@ -18,6 +18,7 @@ import org.projectmaxs.transport.xmpp.util.XMPPUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -152,6 +153,8 @@ public class InfoAndSettings extends Activity {
 	private final EditText addEmptyMasterJidEditText() {
 		EditText newEditText = new EditText(this);
 		newEditText.setHint(getString(R.string.hint_jid));
+		newEditText.setInputType(InputType.TYPE_CLASS_TEXT
+				| InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 		new MasterAddressCallbacks(newEditText);
 		mMasterAddresses.addView(newEditText);
 		return newEditText;
