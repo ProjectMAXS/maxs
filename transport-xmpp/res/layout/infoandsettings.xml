@@ -68,7 +68,6 @@
             android:id="@+id/advancedSettings"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
             android:onClick="openAdvancedSettings"
             android:text="@string/advancedSettings"
             android:textSize="20sp" />
@@ -77,7 +76,6 @@
             android:id="@+id/registerAccount"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
             android:onClick="registerAccount"
             android:text="@string/registerAccount"
             android:textSize="20sp" />
@@ -87,7 +85,6 @@
             android:id="@+id/pingServer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
             android:text="Ping Server"
             android:textSize="20sp" />
     </LinearLayout>
