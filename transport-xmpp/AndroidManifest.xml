@@ -29,6 +29,7 @@
             android:name=".activities.InfoAndSettings"
             android:exported="true" />
         <activity android:name=".activities.AdvancedSettings" />
+        <activity android:name="de.duenndns.ssl.MemorizingActivity" />
 
         <receiver
             android:name=".TransportReceiver"

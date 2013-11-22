@@ -44,6 +44,7 @@ import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -59,7 +60,7 @@ public class XMPPService {
 
 	private final Settings mSettings;
 	private final MessagesTable mMessagesTable;
-	private final Context mContext;
+	private final Application mApplication;
 	private final HandleTransportStatus mHandleTransportStatus;
 
 	private XMPPStatus mXMPPStatus;
@@ -81,30 +82,30 @@ public class XMPPService {
 	private Runnable mReconnectRunnable;
 	private Handler mReconnectHandler;
 
-	public static synchronized XMPPService getInstance(Context context) {
-		if (sXMPPService == null) sXMPPService = new XMPPService(context);
+	public static synchronized XMPPService getInstance(Application application) {
+		if (sXMPPService == null) sXMPPService = new XMPPService(application);
 		return sXMPPService;
 	}
 
-	private XMPPService(Context context) {
-		XMPPEntityCapsCache.initialize(context);
+	private XMPPService(Application application) {
+		XMPPEntityCapsCache.initialize(application);
 
-		mContext = context;
-		mSettings = Settings.getInstance(context);
-		mMessagesTable = MessagesTable.getInstance(context);
+		mApplication = application;
+		mSettings = Settings.getInstance(application);
+		mMessagesTable = MessagesTable.getInstance(application);
 
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
 		addListener(new HandleMessagesListener(this));
 		addListener(new XMPPPingManager(this));
-		addListener(new XMPPFileTransfer(context));
+		addListener(new XMPPFileTransfer(application));
 		addListener(new XMPPDeliveryReceipts());
 
-		mHandleTransportStatus = new HandleTransportStatus(context);
+		mHandleTransportStatus = new HandleTransportStatus(application);
 		addListener(mHandleTransportStatus);
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
-		mXMPPStatus = new XMPPStatus(xmppRoster, context);
+		mXMPPStatus = new XMPPStatus(xmppRoster, application);
 		addListener(mXMPPStatus);
 	}
 
@@ -150,7 +151,7 @@ public class XMPPService {
 	}
 
 	public Context getContext() {
-		return mContext;
+		return mApplication;
 	}
 
 	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
@@ -295,7 +296,7 @@ public class XMPPService {
 		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 		intent.setClassName(GlobalConstants.MAIN_PACKAGE, TransportConstants.MAIN_TRANSPORT_SERVICE);
-		ComponentName cn = mContext.startService(intent);
+		ComponentName cn = mApplication.startService(intent);
 		if (cn == null) {
 			LOG.e("newMessageFromMasterJID: could not start main transport service");
 		}
@@ -446,7 +447,7 @@ public class XMPPService {
 			LOG.d("tryToConnect: already connected, nothing to do here");
 			return;
 		}
-		if (!ConnectivityManagerUtil.hasDataConnection(mContext)) {
+		if (!ConnectivityManagerUtil.hasDataConnection(mApplication)) {
 			LOG.d("tryToConnect: no data connection available");
 			newState(State.WaitingForNetwork);
 			return;
@@ -459,8 +460,9 @@ public class XMPPService {
 
 		try {
 			if (mConnectionConfiguration == null
-					|| mConnectionConfiguration != mSettings.getConnectionConfiguration()) {
-				connection = new XMPPConnection(mSettings.getConnectionConfiguration());
+					|| mConnectionConfiguration != mSettings
+							.getConnectionConfiguration(mApplication)) {
+				connection = new XMPPConnection(mSettings.getConnectionConfiguration(mApplication));
 				newConnection = true;
 			} else {
 				connection = mConnection;

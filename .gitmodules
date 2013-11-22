@@ -1,0 +1,3 @@
+[submodule "transport-xmpp/libraryProjects/memorizingTrustManager"]
+	path = transport-xmpp/libraryProjects/memorizingTrustManager
+	url = https://github.com/Flowdalic/MemorizingTrustManager.git

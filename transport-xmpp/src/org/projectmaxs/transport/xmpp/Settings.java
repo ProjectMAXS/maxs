@@ -17,10 +17,14 @@
 
 package org.projectmaxs.transport.xmpp;
 
-import java.io.File;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.net.ssl.SSLContext;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.Connection;
@@ -31,11 +35,12 @@ import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.preference.PreferenceManager;
+import de.duenndns.ssl.MemorizingTrustManager;
 
 public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
 
@@ -205,7 +210,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return mSharedPreferences.getString(STATUS, "");
 	}
 
-	public ConnectionConfiguration getConnectionConfiguration() throws XMPPException {
+	public ConnectionConfiguration getConnectionConfiguration(Application application)
+			throws XMPPException {
 		if (mConnectionConfiguration == null) {
 			if (mSharedPreferences.getBoolean(MANUAL_SERVICE_SETTINGS, false)) {
 				String host = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_HOST, "");
@@ -218,23 +224,6 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				mConnectionConfiguration = new AndroidConnectionConfiguration(service, 1234);
 			}
 			mConnectionConfiguration.setSocketFactory(XMPPSocketFactory.getInstance());
-
-			// TODO AndroidConnectionConfiguration also contains this code
-			// but hopefully it will be obsolete once we integrate Ge0rg's
-			// memorizing trust manager.
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-				mConnectionConfiguration.setTruststoreType("AndroidCAStore");
-				mConnectionConfiguration.setTruststorePassword(null);
-				mConnectionConfiguration.setTruststorePath(null);
-			} else {
-				mConnectionConfiguration.setTruststoreType("BKS");
-				String path = System.getProperty("javax.net.ssl.trustStore");
-				if (path == null) {
-					path = System.getProperty("java.home") + File.separator + "etc"
-							+ File.separator + "security" + File.separator + "cacerts.bks";
-				}
-				mConnectionConfiguration.setTruststorePath(path);
-			}
 
 			mConnectionConfiguration.setCompressionEnabled(mSharedPreferences.getBoolean(
 					XMPP_STREAM_COMPRESSION, false));
@@ -255,6 +244,17 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 			mConnectionConfiguration.setReconnectionAllowed(false);
 			mConnectionConfiguration.setSendPresence(false);
+
+			try {
+				SSLContext sc = SSLContext.getInstance("TLS");
+				sc.init(null, MemorizingTrustManager.getInstanceList(application),
+						new SecureRandom());
+				mConnectionConfiguration.setCustomSSLContext(sc);
+			} catch (NoSuchAlgorithmException e) {
+				throw new IllegalStateException(e);
+			} catch (KeyManagementException e) {
+				throw new IllegalStateException(e);
+			}
 		}
 
 		return mConnectionConfiguration;
