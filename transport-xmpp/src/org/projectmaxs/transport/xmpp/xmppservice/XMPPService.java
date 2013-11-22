@@ -44,7 +44,6 @@ import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -197,10 +196,6 @@ public class XMPPService {
 
 	public Connection getConnection() {
 		return mConnection;
-	}
-
-	public void registerAccount(final Activity activity) {
-
 	}
 
 	private void sendAsMessage(org.projectmaxs.shared.global.Message message,
