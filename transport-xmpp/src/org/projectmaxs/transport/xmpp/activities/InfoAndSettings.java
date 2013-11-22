@@ -257,6 +257,8 @@ public class InfoAndSettings extends Activity {
 		 */
 		@Override
 		public synchronized void onClick(View v) {
+			Toast.makeText(InfoAndSettings.this, "Sending ping to server", Toast.LENGTH_SHORT)
+					.show();
 			new AsyncTask<PingManager, Void, Boolean>() {
 				@Override
 				protected Boolean doInBackground(PingManager... pingManagers) {
@@ -271,7 +273,7 @@ public class InfoAndSettings extends Activity {
 					} else {
 						text = "Ping failed!";
 					}
-					Toast.makeText(InfoAndSettings.this, text, Toast.LENGTH_SHORT).show();
+					Toast.makeText(InfoAndSettings.this, text, Toast.LENGTH_LONG).show();
 				}
 			}.execute(mPingManager);
 		}
