@@ -19,6 +19,7 @@ import org.projectmaxs.transport.xmpp.xmppservice.StateChangeListener;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,6 +47,16 @@ public class InfoAndSettings extends Activity {
 
 	public void openAdvancedSettings(View view) {
 		startActivity(new Intent(this, AdvancedSettings.class));
+	}
+
+	public void showAbout(View view) {
+		// @formatter:off
+		final AlertDialog alertDialog = new AlertDialog.Builder(this)
+			.setPositiveButton("OK", null)
+			.setMessage(getResources().getText(R.string.about))
+			.create();
+		// @formatter:on
+		alertDialog.show();
 	}
 
 	public void registerAccount(View view) {

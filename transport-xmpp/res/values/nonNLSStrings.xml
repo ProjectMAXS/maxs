@@ -12,4 +12,14 @@
     <string name="pref_app_last_active_network_key">LAST_ACTIVE_NETWORK</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
 
+    <string name="about">
+    MAXS Transport XMPP\n
+    Copyright © 2013  Project MAXS\n
+    MAXS Transport XMPP is free software and licensed under the GNU General Public License version 3, or (at your option) any later version.\n
+    \n
+    Used libraries:\n
+    &#8226; <a href="http://asmack.org">aSmack</a>, Apache License Version 2.0, OpenLDAP Public License\n
+    &#8226; <a href="https://github.com/ge0rg/MemorizingTrustManager">MemorizingTrustManager</a>, MIT License\n
+    </string>
+
 </resources>

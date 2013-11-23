@@ -256,6 +256,16 @@ public class MainActivity extends Activity {
 		sendBroadcast(intent);
 	}
 
+	public void showAbout(View view) {
+		// @formatter:off
+		final AlertDialog alertDialog = new AlertDialog.Builder(this)
+			.setPositiveButton("OK", null)
+			.setMessage(getResources().getText(R.string.about))
+			.create();
+		// @formatter:on
+		alertDialog.show();
+	}
+
 	public void donate(View view) {
 		final Intent BTC_INTENT = new Intent(Intent.ACTION_VIEW,
 				Uri.parse("bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt"));

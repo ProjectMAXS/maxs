@@ -87,6 +87,14 @@
             android:layout_height="wrap_content"
             android:text="Ping Server"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/about"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="showAbout"
+            android:text="About"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </ScrollView>
