@@ -44,7 +44,6 @@ import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
-import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -60,7 +59,7 @@ public class XMPPService {
 
 	private final Settings mSettings;
 	private final MessagesTable mMessagesTable;
-	private final Application mApplication;
+	private final Context mContext;
 	private final HandleTransportStatus mHandleTransportStatus;
 
 	private XMPPStatus mXMPPStatus;
@@ -82,30 +81,41 @@ public class XMPPService {
 	private Runnable mReconnectRunnable;
 	private Handler mReconnectHandler;
 
-	public static synchronized XMPPService getInstance(Application application) {
-		if (sXMPPService == null) sXMPPService = new XMPPService(application);
+	/**
+	 * Get an XMPPService
+	 *
+	 * Note that because of MemorizingTrustManager Context must be an instance of Application,
+	 * Service or Activity. Therefore if you have an Context which is not Service or Activity, use
+	 * getApplication().
+	 *
+	 * @param context
+	 *            as an instance of Application, Service or Activity.
+	 * @return
+	 */
+	public static synchronized XMPPService getInstance(Context context) {
+		if (sXMPPService == null) sXMPPService = new XMPPService(context);
 		return sXMPPService;
 	}
 
-	private XMPPService(Application application) {
-		XMPPEntityCapsCache.initialize(application);
+	private XMPPService(Context context) {
+		XMPPEntityCapsCache.initialize(context);
 
-		mApplication = application;
-		mSettings = Settings.getInstance(application);
-		mMessagesTable = MessagesTable.getInstance(application);
+		mContext = context;
+		mSettings = Settings.getInstance(context);
+		mMessagesTable = MessagesTable.getInstance(context);
 
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
 		addListener(new HandleMessagesListener(this));
 		addListener(new XMPPPingManager(this));
-		addListener(new XMPPFileTransfer(application));
+		addListener(new XMPPFileTransfer(context));
 		addListener(new XMPPDeliveryReceipts());
 
-		mHandleTransportStatus = new HandleTransportStatus(application);
+		mHandleTransportStatus = new HandleTransportStatus(context);
 		addListener(mHandleTransportStatus);
 		XMPPRoster xmppRoster = new XMPPRoster(mSettings);
 		addListener(xmppRoster);
-		mXMPPStatus = new XMPPStatus(xmppRoster, application);
+		mXMPPStatus = new XMPPStatus(xmppRoster, context);
 		addListener(mXMPPStatus);
 	}
 
@@ -151,7 +161,7 @@ public class XMPPService {
 	}
 
 	public Context getContext() {
-		return mApplication;
+		return mContext;
 	}
 
 	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
@@ -296,7 +306,7 @@ public class XMPPService {
 		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 		intent.setClassName(GlobalConstants.MAIN_PACKAGE, TransportConstants.MAIN_TRANSPORT_SERVICE);
-		ComponentName cn = mApplication.startService(intent);
+		ComponentName cn = mContext.startService(intent);
 		if (cn == null) {
 			LOG.e("newMessageFromMasterJID: could not start main transport service");
 		}
@@ -447,7 +457,7 @@ public class XMPPService {
 			LOG.d("tryToConnect: already connected, nothing to do here");
 			return;
 		}
-		if (!ConnectivityManagerUtil.hasDataConnection(mApplication)) {
+		if (!ConnectivityManagerUtil.hasDataConnection(mContext)) {
 			LOG.d("tryToConnect: no data connection available");
 			newState(State.WaitingForNetwork);
 			return;
@@ -459,10 +469,10 @@ public class XMPPService {
 		boolean newConnection = false;
 
 		try {
-			if (mConnectionConfiguration == null
-					|| mConnectionConfiguration != mSettings
-							.getConnectionConfiguration(mApplication)) {
-				connection = new XMPPConnection(mSettings.getConnectionConfiguration(mApplication));
+			if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings
+			// We need to use an Application instance here, because some Context may not work.
+					.getConnectionConfiguration(mContext)) {
+				connection = new XMPPConnection(mSettings.getConnectionConfiguration(mContext));
 				newConnection = true;
 			} else {
 				connection = mConnection;

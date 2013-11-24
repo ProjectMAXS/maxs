@@ -84,8 +84,7 @@ public class InfoAndSettings extends Activity {
 					final String username = StringUtils.parseName(mSettings.getJid());
 					final String password = mSettings.getPassword();
 					final Connection connection = new XMPPConnection(
-							mSettings.getConnectionConfiguration(InfoAndSettings.this
-									.getApplication()));
+							mSettings.getConnectionConfiguration(InfoAndSettings.this));
 					showToast("Connecting to server", Toast.LENGTH_SHORT);
 					connection.connect();
 					AccountManager accountManager = new AccountManager(connection);
@@ -176,7 +175,7 @@ public class InfoAndSettings extends Activity {
 		// onCreate() and the XMPPService was not yet initialized/constructed, then this call may
 		// lead to network IO and an NetworkOnMainThreadException. But a fix wouldn't be trivial
 		// and this is a corner case.
-		XMPPService.getInstance(getApplication()).removeListener(mPingServerButtonHandler);
+		XMPPService.getInstance(this).removeListener(mPingServerButtonHandler);
 	}
 
 	private final EditText addEmptyMasterJidEditText() {
@@ -248,7 +247,7 @@ public class InfoAndSettings extends Activity {
 			new AsyncTask<Activity, Void, XMPPService>() {
 				@Override
 				protected XMPPService doInBackground(Activity... activities) {
-					return XMPPService.getInstance(activities[0].getApplication());
+					return XMPPService.getInstance(activities[0]);
 				}
 
 				@Override

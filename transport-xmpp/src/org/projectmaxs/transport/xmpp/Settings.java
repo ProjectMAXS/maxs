@@ -35,7 +35,6 @@ import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -210,8 +209,17 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return mSharedPreferences.getString(STATUS, "");
 	}
 
-	public ConnectionConfiguration getConnectionConfiguration(Application application)
-			throws XMPPException {
+	/**
+	 * Retrieve a ConnectionConfiguration.
+	 *
+	 * Note that because of MemorizingTrustManager, the given Context must be an instance of
+	 * Application, Service or Activity
+	 *
+	 * @param context
+	 * @return
+	 * @throws XMPPException
+	 */
+	public ConnectionConfiguration getConnectionConfiguration(Context context) throws XMPPException {
 		if (mConnectionConfiguration == null) {
 			if (mSharedPreferences.getBoolean(MANUAL_SERVICE_SETTINGS, false)) {
 				String host = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_HOST, "");
@@ -247,8 +255,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 			try {
 				SSLContext sc = SSLContext.getInstance("TLS");
-				sc.init(null, MemorizingTrustManager.getInstanceList(application),
-						new SecureRandom());
+				sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
 				mConnectionConfiguration.setCustomSSLContext(sc);
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException(e);
