@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -257,10 +258,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void showAbout(View view) {
+		final TextView textView = new TextView(this);
+		textView.setText(R.string.about);
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setPositiveButton("OK", null)
-			.setMessage(getResources().getText(R.string.about))
+			.setView(textView)
 			.create();
 		// @formatter:on
 		alertDialog.show();

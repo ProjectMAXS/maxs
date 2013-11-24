@@ -24,11 +24,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class InfoAndSettings extends Activity {
@@ -50,10 +52,13 @@ public class InfoAndSettings extends Activity {
 	}
 
 	public void showAbout(View view) {
+		final TextView textView = new TextView(this);
+		textView.setText(R.string.about);
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setPositiveButton("OK", null)
-			.setMessage(getResources().getText(R.string.about))
+			.setView(textView)
 			.create();
 		// @formatter:on
 		alertDialog.show();
