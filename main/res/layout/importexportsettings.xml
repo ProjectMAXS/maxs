@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:onClick="importAll"
-            android:text="Import All"/>
+            android:text="Import All" />
     </LinearLayout>
 
     <TextView
