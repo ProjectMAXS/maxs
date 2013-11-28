@@ -285,9 +285,9 @@ public class InfoAndSettings extends Activity {
 				protected void onPostExecute(Boolean result) {
 					String text;
 					if (result) {
-						text = "Ping successful";
+						text = "Pong received. Ping successful";
 					} else {
-						text = "Ping failed!";
+						text = "Pong timeout. Ping failed!";
 					}
 					Toast.makeText(InfoAndSettings.this, text, Toast.LENGTH_LONG).show();
 				}
