@@ -89,6 +89,16 @@ public class MainActivity extends Activity {
 		mStartStopButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if (!TransportRegistry.getInstance(MainActivity.this)
+						.isAtLeastOneTransportInstalled()) {
+					DialogUtil
+							.displayPackageInstallDialog(
+									"In order to use MAXS you need to have at least one transport installed. "
+											+ "We recommend the XMPP transport, which you can now install if you want.",
+									GlobalConstants.TRANSPORT_PACKAGE, MainActivity.this);
+					return;
+				}
+
 				Intent intent;
 				if (MAXSService.isRunning()) {
 					intent = new Intent(Constants.ACTION_STOP_SERVICE);

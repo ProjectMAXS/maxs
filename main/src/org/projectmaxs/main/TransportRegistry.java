@@ -80,6 +80,10 @@ public class TransportRegistry {
 		return Collections.unmodifiableList(mTransportList);
 	}
 
+	public boolean isAtLeastOneTransportInstalled() {
+		return getAllTransports().size() > 0;
+	}
+
 	public List<String> getAllTransportPackages() {
 		List<String> packages = new LinkedList<String>();
 		for (TransportInformation ti : getAllTransports())
