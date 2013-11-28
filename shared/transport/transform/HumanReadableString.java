@@ -132,7 +132,7 @@ public class HumanReadableString {
 		List<org.projectmaxs.shared.global.messagecontent.FormatedText> texts = text.getTexts();
 		for (org.projectmaxs.shared.global.messagecontent.FormatedText ft : texts)
 			sb.append(ft.toString());
-		// Don't append \n here. Text has it's own ways of adding them
+		// Don't append \n here. Text has it's own ways of adding newline
 	}
 
 	private static void toSB(CommandHelp commandHelp, StringBuilder sb) {
