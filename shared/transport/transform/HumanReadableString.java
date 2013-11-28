@@ -122,7 +122,7 @@ public class HumanReadableString {
 		}
 
 		sb.append(sms.getContact());
-		sb.append(" (").append(SharedStringUtil.toFullDate(sms.getDate())).append(')');
+		sb.append(' ').append(SharedStringUtil.toFullDate(sms.getDate()));
 		sb.append(": ");
 		sb.append(sms.getBody());
 		sb.append('\n');
