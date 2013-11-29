@@ -42,7 +42,7 @@ distclean: clean
 prebuild: build.xml resources shared
 
 build.xml:
-	android update project -p . -n maxs-$(MODULE_NAME)
+	android update project -p . -n maxs-$(MODULE_NAME) -s
 
 resources: shared setupResourceLinks
 	cd res-src && $(MAKE)

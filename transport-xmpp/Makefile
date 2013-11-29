@@ -38,7 +38,7 @@ distclean: clean
 prebuild: asmack build.xml resources shared
 
 build.xml:
-	android update project -p . -n maxs-$(TRANSPORT_NAME)
+	android update project -p . -n maxs-$(TRANSPORT_NAME) -s
 
 resources: shared setupResourceLinks
 	cd res-src && $(MAKE)

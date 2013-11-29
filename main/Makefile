@@ -12,7 +12,7 @@ main: prebuild
 prebuild: build.xml resources
 
 build.xml:
-	android update project -p . -n maxs-main
+	android update project -p . -n maxs-main -s
 
 resources: setupResourceLinks
 	cd res-src && $(MAKE)
