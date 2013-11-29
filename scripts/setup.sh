@@ -1,6 +1,27 @@
 #!/bin/bash
+set -e
 
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+while getopts d OPTION "$@"; do
+    case $OPTION in
+	d)
+	    set -x
+	    ;;
+    esac
+done
+
+# Pretty fancy method to get reliable the absolute path of a shell
+# script, *even if it is sourced*. Credits go to GreenFox on
+# stackoverflow: http://stackoverflow.com/a/12197518/194894
+pushd . > /dev/null
+SCRIPTDIR="${BASH_SOURCE[0]}";
+while([ -h "${SCRIPTDIR}" ]); do
+    cd "`dirname "${SCRIPTDIR}"`"
+    SCRIPTDIR="$(readlink "`basename "${SCRIPTDIR}"`")";
+done
+cd "`dirname "${SCRIPTDIR}"`" > /dev/null
+SCRIPTDIR="`pwd`";
+popd  > /dev/null
+
 BASEDIR="$(cd ${SCRIPTDIR}/.. && pwd)"
 HOMEPAGE="${BASEDIR}/homepage"
 DOCDIR="${BASEDIR}/documentation"
