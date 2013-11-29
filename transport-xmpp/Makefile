@@ -13,6 +13,8 @@ ANT_BUILD_TARGET ?= debug
 
 all: transport eclipse
 
+include $(BASE)/build/common.mk
+
 transport: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
 
@@ -34,8 +36,9 @@ clean: build.xml
 distclean: clean
 	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f build.xml
+	rm -f $(VERSION_XML)
 
-prebuild: asmack build.xml resources shared
+prebuild: asmack build.xml resources shared $(VERSION_XML)
 
 build.xml:
 	android update project -p . -n maxs-$(TRANSPORT_NAME) -s

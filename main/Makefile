@@ -6,10 +6,12 @@ ANT_BUILD_TARGET ?= debug
 
 all: main eclipse
 
+include $(BASE)/build/common.mk
+
 main: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
 
-prebuild: build.xml resources
+prebuild: build.xml resources $(VERSION_XML)
 
 build.xml:
 	android update project -p . -n maxs-main -s
@@ -35,6 +37,7 @@ clean: build.xml
 distclean: clean
 	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f build.xml
+	rm -f $(VERSION_XML)
 
 eclipse: .settings .classpath .project
 

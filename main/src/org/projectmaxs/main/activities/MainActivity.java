@@ -23,7 +23,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -268,9 +270,15 @@ public class MainActivity extends Activity {
 	}
 
 	public void showAbout(View view) {
+		final SpannableStringBuilder sb = new SpannableStringBuilder();
+		sb.append(getResources().getString(R.string.app_name)).append('\n');
+		sb.append(getResources().getString(R.string.version)).append('\n');
+		sb.append(getResources().getText(R.string.about));
 		final TextView textView = new TextView(this);
-		textView.setText(R.string.about);
+		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			textView.setTextIsSelectable(true);
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setPositiveButton("OK", null)

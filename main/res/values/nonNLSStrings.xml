@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MAXS</string>
+    <string name="app_name">MAXS Main</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
     <string name="pref_app_connect_on_main_screen_key">CONNECT_ON_MAIN_SCREEN</string>
     <string name="pref_app_connect_on_boot_completed_key">CONNECT_ON_BOOT_COMPLETED</string>
 
     <string name="about">
-    MAXS Main\n
     Copyright © 2013  Project MAXS\n
     MAXS Main is free software and licensed under the GNU General Public License version 3, or (at your option) any later version.\n
     </string>

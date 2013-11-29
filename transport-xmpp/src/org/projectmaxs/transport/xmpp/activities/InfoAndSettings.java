@@ -22,8 +22,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,9 +54,15 @@ public class InfoAndSettings extends Activity {
 	}
 
 	public void showAbout(View view) {
+		final SpannableStringBuilder sb = new SpannableStringBuilder();
+		sb.append(getResources().getString(R.string.app_name)).append('\n');
+		sb.append(getResources().getString(R.string.version)).append('\n');
+		sb.append(getResources().getText(R.string.about));
 		final TextView textView = new TextView(this);
-		textView.setText(R.string.about);
+		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			textView.setTextIsSelectable(true);
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setPositiveButton("OK", null)
