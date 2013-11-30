@@ -42,7 +42,7 @@ public class InfoAndSettings extends Activity {
 		// http://stackoverflow.com/questions/14862750
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
-			.setPositiveButton("OK", null)
+			.setPositiveButton(getResources().getString(R.string.close), null)
 			.setView(textView)
 			.create();
 		// @formatter:on

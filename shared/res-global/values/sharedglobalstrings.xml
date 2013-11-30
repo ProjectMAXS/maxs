@@ -5,4 +5,5 @@
     <string name="copyright">Copyright © 2013  Project MAXS</string>
     <string name="gpl_disclaimier">is free software and licensed under the GNU General Public License version 3, or (at your option) any later version.</string>
     <string name="authors">Authors</string>
+    <string name="close">Close</string>
 </resources>
