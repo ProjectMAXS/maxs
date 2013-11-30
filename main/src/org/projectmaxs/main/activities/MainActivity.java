@@ -14,6 +14,7 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.DialogUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
+import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
@@ -23,7 +24,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -271,14 +271,20 @@ public class MainActivity extends Activity {
 
 	public void showAbout(View view) {
 		final SpannableStringBuilder sb = new SpannableStringBuilder();
-		sb.append(getResources().getString(R.string.app_name)).append('\n');
+		final String appName = getResources().getString(R.string.app_name);
+		sb.append(appName).append('\n');
 		sb.append(getResources().getString(R.string.version)).append('\n');
-		sb.append(getResources().getText(R.string.about));
+		sb.append(getResources().getString(R.string.copyright))
+				.append(" (")
+				.append(SpannedUtil.createAuthorsLink("main",
+						getResources().getString(R.string.authors))).append(")\n");
+		sb.append('\n');
+		sb.append(appName).append(' ').append(getResources().getString(R.string.gpl_disclaimier));
 		final TextView textView = new TextView(this);
 		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			textView.setTextIsSelectable(true);
+		// Sadly we can't make this text view also selectable
+		// http://stackoverflow.com/questions/14862750
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setPositiveButton("OK", null)

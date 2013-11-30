@@ -11,6 +11,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.transport.xmpp.R;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
@@ -22,7 +23,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
@@ -55,14 +55,23 @@ public class InfoAndSettings extends Activity {
 
 	public void showAbout(View view) {
 		final SpannableStringBuilder sb = new SpannableStringBuilder();
-		sb.append(getResources().getString(R.string.app_name)).append('\n');
+		final String appName = getResources().getString(R.string.app_name);
+		sb.append(appName).append('\n');
 		sb.append(getResources().getString(R.string.version)).append('\n');
-		sb.append(getResources().getText(R.string.about));
+		sb.append(getResources().getString(R.string.copyright))
+				.append(" (")
+				.append(SpannedUtil.createAuthorsLink("transport-xmpp",
+						getResources().getString(R.string.authors))).append(")\n");
+		sb.append('\n');
+		sb.append(appName).append(' ').append(getResources().getString(R.string.gpl_disclaimier))
+				.append('\n');
+		sb.append('\n');
+		sb.append(getResources().getText(R.string.open_source_licenses));
 		final TextView textView = new TextView(this);
 		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			textView.setTextIsSelectable(true);
+		// Sadly we can't make this text view also selectable
+		// http://stackoverflow.com/questions/14862750
 		// @formatter:off
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setPositiveButton("OK", null)
