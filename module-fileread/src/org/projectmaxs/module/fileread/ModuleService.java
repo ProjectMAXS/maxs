@@ -164,8 +164,10 @@ public class ModuleService extends MAXSModuleIntentService {
 					message.add(toElement(f));
 				}
 			}
+		} else if (path.isFile()) {
+			message = new Message(path.getAbsolutePath());
 		} else {
-			message = new Message("TODO");
+			message = new Message("No such file or directory: " + path);
 		}
 		return message;
 	}
