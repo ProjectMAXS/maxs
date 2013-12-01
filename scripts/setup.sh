@@ -9,6 +9,10 @@ while getopts d OPTION "$@"; do
     esac
 done
 
+# Reset OPTIND because setup.sh may be sourced from other scripts that
+# also use getopts
+OPTIND=1
+
 # Pretty fancy method to get reliable the absolute path of a shell
 # script, *even if it is sourced*. Credits go to GreenFox on
 # stackoverflow: http://stackoverflow.com/a/12197518/194894
