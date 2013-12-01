@@ -279,7 +279,7 @@ public class MainActivity extends Activity {
 				.append(SpannedUtil.createAuthorsLink("main",
 						getResources().getString(R.string.authors))).append(")\n");
 		sb.append('\n');
-		sb.append(appName).append(' ').append(getResources().getString(R.string.gpl_disclaimier));
+		sb.append(appName).append(' ').append(getResources().getText(R.string.gplv3));
 		final TextView textView = new TextView(this);
 		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());

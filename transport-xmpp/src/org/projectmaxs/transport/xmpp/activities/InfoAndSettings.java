@@ -63,7 +63,7 @@ public class InfoAndSettings extends Activity {
 				.append(SpannedUtil.createAuthorsLink("transport-xmpp",
 						getResources().getString(R.string.authors))).append(")\n");
 		sb.append('\n');
-		sb.append(appName).append(' ').append(getResources().getString(R.string.gpl_disclaimier))
+		sb.append(appName).append(' ').append(getResources().getText(R.string.gplv3))
 				.append('\n');
 		sb.append('\n');
 		sb.append(getResources().getText(R.string.open_source_licenses));
