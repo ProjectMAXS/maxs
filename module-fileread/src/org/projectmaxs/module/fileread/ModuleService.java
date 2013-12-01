@@ -32,6 +32,7 @@ import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.AsyncServiceTask;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
@@ -257,7 +258,7 @@ public class ModuleService extends MAXSModuleIntentService {
 			element = new Element("directory", file.getAbsolutePath(), path + '/');
 		} else {
 			final long size = file.length();
-			Text text = new Text(path);
+			Text text = new Text(path + " " + SharedStringUtil.humandReadableByteCount(size));
 			element = new Element("file", file.getAbsolutePath(), text);
 			element.addChildElement(new Element("size", String.valueOf(size)));
 		}
