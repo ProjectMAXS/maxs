@@ -83,7 +83,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void fileTransferRequest(FileTransferRequest request) {
-		String requestor = request.getRequestor();
+		final String requestor = request.getRequestor();
 		if (!mSettings.isMasterJID(requestor)) {
 			LOG.w("File transfer from non master jid " + requestor);
 			request.reject();
