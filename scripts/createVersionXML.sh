@@ -22,7 +22,10 @@ VERSION_NAME=$(awk -F'"' '/android:versionName/{print $(NF-1); exit}' ${COMPONEN
 
 if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
     GIT_REF=$(git describe --tags --dirty=+)
-    VERSION_NAME+=" (${GIT_REF})"
+    # Only add the result of git describe if it's not the same string a $VERSION_NAME
+    if [[ "$VERSION_NAME" != "$GIT_REF" ]]; then
+	VERSION_NAME+=" (${GIT_REF})"
+    fi
 fi
 
 cat <<EOF > ${COMPONENT_DIR}/res/values/version.xml
