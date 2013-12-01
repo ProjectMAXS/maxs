@@ -117,6 +117,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 							description);
 					if (pfd == null) {
 						LOG.e("fileTranferRequest: PFD from incomingFileTransfer is null");
+						is.close();
 						return;
 					}
 					OutputStream os = new ParcelFileDescriptor.AutoCloseOutputStream(pfd);
@@ -143,6 +144,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 						}
 					}
 				} catch (RemoteException e) {
+					LOG.e("fileTransferRequest", e);
+				} catch (IOException e) {
 					LOG.e("fileTransferRequest", e);
 				}
 			}
