@@ -9,4 +9,11 @@
     <string name="pref_app_connect_on_main_screen_help">Start the service and try to establish a connection if MAXS is opened. Mostly useful for developers.</string>
     <string name="pref_app_connect_on_boot_completed">Connect on completed boot</string>
     <string name="pref_app_connect_on_boot_completed_help">Start the service and try to establish a connection if the device just booted.</string>
+    <string name="info">
+    For more information visit:\n
+    &#8226; <a href="http://projectmaxs.org">projectmaxs.org</a>\n
+    &#8226; <a href="http://projectmaxs.org/docs">projectmaxs.org/docs</a>\n
+    &#8226; <a href="http://projectmaxs.org/forums">projectmaxs.org/forums</a>\n
+    &#8226; #maxs @ freenode (IRC)
+    </string>
 </resources>
