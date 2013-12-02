@@ -15,7 +15,7 @@
     <string name="open_source_licenses">
     Open Source Licenses:\n
     &#8226; <a href="http://asmack.org">aSmack</a>, Apache License Version 2.0, OpenLDAP Public License\n
-    &#8226; <a href="https://github.com/ge0rg/MemorizingTrustManager">MemorizingTrustManager</a>, MIT License\n
+    &#8226; <a href="https://github.com/ge0rg/MemorizingTrustManager">MemorizingTrustManager</a>, MIT License
     </string>
 
 </resources>
