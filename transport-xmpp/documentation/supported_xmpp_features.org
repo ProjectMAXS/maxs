@@ -2,7 +2,7 @@
 #+AUTHOR:       Florian Schmaus
 #+EMAIL:        flo@geekplace.eu
 #+OPTIONS:      H:2 num:nil author:nil toc:nil
-#+OPTIONS:      timestamp:nil
+#+OPTIONS:      timestamp:nil ^:nil
 #+STARTUP:      noindent
 
 * [[http://xmpp.org/extensions/xep-0012.html][XEP-0012]] Last Activity
