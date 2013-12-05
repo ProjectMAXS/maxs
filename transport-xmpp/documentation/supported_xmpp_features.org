@@ -5,7 +5,40 @@
 #+OPTIONS:      timestamp:nil
 #+STARTUP:      noindent
 
+* [[http://xmpp.org/extensions/xep-0012.html][XEP-0012]] Last Activity
+
+This extension needs client support.
+
 * [[http://xmpp.org/extensions/xep-0030.html][XEP-0030]] Service Discovery
+
+Allows XMPP entities to discover information about other entities.
+
+This extension needs server and client support.
+
+* [[http://xmpp.org/extensions/xep-0033.html][XEP-0033]] Extended Stanza Addressing
+
+If a stanza has to be sent to multiple entities, MAXS Transport XMPP
+tries to make use of Extended Stanza Addressing, so that instead of
+sending the same stanza multiple times, it is only send once addressed
+to multiple XMPP entities.
+
+This extension needs server support.
+
+* [[http://xmpp.org/extensions/xep-0047.html][XEP-0047]] In-Band Bytestreams
+
+MAXS Transport XMPP uses In-Band Bytestreams as fallback method for
+file transfers.
+
+This extension needs client support.
+
+* [[http://xmpp.org/extensions/xep-0065.html][XEP-0065]] SOCKS5 Bytestreams
+
+MAXS Transport XMPP uses SOCKS5 Bytestreams as primary, NAT resistant,
+method for XMPP file transfer.
+
+This extension needs client support. Other XMPP entities, such as
+servers, may also support SI File Transfer, for increased reliability.
+This extension needs server and client support.
 
 * [[http://xmpp.org/extensions/xep-0071.html][XEP-0071]] XHTML-IM
 
@@ -13,9 +46,50 @@ MAXS Transport XMPP will automatically detect if the involved XMPP
 entities support XHTML-IM and add the XHTML-IM body to messages if
 supported.
 
+This extension needs clients support.
+
+* [[http://xmpp.org/extensions/xep-0077.html][XEP-0077]] In-Band Registration
+
+MAXS Transport XMPP allows you to conveniently register an XMPP
+account from within the application on servers supporting it.
+
+This extension needs server support.
+
+* [[http://xmpp.org/extensions/xep-0095.html][XEP-0095]] Stream Initiation
+
+This extension needs client support.
+
+* [[http://xmpp.org/extensions/xep-0096.html][XEP-0096]] SI File Transfer
+
+This extension needs client support. Other XMPP entities, such as
+servers, may also support SI File Transfer, for increased reliability.
+
 * [[http://xmpp.org/extensions/xep-0115.html][XEP-0115]] Entity Capabilities
+
+Entity Capabilities provides a mechanism for caching, and hence
+eliding, the =disco#info= requests needed to negotiate optional
+features. It therefore lowers power consumption when used.
+
+This extension needs clients supporting it. Other XMPP entities, such
+as servers, may also use Entity Capabilities.
+
+* [[http://xmpp.org/extensions/xep-0138.html][XEP-0138]] Stream Compression
+
+MAXS Transport XMPP will try to use stream compression if configured
+and available. Experiments show that stream compression will increase
+battery lifetime for mobile devices because of the reduced radio
+usage. More information can be found in [[http://xmpp.org/extensions/xep-0286.html][XEP-0286]].
+
+This extension needs server supporting it.
 
 * [[http://xmpp.org/extensions/xep-0184.html][XEP-0184]] Message Delivery Receipts
 
 Tip: Get [[http://gajim.org][Gajim]] 0.16 and set [[https://trac.gajim.org/ticket/7341][positive_184_acks]] to true in Gajim's
 "Advanced Configuration Editor" to get the most out of XEP-0184 :)
+
+This extension needs clients supporting it.
+
+* [[http://xmpp.org/extensions/xep-0199.html][XEP-0199]] XMPP Ping
+
+MAXS Transport XMPP sends periodically XMPP pings to the user's server
+in order to test the XMPP connection.
