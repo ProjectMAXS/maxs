@@ -24,27 +24,28 @@ import android.os.Parcelable;
 
 public class FormatedText implements Parcelable {
 
-	enum Font {
-		// @formatter:off
-		Standard,
-		Monospace
-		// @formatter:on
-	}
+	public static final FormatedText SINGLE_SPACE = new FormatedText(" ");
 
-	private final Font mFont;
 	private final String mText;
 
+	/**
+	 * The used font-family
+	 */
+	private String mFont;
 	private boolean mIsBold = false;
 	private boolean mIsItalic = false;
 
 	public FormatedText(String text) {
 		mText = text;
-		mFont = Font.Standard;
+	}
+
+	public FormatedText(CharSequence charSequence) {
+		this(charSequence.toString());
 	}
 
 	private FormatedText(Parcel in) {
 		mText = in.readString();
-		mFont = Font.values()[in.readInt()];
+		mFont = in.readString();
 		mIsBold = ParcelUtil.readBool(in);
 		mIsItalic = ParcelUtil.readBool(in);
 	}
@@ -54,9 +55,17 @@ public class FormatedText implements Parcelable {
 		return this;
 	}
 
+	public boolean isBold() {
+		return mIsBold;
+	}
+
 	public FormatedText makeItalic() {
 		mIsItalic = true;
 		return this;
+	}
+
+	public boolean isItalic() {
+		return mIsItalic;
 	}
 
 	@Override
@@ -67,7 +76,7 @@ public class FormatedText implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mText);
-		dest.writeInt(mFont.ordinal());
+		dest.writeString(mFont);
 		ParcelUtil.writeBool(dest, mIsBold);
 		ParcelUtil.writeBool(dest, mIsItalic);
 	}
@@ -90,4 +99,20 @@ public class FormatedText implements Parcelable {
 		}
 
 	};
+
+	public static FormatedText from(CharSequence cs) {
+		return new FormatedText(cs);
+	}
+
+	public static FormatedText bold(CharSequence cs) {
+		return FormatedText.from(cs).makeBold();
+	}
+
+	public static FormatedText italic(CharSequence cs) {
+		return FormatedText.from(cs).makeItalic();
+	}
+
+	public static boolean isNewLine(FormatedText formatedText) {
+		return formatedText == NewLine.getInstance();
+	}
 }

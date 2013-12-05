@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.projectmaxs.shared.global.messagecontent.AbstractElement;
 import org.projectmaxs.shared.global.messagecontent.CommandHelp;
-import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
@@ -31,19 +30,6 @@ import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 
 public class HumanReadableString {
-
-	private static String sMobile = "Mobile";
-	private static String sHome = "Home";
-	private static String sWork = "Work";
-	private static String sUnkown = "Unkown";
-	private static String sOther = "Other";
-
-	private static String sFile = "file";
-	private static String sPath = "path";
-	private static String sNumber = "number";
-	private static String sContactInfo = "contact info";
-	private static String sContactNickname = "contact nickname";
-	private static String sContactName = "contact name";
 
 	public static void toSB(AbstractElement element, StringBuilder sb) {
 		if (element instanceof Contact) {
@@ -67,31 +53,12 @@ public class HumanReadableString {
 		sb.append(contact.getDisplayName());
 		sb.append('\n');
 
-		List<ContactNumber> numbers = contact.getNumbers();
-		for (ContactNumber number : numbers)
+		for (ContactNumber number : contact.getNumbers())
 			toSB(number, sb);
 	}
 
 	private static void toSB(ContactNumber contactNumber, StringBuilder sb) {
-		String numberType;
-		switch (contactNumber.getType()) {
-		case MOBILE:
-			numberType = sMobile;
-			break;
-		case HOME:
-			numberType = sHome;
-			break;
-		case WORK:
-			numberType = sWork;
-			break;
-		case OTHER:
-			numberType = sOther;
-			break;
-		default:
-			numberType = sUnkown;
-			break;
-		}
-		sb.append(numberType);
+		sb.append(TypeTransformator.fromNumberType(contactNumber.getType()));
 		if (contactNumber.getLabel() != null) sb.append(" (" + contactNumber.getLabel() + ")");
 		sb.append(": ");
 		sb.append(contactNumber.getNumber());
@@ -109,17 +76,7 @@ public class HumanReadableString {
 	}
 
 	private static void toSB(Sms sms, StringBuilder sb) {
-		Sms.Type type = sms.getType();
-		switch (type) {
-		case INBOX:
-			sb.append("From ");
-			break;
-		case SENT:
-			sb.append("To ");
-			break;
-		default:
-			break;
-		}
+		sb.append(TypeTransformator.fromSMSType(sms.getType()) + ' ');
 
 		sb.append(sms.getContact());
 		sb.append(' ').append(SharedStringUtil.toFullDate(sms.getDate()));
@@ -139,35 +96,7 @@ public class HumanReadableString {
 		sb.append(commandHelp.mCommand);
 		sb.append(' ');
 		sb.append(commandHelp.mSubCommand);
-		if (commandHelp.mArgType != ArgType.NONE) {
-			sb.append(" <");
-			switch (commandHelp.mArgType) {
-			case FILE:
-				sb.append(sFile);
-				break;
-			case PATH:
-				sb.append(sPath);
-				break;
-			case NUMBER:
-				sb.append(sNumber);
-				break;
-			case CONTACT_INFO:
-				sb.append(sContactInfo);
-				break;
-			case CONTACT_NICKNAME:
-				sb.append(sContactNickname);
-				break;
-			case CONTACT_NAME:
-				sb.append(sContactName);
-				break;
-			case OTHER_STRING:
-				sb.append(commandHelp.mArgString);
-				break;
-			default:
-				throw new IllegalArgumentException("Unkown ArgType: " + commandHelp.mArgType);
-			}
-			sb.append('>');
-		}
+		sb.append(TypeTransformator.toCommandArg(commandHelp));
 
 		sb.append(" - ");
 		sb.append(commandHelp.mHelp);

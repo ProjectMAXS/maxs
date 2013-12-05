@@ -28,12 +28,12 @@ public class Text extends AbstractElement {
 
 	public Text() {}
 
-	public Text(String text) {
-		this(text, true);
+	public Text(CharSequence charSequence) {
+		this(charSequence, true);
 	}
 
-	public Text(String text, boolean newLine) {
-		mTexts.add(new FormatedText(text));
+	public Text(CharSequence charSequence, boolean newLine) {
+		mTexts.add(new FormatedText(charSequence));
 		if (newLine) mTexts.add(NewLine.getInstance());
 	}
 
@@ -51,35 +51,35 @@ public class Text extends AbstractElement {
 		dest.writeList(mTexts);
 	}
 
-	public Text add(String string) {
-		mTexts.add(new FormatedText(string));
+	public Text add(CharSequence charSequence) {
+		mTexts.add(new FormatedText(charSequence));
 		return this;
 	}
 
-	public Text addNL(String string) {
-		add(string);
+	public Text addNL(CharSequence charSequence) {
+		add(charSequence);
 		mTexts.add(NewLine.getInstance());
 		return this;
 	}
 
-	public Text addBold(String string) {
-		mTexts.add(new FormatedText(string).makeBold());
+	public Text addBold(CharSequence charSequence) {
+		mTexts.add(new FormatedText(charSequence).makeBold());
 		return this;
 	}
 
-	public Text addBoldNL(String string) {
-		addBold(string);
+	public Text addBoldNL(CharSequence charSequence) {
+		addBold(charSequence);
 		mTexts.add(NewLine.getInstance());
 		return this;
 	}
 
-	public Text addItalic(String string) {
-		mTexts.add(new FormatedText(string).makeItalic());
+	public Text addItalic(CharSequence charSequence) {
+		mTexts.add(new FormatedText(charSequence).makeItalic());
 		return this;
 	}
 
-	public Text addItalicNL(String string) {
-		addItalic(string);
+	public Text addItalicNL(CharSequence charSequence) {
+		addItalic(charSequence);
 		mTexts.add(NewLine.getInstance());
 		return this;
 	}
@@ -102,7 +102,13 @@ public class Text extends AbstractElement {
 
 	};
 
-	public static Text get() {
+	public static Text create() {
 		return new Text();
+	}
+
+	public static Text createBoldNL(CharSequence charSequence) {
+		Text text = new Text();
+		text.addBoldNL(charSequence);
+		return text;
 	}
 }

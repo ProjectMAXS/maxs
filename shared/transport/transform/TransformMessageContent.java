@@ -42,7 +42,7 @@ public class TransformMessageContent {
 		List<FormatedText> res = new ArrayList<FormatedText>();
 		Iterator<AbstractElement> it = message.getElementsIt();
 		while (it.hasNext())
-			res.addAll(FormatedTextTransformator.toFormatedText(it.next()));
+			FormatedTextTransformator.toFormatedText(it.next(), res);
 
 		return res;
 	}

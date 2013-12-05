@@ -33,6 +33,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.MultipleRecipientManager;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.XHTMLManager;
 import org.jivesoftware.smackx.packet.DiscoverInfo;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
@@ -43,6 +44,7 @@ import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
+import org.projectmaxs.transport.xmpp.util.XHTMLIMUtil;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -83,11 +85,11 @@ public class XMPPService {
 
 	/**
 	 * Get an XMPPService
-	 *
+	 * 
 	 * Note that because of MemorizingTrustManager Context must be an instance of Application,
 	 * Service or Activity. Therefore if you have an Context which is not Service or Activity, use
 	 * getApplication().
-	 *
+	 * 
 	 * @param context
 	 *            as an instance of Application, Service or Activity.
 	 * @return
@@ -226,8 +228,9 @@ public class XMPPService {
 		packet.setBody(TransformMessageContent.toString(message));
 		packet.setThread(originId);
 
+		List<String> toList = new LinkedList<String>();
 		if (to == null) {
-			List<String> toList = new LinkedList<String>();
+			// Broadcast to all masterJID resources
 			for (String masterJid : mSettings.getMasterJids()) {
 				Iterator<Presence> presences = mConnection.getRoster().getPresences(masterJid);
 				while (presences.hasNext()) {
@@ -261,28 +264,31 @@ public class XMPPService {
 				// Add this master JID, if it isn't already contained in toList
 				if (!found) toList.add(jid);
 			}
-
-			try {
-				MultipleRecipientManager.send(mConnection, packet, toList, null, null);
-			} catch (XMPPException e1) {
-				LOG.w("sendAsMessage: MultipleRecipientManager exception", e1);
-				return;
-			} catch (IllegalStateException e2) {
-				if ("Not connected to server.".equals(e2.getMessage())) {
-					LOG.i("sendAsMessage: Got IllegalStateException (Not connected), adding message to DB");
-					mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE,
-							originIssuerInfo, originId);
-					return;
-				} else {
-					throw e2;
-				}
-			}
 		} else {
-			packet.setTo(to);
-			mConnection.sendPacket(packet);
+			toList.add(to);
 		}
 
-		return;
+		boolean atLeastOneSupportsXHTMLIM = false;
+		for (String jid : toList) {
+			atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection, jid);
+			if (atLeastOneSupportsXHTMLIM) break;
+		}
+		if (atLeastOneSupportsXHTMLIM)
+			XHTMLIMUtil.addXHTMLIM(packet, TransformMessageContent.toFormatedText(message));
+
+		try {
+			MultipleRecipientManager.send(mConnection, packet, toList, null, null);
+		} catch (XMPPException e1) {
+			LOG.w("sendAsMessage: MultipleRecipientManager exception", e1);
+		} catch (IllegalStateException e2) {
+			if ("Not connected to server.".equals(e2.getMessage())) {
+				LOG.i("sendAsMessage: Got IllegalStateException (Not connected), adding message to DB");
+				mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE,
+						originIssuerInfo, originId);
+			} else {
+				throw e2;
+			}
+		}
 	}
 
 	private void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo,
