@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # defaults
 CHECK_SHA=true
 REFETCH=false
@@ -41,6 +43,15 @@ fi
 OLDIFS=$IFS
 IFS=";"
 
+maybeCheckHash() {
+    if [ $SHA256 != 0 -a \
+	$(sha256sum $FILE | cut -f 1 -d ' ') != $SHA256 ]; then
+	echo "Error: sha256 for $FILE does not match!"
+	echo "expected=$SHA256 actual=$(sha256sum $FILE | cut -f 1 -d ' ')"
+	exit 1
+    fi
+}
+
 while read URL DIR SHA256; do
     TARGETDIR=${OUTDIR}/${DIR}
     FILE=$(basename $URL)
@@ -50,21 +61,14 @@ while read URL DIR SHA256; do
 	rm $FILE
     fi
     if [[ -f $FILE ]]; then
-	if $CHECK_SHA && \
-	    [ $SHA256 != 0 -a \
-	    $(sha256sum $FILE | cut -f 1 -d ' ') != $SHA256 ]; then
-	    echo "sha256 for $FILE does not match"
-	    exit 1
-	else
-	    continue
+	if $CHECK_SHA; then
+	    maybeCheckHash
 	fi
+	continue
     fi
 
     wget $URL
-    if $CHECK_SHA && \
-	[ $SHA256 != 0 -a \
-	$(sha256sum $FILE | cut -f 1 -d ' ') != $SHA256 ]; then
-	echo "sha256 for $FILE does not match"
-	exit 1
+    if $CHECK_SHA; then
+	maybeCheckHash
     fi
 done < $ASSETSFILE
