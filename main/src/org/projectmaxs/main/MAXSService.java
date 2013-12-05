@@ -157,16 +157,6 @@ public class MAXSService extends Service {
 		}
 	}
 
-	public void startService() {
-		Intent intent = new Intent(Constants.ACTION_START_SERVICE);
-		startService(intent);
-	}
-
-	public void stopService() {
-		Intent intent = new Intent(Constants.ACTION_STOP_SERVICE);
-		startService(intent);
-	}
-
 	/**
 	 * Entry point for commands provided by transports.
 	 * 
@@ -340,6 +330,11 @@ public class MAXSService extends Service {
 				LOG.e("sendActionToAllTransportServices: No service found for " + transportPackage);
 			}
 		}
+	}
+
+	private void startService() {
+		Intent intent = new Intent(Constants.ACTION_START_SERVICE);
+		startService(intent);
 	}
 
 	public static abstract class StartStopListener {
