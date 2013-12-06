@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -56,17 +57,64 @@ public class InfoAndSettings extends Activity {
 	public void showAbout(View view) {
 		final SpannableStringBuilder sb = new SpannableStringBuilder();
 		final String appName = getResources().getString(R.string.app_name);
-		sb.append(appName).append('\n');
+		sb.append(Html.fromHtml("<h1>" + appName + "</h1>"));
 		sb.append(getResources().getString(R.string.version)).append('\n');
 		sb.append(getResources().getString(R.string.copyright))
 				.append(" (")
 				.append(SpannedUtil.createAuthorsLink("transport-xmpp",
 						getResources().getString(R.string.authors))).append(")\n");
 		sb.append('\n');
-		sb.append(appName).append(' ').append(getResources().getText(R.string.gplv3))
-				.append('\n');
+		sb.append(appName).append(' ').append(getResources().getText(R.string.gplv3)).append('\n');
 		sb.append('\n');
-		sb.append(getResources().getText(R.string.open_source_licenses));
+		sb.append(Html.fromHtml(
+// @formatter:off
+"<h1>Open Source</h1>" +
+"&#8226; <a href=\"http://asmack.org\">aSmack</a><br>" +
+"&#8226; <a	href=\"https://github.com/ge0rg/MemorizingTrustManager\">MemorizingTrustManager</a><br>" +
+"<h2>aSmack</h2>" +
+"<a href=\"http://asmack.org\">http://asmack.org</a><br>" +
+"<br>" +
+"&#8226; Smack (XMPP Client Library)<br>" +
+"Copyright © 2003-2010 Jive Software<br>" +
+"Copyright © 2001-2004 Apache Software Foundation<br>" +
+"Copyright © 2011-2013 Florian Schmaus<br>" +
+"Copyright © 2013 Georg Lukas<br>" +
+"Copyright © 2013 Robin Collier<br>" +
+"Copyright © 2009 Jonas Ådahl<br>" +
+"Apache License, Version 2.0<br>" +
+"&#8226; Apache Harmony (SASL/XML)<br>" +
+"Copyright © 2006, 2010 Apache Software Foundation<br>" +
+"Apache License, Version 2.0<br>" +
+"&#8226; novell-openldap-jldap (SASL)<br>" +
+"Copyright © 2002-2003 Novell, Inc.<br>" +
+"OpenLDAP Public License, Version 2.8<br>" +
+"&#8226; Apache qpid (SASL)<br>" +
+"Copyright © 2006-2008 Apache Software Foundation<br>" +
+"Apache License, Version 2.0<br>" +
+"&#8226; jbosh (BOSH)<br>" +
+"Copyright © 2009 Guenther Niess<br>" +
+"Copyright © 2009 Mike Cumings<br>" +
+"Copyright © 2001-2003 Apache Software Foundation<br>" +
+"Apache License, Version 2.0<br>" +
+"&#8226; dnsjava (DNS SRV)<br>" +
+"Copyright © 1998-2011 Brian Wellington<br>" +
+"BSD 2-Clause License<br>" +
+"&#8226; aSmack custom code (various glue stuff)<br>" +
+"Copyright © 2011-2013 Florian Schmaus<br>" +
+"Copyright © 2009-2010 Rene Treffer<br>" +
+"Apache License, Version 2.0<br>" +
+"<h1>MemorizingTrustManager</h1>" +
+"<a href=\"https://github.com/ge0rg/MemorizingTrustManager\">https://github.com/ge0rg/MemorizingTrustManager</a><br>" +
+"<br>" +
+"Copyright © 2010 Georg Lukas<br>" +
+"MIT License<br>" +
+"<h1>License Links</h1>" +
+"&#8226; <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a><br>" +
+"&#8226; <a href=\"http://opensource.org/licenses/MIT\">MIT License</a><br>" +
+"&#8226; <a href=\"http://opensource.org/licenses/BSD-2-Clause\">BSD 2-Clause License</a><br>" +
+"&#8226; <a	href=\"http://www.openldap.org/devel/gitweb.cgi?p=openldap-jldap.git;a=blob_plain;f=LICENSE;h=05ad7571e448b9d83ead5d4691274d9484574714;hb=HEAD\">OpenLDAP Public License, Version 2.8</a>"
+// @formatter:on
+				));
 		final TextView textView = new TextView(this);
 		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());

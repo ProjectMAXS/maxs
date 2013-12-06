@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -272,7 +273,7 @@ public class MainActivity extends Activity {
 	public void showAbout(View view) {
 		final SpannableStringBuilder sb = new SpannableStringBuilder();
 		final String appName = getResources().getString(R.string.app_name);
-		sb.append(appName).append('\n');
+		sb.append(Html.fromHtml("<h1>" + appName + "</h1>"));
 		sb.append(getResources().getString(R.string.version)).append('\n');
 		sb.append(getResources().getString(R.string.copyright))
 				.append(" (")

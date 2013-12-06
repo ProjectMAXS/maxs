@@ -12,48 +12,4 @@
     <string name="pref_app_last_active_network_key">LAST_ACTIVE_NETWORK</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
 
-    <string name="open_source_licenses">
-    Open Source Licenses:\n
-    &#8226; <a href="http://asmack.org">aSmack</a>\n
-    \taSmack components:\n
-    &#8226;&#8226; Smack (XMPP Client Library)\n
-    \tCopyright © 2003-2010 Jive Software\n
-    \tCopyright © 2001-2004 Apache Software Foundation\n
-    \tCopyright © 2011-2013 Florian Schmaus\n
-    \tCopyright © 2013 Georg Lukas\n
-    \tCopyright © 2013 Robin Collier\n
-    \tCopyright © 2009 Jonas Ådahl\n
-    \tApache License, Version 2.0\n
-    &#8226;&#8226; Apache Harmony (SASL/XML)\n
-    \tCopyright © 2006, 2010 Apache Software Foundation\n
-    \tApache License, Version 2.0\n
-    &#8226;&#8226; novell-openldap-jldap (SASL)\n
-    \tCopyright © 2002-2003 Novell, Inc.\n
-    \tOpenLDAP Public License, Version 2.8\n
-    &#8226;&#8226; Apache qpid (SASL)\n
-    \tCopyright © 2006-2008 Apache Software Foundation\n
-    \tApache License, Version 2.0\n
-    &#8226;&#8226; jbosh (BOSH)\n
-    \tCopyright © 2009 Guenther Niess\n
-    \tCopyright © 2009 Mike Cumings\n
-    \tCopyright © 2001-2003 Apache Software Foundation\n
-    \tApache License, Version 2.0\n
-    &#8226;&#8226; dnsjava (DNS SRV)\n
-    \tCopyright © 1998-2011 Brian Wellington\n
-    \tBSD 2-Clause License\n
-    &#8226;&#8226; aSmack custom code (various glue stuff)\n
-    \tCopyright © 2011-2013 Florian Schmaus\n
-    \tCopyright © 2009-2010 Rene Treffer\n
-    \tApache License, Version 2.0\n
-    &#8226; <a href="https://github.com/ge0rg/MemorizingTrustManager">MemorizingTrustManager</a>\n
-    \tCopyright © 2010 Georg Lukas\n
-    \tMIT License\n
-    \n
-    License Links:\n
-    &#8226; <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>\n
-    &#8226; <a href="http://opensource.org/licenses/MIT">MIT License</a>\n
-    &#8226; <a href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause License</a>\n
-    &#8226; <a href="http://www.openldap.org/devel/gitweb.cgi?p=openldap-jldap.git;a=blob_plain;f=LICENSE;h=05ad7571e448b9d83ead5d4691274d9484574714;hb=HEAD">OpenLDAP Public License, Version 2.8</a>
-    </string>
-
 </resources>
