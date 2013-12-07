@@ -362,19 +362,28 @@ public class InfoAndSettings extends Activity {
 		@Override
 		public synchronized void connected(Connection connection) {
 			mPingManager = PingManager.getInstanceFor(connection);
-			mPingServerButton.setEnabled(true);
+			setPingButtonEnabled(true);
 		}
 
 		@Override
 		public synchronized void disconnected(Connection connection) {
 			mPingManager = null;
-			mPingServerButton.setEnabled(false);
+			setPingButtonEnabled(false);
 		}
 
 		@Override
 		public synchronized void disconnected(String reason) {
 			mPingManager = null;
-			mPingServerButton.setEnabled(false);
+			setPingButtonEnabled(false);
+		}
+
+		private final void setPingButtonEnabled(final boolean enabled) {
+			InfoAndSettings.this.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mPingServerButton.setEnabled(enabled);
+				}
+			});
 		}
 	}
 }
