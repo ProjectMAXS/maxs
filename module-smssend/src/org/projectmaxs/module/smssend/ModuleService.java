@@ -25,7 +25,9 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
+import org.projectmaxs.shared.global.messagecontent.FormatedText;
 import org.projectmaxs.shared.global.messagecontent.Sms;
+import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
@@ -119,7 +121,13 @@ public class ModuleService extends MAXSModuleIntentService {
 				} else if (contacts.size() > 1) {
 					return new Message("Many matching contacts found");
 				} else if (contacts.size() == 0) {
-					return new Message("No matching contact found");
+					Text failureText = new Text("No matching contact found.");
+					int spaceCount = SharedStringUtil.countMatches(argsSplit[0], ' ');
+					if (spaceCount > 2)
+						failureText
+								.add(FormatedText
+										.from("Did you forget to seperate the name from the content with two spaces (sms␣send␣<name>␣␣<content>)? "));
+					return new Message(failureText);
 				}
 				contact = contacts.iterator().next();
 			}

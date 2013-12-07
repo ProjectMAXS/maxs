@@ -51,6 +51,11 @@ public class Text extends AbstractElement {
 		dest.writeList(mTexts);
 	}
 
+	public Text add(FormatedText formatedText) {
+		mTexts.add(formatedText);
+		return this;
+	}
+
 	public Text add(CharSequence charSequence) {
 		mTexts.add(new FormatedText(charSequence));
 		return this;

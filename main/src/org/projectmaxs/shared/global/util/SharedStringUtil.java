@@ -132,4 +132,11 @@ public class SharedStringUtil {
 		return String.format("%.1f %s", bytes / Math.pow(1024, exp), pre);
 	}
 
+	public static int countMatches(String haystack, char c) {
+		int count = 0;
+		for (int i = 0; i < haystack.length(); i++) {
+			if (haystack.charAt(i) == c) count++;
+		}
+		return count;
+	}
 }
