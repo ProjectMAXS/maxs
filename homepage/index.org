@@ -13,24 +13,22 @@ test.
 * What is MAXS? / Documentation
 
 MAXS (Modular Android XMPP Suite) allows you to control your Android
-device (Ringermode, Send SMS, Query contacts, …) and receive
-notifications from that device (Incoming SMS, Battery Status, …). For
-example you can write SMS on your desktop/laptop by sending a command
-over XMPP to MAXS running on your smartphone.
+device and receive notifications over XMPP. You can for example write
+SMS on your desktop/laptop by sending a command over XMPP to MAXS
+running on your smartphone.
 
 MAXS is dedicated to users privacy and choice, that is why it's
 designed modular. This means that the functionality is split across
-components, i.e. Android applications, which can be categorized in
-three types: /Modules/, /Transports/ and the /main/
-component. /Modules/ provide the notifications and commands, which
-exchanged between MAXS and the user over so called /transports/. MAXS
-modules and transports are glued together with the so called MAXS
-/main/ application.
+components, which are standard Android applications. These components
+can be categorized in three types: /Modules/, /Transports/ and the
+/main/ component. /Modules/ provide the notifications and commands,
+which are exchanged between MAXS and the user over so called
+/transports/. MAXS modules and transports are glued together with the
+so called /MAXS main/ application.
 
-Get an overview about MAXS by having a look at the
-[[file:../documentation/introduction.org][Introduction]].
+Get an overview about MAXS by having a look at the [[file:../documentation/introduction.org][Introduction]].
 
-[[../documentation/index.org][There is more Documentation available under projectmaxs.org/docs]]
+[[../documentation/index.org][There is more documentation available under projectmaxs.org/docs]]
 
 * Alpha Testing
   :PROPERTIES:
@@ -122,7 +120,7 @@ will be helpful.
 
 ** IRC
 
-Feel free to join  [[irc://chat.freenode.net/maxs][~#maxs~]] (@freenode). Questions and suggestions are
+Feel free to join  [[irc://chat.freenode.net/maxs][~#maxs~]] @ freenode. Questions and suggestions are
 welcome, but remeber that this is IRC and it may take a while (~hours,
 days) to get an answer.
 
@@ -159,7 +157,7 @@ Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
 
 [[https://flattr.com/thing/2148361][Flattr Project MAXS]]
 
-* Acknowledgements
+* <<<Acknowledgements>>>
 
 - The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
