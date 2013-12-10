@@ -5,7 +5,7 @@ set -e
 while getopts c:d OPTION "$@"; do
     case $OPTION in
 	c)
-	    COMPONENTDIR=${OPTARG}
+	    COMPONENTDIR=$(readlink -f ${OPTARG})
 	    ;;
 	d)
 	    set -x
@@ -49,3 +49,8 @@ createRelativeSymlinks ${BASEDIR}/shared/res-global $COMPONENTDIR/res
 # Phase2: The global shared source resources
 [[ ! -d $COMPONENTDIR/res-src ]] && mkdir $COMPONENTDIR/res-src
 createRelativeSymlinks ${BASEDIR}/shared/res-src-global $COMPONENTDIR/res-src
+
+# Phase3: The module shared resources
+if $IS_MODULE; then
+    createRelativeSymlinks ${BASEDIR}/shared/res-module $COMPONENTDIR/res
+fi

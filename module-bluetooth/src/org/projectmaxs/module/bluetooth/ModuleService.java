@@ -24,6 +24,7 @@ import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 import org.projectmaxs.shared.module.UnkownCommandException;
 import org.projectmaxs.shared.module.UnkownSubcommandException;
+import org.projectmaxs.shared.module.messagecontent.BooleanElement;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -67,7 +68,8 @@ public class ModuleService extends MAXSModuleIntentService {
 		final Message msg;
 		if ("bluetooth".equals(cmd) || "bt".equals(cmd)) {
 			if ("status".equals(subCmd)) {
-				msg = new Message("Bluetooth is enabled: " + mAdapter.isEnabled());
+				msg = new Message(BooleanElement.enabled("Bluetooth is %1$s",
+						"bluetooth_adapter_enabled", mAdapter.isEnabled(), this));
 			} else {
 				throw new UnkownSubcommandException(command);
 			}
