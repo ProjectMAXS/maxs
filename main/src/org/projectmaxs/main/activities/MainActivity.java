@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 							.displayPackageInstallDialog(
 									"In order to use MAXS you need to have at least one transport installed. "
 											+ "We recommend the XMPP transport, which you can now install if you want.",
-									GlobalConstants.TRANSPORT_PACKAGE, MainActivity.this);
+									TransportConstants.TRANSPORT_XMPP, MainActivity.this);
 					return;
 				}
 

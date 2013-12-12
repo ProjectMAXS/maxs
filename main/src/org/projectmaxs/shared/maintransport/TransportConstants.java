@@ -44,4 +44,6 @@ public class TransportConstants {
 	public static final String EXTRA_TRANSPORT_INFORMATION = TRANSPORT_PACKAGE
 			+ ".TRANSPORT_INFORMATION";
 
+	public static final String TRANSPORT_XMPP = TRANSPORT_PACKAGE + ".xmpp";
+
 }
