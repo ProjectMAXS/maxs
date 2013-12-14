@@ -307,6 +307,7 @@ public class MainActivity extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Do you want to donate directly with help of an Android Bitcoin Client, or do you want to view the \"Donate\" section on projectmaxs.org in a browser?");
+		// We don't set the negative button with cancel here, as it's not really necessary
 		builder.setPositiveButton("Bitcoin", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -326,12 +327,7 @@ public class MainActivity extends Activity {
 				startActivity(DONATE_INTENT);
 			}
 		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
+
 		builder.show();
 	}
 }

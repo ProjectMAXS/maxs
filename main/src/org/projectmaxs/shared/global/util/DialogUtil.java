@@ -43,6 +43,7 @@ public class DialogUtil {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(message);
+		// We don't set the negative button with cancel here, as it's not really necessary
 		builder.setPositiveButton("Install from Play Store", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -66,12 +67,6 @@ public class DialogUtil {
 					Toast.makeText(context, "No handler for 'fdroid.app:' links available",
 							Toast.LENGTH_LONG).show();
 				}
-			}
-		});
-		builder.setNegativeButton("Cancel", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
 			}
 		});
 		builder.show();
