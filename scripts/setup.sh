@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-while getopts d OPTION "$@"; do
-    case $OPTION in
-	d)
-	    set -x
-	    ;;
-    esac
+# Do not use getopts here, because this script is sourced by others,
+# which very likely will have other argument parameters as this one.
+for OPTARG in "$@"; do
+    if [[ $OPTARG == "-d" ]]; then
+	set -x
+    fi
 done
 
 # Reset OPTIND because setup.sh may be sourced from other scripts that
