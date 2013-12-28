@@ -92,9 +92,7 @@ public class PhoneStateService extends Service {
 				} else if (ContactNumber.isNumber(incomingNumber)) {
 					Contact contact = ContactUtil.getInstance(PhoneStateService.this)
 							.contactByNumber(incomingNumber);
-					if (contact != null) {
-						caller = contact.getDisplayName() + " (" + incomingNumber + ")";
-					}
+					caller = ContactUtil.prettyPrint(contact, incomingNumber);
 				}
 				send(new Message(caller + " is calling"));
 				break;
