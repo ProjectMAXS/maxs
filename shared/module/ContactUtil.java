@@ -130,7 +130,7 @@ public class ContactUtil {
 	 * Lookup exactly one contact for a given number
 	 * 
 	 * @param phoneNumber
-	 * @return
+	 * @return the contact, or null if none was found
 	 */
 	public Contact contactByNumber(String number) {
 		if (!contactsReadModuleInstalled()) return null;
@@ -358,6 +358,23 @@ public class ContactUtil {
 			contact.addNumber(number, type, label, superPrimary);
 		}
 		c.close();
+	}
+
+	/**
+	 * Pretty print for a given contact and contactInfo. If contact is null, only contactInfo will
+	 * be returned. Otherwise {@code"<contact.getDisplayName()> (<contactInfo>)"} will get
+	 * returned.
+	 * 
+	 * @param contact
+	 * @param contactInfo
+	 * @return
+	 */
+	public static String prettyPrint(Contact contact, String contactInfo) {
+		if (contact == null) {
+			return contactInfo;
+		} else {
+			return contact.getDisplayName() + " (" + contactInfo + ")";
+		}
 	}
 
 }

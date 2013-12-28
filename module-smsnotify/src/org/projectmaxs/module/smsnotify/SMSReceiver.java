@@ -55,12 +55,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			contact = ContactUtil.getInstance(context).contactByNumber(sender);
 			lastSender = sender;
 
-			String contactString;
-			if (contact == null) {
-				contactString = sender;
-			} else {
-				contactString = contact.getDisplayName() + " (" + sender + ")";
-			}
+			String contactString = ContactUtil.prettyPrint(contact, sender);
 
 			message.add(new Sms(contactString, smsBody, Sms.Type.INBOX));
 		}
