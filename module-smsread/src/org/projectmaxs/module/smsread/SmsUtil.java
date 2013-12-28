@@ -20,8 +20,10 @@ package org.projectmaxs.module.smsread;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.module.ContactUtil;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -49,12 +51,16 @@ public class SmsUtil {
 		}
 
 		if (!c.moveToFirst()) return res;
+		ContactUtil contactUtil = ContactUtil.getInstance(context);
 		do {
 			String address = c.getString(c.getColumnIndexOrThrow("address"));
 			int type = c.getInt(c.getColumnIndexOrThrow("type"));
 			String body = c.getString(c.getColumnIndexOrThrow("body"));
 			long date = c.getLong(c.getColumnIndexOrThrow("date"));
-			res.add(new Sms(address, body, getType(type), date));
+
+			Contact contact = contactUtil.contactByNumber(address);
+			String contactInfo = ContactUtil.prettyPrint(contact, address);
+			res.add(new Sms(contactInfo, body, getType(type), date));
 		} while (c.moveToNext());
 
 		return res;
