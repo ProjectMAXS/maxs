@@ -95,9 +95,9 @@ public class ModuleService extends MAXSModuleIntentService {
 			count = Integer.parseInt(args);
 		}
 		Message msg = new Message();
-		Text text = Text.createBoldNL("Last " + count + " SMS messages");
+		msg.add(Text.createBoldNL("Last " + count + " SMS messages"));
 		List<Sms> sms = SmsUtil.getOrderedSMS(null, null, count, this);
-		msg.add(text).addAll(sms);
+		msg.addAll(sms);
 
 		return msg;
 	}
