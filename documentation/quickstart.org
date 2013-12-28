@@ -1,0 +1,98 @@
+#+TITLE:        MAXS Quickstart Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Introduction
+
+This document will guide you through the process of setting up a
+typical MAXS deployment using XMPP on your Android device. If you have
+any questions, feel free use the available [[file:../homepage/index.org::Contact][contact channels]].
+
+* Prerequisites
+
+The minimal prerequiste for using MAXS over XMPP is a personal XMPP
+account, from now on referred to as /user account/. This account will
+receive notifications from MAXS and will be able to send commands to
+MAXS. The XMPP address, also called JID (Jabber ID), of the /user
+account/ will be configured as /master address/ in MAXS.
+
+But in order to be able send and receive XMPP packets, MAXS needs also
+an XMPP account, we will call this account simply /MAXS account/.
+
+* Installing the Suite
+
+It is important that you first install MAXS main *and lauch it once*
+so that Android recognized the permissions declard by MAXS. After that
+you can install all other modules and transports.
+
+If you don't launch MAXS Main prior installing the other components,
+they will be *unable to register* with MAXS Main. Launching MAXS Main,
+uninstalling and re-installing the affected components resolves this.
+
+* MAXS Main Screen
+
+If MAXS is installed correctly, you should see at least one registered
+Transport (A). Now proceed with configuring the Transport by *pressing
+the 'More' Button (B)* right of the Transport's entry.
+
+#+CAPTION: MAXS Main screen
+[[./images/maxs-main_annotated.png]]
+
+
+* Configuring the XMPP Transport
+
+Start with adding your /user account/ as /master address/ in A. Now
+enter the device account information in B. You have two options here:
+
+1. You already created an account for MAXS, then simply enter the JID
+   and password in B
+2. You don't have already created an account for MAXS. Then either
+   create one or [[*Register%20a%20XMPP%20account%20with%20MAXS][register an account]] at one of the many free of charge
+   and open XMPP servers worldwide.
+
+#+CAPTION: MAXS Transport XMPP Configuration
+[[./images/maxs-transport-xmpp_annotated.png]]
+
+** Register a XMPP account with MAXS
+
+In order to register an account from MAXS you need to choose an XMPP
+service and server first. Here is a small incomplete list of XMPP
+service providers that respect your privacy:
+
+- [[http://yax.im][yax.im]]
+- [[http://web.jabber.ccc.de/][jabber.ccc.de]]
+
+Now simply enter your choosen JID, e.g. user@yax.im and a good strong
+password under "Device Account" (B) and press the "Register Account"
+button.
+
+** Advanced XMPP settings
+
+#+CAPTION: MAXS Transport XMPP Advanced Settings
+[[./images/maxs-transport-xmpp_advanced_settings_annotated.png]]
+
+*** Manual XMPP serivice settings (A)
+
+If your XMPP server does not accounce its availablitiy over DNS SRV
+records, then you may have to configure the server data (host, port)
+manually under A.
+
+*** Stream compression (B)
+
+Enable this if your server supports stream compression to reduce
+battery usage.
+
+*** Stream encryption (C)
+
+Choose 'required' for increased security and privacy when using MAXS.
+
+* Next steps
+
+Press "Start Service" to start MAXS. In order to run MAXS all the
+time check the "Connect on completed boot" preference under MAXS Main
+→ Advanced Settings → Start/Stop Options
+
+Now is also a good time to have a look at [[file:introduction.org]["Introducing MAXS"]] if you
+haven't done already.

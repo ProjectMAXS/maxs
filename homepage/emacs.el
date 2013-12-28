@@ -35,6 +35,13 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
 	 :sitemap-filename "index.org"
 	 :recursive t
 	 )
+	("documentation-static"
+	 :base-directory "../documentation"
+	 :base-extension "png"
+	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
+	 :publishing-function org-publish-attachment
+	 :recursive t
+	 )
 	("maxs-static"
 	 :base-directory "."
 	 :base-extension "css\\|js\\|png"

@@ -1,0 +1,28 @@
+#+TITLE:        MAXS Privacy Policy
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      H:2 num:nil author:nil toc:nil
+#+OPTIONS:      timestamp:nil
+#+STARTUP:      noindent
+
+*MAXS does not collect or share personal information*.
+
+Depending on the used MAXS Components, it may be possible that
+personal information, like contact data or SMS messages, are send over
+the used MAXS Transport. MAXS tries everything to protect these
+information, but it is up to the user to configure MAXS for optimum
+protection, for example by making use of XMPP encryption.
+
+* MAXS Transport XMPP
+
+Best practices:
+- Only use encrypted XMPP streams
+- Set "Stream encryption" to "Required"
+- The MAXS account and the master addresses should be on the same XMPP
+  server. If that is not possible, make sure that the involved XMPP
+  servers support encrypted server-to-server (s2s) streams.
+
+* Website
+
+http(s)://projectmaxs.org does utilize [[http://piwik.org][Piwik]] to gather visitor data
+and metrics. The site is also avaiable via https, secured with [[https://www.cacert.org][CAcert]].

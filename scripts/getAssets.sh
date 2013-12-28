@@ -40,9 +40,6 @@ if [[ ! -d $OUTDIR ]]; then
     exit 1
 fi
 
-OLDIFS=$IFS
-IFS=";"
-
 maybeCheckHash() {
     if [ $SHA256 != 0 -a \
 	$(sha256sum $FILE | cut -f 1 -d ' ') != $SHA256 ]; then
@@ -52,6 +49,8 @@ maybeCheckHash() {
     fi
 }
 
+OLDIFS=$IFS
+IFS=";"
 while read URL DIR SHA256; do
     TARGETDIR=${OUTDIR}/${DIR}
     FILE=$(basename $URL)
@@ -72,3 +71,4 @@ while read URL DIR SHA256; do
 	maybeCheckHash
     fi
 done < $ASSETSFILE
+IFS=$OLDIFS

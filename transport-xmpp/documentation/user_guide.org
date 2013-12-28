@@ -1,0 +1,22 @@
+#+TITLE:        MAXS Transport XMPP: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+MAXS Transport XMPP acts as gateway between MAXS and the Extensible
+Messaging and Presence Protocol (XMPP). It enables MAXS to receive
+commands and send responses or notifications via XMPP.
+
+Uses =android.permission.INTERNET= permission for XMPP communication.
+
+Uses =android.permission.ACCESS_NETWORK_STATE= permission to detect
+and react on data connectivity changes.
+
+Uses =android.permission.ACCESS_WIFI_STATE= permission to bind a port
+for a SOCKS5 proxy used for XMPP file transfers on the IP of the WiFi
+interface.
+
+

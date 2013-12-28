@@ -61,6 +61,10 @@ This extension needs client support.
 
 * [[http://xmpp.org/extensions/xep-0096.html][XEP-0096]] SI File Transfer
 
+Used for the file transfer feature of Project MAXS. Note that
+XEP-0069, XEP-0047 and XEP-0065 based XMPP file transfers are per
+default *not encrypted*.
+
 This extension needs client support. Other XMPP entities, such as
 servers, may also support SI File Transfer, for increased reliability.
 

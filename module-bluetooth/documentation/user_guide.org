@@ -1,0 +1,22 @@
+#+TITLE:        MAXS Module Bluetooth: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Query the default bluetooth adapter for its status.
+
+Uses =android.permission.BLUETOOTH= permission.
+
+* Commands
+
+** =bluetooth= (short command: =bt=)
+
+*** =bluetooth status=
+
+#+BEGIN_SRC
+User: bluetooth status
+AndroidDevice: Bluetooth is enabled: true
+#+END_SRC

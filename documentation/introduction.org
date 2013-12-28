@@ -149,5 +149,9 @@ system (e.g. XMPP presence status)
 
 Try sending simply =help= as command.
 
+* How can configure MAXS?
+
+Have a look at the [[file:quickstart.org][Quickstart Guide]]
+
 #  LocalWords:  odular ndroid MPP ervice bluetoothadmin smsnotify sms
 #  LocalWords:  contactsread GTalkSMS bluetooth AndroidDevice
