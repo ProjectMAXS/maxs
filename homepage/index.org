@@ -11,8 +11,9 @@ carefully tested but there may be some bugs left.
 * What is MAXS? / Documentation
 
 MAXS (Modular Android XMPP Suite) allows you to control your Android
-device and receive notifications over XMPP. You can for example write
-SMS on your desktop/laptop by sending a command over XMPP to MAXS
+device and receive notifications over XMPP. For example, you can
+compose and send a SMS message on your desktop/laptop by sending a
+command message from every standard compliant XMPP client to MAXS
 running on your smartphone.
 
 MAXS is dedicated to [[file:privacy_policy.org][users privacy]] and choice, that is why it's
