@@ -18,4 +18,9 @@
             android:title="@string/pref_notify_delivered" />
     </PreferenceCategory>
 
+    <CheckBoxPreference
+        android:key="@string/pref_use_best_contact_key"
+        android:summary="@string/pref_use_best_contact_help"
+        android:title="@string/pref_use_best_contact" />
+
 </PreferenceScreen>

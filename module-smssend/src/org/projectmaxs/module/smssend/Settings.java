@@ -30,6 +30,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	private final String NOTIFY_SEND;
 	private final String NOTIFY_DELIVERED;
+	private final String USE_BEST_CONTACT;
 
 	private final String DELIVERED_INTENT_REQUEST_CODE = "DELIVERED_INTENT_REQUEST_CODE";
 	private final String SENT_INTENT_REQUEST_CODE = "SENT_INTENT_REQUEST_CODE";
@@ -51,6 +52,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 		NOTIFY_SEND = context.getString(R.string.pref_notify_send_key);
 		NOTIFY_DELIVERED = context.getString(R.string.pref_notify_delivered_key);
+		USE_BEST_CONTACT = context.getString(R.string.pref_use_best_contact_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -65,6 +67,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public boolean notifyDeliveredEnabled() {
 		return mSharedPreferences.getBoolean(NOTIFY_DELIVERED, false);
+	}
+
+	public boolean useBestContactEnabled() {
+		return mSharedPreferences.getBoolean(USE_BEST_CONTACT, false);
 	}
 
 	public synchronized int getDeliveredIntentRequestCode(int howMany) {

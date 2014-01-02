@@ -377,4 +377,26 @@ public class ContactUtil {
 		}
 	}
 
+	/**
+	 * If the given collection contains only one contact with a number, then this contact is
+	 * returned. Otherwise, if more then one contact with a number exists or if none exists, null is
+	 * returned.
+	 * 
+	 * @param contacts
+	 * @return the one and only contact with number(s) from contacts or null
+	 */
+	public static Contact getOnlyContactWithNumber(Collection<Contact> contacts) {
+		Contact res = null;
+		for (Contact contact : contacts) {
+			if (contact.hasNumbers()) {
+				if (res != null) {
+					return null;
+				} else {
+					res = contact;
+				}
+			}
+		}
+		return res;
+	}
+
 }

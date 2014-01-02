@@ -75,16 +75,19 @@ public class ModuleService extends MAXSModuleIntentService {
 	public static final String PART_NUM_EXTRA = "partNum";
 	public static final String CMD_ID_EXTRA = "cmdId";
 
+	private Settings mSettings;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mSettings.getInstance(this);
 	}
 
 	@Override
 	public Message handleCommand(Command command) {
 		final String cmd = command.getCommand();
 
-		Contact contact;
+		Contact contact = null;
 		String text;
 		String receiver = null;
 		if ("reply".equals(cmd) || "r".equals(cmd)) {
@@ -117,9 +120,11 @@ public class ModuleService extends MAXSModuleIntentService {
 				Collection<Contact> contacts = ContactUtil.getInstance(this).lookupContacts(
 						argsSplit[0]);
 				if (contacts == null) {
-					return new Message("Contacts module not installed?");
+					return new Message("Contacts module (MAXS module contactsread) not installed?");
 				} else if (contacts.size() > 1) {
-					return new Message("Many matching contacts found");
+					if (mSettings.useBestContactEnabled())
+						contact = ContactUtil.getOnlyContactWithNumber(contacts);
+					if (contact == null) return new Message("Many matching contacts found");
 				} else if (contacts.size() == 0) {
 					Text failureText = new Text("No matching contact found.");
 					int spaceCount = SharedStringUtil.countMatches(argsSplit[0], ' ');
@@ -167,14 +172,13 @@ public class ModuleService extends MAXSModuleIntentService {
 	 */
 	private Sms sendSMS(String receiver, String text, int cmdId) {
 		SmsManager smsManager = SmsManager.getDefault();
-		Settings settings = Settings.getInstance(this);
 		ArrayList<PendingIntent> sentIntents = null;
 		ArrayList<PendingIntent> deliveryIntents = null;
 		ArrayList<String> parts = smsManager.divideMessage(text);
 		int partCount = parts.size();
 		SMSTable smsTable = SMSTable.getInstance(this);
-		boolean notifySentEnabled = settings.notifySentEnabled();
-		boolean notifyDeliveredEnabled = settings.notifyDeliveredEnabled();
+		boolean notifySentEnabled = mSettings.notifySentEnabled();
+		boolean notifyDeliveredEnabled = mSettings.notifyDeliveredEnabled();
 
 		if (notifySentEnabled || notifyDeliveredEnabled) {
 			smsTable.addSms(cmdId, receiver, SharedStringUtil.shorten(text, 20), partCount,
@@ -182,12 +186,12 @@ public class ModuleService extends MAXSModuleIntentService {
 			if (notifySentEnabled) {
 				sentIntents = createPendingIntents(partCount, cmdId,
 						SMSPendingIntentReceiver.SMS_SENT_ACTION,
-						settings.getSentIntentRequestCode(partCount));
+						mSettings.getSentIntentRequestCode(partCount));
 			}
 			if (notifyDeliveredEnabled) {
 				deliveryIntents = createPendingIntents(partCount, cmdId,
 						SMSPendingIntentReceiver.SMS_DELIVERED_ACTION,
-						settings.getDeliveredIntentRequestCode(partCount));
+						mSettings.getDeliveredIntentRequestCode(partCount));
 			}
 		}
 
