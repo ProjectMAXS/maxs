@@ -29,6 +29,9 @@
         <activity
             android:name=".activities.InfoAndSettings"
             android:exported="true" />
+        <activity
+            android:name=".activities.Settings"
+            android:exported="true" />
 
         <receiver
             android:name=".ModuleReceiver"
