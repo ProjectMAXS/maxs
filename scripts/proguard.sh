@@ -6,7 +6,7 @@ set -e
 
 readonly PROJECT_PROPERTIES=project.properties
 readonly PROGUARD_ENABLED_STRING="proguard.enabled=true"
-readonly PROGUARD_CONFIG_STRING="proguard.config=proguard.cfg"
+readonly PROGUARD_CONFIG_STRING="proguard.config=proguard-project.txt"
 
 show_usage_exit() {
     echo "usage: `basename $0` [-d] -c <component> -p (enabled|disabled)"
@@ -49,9 +49,9 @@ COMPONENT_DIR=${BASEDIR}/${COMPONENT}
 if [[ ! -d $COMPONENT_DIR ]]; then
     echo "error: not a directory $COMPONENT_DIR"
     exit 1
-elif [[ ! -f "${COMPONENT_DIR}/proguard.cfg" ]]; then
+elif [[ ! -f "${COMPONENT_DIR}/proguard-project.txt" ]]; then
     # Silently abort if the component has no proguard.cfg
-    echo "Component has now proguard.cfg. Aborting"
+    echo "Component has now proguard-project.txt. Aborting"
     exit
 fi
 
