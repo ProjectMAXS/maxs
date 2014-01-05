@@ -1,0 +1,9 @@
+<project name="android_rules" default="debug">
+  <!-- Set 'out.dex.jar.input.ref' path element without any
+       content. Android's build.xml dex-helper macro will then only
+       use 'obfuscated.jar' (as 'out.dex.input.absolute.dir') as input
+       and not all libraries (as 'out.dex.jar.input.ref'). This allows
+       debug builds with proguard for optimization. -->
+  <path id="out.dex.jar.input.ref" />
+</project>
+
