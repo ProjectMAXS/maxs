@@ -80,7 +80,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mSettings.getInstance(this);
+		mSettings = Settings.getInstance(this);
 	}
 
 	@Override
