@@ -21,6 +21,9 @@ import org.projectmaxs.shared.global.GlobalConstants;
 
 public class MainModuleConstants {
 
+	public static final String MAIN_PACKAGE = GlobalConstants.MAIN_PACKAGE;
+	public static final String MAIN_MODULE_SERVICE = MAIN_PACKAGE + ".MAXSModuleIntentService";
+
 	public static final String ACTION_SMS_TO_INBOX = GlobalConstants.MODULE_PACKAGE
 			+ ".ACTION_SMS_TO_INBOX";
 

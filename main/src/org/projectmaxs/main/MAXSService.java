@@ -333,7 +333,8 @@ public class MAXSService extends Service {
 	}
 
 	private void startService() {
-		Intent intent = new Intent(Constants.ACTION_START_SERVICE);
+		Intent intent = new Intent(this, MAXSService.class);
+		intent.setAction(Constants.ACTION_START_SERVICE);
 		startService(intent);
 	}
 

@@ -89,6 +89,8 @@ public class HandleTransportStatus extends StateChangeListener {
 
 	public void sendStatus() {
 		Intent intent = new Intent(TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS);
+		intent.setClassName(TransportConstants.MAIN_PACKAGE,
+				TransportConstants.MAIN_TRANSPORT_SERVICE);
 		intent.putExtra(GlobalConstants.EXTRA_PACKAGE, Constants.PACKAGE);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, mStatusString);
 		mContext.startService(intent);

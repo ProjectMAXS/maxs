@@ -19,6 +19,7 @@ package org.projectmaxs.main.misc;
 
 import java.util.ArrayList;
 
+import org.projectmaxs.main.MAXSModuleIntentService;
 import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
@@ -95,7 +96,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		mLastBatteryPct = batteryPct;
 		mLastPlugged = plugged;
 
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_UPDATE_STATUS);
+		Intent replyIntent = new Intent(mContext, MAXSModuleIntentService.class);
+		replyIntent.setAction(GlobalConstants.ACTION_UPDATE_STATUS);
 		replyIntent.putParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT, infos);
 		mContext.startService(replyIntent);
 	}

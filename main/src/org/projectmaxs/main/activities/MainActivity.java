@@ -104,12 +104,14 @@ public class MainActivity extends Activity {
 					return;
 				}
 
-				Intent intent;
+				String action;
 				if (MAXSService.isRunning()) {
-					intent = new Intent(Constants.ACTION_STOP_SERVICE);
+					action = Constants.ACTION_STOP_SERVICE;
 				} else {
-					intent = new Intent(Constants.ACTION_START_SERVICE);
+					action = Constants.ACTION_START_SERVICE;
 				}
+				final Intent intent = new Intent(MainActivity.this, MAXSService.class);
+				intent.setAction(action);
 				startService(intent);
 			}
 		});

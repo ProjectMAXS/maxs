@@ -29,6 +29,8 @@ public class GlobalConstants {
 	public static final String MODULE_PACKAGE = PACKAGE + ".module";
 	public static final String TRANSPORT_PACKAGE = PACKAGE + ".transport";
 
+	public static final String MAIN_INTENT_SERVICE = MAIN_PACKAGE + ".MAXSIntentService";
+
 	public static final String FILEWRITE_MODULE_PACKAGE = MODULE_PACKAGE + ".filewrite";
 	public static final String FILEWRITE_MODULE_IFT_SERVICE = FILEWRITE_MODULE_PACKAGE
 			+ ".IncomingFileTransferService";

@@ -173,9 +173,6 @@ public abstract class MAXSModuleIntentService extends Service {
 	}
 
 	public final void send(org.projectmaxs.shared.global.Message message) {
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-		startService(replyIntent);
+		MainUtil.send(message, this);
 	}
-
 }

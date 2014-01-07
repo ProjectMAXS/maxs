@@ -19,6 +19,7 @@ package org.projectmaxs.shared.module;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,8 @@ public class MainUtil {
 
 	public static final void send(Message message, Context context) {
 		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
+		replyIntent.setClassName(GlobalConstants.MAIN_PACKAGE,
+				MainModuleConstants.MAIN_MODULE_SERVICE);
 		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 		context.startService(replyIntent);
 	}

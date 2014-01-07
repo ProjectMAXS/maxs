@@ -48,24 +48,27 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 		String action = intent.getAction();
 		mLog.d("onReceive: action=" + action);
 
+		String replyToClassName;
 		Intent replyIntent = null;
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(TransportConstants.ACTION_REGISTER_TRANSPORT);
 			replyIntent.putExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION,
 					mTransportInformation);
+			replyToClassName = TransportConstants.MAIN_TRANSPORT_SERVICE;
 		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
+			replyToClassName = GlobalConstants.MAIN_INTENT_SERVICE;
 		} else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
+			replyToClassName = GlobalConstants.MAIN_INTENT_SERVICE;
 		} else {
-			throw new IllegalStateException("MAXSTransportReceiver: unknown action: " + action);
+			throw new IllegalStateException("MAXSTransportReceiver: unknown action=" + action);
 		}
-		if (replyIntent != null) {
-			mLog.d("onReceive: replying with action=" + replyIntent.getAction());
-			context.startService(replyIntent);
-		}
+		replyIntent.setClassName(TransportConstants.MAIN_PACKAGE, replyToClassName);
+		mLog.d("onReceive: replying with action=" + replyIntent.getAction());
+		context.startService(replyIntent);
 	}
 
 	public abstract void initLog(Context context);

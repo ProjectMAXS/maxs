@@ -28,6 +28,7 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.messagecontent.CommandHelp;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
+import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
 import android.content.BroadcastReceiver;
@@ -50,6 +51,7 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 		String action = intent.getAction();
 		mLog.d("onReceive: action=" + action);
 
+		String replyToClassName;
 		Intent replyIntent = null;
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
@@ -57,17 +59,21 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 			addHelp(help, context);
 			mModuleInformation.addHelp(help, true);
 			replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
+			replyToClassName = MainModuleConstants.MAIN_MODULE_SERVICE;
 		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
+			replyToClassName = GlobalConstants.MAIN_INTENT_SERVICE;
 		} else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
+			replyToClassName = GlobalConstants.MAIN_INTENT_SERVICE;
+		} else {
+			throw new IllegalStateException("MAXSModuleReceiver: unknown action=" + action);
 		}
-		if (replyIntent != null) {
-			mLog.d("onReceive: replying with action=" + replyIntent.getAction());
-			context.startService(replyIntent);
-		}
+		replyIntent.setClassName(GlobalConstants.MAIN_PACKAGE, replyToClassName);
+		mLog.d("onReceive: replying with action=" + replyIntent.getAction());
+		context.startService(replyIntent);
 	}
 
 	public abstract void initLog(Context context);

@@ -78,7 +78,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			}
 			LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed="
 					+ networkTypeChanged);
-			Intent i = new Intent(Constants.ACTION_NETWORK_STATUS_CHANGED);
+			Intent i = new Intent(context, TransportService.class);
+			i.setAction(Constants.ACTION_NETWORK_STATUS_CHANGED);
 			i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
 			i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);
 			context.startService(i);
