@@ -5,5 +5,112 @@
        and not all libraries (as 'out.dex.jar.input.ref'). This allows
        debug builds with proguard for optimization. -->
   <path id="out.dex.jar.input.ref" />
+
+    <!-- Obfuscate target
+        This is only active in release builds when proguard.config is defined
+        in default.properties.
+
+        To replace Proguard with a different obfuscation engine:
+        Override the following targets in your build.xml, before the call to <setup>
+            -release-obfuscation-check
+                Check whether obfuscation should happen, and put the result in a property.
+            -debug-obfuscation-check
+                Obfuscation should not happen. Set the same property to false.
+            -obfuscate
+                check if the property set in -debug/release-obfuscation-check is set to true.
+                If true:
+                    Perform obfuscation
+                    Set property out.dex.input.absolute.dir to be the output of the obfuscation
+    -->
+    <target name="-obfuscate">
+        <if condition="${proguard.enabled}">
+            <then>
+                <property name="obfuscate.absolute.dir" location="${out.absolute.dir}/proguard" />
+                <property name="preobfuscate.jar.file" value="${obfuscate.absolute.dir}/original.jar" />
+                <property name="obfuscated.jar.file" value="${obfuscate.absolute.dir}/obfuscated.jar" />
+                <!-- input for dex will be proguard's output -->
+                <property name="out.dex.input.absolute.dir" value="${obfuscated.jar.file}" />
+
+                <!-- Add Proguard Tasks -->
+                <property name="proguard.jar" location="${android.tools.dir}/proguard/lib/proguard.jar" />
+                <taskdef name="proguard" classname="proguard.ant.ProGuardTask" classpath="${proguard.jar}" />
+
+                <!-- Set the android classpath Path object into a single property. It'll be
+                     all the jar files separated by a platform path-separator.
+                     Each path must be quoted if it contains spaces.
+                -->
+                <pathconvert property="project.target.classpath.value" refid="project.target.class.path">
+                    <firstmatchmapper>
+                        <regexpmapper from='^([^ ]*)( .*)$$' to='"\1\2"'/>
+                        <identitymapper/>
+                    </firstmatchmapper>
+                </pathconvert>
+
+                <!-- Build a path object with all the jar files that must be obfuscated.
+                     This include the project compiled source code and any 3rd party jar
+                     files. -->
+                <path id="project.all.classes.path">
+                    <pathelement location="${preobfuscate.jar.file}" />
+                    <path refid="project.all.jars.path" />
+                </path>
+                <!-- Set the project jar files Path object into a single property. It'll be
+                     all the jar files separated by a platform path-separator.
+                     Each path must be quoted if it contains spaces.
+                -->
+                <pathconvert property="project.all.classes.value" refid="project.all.classes.path">
+                    <firstmatchmapper>
+                        <regexpmapper from='^([^ ]*)( .*)$$' to='"\1\2"'/>
+                        <identitymapper/>
+                    </firstmatchmapper>
+                </pathconvert>
+
+                <path id="proguard.configpath">
+                    <pathelement path="${proguard.config}"/>
+                </path>
+
+                <union id="project.all.proguard.input">
+                  <path refid="proguard.configpath"/>
+                  <path refid="project.all.jars.path"/>
+                  <fileset dir="${out.classes.absolute.dir}" includes="**/*.class"/>
+                </union>
+                <uptodate property="obfuscated.jar.file.uptodate" targetfile="${obfuscated.jar.file}">
+                  <srcresources refid="project.all.proguard.input"/>
+                </uptodate>
+
+                <if condition="${obfuscated.jar.file.uptodate}">
+                  <then>
+                    <echo level="info">ProGuard output up-to-date. Skipping ProGuard invocation...</echo>
+                  </then>
+                  <else>
+                    <!-- Turn the path property ${proguard.config} from an A:B:C property
+                         into a series of includes: -include A -include B -include C
+                         suitable for processing by the ProGuard task. Note - this does
+                         not include the leading '-include "' or the closing '"'; those
+                         are added under the <proguard> call below.
+                    -->
+                    <pathconvert pathsep='" -include "' property="proguard.configcmd" refid="proguard.configpath"/>
+
+                    <mkdir   dir="${obfuscate.absolute.dir}" />
+                    <delete file="${preobfuscate.jar.file}"/>
+                    <delete file="${obfuscated.jar.file}"/>
+                    <jar basedir="${out.classes.absolute.dir}"
+                         destfile="${preobfuscate.jar.file}" />
+                    <proguard>
+                      -include      "${proguard.configcmd}"
+                      -include      "${out.absolute.dir}/proguard.txt"
+                      -injars       ${project.all.classes.value}
+                      -outjars      "${obfuscated.jar.file}"
+                      -libraryjars  ${project.target.classpath.value}
+                      -dump         "${obfuscate.absolute.dir}/dump.txt"
+                      -printseeds   "${obfuscate.absolute.dir}/seeds.txt"
+                      -printusage   "${obfuscate.absolute.dir}/usage.txt"
+                      -printmapping "${obfuscate.absolute.dir}/mapping.txt"
+                    </proguard>
+                  </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
 </project>
 
