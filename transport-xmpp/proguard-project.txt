@@ -1,6 +1,13 @@
 # This is a pretty standard optimization only proguard config for an
 # Android Project
 
+-keep class org.projectmaxs.shared.global.util.Log
+-keep class org.projectmaxs.shared.maintransport.TransportInformation
+
+-keepclasseswithmembers class * extends org.jivesoftware.smack.sasl.SASLMechanism {
+    public <init>(org.jivesoftware.smack.SASLAuthentication);
+}
+
 ################################################################################
 # Custom proguard settings
 
