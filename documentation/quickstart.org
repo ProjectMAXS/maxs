@@ -64,6 +64,8 @@ service providers that respect your privacy:
 - [[http://yax.im][yax.im]]
 - [[http://web.jabber.ccc.de/][jabber.ccc.de]]
 
+For more public XMPP servers visit https://xmpp.net/directory.php
+
 Now simply enter your choosen JID, e.g. user@yax.im and a good strong
 password under "Device Account" (B) and press the "Register Account"
 button.
