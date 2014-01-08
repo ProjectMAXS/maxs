@@ -1,13 +1,13 @@
 <project name="android_rules">
   <target name="-pre-build">
-  <if condition="${proguard.enabled}">
-    <then>
-      <echo level="info">Proguard.config is enabled</echo>
-      <!-- Secondary dx input (jar files) is empty since all the
-           jar files will be in the obfuscated jar -->
-      <path id="out.dex.jar.input.ref" />
-    </then>
-  </if>
+    <if condition="${proguard.enabled}">
+      <then>
+	<echo level="info">Proguard.config is enabled</echo>
+	<!-- Secondary dx input (jar files) is empty since all the
+             jar files will be in the obfuscated jar -->
+	<path id="out.dex.jar.input.ref" />
+      </then>
+    </if>
   </target>
 
     <!-- Obfuscate target
