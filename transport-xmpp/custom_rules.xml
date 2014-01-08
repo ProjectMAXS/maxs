@@ -1,10 +1,14 @@
-<project name="android_rules" default="debug">
-  <!-- Set 'out.dex.jar.input.ref' path element without any
-       content. Android's build.xml dex-helper macro will then only
-       use 'obfuscated.jar' (as 'out.dex.input.absolute.dir') as input
-       and not all libraries (as 'out.dex.jar.input.ref'). This allows
-       debug builds with proguard for optimization. -->
-  <path id="out.dex.jar.input.ref" />
+<project name="android_rules">
+  <target name="-pre-build">
+  <if condition="${proguard.enabled}">
+    <then>
+      <echo level="info">Proguard.config is enabled</echo>
+      <!-- Secondary dx input (jar files) is empty since all the
+           jar files will be in the obfuscated jar -->
+      <path id="out.dex.jar.input.ref" />
+    </then>
+  </if>
+  </target>
 
     <!-- Obfuscate target
         This is only active in release builds when proguard.config is defined
