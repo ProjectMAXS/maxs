@@ -29,6 +29,7 @@ the [[file:../documentation/quickstart.org][Quickstart Guide]].
 There is more documentation available under [[../documentation/index.org][projectmaxs.org/docs]].
 
 * Get MAXS
+<<getmaxs>>
 
 ** Play Store
 
@@ -133,7 +134,7 @@ will be helpful.
 - Project MAXS at ohloh.net: https://www.ohloh.net/p/maxs
  
 * Contact
-<<Contact>>
+<<contact>>
 
 ** IRC
 
@@ -176,7 +177,7 @@ Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
 [[https://flattr.com/thing/2148361][Flattr Project MAXS]]
 
 * Acknowledgements
-<<Acknowledgements>>
+<<acknowledgements>>
 
 - The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
 - [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers

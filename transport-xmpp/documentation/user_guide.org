@@ -10,13 +10,14 @@ MAXS Transport XMPP acts as gateway between MAXS and the Extensible
 Messaging and Presence Protocol (XMPP). It enables MAXS to receive
 commands and send responses or notifications via XMPP.
 
-Uses =android.permission.INTERNET= permission for XMPP communication.
+For setup instructions go to [[../quickstart.org][projectmaxs.org/quickstart]]
 
-Uses =android.permission.ACCESS_NETWORK_STATE= permission to detect
-and react on data connectivity changes.
+* Permissions
 
-Uses =android.permission.ACCESS_WIFI_STATE= permission to bind a port
-for a SOCKS5 proxy used for XMPP file transfers on the IP of the WiFi
-interface.
+| Permission                                | Use                                                                              |
+|-------------------------------------------+----------------------------------------------------------------------------------|
+| =android.permission.INTERNET=             | XMPP communication                                                               |
+| =android.permission.ACCESS_NETWORK_STATE= | Detect and react on data connecvity changes                                      |
+| =android.permission.ACCESS_WIFI_STATE=    | Bind a port ib the WiFi interfacefor a SOCKS5 proxy used for XMPP file transfers |
 
 

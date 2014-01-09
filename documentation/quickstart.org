@@ -8,7 +8,7 @@
 
 This document will guide you through the process of setting up a
 typical MAXS deployment using XMPP on your Android device. If you have
-any questions, feel free use the available [[file:../homepage/index.org::Contact][contact channels]].
+any questions, feel free use the available [[http://projectmaxs.org/contact][contact channels]].
 
 * Prerequisites
 
@@ -22,6 +22,9 @@ But in order to be able send and receive XMPP packets, MAXS needs also
 an XMPP account, we will call this account simply /MAXS account/.
 
 * Installing the Suite
+
+MAXS can be obtained from Google's Play Store, F-Droid or via direct
+download: [[http://projectmaxs.org/getmaxs][projectmaxs.org/getmaxs]]
 
 It is important that you first install MAXS main *and lauch it once*
 so that Android recognized the permissions declard by MAXS. After that
@@ -75,7 +78,7 @@ button.
 #+CAPTION: MAXS Transport XMPP Advanced Settings
 [[./images/maxs-transport-xmpp_advanced_settings_annotated.png]]
 
-*** Manual XMPP serivice settings (A)
+*** Manual XMPP service settings (A)
 
 If your XMPP server does not accounce its availablitiy over DNS SRV
 records, then you may have to configure the server data (host, port)
