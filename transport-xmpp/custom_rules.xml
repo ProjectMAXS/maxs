@@ -1,5 +1,11 @@
 <project name="android_rules">
+  <!-- Zap debug-obfuscation-check from SDK's build.xml so that it
+       can't set proguard.enabled to false !-->
+  <target name="-debug-obfuscation-check"/>
   <target name="-pre-build">
+    <condition property="proguard.enabled" value="true" else="false">
+      <isset property="proguard.config" />
+    </condition>
     <if condition="${proguard.enabled}">
       <then>
 	<echo level="info">Proguard.config is enabled</echo>
@@ -7,6 +13,9 @@
              jar files will be in the obfuscated jar -->
 	<path id="out.dex.jar.input.ref" />
       </then>
+      <else>
+	<echo level="info">Proguard.config is disabled</echo>
+      </else>
     </if>
   </target>
 

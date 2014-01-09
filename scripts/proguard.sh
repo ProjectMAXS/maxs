@@ -5,7 +5,6 @@
 set -e
 
 readonly PROJECT_PROPERTIES=project.properties
-readonly PROGUARD_ENABLED_STRING="proguard.enabled=true"
 readonly PROGUARD_CONFIG_STRING="proguard.config=proguard-project.txt"
 
 show_usage_exit() {
@@ -14,7 +13,7 @@ show_usage_exit() {
 }
 
 proguard_enabled() {
-    return $(grep $PROGUARD_ENABLED_STRING $PROJECT_PROPERTIES &> /dev/null)
+    return $(grep $PROGUARD_CONFIG_STRING $PROJECT_PROPERTIES &> /dev/null)
 }
 
 while getopts c:dp: OPTION "$@"; do
@@ -58,9 +57,7 @@ fi
 cd "${COMPONENT_DIR}"
 
 if $PROGUARD && ! proguard_enabled ; then
-    echo "${PROGUARD_ENABLED_STRING}" >> $PROJECT_PROPERTIES
     echo "${PROGUARD_CONFIG_STRING}" >> $PROJECT_PROPERTIES
 elif ! $PROGUARD && proguard_enabled ; then
-    sed -i "/${PROGUARD_ENABLED_STRING}/d" $PROJECT_PROPERTIES
     sed -i "/${PROGUARD_CONFIG_STRING}/d" $PROJECT_PROPERTIES
 fi
