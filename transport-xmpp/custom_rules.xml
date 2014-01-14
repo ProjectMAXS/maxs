@@ -1,4 +1,4 @@
-<project name="android_rules">
+<project name="custom_android_rules">
   <!-- Zap debug-obfuscation-check from SDK's build.xml so that it
        can't set proguard.enabled to false !-->
   <target name="-debug-obfuscation-check"/>
