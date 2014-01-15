@@ -69,9 +69,9 @@ public class Log {
 		android.util.Log.e(mLogTag, msg, tr);
 	}
 
-	public void d(String msg) {
+	public void d(CharSequence msg) {
 		if (sDebugLogSettings == null || sDebugLogSettings.isDebugLogEnabled()) {
-			android.util.Log.d(mLogTag, msg);
+			android.util.Log.d(mLogTag, msg.toString());
 		}
 	}
 
