@@ -54,12 +54,22 @@ public class TypeTransformator {
 
 	public static String fromSMSType(Sms.Type type) {
 		switch (type) {
+		case ALL:
+			return "All";
 		case INBOX:
 			return "From";
 		case SENT:
 			return "To";
+		case DRAFT:
+			return "Draft";
+		case OUTBOX:
+			return "Outbox";
+		case FAILED:
+			return "Failed";
+		case QUEUED:
+			return "Queued";
 		default:
-			throw new IllegalStateException();
+			throw new IllegalStateException("Unkown sms type: " + type);
 		}
 	}
 
