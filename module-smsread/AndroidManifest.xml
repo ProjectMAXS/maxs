@@ -7,6 +7,7 @@
     <permission android:name="org.projectmaxs.permission.USE_MODULE" />
     <permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
+    <permission android:name="org.projectmaxs.permission.READ_CONTACTS" />
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
