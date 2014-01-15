@@ -449,10 +449,7 @@ public class XMPPService {
 	}
 
 	private synchronized void tryToConnect() {
-		String failureReason = null;
-		if (mSettings.getPassword().isEmpty()) failureReason = "Password not set or empty";
-		if (mSettings.getJid().isEmpty()) failureReason = "JID not set or empty";
-		if (mSettings.getMasterJidCount() == 0) failureReason = "Master JID(s) not configured";
+		String failureReason = mSettings.checkIfReadyToConnect();
 		if (failureReason != null) {
 			LOG.w("tryToConnect: failureReason=" + failureReason);
 			mHandleTransportStatus.setAndSendStatus("Unable to connect: " + failureReason);

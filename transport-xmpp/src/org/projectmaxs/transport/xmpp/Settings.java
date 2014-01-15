@@ -210,22 +210,40 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	/**
+	 * Ensures that the user configured everything so that a connection attempt can be made. If
+	 * something is missing, a String describing what is missing, will be returned.
+	 * 
+	 * @return null if everything is fine, otherwise a string explaining what's wrong
+	 */
+	public String checkIfReadyToConnect() {
+		if (getPassword().isEmpty()) return "Password not set or empty";
+		if (getJid().isEmpty()) return "JID not set or empty";
+		if (getMasterJidCount() == 0) return "Master JID(s) not configured";
+		if (getManualServiceSettings()) {
+			if (getManualServiceSettingsHost().isEmpty()) return "XMPP Server Host not specified";
+			if (getManualServiceSettingsService().isEmpty())
+				return "XMPP Server service name not specified";
+		}
+
+		return null;
+	}
+
+	/**
 	 * Retrieve a ConnectionConfiguration.
-	 *
+	 * 
 	 * Note that because of MemorizingTrustManager, the given Context must be an instance of
 	 * Application, Service or Activity
-	 *
+	 * 
 	 * @param context
 	 * @return
 	 * @throws XMPPException
 	 */
 	public ConnectionConfiguration getConnectionConfiguration(Context context) throws XMPPException {
 		if (mConnectionConfiguration == null) {
-			if (mSharedPreferences.getBoolean(MANUAL_SERVICE_SETTINGS, false)) {
-				String host = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_HOST, "");
-				int port = Integer.parseInt(mSharedPreferences.getString(
-						MANUAL_SERVICE_SETTINGS_PORT, "5222"));
-				String service = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
+			if (getManualServiceSettings()) {
+				String host = getManualServiceSettingsHost();
+				int port = getManualServiceSettingsPort();
+				String service = getManualServiceSettingsService();
 				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
 			} else {
 				String service = StringUtils.parseServer(mSharedPreferences.getString(JID, ""));
@@ -286,5 +304,21 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		String masterJids = SharedStringUtil.setToString(newMasterJids);
 		e.putString(MASTER_JIDS, masterJids);
 		e.commit();
+	}
+
+	private boolean getManualServiceSettings() {
+		return mSharedPreferences.getBoolean(MANUAL_SERVICE_SETTINGS, false);
+	}
+
+	private String getManualServiceSettingsHost() {
+		return mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_HOST, "");
+	}
+
+	private int getManualServiceSettingsPort() {
+		return Integer.parseInt(mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_PORT, "5222"));
+	}
+
+	private String getManualServiceSettingsService() {
+		return mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
 	}
 }
