@@ -55,11 +55,6 @@ public class TransportService extends MAXSTransportService {
 	// @formatter:on
 
 	private static final Log LOG = Log.getLog();
-	private static boolean sIsRunning = false;
-
-	public static boolean isRunning() {
-		return sIsRunning;
-	}
 
 	private XMPPService mXMPPService;
 	private SmackAndroid mSmackAndroid;
@@ -79,32 +74,6 @@ public class TransportService extends MAXSTransportService {
 	public void onDestroy() {
 		super.onDestroy();
 		mSmackAndroid.onDestroy();
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent == null) {
-			LOG.d("onStartCommand: null intent received, issueing START_SERVICE");
-			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
-		}
-
-		boolean stickyStart = true;
-		final String action = intent.getAction();
-		LOG.d("onStartCommand: action=" + action);
-		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
-			sIsRunning = false;
-			stickyStart = false;
-		} else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
-			sIsRunning = true;
-		}
-		// If the service is not running, and we receive something else then
-		// START_SERVICE, then don't start sticky to prevent the service from
-		// running
-		else if (!sIsRunning && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
-			stickyStart = false;
-		}
-		performInServiceHandler(intent);
-		return stickyStart ? START_STICKY : START_NOT_STICKY;
 	}
 
 	@Override
@@ -133,6 +102,9 @@ public class TransportService extends MAXSTransportService {
 					.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			mXMPPService.send(message, origin);
 		} else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
+			// Don't react on network status changes if the service isn't even running
+			if (!isRunning()) return;
+
 			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
 			boolean networkTypeChanged = intent.getBooleanExtra(
 					Constants.EXTRA_NETWORK_TYPE_CHANGED, false);

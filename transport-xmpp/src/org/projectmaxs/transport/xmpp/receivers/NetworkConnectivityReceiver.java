@@ -53,37 +53,35 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 		boolean connected;
 		boolean networkTypeChanged;
 
-		if (TransportService.isRunning()) {
-			String lastActiveNetworkType = settings.getLastActiveNetwork();
-			if (activeNetworkInfo != null) {
-				// we have an active data connection
-				String networkTypeName = activeNetworkInfo.getTypeName();
-				connected = true;
-				networkTypeChanged = false;
-				if (!networkTypeName.equals(lastActiveNetworkType)) {
-					LOG.d("networkTypeChanged current=" + networkTypeName + " last="
-							+ lastActiveNetworkType);
-					settings.setLastActiveNetwork(networkTypeName);
-					networkTypeChanged = true;
-				}
-			} else {
-				// we have *no* active data connection
-				connected = false;
-				if (lastActiveNetworkType.length() != 0) {
-					networkTypeChanged = true;
-				} else {
-					networkTypeChanged = false;
-				}
-				settings.setLastActiveNetwork("");
+		String lastActiveNetworkType = settings.getLastActiveNetwork();
+		if (activeNetworkInfo != null) {
+			// we have an active data connection
+			String networkTypeName = activeNetworkInfo.getTypeName();
+			connected = true;
+			networkTypeChanged = false;
+			if (!networkTypeName.equals(lastActiveNetworkType)) {
+				LOG.d("networkTypeChanged current=" + networkTypeName + " last="
+						+ lastActiveNetworkType);
+				settings.setLastActiveNetwork(networkTypeName);
+				networkTypeChanged = true;
 			}
-			LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed="
-					+ networkTypeChanged);
-			Intent i = new Intent(context, TransportService.class);
-			i.setAction(Constants.ACTION_NETWORK_STATUS_CHANGED);
-			i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
-			i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);
-			context.startService(i);
+		} else {
+			// we have *no* active data connection
+			connected = false;
+			if (lastActiveNetworkType.length() != 0) {
+				networkTypeChanged = true;
+			} else {
+				networkTypeChanged = false;
+			}
+			settings.setLastActiveNetwork("");
 		}
+		LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed="
+				+ networkTypeChanged);
+		Intent i = new Intent(context, TransportService.class);
+		i.setAction(Constants.ACTION_NETWORK_STATUS_CHANGED);
+		i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
+		i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);
+		context.startService(i);
 	}
 
 	private static void log(NetworkInfo networkInfo) {

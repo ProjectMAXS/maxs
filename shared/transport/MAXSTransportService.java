@@ -17,6 +17,9 @@
 
 package org.projectmaxs.shared.transport;
 
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.TransportConstants;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -26,6 +29,9 @@ import android.os.Looper;
 import android.os.Message;
 
 public abstract class MAXSTransportService extends Service {
+	private static final Log LOG = Log.getLog();
+
+	private boolean mIsRunning = false;
 	private volatile Looper mServiceLooper;
 	private volatile ServiceHandler mServiceHandler;
 	private String mName;
@@ -73,7 +79,37 @@ public abstract class MAXSTransportService extends Service {
 		mServiceHandler.sendMessage(msg);
 	}
 
-	public abstract int onStartCommand(Intent intent, int flags, int startId);
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent == null) {
+			LOG.d("onStartCommand: null intent received, issueing START_SERVICE");
+			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
+		}
+
+		boolean stickyStart = true;
+		final String action = intent.getAction();
+		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
+			mIsRunning = false;
+			stickyStart = false;
+		} else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+			mIsRunning = true;
+		}
+		// If the service is not running, and we receive something else then
+		// START_SERVICE, then don't start sticky to prevent the service from
+		// running
+		else if (!mIsRunning && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
+			LOG.d("onStartCommand: service not running and action (" + action
+					+ ") not start. Don't start sticky");
+			stickyStart = false;
+		}
+		performInServiceHandler(intent);
+		LOG.d("onStartCommand: stickyStart=" + stickyStart + " action=" + action);
+		return stickyStart ? START_STICKY : START_NOT_STICKY;
+	}
+
+	public boolean isRunning() {
+		return mIsRunning;
+	}
 
 	public abstract void onHandleIntent(Intent intent);
 }
