@@ -34,6 +34,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		LOG.d("onReceive; intent=" + intent.getAction());
 		Settings settings = Settings.getInstance(context);
 
 		ConnectivityManager cm = (ConnectivityManager) context
