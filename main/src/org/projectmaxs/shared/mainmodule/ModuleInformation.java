@@ -36,39 +36,13 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 	private final Set<CommandHelp> mHelp = new HashSet<CommandHelp>();;
 
 	public ModuleInformation(String modulePackage, String moduleName) {
-		this.mModulePackage = modulePackage;
-		this.mModuleName = moduleName;
-		this.mCommands = new HashSet<Command>();
+		mModulePackage = modulePackage;
+		mModuleName = moduleName;
+		mCommands = new HashSet<Command>();
 	}
 
-	public ModuleInformation(String modulePackage, Set<Command> commands) {
-		this.mModulePackage = modulePackage;
-		this.mModuleName = SharedStringUtil.getSubstringAfter(modulePackage, '.');
-		this.mCommands = commands;
-	}
-
-	public ModuleInformation(String modulePackage, Command... commands) {
-		this.mModulePackage = modulePackage;
-		this.mModuleName = SharedStringUtil.getSubstringAfter(modulePackage, '.');
-		Set<Command> cmds = new HashSet<Command>();
-		for (Command c : commands)
-			cmds.add(c);
-		this.mCommands = cmds;
-	}
-
-	public ModuleInformation(String modulePackage, String moduleName, Set<Command> commands) {
-		this.mModulePackage = modulePackage;
-		this.mModuleName = moduleName;
-		this.mCommands = commands;
-	}
-
-	public ModuleInformation(String modulePackage, String moduleName, Command... commands) {
-		this.mModulePackage = modulePackage;
-		this.mModuleName = moduleName;
-		Set<Command> cmds = new HashSet<Command>();
-		for (Command c : commands)
-			cmds.add(c);
-		this.mCommands = cmds;
+	public ModuleInformation(String modulePackage) {
+		this(modulePackage, SharedStringUtil.getSubstringAfter(modulePackage, '.'));
 	}
 
 	public ModuleInformation(Parcel in) {
@@ -103,25 +77,26 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 		return mModuleName;
 	}
 
+	public void add(Command command) {
+		if (command == null) return;
+		mCommands.add(command);
+	}
+
+	public void add(CommandHelp commandHelp) {
+		if (commandHelp == null) return;
+		mHelp.add(commandHelp);
+	}
+
 	public Set<Command> getCommands() {
 		return mCommands;
 	}
 
+	public Set<CommandHelp> getHelp() {
+		return mHelp;
+	}
+
 	public String toString() {
 		return "Package: " + mModulePackage;
-	}
-
-	public void addHelp(List<CommandHelp> help, boolean clear) {
-		if (clear) mHelp.clear();
-		for (CommandHelp ch : help)
-			addHelp(ch);
-	}
-
-	public void addHelp(CommandHelp help) {
-		if (mHelp.contains(help)) throw new IllegalStateException("CommandHelp already added");
-		if (!provides(help.mCommand, help.mSubCommand))
-			throw new IllegalStateException("ModuleInformation does not provide this command");
-		mHelp.add(help);
 	}
 
 	public boolean provides(String command, String subCommand) {
@@ -130,10 +105,6 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 				return true;
 
 		return false;
-	}
-
-	public Set<CommandHelp> getHelp() {
-		return mHelp;
 	}
 
 	public static final Creator<ModuleInformation> CREATOR = new Creator<ModuleInformation>() {
@@ -167,17 +138,17 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 		private Set<String> mSubCommands;
 
 		private Command(String command, String shortCommand, String defaultSubCommand,
-				String defaultSubcommandWithArgs) {
-			this.mCommand = command;
-			this.mShortCommand = shortCommand;
-			this.mDefaultSubCommand = defaultSubCommand;
-			this.mDefaultSubCommandWithArgs = defaultSubcommandWithArgs;
+				String defaultSubCommandWithArgs) {
+			mCommand = command;
+			mShortCommand = shortCommand;
+			mDefaultSubCommand = defaultSubCommand;
+			mDefaultSubCommandWithArgs = defaultSubCommandWithArgs;
 		}
 
 		public Command(String command, String shortCommand, String defaultSubCommand,
 				String defaultSubcommandWithArgs, Set<String> subCommands) {
 			this(command, shortCommand, defaultSubCommand, defaultSubcommandWithArgs);
-			this.mSubCommands = subCommands;
+			mSubCommands = subCommands;
 		}
 
 		public Command(String command, String shortCommand, String defaultSubCommand,
@@ -186,7 +157,7 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 			Set<String> subCmdSet = new HashSet<String>();
 			for (String s : subCommands)
 				subCmdSet.add(s);
-			this.mSubCommands = subCmdSet;
+			mSubCommands = subCmdSet;
 		}
 
 		public Command(Parcel in) {

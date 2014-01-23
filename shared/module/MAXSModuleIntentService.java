@@ -18,6 +18,8 @@
 package org.projectmaxs.shared.module;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,9 +38,7 @@ import android.os.Message;
 
 /**
  * MAXSModuleIntentService is meant for modules to handle their PERFORM_COMMAND
- * intents. This is done in {@link #handleCommand(Command)}, which must be
- * implemented by the modules service.
- * 
+ * intents.
  * 
  * @author Florian Schmaus flo@freakempire.de
  * 
@@ -47,11 +47,13 @@ public abstract class MAXSModuleIntentService extends Service {
 	private static final int WHAT = 42;
 
 	private final Log mLog;
+	private final String mName;
+	private final Map<String, SupraCommand> mCommands;
+
 	private volatile Looper mServiceLooper;
 	private volatile ServiceHandler mServiceHandler;
 	private volatile Set<Object> mPendingActions = Collections
 			.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
-	private String mName;
 
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
@@ -69,9 +71,17 @@ public abstract class MAXSModuleIntentService extends Service {
 		}
 	}
 
-	public MAXSModuleIntentService(Log log, String name) {
+	public MAXSModuleIntentService(Log log, String name, SupraCommand[] commands) {
 		super();
 		mLog = log;
+		mName = name;
+		mCommands = new HashMap<String, SupraCommand>(commands.length);
+		for (SupraCommand command : commands) {
+			mCommands.put(command.getCommand(), command);
+			// Note that we don't need to insert the short command here
+			// If a command is given by the user in the short version, main will already substitute
+			// the short for the long version for us
+		}
 	}
 
 	@Override
@@ -125,47 +135,30 @@ public abstract class MAXSModuleIntentService extends Service {
 
 		org.projectmaxs.shared.global.Message message = null;
 
-		if ("help".equals(command.getCommand())) {
-			message = getHelp(command.getSubCommand(), command.getArgs());
-		} else {
-			try {
-				message = handleCommand(command);
-			} catch (Throwable e) {
-				mLog.e("onHandleIntent", e);
-				message = new org.projectmaxs.shared.global.Message("Exception: " + e.getMessage());
+		try {
+			SupraCommand supraCommand = mCommands.get(command.getCommand());
+			if (supraCommand != null) {
+				SubCommand subCommand = supraCommand.getSubCommand(command.getSubCommand());
+				if (subCommand != null) {
+					message = subCommand.execute(command.getArgs(), command, this);
+				} else {
+					throw new UnkownSubcommandException(command);
+				}
+			} else {
+				throw new UnkownCommandException(command);
 			}
-			if (message == null) return;
+
+		} catch (Throwable e) {
+			mLog.e("onHandleIntent", e);
+			message = new org.projectmaxs.shared.global.Message("Exception: " + e.getMessage());
 		}
+		if (message == null) return;
 
 		// make sure the id is set
 		send(message, command.getId());
 	}
 
-	/**
-	 * Main entry point for a module to handle it's commands.
-	 * 
-	 * There is no need to add the command id to the message, it will be done
-	 * automatically by MAXSModuleIntentService
-	 * 
-	 * @param command
-	 * @return
-	 */
-	public abstract org.projectmaxs.shared.global.Message handleCommand(Command command)
-			throws Throwable;
-
 	public abstract void initLog(Context context);
-
-	/**
-	 * Modules need to override this method to provide help for their commands
-	 * 
-	 * @param command
-	 * @param subCommand
-	 * @return
-	 */
-	public org.projectmaxs.shared.global.Message getHelp(String command, String subCommand) {
-		return new org.projectmaxs.shared.global.Message("Help for '" + command + " " + subCommand
-				+ "' not available");
-	}
 
 	public final void send(org.projectmaxs.shared.global.Message message, int cmdId) {
 		message.setId(cmdId);

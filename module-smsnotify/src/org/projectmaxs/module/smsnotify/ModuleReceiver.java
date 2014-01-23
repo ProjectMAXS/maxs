@@ -28,7 +28,7 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	private final static Log LOG = Log.getLog();
 
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
-			"org.projectmaxs.module.smsnotify", new ModuleInformation.Command[0]);
+			"org.projectmaxs.module.smsnotify");
 
 	public ModuleReceiver() {
 		super(LOG, sMODULE_INFORMATION);

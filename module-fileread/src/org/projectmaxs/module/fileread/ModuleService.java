@@ -17,252 +17,56 @@
 
 package org.projectmaxs.module.fileread;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.aidl.IMAXSOutgoingFileTransferService;
-import org.projectmaxs.shared.global.messagecontent.Element;
-import org.projectmaxs.shared.global.messagecontent.Text;
-import org.projectmaxs.shared.global.util.AsyncServiceTask;
+import org.projectmaxs.module.fileread.commands.CdPath;
+import org.projectmaxs.module.fileread.commands.CdTilde;
+import org.projectmaxs.module.fileread.commands.LsPath;
+import org.projectmaxs.module.fileread.commands.LsTilde;
+import org.projectmaxs.module.fileread.commands.SendPath;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.SharedStringUtil;
-import org.projectmaxs.shared.mainmodule.Command;
-import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
-import org.projectmaxs.shared.module.UnkownCommandException;
-import org.projectmaxs.shared.module.UnkownSubcommandException;
+import org.projectmaxs.shared.module.SupraCommand;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
 
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
-	private Settings mSettings;
-
 	public ModuleService() {
-		super(LOG, "maxs-module-fileread");
+		super(LOG, "maxs-module-fileread", sCOMMANDS);
 	}
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.fileread",        // Package of the Module
-			"fileread",                               // Name of the Module (if omitted, last substring after '.' is used)
-			new ModuleInformation.Command[] {         // Array of commands provided by the module
-					new ModuleInformation.Command(
-							"send",                    // Command name
-							null,                      // Short command name
-							null,                      // Default subcommand without arguments
-							"path",                    // Default subcommand with arguments
-							new String[] { "path" }),  // Array of provided subcommands 
-					new ModuleInformation.Command(
-							"ls",                          // Command name
-							null,                          // Short command name
-							"~",                           // Default subcommnd without arguments
-							"path",                        // Default subcommand with arguments
-							new String[] { "~", "path" }), // Array of provided subcommands
-					new ModuleInformation.Command(
-							"cd",
-							null,
-							"~",
-							"path",
-							new String[] { "~", "path" }),
-			});
+			"fileread"                                // Name of the Module (if omitted, last substring after '.' is used)
+			);
 	// @formatter:on
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		// Do not try to initialize settings in the ModuleService's constructor, as the context will
-		// not be available, resulting in an NPE.
-		mSettings = Settings.getInstance(this);
-	}
+	public static final SupraCommand CD = new SupraCommand("cd");
+	public static final SupraCommand LS = new SupraCommand("ls");
+	public static final SupraCommand SEND = new SupraCommand("send");
 
-	@Override
-	public Message handleCommand(Command command) {
-		final String cmd = command.getCommand();
-		final String subCommand = command.getSubCommand();
-		Message message = null;
+	public static final SupraCommand[] sCOMMANDS;
 
-		if ("send".equals(cmd)) {
-			if ("path".equals(subCommand)) {
-				message = send(command);
-			} else {
-				throw new UnkownSubcommandException(command);
-			}
-		} else if ("ls".equals(cmd)) {
-			if ("path".equals(subCommand)) {
-				message = list(command.getArgs());
-			} else if ("~".equals(subCommand)) {
-				message = list(mSettings.getCwd());
-			} else {
-				throw new UnkownSubcommandException(command);
-			}
-		} else if ("cd".equals(cmd)) {
-			if ("~".equals(subCommand)) {
-				message = cd(GlobalConstants.MAXS_EXTERNAL_STORAGE);
-			} else if ("path".equals(subCommand)) {
-				message = cd(fileFrom(command.getArgs()));
-			} else {
-				throw new UnkownSubcommandException(command);
-			}
-		} else {
-			throw new UnkownCommandException(command);
-		}
-		return message;
+	static {
+		Set<SupraCommand> commands = new HashSet<SupraCommand>();
+
+		SupraCommand.register(CdPath.class, commands);
+		SupraCommand.register(CdTilde.class, commands);
+		SupraCommand.register(LsPath.class, commands);
+		SupraCommand.register(LsTilde.class, commands);
+		SupraCommand.register(SendPath.class, commands);
+
+		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
 
 	@Override
 	public void initLog(Context context) {
 		LOG.initialize(Settings.getInstance(context));
-	}
-
-	private final Message list(String path) {
-		if (path == null) {
-			return list(mSettings.getCwd());
-		} else {
-			return list(fileFrom(path));
-		}
-	}
-
-	private final Message list(File path) {
-		Message message;
-		if (path.isDirectory()) {
-			message = new Message("Content of " + path.getAbsolutePath());
-			mSettings.setCwd(path);
-			File[] dirs = path.listFiles(new FileFilter() {
-				public boolean accept(File pathname) {
-					return pathname.isDirectory();
-				}
-			});
-			File[] files = path.listFiles(new FileFilter() {
-				public boolean accept(File pathname) {
-					return pathname.isFile();
-				}
-			});
-			if (dirs.length > 0) {
-				Arrays.sort(dirs);
-				for (File d : dirs) {
-					message.add(toElement(d));
-				}
-			}
-			if (files.length > 0) {
-				Arrays.sort(files);
-				for (File f : files) {
-					message.add(toElement(f));
-				}
-			}
-		} else if (path.isFile()) {
-			message = new Message(path.getAbsolutePath());
-		} else {
-			message = new Message("No such file or directory: " + path);
-		}
-		return message;
-	}
-
-	private final Message send(Command command) {
-		final String file = command.getArgs();
-		final File toSend = fileFrom(file);
-
-		if (!toSend.isFile()) return new Message("Not a file: " + toSend);
-
-		ContentResolver cr = getContentResolver();
-		Uri uri = ContentUris.withAppendedId(
-				MAXSContentProviderContract.OUTGOING_FILE_TRANSFER_URI, (long) command.getId());
-		Cursor c = cr.query(uri, null, null, null, null);
-		if (!c.moveToFirst()) throw new IllegalStateException("Empty cursor");
-		final String action = c.getString(c
-				.getColumnIndexOrThrow(MAXSContentProviderContract.OUTGOING_FILETRANSFER_SERVICE));
-		final String receiver = c.getString(c
-				.getColumnIndexOrThrow(MAXSContentProviderContract.RECEIVER_INFO));
-		c.close();
-
-		AsyncServiceTask<IMAXSOutgoingFileTransferService> ast = new AsyncServiceTask<IMAXSOutgoingFileTransferService>(
-				action, this) {
-			@Override
-			public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
-				return IMAXSOutgoingFileTransferService.Stub.asInterface(iBinder);
-			}
-
-			@Override
-			public void performTask(IMAXSOutgoingFileTransferService iinterface) {
-				InputStream is = null;
-				OutputStream os = null;
-				try {
-					ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(toSend.getName(),
-							toSend.length(), toSend.getAbsolutePath(), receiver);
-
-					int len;
-					byte[] buf = new byte[1024];
-
-					is = new FileInputStream(toSend);
-					os = new ParcelFileDescriptor.AutoCloseOutputStream(pfd);
-					while ((len = is.read(buf)) > 0) {
-						os.write(buf, 0, len);
-					}
-
-				} catch (Exception e) {
-					send(new Message("Exception while sending file" + e.getMessage()));
-					LOG.e("handleSend: performTask exception", e);
-				} finally {
-					try {
-						if (is != null) is.close();
-						if (os != null) os.close();
-					} catch (IOException e) {}
-				}
-				removePendingAction(this);
-			}
-		};
-		addPendingAction(ast);
-		ast.go();
-
-		return null;
-	}
-
-	private final Message cd(File path) {
-		Message message;
-		if (path.isDirectory()) {
-			mSettings.setCwd(path);
-			message = new Message("Change working directory to: " + path.getAbsolutePath());
-		} else {
-			message = new Message("Not a directory: " + path.getAbsolutePath());
-		}
-		return message;
-	}
-
-	private final File fileFrom(String path) {
-		if (path.startsWith("/")) {
-			return new File(path);
-		} else {
-			return new File(mSettings.getCwd(), path);
-		}
-	}
-
-	private static final Element toElement(File file) {
-		final String path = file.getAbsolutePath();
-		Element element;
-		if (file.isDirectory()) {
-			element = new Element("directory", file.getAbsolutePath(), path + '/');
-		} else {
-			final long size = file.length();
-			Text text = new Text(path + " " + SharedStringUtil.humandReadableByteCount(size));
-			element = new Element("file", file.getAbsolutePath(), text);
-			element.addChildElement(new Element("size", String.valueOf(size)));
-		}
-		return element;
 	}
 
 }

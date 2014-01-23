@@ -184,6 +184,10 @@ public class MAXSService extends Service {
 			if (ci == null) {
 				errorMsg = new Message("Unkown command: " + command);
 			} else {
+				// Map a possible short command to the long version, so that the modules only have
+				// to care about the long versions
+				command = ci.getCommand();
+
 				if (subCmd == null) {
 					// User sent just a command without a subcommand, find the default one
 					subCmd = ci.getDefaultSubCommand();

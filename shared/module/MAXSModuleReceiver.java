@@ -20,12 +20,9 @@ package org.projectmaxs.shared.module;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.messagecontent.CommandHelp;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 import org.projectmaxs.shared.mainmodule.MainModuleConstants;
@@ -39,15 +36,26 @@ import android.content.SharedPreferences;
 public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 	private final Log mLog;
 	private final ModuleInformation mModuleInformation;
+	private final SupraCommand[] mCommands;
+
+	private Context mContext;
 
 	public MAXSModuleReceiver(Log log, ModuleInformation moduleInformation) {
 		mLog = log;
 		mModuleInformation = moduleInformation;
+		mCommands = new SupraCommand[0];
+	}
+
+	public MAXSModuleReceiver(Log log, ModuleInformation moduleInformation,
+			final SupraCommand[] commands) {
+		mLog = log;
+		mModuleInformation = moduleInformation;
+		mCommands = commands;
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		initLog(context);
+		init(context);
 		String action = intent.getAction();
 		mLog.d("onReceive: action=" + action);
 
@@ -55,9 +63,6 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 		Intent replyIntent = null;
 		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
 			replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
-			List<CommandHelp> help = new LinkedList<CommandHelp>();
-			addHelp(help, context);
-			mModuleInformation.addHelp(help, true);
 			replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
 			replyToClassName = MainModuleConstants.MAIN_MODULE_SERVICE;
 		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
@@ -76,11 +81,19 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 		context.startService(replyIntent);
 	}
 
+	private final void init(Context context) {
+		if (mContext != null) return;
+
+		mContext = context;
+		for (SupraCommand command : mCommands)
+			command.addTo(mModuleInformation, context);
+
+		initLog(context);
+	}
+
 	public abstract void initLog(Context context);
 
 	public abstract SharedPreferences getSharedPreferences(Context context);
-
-	public void addHelp(List<CommandHelp> help, Context context) {}
 
 	public Set<String> doNotExport() {
 		return null;

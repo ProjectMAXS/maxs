@@ -17,66 +17,44 @@
 
 package org.projectmaxs.module.clipboard;
 
-import org.projectmaxs.shared.global.Message;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.projectmaxs.module.clipboard.commands.ClipboardGet;
+import org.projectmaxs.module.clipboard.commands.ClipboardSet;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
-import org.projectmaxs.shared.module.UnkownCommandException;
-import org.projectmaxs.shared.module.UnkownSubcommandException;
+import org.projectmaxs.shared.module.SupraCommand;
 
 import android.content.Context;
-import android.text.ClipboardManager;
 
 @SuppressWarnings("deprecation")
 public class ModuleService extends MAXSModuleIntentService {
+
 	private final static Log LOG = Log.getLog();
 
-	private ClipboardManager mManager;
-
 	public ModuleService() {
-		super(LOG, "maxs-module-clipboard");
+		super(LOG, "maxs-module-clipboard", sCOMMANDS);
 	}
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.clipboard",      // Package of the Module
-			"clipboard",                             // Name of the Module (if omitted, last substring after '.' is used)
-			new ModuleInformation.Command[] {        // Array of commands provided by the module
-					new ModuleInformation.Command(
-							"clipboard",             // Command name
-							"clip",                    // Short command name
-							"get",                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
-							new String[] { "set", "get" }),  // Array of provided subcommands 
-			});
+			"clipboard"                             // Name of the Module (if omitted, last substring after '.' is used)
+			);
 	// @formatter:on
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		mManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-	}
+	public static final SupraCommand sCLIPBOARD = new SupraCommand("clipboard", "clip");
+	public static final SupraCommand[] sCOMMANDS;
 
-	@Override
-	public Message handleCommand(Command command) {
-		final String cmd = command.getCommand();
-		final String subCmd = command.getSubCommand();
+	static {
+		Set<SupraCommand> commands = new HashSet<SupraCommand>();
 
-		final Message msg;
-		if ("clipboard".equals(cmd) || "clip".equals(cmd)) {
-			if ("get".equals(subCmd)) {
-				msg = new Message("Clipboard: " + mManager.getText());
-			} else if ("set".equals(subCmd)) {
-				mManager.setText(command.getArgs());
-				msg = new Message("Clipboard set to: " + command.getArgs());
-			} else {
-				throw new UnkownSubcommandException(command);
-			}
-		} else {
-			throw new UnkownCommandException(command);
-		}
-		return msg;
+		SupraCommand.register(ClipboardSet.class, commands);
+		SupraCommand.register(ClipboardGet.class, commands);
+
+		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
 
 	@Override

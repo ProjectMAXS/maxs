@@ -17,99 +17,51 @@
 
 package org.projectmaxs.module.contactsread;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.messagecontent.Contact;
+import org.projectmaxs.module.contactsread.commands.ContactLookup;
+import org.projectmaxs.module.contactsread.commands.ContactMobile;
+import org.projectmaxs.module.contactsread.commands.ContactName;
+import org.projectmaxs.module.contactsread.commands.ContactNick;
+import org.projectmaxs.module.contactsread.commands.ContactNum;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
-import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
+import org.projectmaxs.shared.module.SupraCommand;
 
 import android.content.Context;
 
 public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
-	private ContactUtil mContactUtil;
-
 	public ModuleService() {
-		super(LOG, "maxs-module-contactsread");
+		super(LOG, "maxs-module-contactsread", sCOMMANDS);
 	}
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.contactsread",      // Package of the Module
-			"contactsread",                             // Name of the Module (if omitted, last substring after '.' is used)
-			new ModuleInformation.Command[] {        // Array of commands provided by the module
-					new ModuleInformation.Command(
-							"contact",             // Command name
-							"c",                    // Short command name
-							null,                // Default subcommand without arguments
-							"lookup",                    // Default subcommand with arguments
-							new String[] { "lookup", "lname", "lnum", "lnick", "mobile" }),  // Array of provided subcommands
-			});
+			"contactsread"                              // Name of the Module (if omitted, last substring after '.' is used)
+			);
 	// @formatter:on
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		mContactUtil = ContactUtil.getInstance(this);
+	public static final SupraCommand[] sCOMMANDS;
+
+	static {
+		Set<SupraCommand> commands = new HashSet<SupraCommand>();
+
+		SupraCommand.register(ContactLookup.class, commands);
+		SupraCommand.register(ContactMobile.class, commands);
+		SupraCommand.register(ContactName.class, commands);
+		SupraCommand.register(ContactNick.class, commands);
+		SupraCommand.register(ContactNum.class, commands);
+
+		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
 
 	@Override
 	public void initLog(Context context) {
 		LOG.initialize(Settings.getInstance(context));
-	}
-
-	@Override
-	public Message handleCommand(Command command) {
-		Message msg;
-		String subCmd = command.getSubCommand();
-		String args = command.getArgs();
-		if ("lookup".equals(subCmd)) {
-			msg = lookup(args);
-		} else if ("lname".equals(subCmd)) {
-			msg = lookupByName(args);
-		} else if ("lnum".equals(subCmd)) {
-			msg = lookupByNumber(args);
-		} else if ("lnick".equals(subCmd)) {
-			msg = lookupByNickname(args);
-		} else {
-			msg = new Message("Unkown command");
-		}
-		return msg;
-	}
-
-	private Message lookup(String args) {
-		Collection<Contact> contacts = mContactUtil.lookupContacts(args);
-		return processResult(contacts);
-	}
-
-	private Message lookupByName(String args) {
-		Collection<Contact> contacts = mContactUtil.contactsByName(args);
-		return processResult(contacts);
-	}
-
-	private Message lookupByNumber(String args) {
-		Collection<Contact> contacts = mContactUtil.contactsByNumber(args);
-		return processResult(contacts);
-	}
-
-	private Message lookupByNickname(String args) {
-		Collection<Contact> contacts = mContactUtil.contactsByNickname(args);
-		return processResult(contacts);
-	}
-
-	private static final Message processResult(Collection<Contact> contacts) {
-		Iterator<Contact> it = contacts.iterator();
-		if (!it.hasNext()) return new Message("No Contacts found");
-		Message msg = new Message();
-		while (it.hasNext()) {
-			msg.add(it.next());
-		}
-		return msg;
 	}
 }

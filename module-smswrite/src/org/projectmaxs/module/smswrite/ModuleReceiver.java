@@ -17,9 +17,6 @@
 
 package org.projectmaxs.module.smswrite;
 
-import java.util.List;
-
-import org.projectmaxs.shared.global.messagecontent.CommandHelp;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.module.MAXSModuleReceiver;
 
@@ -30,7 +27,7 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	private final static Log LOG = Log.getLog();
 
 	public ModuleReceiver() {
-		super(LOG, ModuleService.sMODULE_INFORMATION);
+		super(LOG, ModuleService.sMODULE_INFORMATION, ModuleService.sCOMMANDS);
 	}
 
 	@Override
@@ -41,11 +38,5 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	@Override
 	public SharedPreferences getSharedPreferences(Context context) {
 		return Settings.getInstance(context).getSharedPreferences();
-	}
-
-	@Override
-	public void addHelp(List<CommandHelp> help, Context context) {
-		help.add(new CommandHelp("sms", "write", "sms content",
-				"Add a SMS to the system database. Does not actually send the SMS"));
 	}
 }

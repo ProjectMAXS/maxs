@@ -17,11 +17,14 @@
 
 package org.projectmaxs.module.smswrite;
 
-import org.projectmaxs.shared.global.Message;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.projectmaxs.module.smswrite.commands.SmsWrite;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
+import org.projectmaxs.shared.module.SupraCommand;
 
 import android.content.Context;
 
@@ -29,36 +32,24 @@ public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
 	public ModuleService() {
-		super(LOG, "maxs-module-smswrite");
+		super(LOG, "maxs-module-smswrite", sCOMMANDS);
 	}
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.smswrite",      // Package of the Module
-			"smswrite",                             // Name of the Module (if omitted, last substring after '.' is used)
-			new ModuleInformation.Command[] {        // Array of commands provided by the module
-					new ModuleInformation.Command(
-							"sms",             // Command name
-							"s",                    // Short command name
-							null,                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
-							new String[] { "write" }),  // Array of provided subcommands 
-			});
+			"smswrite"                             // Name of the Module (if omitted, last substring after '.' is used)
+			);
 	// @formatter:on
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
+	public static final SupraCommand[] sCOMMANDS;
 
-	@Override
-	public Message handleCommand(Command command) {
+	static {
+		Set<SupraCommand> commands = new HashSet<SupraCommand>();
 
-		Message msg;
+		SupraCommand.register(SmsWrite.class, commands);
 
-		msg = new Message("not done yet");
-
-		return msg;
+		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
 
 	@Override

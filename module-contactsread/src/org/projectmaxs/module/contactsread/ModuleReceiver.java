@@ -17,10 +17,6 @@
 
 package org.projectmaxs.module.contactsread;
 
-import java.util.List;
-
-import org.projectmaxs.shared.global.messagecontent.CommandHelp;
-import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.module.MAXSModuleReceiver;
 
@@ -31,7 +27,7 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	private final static Log LOG = Log.getLog();
 
 	public ModuleReceiver() {
-		super(LOG, ModuleService.sMODULE_INFORMATION);
+		super(LOG, ModuleService.sMODULE_INFORMATION, ModuleService.sCOMMANDS);
 	}
 
 	@Override
@@ -42,14 +38,5 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	@Override
 	public SharedPreferences getSharedPreferences(Context context) {
 		return Settings.getInstance(context).getSharedPreferences();
-	}
-
-	@Override
-	public void addHelp(List<CommandHelp> help, Context context) {
-		help.add(new CommandHelp("contact", "lookup", ArgType.CONTACT_INFO, "Lookup a contact"));
-		help.add(new CommandHelp("contact", "lname", ArgType.CONTACT_NAME, "Lookup by name"));
-		help.add(new CommandHelp("contact", "lnum", ArgType.NUMBER, "Lookup by number"));
-		help.add(new CommandHelp("contact", "lnick", ArgType.CONTACT_NICKNAME, "Lookup by nickname"));
-		help.add(new CommandHelp("contact", "mobile", ArgType.NUMBER, "Lookup my mobile number"));
 	}
 }

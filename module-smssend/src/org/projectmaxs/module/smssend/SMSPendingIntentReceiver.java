@@ -17,6 +17,7 @@
 
 package org.projectmaxs.module.smssend;
 
+import org.projectmaxs.module.smssend.commands.AbstractSmsSendCommand;
 import org.projectmaxs.module.smssend.database.SMSTable;
 import org.projectmaxs.module.smssend.database.SMSTable.SMSInfo;
 import org.projectmaxs.shared.global.Message;
@@ -43,8 +44,8 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Message message = null;
 		String action = intent.getAction();
-		int partNum = intent.getIntExtra(ModuleService.PART_NUM_EXTRA, -1);
-		int cmdId = intent.getIntExtra(ModuleService.CMD_ID_EXTRA, -1);
+		int partNum = intent.getIntExtra(AbstractSmsSendCommand.PART_NUM_EXTRA, -1);
+		int cmdId = intent.getIntExtra(AbstractSmsSendCommand.CMD_ID_EXTRA, -1);
 		int res = getResultCode();
 		LOG.d("onReceive: action=" + action + " partNum=" + partNum + " cmdId=" + cmdId + " res="
 				+ res);

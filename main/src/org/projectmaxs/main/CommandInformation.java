@@ -39,6 +39,10 @@ public class CommandInformation {
 		this.mCommand = command;
 	}
 
+	public String getCommand() {
+		return mCommand;
+	}
+
 	public String getDefaultSubCommand() {
 		return mDefaultSubCommand;
 	}

@@ -17,11 +17,13 @@
 
 package org.projectmaxs.module.phonestateread;
 
-import org.projectmaxs.shared.global.Message;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
+import org.projectmaxs.shared.module.SupraCommand;
 
 import android.content.Context;
 
@@ -29,28 +31,22 @@ public class ModuleService extends MAXSModuleIntentService {
 	private final static Log LOG = Log.getLog();
 
 	public ModuleService() {
-		super(LOG, "maxs-module-phonestateread");
+		super(LOG, "maxs-module-phonestateread", sCOMMANDS);
 	}
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			Constants.MODULE_PACKAGE,      // Package of the Module
-			"phonestateread",                             // Name of the Module (if omitted, last substring after '.' is used)
-			new ModuleInformation.Command[] {        // Array of commands provided by the module
-					new ModuleInformation.Command(
-							"TODOphonestateread",             // Command name
-							null,                    // Short command name
-							null,                // Default subcommand without arguments
-							null,                    // Default subcommand with arguments
-							new String[] { "TODOstatus" }),  // Array of provided subcommands
-			});
+			"phonestateread"               // Name of the Module (if omitted, last substring after '.' is used)
+			);
 	// @formatter:on
 
-	@Override
-	public Message handleCommand(Command command) {
-		Message msg;
-		msg = new Message("no commands here");
-		return msg;
+	public static final SupraCommand[] sCOMMANDS;
+
+	static {
+		List<SupraCommand> commands = new LinkedList<SupraCommand>();
+
+		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
 
 	@Override

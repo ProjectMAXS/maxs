@@ -17,10 +17,6 @@
 
 package org.projectmaxs.module.smssend;
 
-import java.util.List;
-
-import org.projectmaxs.shared.global.messagecontent.CommandHelp;
-import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.module.MAXSModuleReceiver;
 
@@ -31,7 +27,7 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 	private final static Log LOG = Log.getLog();
 
 	public ModuleReceiver() {
-		super(LOG, ModuleService.sMODULE_INFORMATION);
+		super(LOG, ModuleService.sMODULE_INFORMATION, ModuleService.sCOMMANDS);
 	}
 
 	@Override
@@ -44,10 +40,4 @@ public class ModuleReceiver extends MAXSModuleReceiver {
 		return Settings.getInstance(context).getSharedPreferences();
 	}
 
-	@Override
-	public void addHelp(List<CommandHelp> help, Context context) {
-		help.add(new CommandHelp("sms", "send", "[contact name]  <sms content>",
-				"Send a sms. The contact needs to be seperated from the sms body with two spaces."));
-		help.add(new CommandHelp("reply", "to", ArgType.NONE, "Send a sms to the recent contact"));
-	}
 }
