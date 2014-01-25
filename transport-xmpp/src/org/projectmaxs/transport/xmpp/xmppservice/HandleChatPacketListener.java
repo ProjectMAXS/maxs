@@ -24,6 +24,7 @@ import org.jivesoftware.smack.filter.OrFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 
 public class HandleChatPacketListener extends StateChangeListener {
@@ -33,6 +34,8 @@ public class HandleChatPacketListener extends StateChangeListener {
 	 */
 	private static final PacketFilter sMessageFilter = new OrFilter(new MessageTypeFilter(
 			Message.Type.chat), new MessageTypeFilter(Message.Type.normal));
+
+	private static Log LOG = Log.getLog();
 
 	private final PacketListener mChatPacketListener;
 	private final XMPPService mXMPPService;
@@ -47,7 +50,12 @@ public class HandleChatPacketListener extends StateChangeListener {
 			public void processPacket(Packet packet) {
 				Message message = (Message) packet;
 				String from = message.getFrom();
-				if (mSettings.isMasterJID(from)) mXMPPService.newMessageFromMasterJID(message);
+				if (mSettings.isMasterJID(from)) {
+					mXMPPService.newMessageFromMasterJID(message);
+				} else {
+					LOG.w("Ignoring message from non-master JID: jid='" + from + "' message='"
+							+ message + '\'');
+				}
 			}
 
 		};
