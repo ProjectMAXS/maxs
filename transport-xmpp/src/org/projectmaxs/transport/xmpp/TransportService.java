@@ -20,6 +20,7 @@ package org.projectmaxs.transport.xmpp;
 import org.jivesoftware.smack.SmackAndroid;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
@@ -68,6 +69,7 @@ public class TransportService extends MAXSTransportService {
 	public void onCreate() {
 		super.onCreate();
 		mSmackAndroid = SmackAndroid.init(this);
+		JULHandler.init(Settings.getInstance(this));
 	}
 
 	@Override
