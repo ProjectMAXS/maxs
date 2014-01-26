@@ -85,6 +85,8 @@ public abstract class MAXSTransportService extends Service {
 			LOG.d("onStartCommand: null intent received, issueing START_SERVICE");
 			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
 		}
+		LOG.d("onStartCommand: intent=" + intent.getAction() + " flags=" + flags + " startId="
+				+ startId + " mIsRunning=" + mIsRunning);
 
 		boolean stickyStart = true;
 		final String action = intent.getAction();
