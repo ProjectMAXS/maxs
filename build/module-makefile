@@ -70,7 +70,7 @@ setupResourceLinks:
 eclipse: .settings .classpath .project prebuild
 
 .settings:
-	ln -s $(BASE)/build/eclipse/settings .settings
+	ln -rs $(BASE)/build/eclipse/settings .settings
 
 .classpath:
 	ln -s build/eclipse/classpath .classpath
