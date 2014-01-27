@@ -17,8 +17,6 @@
 
 package org.projectmaxs.shared.global.util;
 
-import android.text.TextUtils;
-
 public class Log {
 
 	private static DebugLogSettings sDebugLogSettings;
@@ -30,7 +28,7 @@ public class Log {
 
 	public static Log getLog() {
 		StackTraceElement[] s = new RuntimeException().getStackTrace();
-		return getLog(shortClassName(s[1].getClassName()));
+		return getLog(SharedStringUtil.substringAfterLastDot(s[1].getClassName()));
 	}
 
 	public static Log getLog(String logTag) {
@@ -81,11 +79,6 @@ public class Log {
 
 	private static String shortClassName(Class<?> c) {
 		String className = c.getName();
-		return shortClassName(className);
-	}
-
-	private static String shortClassName(String className) {
-		int index = TextUtils.lastIndexOf(className, '.');
-		return className.substring(index + 1);
+		return SharedStringUtil.substringAfterLastDot(className);
 	}
 }

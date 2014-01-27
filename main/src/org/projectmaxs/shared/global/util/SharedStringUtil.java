@@ -139,4 +139,15 @@ public class SharedStringUtil {
 		}
 		return count;
 	}
+
+	/**
+	 * Returns the substring after the last dot ('.').
+	 * "bar" = substringAfterLastDot("my.foo.bar");
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static String substringAfterLastDot(String string) {
+		return getSubstringAfter(string, '.');
+	}
 }
