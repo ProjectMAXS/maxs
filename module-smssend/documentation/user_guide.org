@@ -1,0 +1,45 @@
+#+TITLE:        MAXS Module SmsSend: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Send SMS messages
+
+| Makes optional use of modules| contactsread, smswrite |
+| Uses *inoffical* Android API | no                     |
+
+** Permissions
+
+| Permission                                  | Use                                            |
+|---------------------------------------------+------------------------------------------------|
+| =android.permission.SEND_SMS= | Send SMS messages |
+
+
+* Commands
+
+** =sms= (short command: =s=)
+
+Default subcommand with arguments: =send=
+
+*** =sms send=
+
+#+BEGIN_SRC
+User: sms send John Doe  Hi John, I got the tickets! :)
+#+END_SRC
+
+** =reply= (short command: =r=)
+
+Default subcommand with arguments: =to=
+
+*** =reply to=
+
+Reply to the recent contact.
+
+#+BEGIN_SRC
+AndroidDevice: Recent contact is Foo Bar (+234123)
+User: reply Hi Foo, let's meet at the cinema.
+#+END_SRC
+

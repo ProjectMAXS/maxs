@@ -1,0 +1,36 @@
+#+TITLE:        MAXS Module FileRead: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Browse the storage device. Send files over /transports/ that allow it.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | ☐    |
+
+** Permissions
+
+| Permission                                  | Use                                            |
+|---------------------------------------------+------------------------------------------------|
+| =android.permission.READ_EXTERNAL_STORAGE= | Write, modify and delete files on the external storage |
+
+* Commands
+
+** =send=
+
+*** =send path=
+
+** =ls=
+
+*** =ls path=
+
+*** =ls ~=
+
+** =cd=
+
+*** =cd path=
+
+*** =cd ~=

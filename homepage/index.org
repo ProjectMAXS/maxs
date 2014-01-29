@@ -5,7 +5,7 @@
 #+OPTIONS:      timestamp:nil
 #+STARTUP:      noindent
 
-* What is MAXS? / Documentation
+* What is MAXS?
 
 MAXS (Modular Android XMPP Suite), a set of *open-source GPLv3* licensed
 Android applications, allows you to control your Android device and
@@ -23,10 +23,13 @@ which are exchanged between MAXS and the user over so called
 /transports/. MAXS modules and transports are glued together with the
 so called /MAXS main/ application.
 
-Get an overview about MAXS by having a look at the [[file:../documentation/introduction.org][Introduction]] or
-the [[file:../documentation/quickstart.org][Quickstart Guide]].
+* Quickstart and Documentation
 
-There is more documentation available under [[../documentation/index.org][projectmaxs.org/docs]].
+For the impatient [[file:../documentation/quickstart.org][Quickstart Guide]].
+
+It is also a good idea to have a look at the [[file:../documentation/introduction.org][Introduction]].
+
+There is more documentation available at [[../documentation/index.org][projectmaxs.org/docs]].
 
 * Get MAXS
 <<getmaxs>>

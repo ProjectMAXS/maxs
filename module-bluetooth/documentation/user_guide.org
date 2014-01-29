@@ -8,7 +8,14 @@
 
 Query the default bluetooth adapter for its status.
 
-Uses =android.permission.BLUETOOTH= permission.
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.BLUETOOTH= | Query the status of the default bluetooth adapter |
 
 * Commands
 

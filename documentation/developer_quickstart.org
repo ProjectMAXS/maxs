@@ -1,0 +1,45 @@
+#+TITLE:        MAXS Developer Quickstart Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+If the [[*Prerequisistes][prerequisites]] are satisfied and everything is correctly
+configured, MAXS can be obtained and build with two simple steps:
+
+1. =git clone --recursive https://bitbucket.org/projectmaxs/maxs.git=
+2. =cd maxs && make=
+
+* Introduction
+
+MAXS is developed under Linux and sometimes with Eclipse as IDE. This
+guide hence focuses on this setup. But it should be also possible to
+develop on other platforms, given the prerequisistes are satisfied.
+
+* Prerequisites
+
+In order develop MAXS, you need to be able to build it from
+source. MAXS's build system requires the following prerequisites:
+
+- [[https://developer.android.com/sdk/index.html][Android SDK]]
+- bash
+- [[http://git-scm.com/][git]]
+- make (e.g. [[http://www.gnu.org/software/make/][GNU Make]])
+- A file system with symlink support and a POSIX compatible =ln= binary
+
+* Checking out the source
+
+#+begin_src
+git clone --recursive https://bitbucket.org/projectmaxs/maxs.git
+#+end_src
+
+* Importing MAXS components projects into Eclipse
+
+Call =make eclipse= from the project's root directory to setup the
+Eclipse configuration. You can then import the components from Eclipse
+with /File/ → /Import/ → /Android/ → /Existing Android Code Into
+Workspace/, select the root directory of maxs and all component
+projects should appear in the /Projects:/ list.
+
+#+caption: Eclipse Import Projects
+[[./images/eclipse_import_projects.png]]

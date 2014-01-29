@@ -30,12 +30,36 @@ MAXS is heavily inspired by GTalkSMS, and hence it shares many ideas
 with GTalkSMS. In fact we hope that MAXS will share the same feature
 set as GTalkSMS at some point.
 
-* Modular!
+** Modular and Secure!
 
 MAXS is split into a main component, which we refer to as /main/ from
 now on, transport components and various modules. It is the job of
 /main/ to forward incoming commands to the modules and send the answer
 message from the modules back to the origin transport.
+
+The modular design wouldn't be possible without Android's great
+inter-process communication (IPC) capabilities. For security reasons
+the IPC interfaces of MAXS are secured by custom Android permissions.
+
+** Resource-efficient
+
+MAXS does not use [[http://developer.android.com/reference/android/app/Service.html#startForeground(int,%20android.app.Notification)][foreground services]]. This allows Android to reclaim
+memory by killing MAXS services when needed. Usually these killed
+services are restared after a few seconds. MAXS saves it's full state
+to permantent storage, to easily recover from those interruptions.
+
+In order to lower CPU and radio usage, MAXS follows these simple
+principles:
+
+- Send as much data at once as possbile
+- Only send data if there is an interested receiver
+- Try to avoid sending data if the device is on battery
+
+Furthermore MAXS avoids library dependencies where possible. Being not
+really a GUI focused app, there is no need for Action Bar
+Sherlok. MAXS does not display any ads, so it does not have to depend
+on ad libraries (Google AdMob and such). This helps to reduce the
+overall memory footprint of MAXS.
 
 * What can MAXS do for me?
 
@@ -149,7 +173,7 @@ system (e.g. XMPP presence status)
 
 Try sending simply =help= as command.
 
-* How can configure MAXS?
+* How can I configure MAXS?
 
 Have a look at the [[file:quickstart.org][Quickstart Guide]]
 

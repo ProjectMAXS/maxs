@@ -1,0 +1,35 @@
+#+TITLE:        MAXS Module FileWrite: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Write, modify (rename, move, …) and delete files on the external
+storage.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | ☐    |
+
+** Permissions
+
+| Permission                                  | Use                                            |
+|---------------------------------------------+------------------------------------------------|
+| =android.permission.WRITE_EXTERNAL_STORAGE= | Write, modify and delete files on the external storage |
+
+* Commands
+
+** =rm=
+
+*** =rm path=
+
+*Not implemented yet*
+
+* File transfer
+
+This module allows /transports/ to *receive* incoming file transfers
+by allowing the file to be stored on the devices storage. For example
+the XMPP transport will automatically accept all incoming file
+transfers from any /master JID/ if this module is isntalled.
+
