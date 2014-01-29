@@ -18,7 +18,10 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.PrivacyListManager;
+import org.jivesoftware.smack.XMPPException;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
@@ -26,6 +29,8 @@ import android.content.Context;
 import android.content.Intent;
 
 public class HandleTransportStatus extends StateChangeListener {
+
+	private static final Log LOG = Log.getLog();
 
 	private final Context mContext;
 
@@ -44,13 +49,29 @@ public class HandleTransportStatus extends StateChangeListener {
 		} else {
 			encryptionStatus = "unencrypted";
 		}
+
 		String compressionStatus;
 		if (connection.isUsingCompression()) {
 			compressionStatus = "compressed";
 		} else {
 			compressionStatus = "uncompressed";
 		}
-		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ")");
+
+		String privacyListStatus;
+		try {
+			if (PrivacyListManager.getInstanceFor(connection).getActiveList().toString()
+					.equals(XMPPPrivacyList.PRIVACY_LIST_NAME)) {
+				privacyListStatus = "privacy";
+			} else {
+				privacyListStatus = "privacy inactive";
+			}
+		} catch (XMPPException e) {
+			LOG.e("connected", e);
+			privacyListStatus = "privacy unkown";
+		}
+
+		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ", "
+				+ privacyListStatus + ")");
 	}
 
 	@Override
