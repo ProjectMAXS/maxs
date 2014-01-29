@@ -62,8 +62,11 @@ public abstract class SubCommand {
 				help = context.getString(mHelpResId);
 			} else if (mHelpResId <= 0 && mHelp != null) {
 				help = mHelp;
-			} else {
+			} else if (mHelpResId > 0 && mHelp != null) {
 				throw new IllegalStateException("Must have either help resource ID or String");
+			} else {
+				// No help available for this sub command
+				return null;
 			}
 
 			if (mArgString == null && mArgType != null) {
