@@ -58,16 +58,21 @@ public class HandleTransportStatus extends StateChangeListener {
 		}
 
 		String privacyListStatus;
+		final String privacyInactive = "privacy inactive";
 		try {
 			if (PrivacyListManager.getInstanceFor(connection).getActiveList().toString()
 					.equals(XMPPPrivacyList.PRIVACY_LIST_NAME)) {
 				privacyListStatus = "privacy";
 			} else {
-				privacyListStatus = "privacy inactive";
+				privacyListStatus = privacyInactive;
 			}
 		} catch (XMPPException e) {
-			LOG.e("connected", e);
-			privacyListStatus = "privacy unkown";
+			if (e.getXMPPError().getCode() == 404) {
+				privacyListStatus = privacyInactive;
+			} else {
+				LOG.e("connected", e);
+				privacyListStatus = "privacy unkown";
+			}
 		}
 
 		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ", "
