@@ -17,6 +17,7 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 
 	public static final String PRIVACY_LIST_NAME = GlobalConstants.NAME;
 
+	private static final String JID = "jid";
 	private static final String SUBSCRIPTION = "subscription";
 	private static final String NAMESPACE = "jabber:iq:privacy";
 
@@ -84,7 +86,6 @@ public class XMPPPrivacyList extends StateChangeListener {
 
 		if (!mSettings.privacyListsEnabled()) {
 			try {
-				mPrivacyListManager.declineActiveList();
 				mPrivacyListManager.declineDefaultList();
 			} catch (XMPPException e) {
 				LOG.e("Could not disable privacy lists", e);
@@ -92,13 +93,14 @@ public class XMPPPrivacyList extends StateChangeListener {
 			return;
 		}
 
-		PrivacyList activeList = null;
+		PrivacyList defaultList = null;
 		try {
-			activeList = mPrivacyListManager.getActiveList();
+			defaultList = mPrivacyListManager.getDefaultList();
+			LOG.d("Default privacy list: " + defaultList);
 			// TODO We now assume if there is a privacy list with our name, then this list is
 			// actually equal to the one we want. This should be changed so that the activeList is
 			// in fact compared item-by-item with the desired list
-			if (activeList.toString().equals(PRIVACY_LIST_NAME)) return;
+			if (defaultList.toString().equals(PRIVACY_LIST_NAME)) return;
 		} catch (XMPPException e) {
 			// Log if not item-not-found(404)
 			if (e.getXMPPError().getCode() != 404) {
@@ -106,17 +108,26 @@ public class XMPPPrivacyList extends StateChangeListener {
 			}
 		}
 		try {
-			setPrivacyList();
+			setPrivacyList(connection);
 		} catch (XMPPException e) {
 			LOG.e("connected", e);
 		}
 
 	}
 
-	private final void setPrivacyList() throws XMPPException {
-		mPrivacyListManager.createPrivacyList(PRIVACY_LIST_NAME, PRIVACY_LIST);
+	private final void setPrivacyList(Connection connection) throws XMPPException {
+		// This is an ugly workaround for XMPP servers that apply privacy lists also to stanzas
+		// originating from themselves. For example http://issues.igniterealtime.org/browse/OF-724
+		List<PrivacyItem> list = new ArrayList<PrivacyItem>(PRIVACY_LIST.size() + 1);
+		list.addAll(PRIVACY_LIST);
+		// Because there are such services in the wild and XEP-0016 is not clear on that topic, we
+		// explicitly have to add a JID rule that allows stanzas from the service
+		PrivacyItem allowService = new PrivacyItem(JID, true, Integer.MAX_VALUE - 1);
+		allowService.setValue(connection.getServiceName());
+		list.add(allowService);
+
+		mPrivacyListManager.createPrivacyList(PRIVACY_LIST_NAME, list);
 		mPrivacyListManager.setDefaultListName(PRIVACY_LIST_NAME);
-		mPrivacyListManager.setActiveListName(PRIVACY_LIST_NAME);
 	}
 
 	public static final boolean isSupported(Connection connection) {
