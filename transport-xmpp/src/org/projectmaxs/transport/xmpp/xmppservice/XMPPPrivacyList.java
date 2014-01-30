@@ -30,6 +30,7 @@ import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.packet.DiscoverInfo;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.transport.xmpp.Settings;
 
 public class XMPPPrivacyList extends StateChangeListener {
 
@@ -43,20 +44,34 @@ public class XMPPPrivacyList extends StateChangeListener {
 	private static final List<PrivacyItem> PRIVACY_LIST = new LinkedList<PrivacyItem>();
 
 	static {
-		PrivacyItem subsToMessagesAllow = new PrivacyItem(SUBSCRIPTION, true, 1);
-		subsToMessagesAllow.setValue(PrivacyRule.SUBSCRIPTION_TO);
-		subsToMessagesAllow.setFilterMessage(true);
-		PRIVACY_LIST.add(subsToMessagesAllow);
+		// Allow messages, iq and presence out, for JIDs that have a subscription to our presence
+		// The idea is that we don't care about the presence of such IDs and therefore disallow, by
+		// not filtering them, presence in stanzas, to reduce bandwidth
+		PrivacyItem subscribedToAllow = new PrivacyItem(SUBSCRIPTION, true, 1);
+		subscribedToAllow.setValue(PrivacyRule.SUBSCRIPTION_TO);
+		subscribedToAllow.setFilterMessage(true);
+		subscribedToAllow.setFilterIQ(true);
+		subscribedToAllow.setFilterPresence_out(true);
+		PRIVACY_LIST.add(subscribedToAllow);
 
-		PrivacyItem subsBothAllAllow = new PrivacyItem(SUBSCRIPTION, true, 2);
-		subsToMessagesAllow.setValue(PrivacyRule.SUBSCRIPTION_BOTH);
-		PRIVACY_LIST.add(subsBothAllAllow);
+		// Stanzas from JIDs that have subscription state both are allowed. We use their presence in
+		// stanza information to determine if there is a JID online that needs information in some
+		// cases
+		PrivacyItem subscribedBothAllow = new PrivacyItem(SUBSCRIPTION, true, 2);
+		subscribedBothAllow.setValue(PrivacyRule.SUBSCRIPTION_BOTH);
+		PRIVACY_LIST.add(subscribedBothAllow);
 
-		PrivacyItem disallow = new PrivacyItem(null, false, 3);
+		// Fall-through case, because there is no type attribute, disallow
+		PrivacyItem disallow = new PrivacyItem(null, false, Integer.MAX_VALUE);
 		PRIVACY_LIST.add(disallow);
 	}
 
-	PrivacyListManager mPrivacyListManager;
+	private final Settings mSettings;
+	private PrivacyListManager mPrivacyListManager;
+
+	XMPPPrivacyList(Settings settings) {
+		mSettings = settings;
+	}
 
 	@Override
 	public void newConnection(Connection connection) {
@@ -66,7 +81,17 @@ public class XMPPPrivacyList extends StateChangeListener {
 	@Override
 	public void connected(Connection connection) {
 		if (!isSupported(connection)) {
-			LOG.i("PrivacyLists not supported by server");
+			if (mSettings.privacyListsEnabled()) LOG.i("PrivacyLists not supported by server");
+			return;
+		}
+
+		if (!mSettings.privacyListsEnabled()) {
+			try {
+				mPrivacyListManager.declineActiveList();
+				mPrivacyListManager.declineDefaultList();
+			} catch (XMPPException e) {
+				LOG.e("Could not disable privacy lists", e);
+			}
 			return;
 		}
 

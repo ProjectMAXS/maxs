@@ -12,6 +12,8 @@
     <string name="pref_xmpp_stream_compression_help">Use XMPP stream compression if supported by server</string>
     <string name="pref_xmpp_stream_encryption">Stream encryption</string>
     <string name="pref_xmpp_stream_encryption_help">Chose the level of encryption</string>
+    <string name="pref_xmpp_stream_privacy">Use Privacy Lists</string>
+    <string name="pref_xmpp_stream_privacy_help">Make use of XMPP Privacy Lists, if supported by server, to avoid non master JIDs to flood us with stanzas.</string>
     <string name="pref_xmpp_service_settings">XMPP Service Settings</string>
     <string name="pref_manual_service_settings">Manual service settings</string>
     <string name="pref_manual_service_settings_help">Allows you to specifiy the XMPP service settings</string>

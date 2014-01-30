@@ -39,6 +39,13 @@
             android:key="@string/pref_xmpp_stream_encryption_key"
             android:summary="@string/pref_xmpp_stream_encryption_help"
             android:title="@string/pref_xmpp_stream_encryption" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_xmpp_stream_privacy_key"
+            android:summary="@string/pref_xmpp_stream_privacy_help"
+            android:title="@string/pref_xmpp_stream_privacy" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_settings" >
         <CheckBoxPreference

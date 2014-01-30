@@ -112,7 +112,7 @@ public class XMPPService {
 		addListener(new XMPPPingManager(this));
 		addListener(new XMPPFileTransfer(context));
 		addListener(new XMPPDeliveryReceipts());
-		addListener(new XMPPPrivacyList());
+		addListener(new XMPPPrivacyList(mSettings));
 
 		mHandleTransportStatus = new HandleTransportStatus(context);
 		addListener(mHandleTransportStatus);
