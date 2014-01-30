@@ -80,10 +80,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 
 	@Override
 	public void connected(Connection connection) {
-		if (!isSupported(connection)) {
-			if (mSettings.privacyListsEnabled()) LOG.i("PrivacyLists not supported by server");
-			return;
-		}
+		if (!isSupported(connection)) return;
 
 		if (!mSettings.privacyListsEnabled()) {
 			try {
@@ -122,7 +119,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 		mPrivacyListManager.setActiveListName(PRIVACY_LIST_NAME);
 	}
 
-	private static final boolean isSupported(Connection connection) {
+	public static final boolean isSupported(Connection connection) {
 		ServiceDiscoveryManager sdm = ServiceDiscoveryManager.getInstanceFor(connection);
 		DiscoverInfo info;
 		try {
