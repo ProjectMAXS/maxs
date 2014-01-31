@@ -49,7 +49,7 @@ public class SmsSend extends AbstractSmsSendCommand {
 		String[] argsSplit = command.getArgs().split("  ", 2);
 		if (ContactNumber.isNumber(argsSplit[0])) {
 			contact = ContactUtil.getInstance(mService).contactByNumber(argsSplit[0]);
-			if (contact == null) receiver = argsSplit[0];
+			receiver = argsSplit[0];
 		} else {
 
 			Collection<Contact> contacts = ContactUtil.getInstance(mService).lookupContacts(
@@ -70,9 +70,8 @@ public class SmsSend extends AbstractSmsSendCommand {
 				return new Message(failureText);
 			}
 			contact = contacts.iterator().next();
-		}
-		if (contact != null)
 			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
+		}
 		String text = argsSplit[1];
 		RecentContactUtil.setRecentContact(receiver, contact, mService);
 

@@ -72,6 +72,7 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 	 * @param text
 	 * @param cmdId
 	 * @param contact
+	 *            - optional
 	 * @return
 	 */
 	final Message sendSms(String receiver, String text, int cmdId, Contact contact) {
