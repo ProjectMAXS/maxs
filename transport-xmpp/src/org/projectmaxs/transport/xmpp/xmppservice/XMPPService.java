@@ -522,19 +522,25 @@ public class XMPPService {
 				return;
 			}
 		}
-
 		// Login Successful
 
 		mConnection = connection;
 
-		if (newConnection) {
-			for (StateChangeListener l : mStateChangeListeners) {
-				l.newConnection(mConnection);
+		try {
+			if (newConnection) {
+				for (StateChangeListener l : mStateChangeListeners) {
+					l.newConnection(mConnection);
+				}
 			}
+
+			newState(State.Connected);
+		} catch (Exception e) {
+			LOG.w("tryToConnect: Exception thrown by StateChangeListener", e);
+			scheduleReconnect();
+			return;
 		}
 
 		LOG.d("tryToConnect: successfully connected \\o/");
-		newState(State.Connected);
 	}
 
 	private synchronized void disconnectConnection() {
