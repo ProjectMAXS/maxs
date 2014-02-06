@@ -73,6 +73,12 @@ public class Log {
 		}
 	}
 
+	public void d(CharSequence msg, Throwable tr) {
+		if (sDebugLogSettings == null || sDebugLogSettings.isDebugLogEnabled()) {
+			android.util.Log.d(mLogTag, msg.toString(), tr);
+		}
+	}
+
 	public static interface DebugLogSettings {
 		public boolean isDebugLogEnabled();
 	}

@@ -29,7 +29,7 @@ import org.projectmaxs.shared.global.messagecontent.FormatedText;
 import org.projectmaxs.shared.global.messagecontent.NewLine;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.messagecontent.Text;
-import org.projectmaxs.shared.global.util.SharedStringUtil;
+import org.projectmaxs.shared.global.util.DateTimeUtil;
 
 public class FormatedTextTransformator {
 
@@ -83,7 +83,7 @@ public class FormatedTextTransformator {
 
 		ft.add(FormatedText.bold(sms.getContact()));
 		ft.add(FormatedText.SINGLE_SPACE);
-		ft.add(FormatedText.italic(SharedStringUtil.toFullDate(sms.getDate())));
+		ft.add(FormatedText.italic(DateTimeUtil.toFullDate(sms.getDate())));
 		ft.add(FormatedText.from(": "));
 		ft.add(FormatedText.from(sms.getBody()));
 		ft.add(NewLine.getInstance());

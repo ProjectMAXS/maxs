@@ -32,11 +32,24 @@ public class Element extends AbstractElement {
 
 	private String mText;
 
+	/**
+	 * This element and all child elements will be considered non-human readable and therefore not
+	 * displayed to human users of MAXS
+	 * 
+	 * @param xmlName
+	 */
 	public Element(String xmlName) {
 		mXMLName = xmlName;
 		mHumanReadableName = null;
 	}
 
+	/**
+	 * This element and all child elements will be considered non-human readable and therefore not
+	 * displayed to human users of MAXS
+	 * 
+	 * @param xmlName
+	 * @param text
+	 */
 	public Element(String xmlName, String text) {
 		this(xmlName);
 		setText(text);

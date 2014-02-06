@@ -1,0 +1,30 @@
+#+TITLE:        MAXS Module Notification: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Listen for new notifications and inform the user.
+
+You need to allow the access to the notifications in Settings →
+Security → Notification access.
+
+The module allows you to configure when to notify you about
+Android notifications:
+- When posted
+- When removed
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                                              | Use                                 |
+|---------------------------------------------------------+-------------------------------------|
+| =android.permission.BIND_NOTIFICATION_LISTENER_SERVICE= | Listen for new system notifications |
+
+* Commands
+
+Currently none

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/pref_app_debug_log_key"
+        android:summary="@string/pref_app_debug_log_help"
+        android:title="@string/pref_app_debug_log" />
+
+    <PreferenceCategory>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_notification_posted_key"
+            android:summary="@string/pref_notification_posted_help"
+            android:title="@string/pref_notification_posted" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_notification_removed_key"
+            android:summary="@string/pref_notification_removed_help"
+            android:title="@string/pref_notification_removed" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

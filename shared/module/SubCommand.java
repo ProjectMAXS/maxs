@@ -31,6 +31,8 @@ public abstract class SubCommand {
 	final boolean mIsDefaultWithArguments;
 	final boolean mIsDefaultWithoutArguments;
 
+	private boolean mRequiresArgument = false;
+
 	private String mArgString;
 	private CommandHelp.ArgType mArgType;
 
@@ -86,6 +88,10 @@ public abstract class SubCommand {
 		return mSubCommandName;
 	}
 
+	public boolean requiresArgument() {
+		return mRequiresArgument;
+	}
+
 	protected void setHelp(String argString, String help) {
 		mArgString = argString;
 		mHelp = help;
@@ -104,6 +110,10 @@ public abstract class SubCommand {
 	protected void setHelp(CommandHelp.ArgType type, int helpResId) {
 		mArgType = type;
 		mHelpResId = helpResId;
+	}
+
+	protected void setRequiresArgument() {
+		mRequiresArgument = true;
 	}
 
 	public abstract Message execute(String arguments, Command command,

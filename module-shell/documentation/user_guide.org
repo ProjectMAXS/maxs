@@ -1,0 +1,113 @@
+#+TITLE:        MAXS Module Shell: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Execute a shell command and return the result.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+No speical permissions are required. May ask for root access if
+superuser is installed and 
+
+* Commands
+
+** =shell= (short command: =sh=)
+
+*** =shell execute=
+
+Execute the given command in a normal shell (i.e. as non-root).
+
+#+BEGIN_SRC
+User: shell execute ls -l
+AndroidDevice: drwxr-xr-x root root 2014-02-05 11:57 acct
+drwxrwx--x system cache 2014-02-06 12:10 cache
+-rwxr-x--- root root 284688 1970-01-01 01:00 charger
+dr-x------ root root 2014-02-05 11:57 config
+lrwxrwxrwx root root 2014-02-05 11:57 d -> /sys/kernel/debug
+drwxrwx--x system system 2014-02-05 13:50 data
+-rw-r--r-- root root 180 1970-01-01 01:00 default.prop
+drwxr-xr-x root root 2014-02-05 13:38 dev
+lrwxrwxrwx root root 2014-02-05 11:57 etc -> /system/etc
+-rw-r--r-- root root 10849 1970-01-01 01:00 file_contexts
+dr-xr-x--- system system 1970-01-01 01:00 firmware
+-rw-r----- root root 2588 1970-01-01 01:00 fstab.mako
+-rwxr-x--- root root 183792 1970-01-01 01:00 init
+-rwxr-x--- root root 6159 1970-01-01 01:00 init.cm.rc
+-rwxr-x--- root root 919 1970-01-01 01:00 init.environ.rc
+-rwxr-x--- root root 19317 1970-01-01 01:00 init.mako.rc
+-rwxr-x--- root root 5951 1970-01-01 01:00 init.mako.usb.rc
+-rwxr-x--- root root 21243 1970-01-01 01:00 init.rc
+-rwxr-x--- root root 301 1970-01-01 01:00 init.superuser.rc
+-rwxr-x--- root root 1795 1970-01-01 01:00 init.trace.rc
+-rwxr-x--- root root 3915 1970-01-01 01:00 init.usb.rc
+drwxrwxr-x root system 2014-02-05 11:57 mnt
+drwxrwx--x system system 1970-01-02 01:23 persist
+dr-xr-xr-x root root 1970-01-01 01:00 proc
+-rw-r--r-- root root 2161 1970-01-01 01:00 property_contexts
+drwxr-xr-x root root 1970-01-01 01:00 res
+drwx------ root root 2014-02-04 16:47 root
+drwxr-x--- root root 1970-01-01 01:00 sbin
+lrwxrwxrwx root root 2014-02-05 11:57 sdcard -> /storage/emulated/legacy
+-rw-r--r-- root root 711 1970-01-01 01:00 seapp_contexts
+-rw-r--r-- root root 76860 1970-01-01 01:00 sepolicy
+drwxr-x--x root sdcard_r 2014-02-05 11:57 storage
+dr-xr-xr-x root root 2014-02-05 11:57 sys
+drwxr-xr-x root root 2014-02-04 23:06 system
+-rw-r--r-- root root 2336 1970-01-01 01:00 ueventd.mako.rc
+-rw-r--r-- root root 5896 1970-01-01 01:00 ueventd.rc
+lrwxrwxrwx root root 2014-02-05 11:57 vendor -> /system/vendor
+#+END_SRC
+
+#+BEGIN_SRC
+User: sh ls -l
+AndroidDevice: drwxr-xr-x root root 2014-02-05 11:57 acct
+drwxrwx--x system cache 2014-02-06 12:10 cache
+-rwxr-x--- root root 284688 1970-01-01 01:00 charger
+dr-x------ root root 2014-02-05 11:57 config
+lrwxrwxrwx root root 2014-02-05 11:57 d -> /sys/kernel/debug
+drwxrwx--x system system 2014-02-05 13:50 data
+-rw-r--r-- root root 180 1970-01-01 01:00 default.prop
+drwxr-xr-x root root 2014-02-05 13:38 dev
+lrwxrwxrwx root root 2014-02-05 11:57 etc -> /system/etc
+-rw-r--r-- root root 10849 1970-01-01 01:00 file_contexts
+dr-xr-x--- system system 1970-01-01 01:00 firmware
+-rw-r----- root root 2588 1970-01-01 01:00 fstab.mako
+-rwxr-x--- root root 183792 1970-01-01 01:00 init
+-rwxr-x--- root root 6159 1970-01-01 01:00 init.cm.rc
+-rwxr-x--- root root 919 1970-01-01 01:00 init.environ.rc
+-rwxr-x--- root root 19317 1970-01-01 01:00 init.mako.rc
+-rwxr-x--- root root 5951 1970-01-01 01:00 init.mako.usb.rc
+-rwxr-x--- root root 21243 1970-01-01 01:00 init.rc
+-rwxr-x--- root root 301 1970-01-01 01:00 init.superuser.rc
+-rwxr-x--- root root 1795 1970-01-01 01:00 init.trace.rc
+-rwxr-x--- root root 3915 1970-01-01 01:00 init.usb.rc
+drwxrwxr-x root system 2014-02-05 11:57 mnt
+drwxrwx--x system system 1970-01-02 01:23 persist
+dr-xr-xr-x root root 1970-01-01 01:00 proc
+-rw-r--r-- root root 2161 1970-01-01 01:00 property_contexts
+drwxr-xr-x root root 1970-01-01 01:00 res
+drwx------ root root 2014-02-04 16:47 root
+drwxr-x--- root root 1970-01-01 01:00 sbin
+lrwxrwxrwx root root 2014-02-05 11:57 sdcard -> /storage/emulated/legacy
+-rw-r--r-- root root 711 1970-01-01 01:00 seapp_contexts
+-rw-r--r-- root root 76860 1970-01-01 01:00 sepolicy
+drwxr-x--x root sdcard_r 2014-02-05 11:57 storage
+dr-xr-xr-x root root 2014-02-05 11:57 sys
+drwxr-xr-x root root 2014-02-04 23:06 system
+-rw-r--r-- root root 2336 1970-01-01 01:00 ueventd.mako.rc
+-rw-r--r-- root root 5896 1970-01-01 01:00 ueventd.rc
+lrwxrwxrwx root root 2014-02-05 11:57 vendor -> /system/vendor
+#+END_SRC
+
+** =rshell= (short commmand: =root=)
+
+*** =rshell execute=
+
+Execute the given command in a root shell.

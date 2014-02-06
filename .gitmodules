@@ -1,3 +1,6 @@
 [submodule "transport-xmpp/libraryProjects/memorizingTrustManager"]
 	path = transport-xmpp/libraryProjects/memorizingTrustManager
 	url = https://github.com/Flowdalic/MemorizingTrustManager.git
+[submodule "module-shell/libraryProjects/root-commands"]
+	path = module-shell/libraryProjects/root-commands
+	url = https://github.com/dschuermann/root-commands.git

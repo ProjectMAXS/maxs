@@ -27,7 +27,7 @@ import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.messagecontent.Text;
-import org.projectmaxs.shared.global.util.SharedStringUtil;
+import org.projectmaxs.shared.global.util.DateTimeUtil;
 
 public class HumanReadableString {
 
@@ -79,7 +79,7 @@ public class HumanReadableString {
 		sb.append(TypeTransformator.fromSMSType(sms.getType()) + ' ');
 
 		sb.append(sms.getContact());
-		sb.append(' ').append(SharedStringUtil.toFullDate(sms.getDate()));
+		sb.append(' ').append(DateTimeUtil.toFullDate(sms.getDate()));
 		sb.append(": ");
 		sb.append(sms.getBody());
 		sb.append('\n');

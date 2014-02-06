@@ -22,5 +22,6 @@ public class ModuleConstants {
 	public static final SupraCommand SMS = new SupraCommand("sms", "s");
 	public static final SupraCommand BLUEOOTH = new SupraCommand("bluetooth", "bt");
 	public static final SupraCommand CONTACT = new SupraCommand("contact", "c");
+	public static final SupraCommand WIFI = new SupraCommand("wifi", "w");
 
 }

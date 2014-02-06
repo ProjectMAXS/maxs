@@ -76,7 +76,9 @@ public class SupraCommand {
 
 	@Override
 	public int hashCode() {
-		return mCommand.hashCode() + 31 * mShortCommand.hashCode();
+		int hash = mCommand.hashCode();
+		if (mShortCommand != null) hash += 31 * mShortCommand.hashCode();
+		return hash;
 	}
 
 	public void addTo(ModuleInformation moduleInformation, Context context) {

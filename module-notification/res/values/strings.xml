@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_module_receiver_label">MAXS notification Module Receiver</string>
+    <string name="notification_listener_service_label">MAXS notification Module Listener Service</string>
+    <string name="pref_notification_posted">Notification posted</string>
+    <string name="pref_notification_posted_help">Notify the master addresses if a new notification is posted.</string>
+    <string name="pref_notification_removed">Notification removed</string>
+    <string name="pref_notification_removed_help">Notify the master addresses if a notification was removed.</string>
+</resources>

@@ -103,7 +103,7 @@ public class InfoAndSettings extends Activity {
 "Copyright © 2011-2013 Florian Schmaus<br>" +
 "Copyright © 2009-2010 Rene Treffer<br>" +
 "Apache License, Version 2.0<br>" +
-"<h1>MemorizingTrustManager</h1>" +
+"<h2>MemorizingTrustManager</h2>" +
 "<a href=\"https://github.com/ge0rg/MemorizingTrustManager\">https://github.com/ge0rg/MemorizingTrustManager</a><br>" +
 "<br>" +
 "Copyright © 2010 Georg Lukas<br>" +

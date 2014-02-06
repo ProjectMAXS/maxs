@@ -109,9 +109,9 @@ public class ContactUtil {
 	}
 
 	/**
-	 * Magical method that tries to find contacts based on a given String
+	 * Magical method that tries to find contacts based on a given String.
 	 * 
-	 * Only returns null if the contacts module is not installed or on error
+	 * Only returns null if the contacts module is not installed or on error.
 	 * 
 	 * @param info
 	 * @return

@@ -17,6 +17,8 @@
 
 package org.projectmaxs.shared.mainmodule;
 
+import org.projectmaxs.shared.global.Message;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -25,6 +27,18 @@ public class Command implements Parcelable {
 	private final String mSubCommand;
 	private final String mArgs;
 	private final int mId;
+
+	/**
+	 * Dummy constructor
+	 * 
+	 * Only use if you know it's needed
+	 */
+	public Command() {
+		mCommand = null;
+		mSubCommand = null;
+		mArgs = "";
+		mId = Message.NO_ID;
+	}
 
 	public Command(String command, String subCommand, String args, int id) {
 		this.mCommand = command;

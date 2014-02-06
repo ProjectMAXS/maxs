@@ -1,0 +1,49 @@
+#+TITLE:        MAXS Module LocationFine: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Locate the device using the best possible locate mechanism available
+(fine location).
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.ACCESS_FINE_LOCATION= | Access fine location data of the device |
+
+* Commands
+
+** =locate= (short command: =l=)
+
+*** =locate start=
+
+Start locating the device and send periodic location reports
+
+#+BEGIN_SRC
+User: locate start
+AndroidDevice: Started to locate the device
+AndroidDevice: Location (12:07:40)
+Latitude: 49.XXXXXXX Longitude: 10.XXXXXXX
+http://www.openstreetmap.org/?mlat=49.0000000&mlon=10.0000000&zoom=14&layers=M
+Accuracy: 71.87
+#+END_SRC
+
+*** =locate stop=
+
+Stop locating the device
+
+#+BEGIN_SRC
+User: locate stop
+AndroidDevice: Stopped locating device
+#+END_SRC
+
+*** =locate once=
+
+Send device location once

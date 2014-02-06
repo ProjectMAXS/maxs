@@ -140,14 +140,18 @@ public abstract class MAXSModuleIntentService extends Service {
 			if (supraCommand != null) {
 				SubCommand subCommand = supraCommand.getSubCommand(command.getSubCommand());
 				if (subCommand != null) {
-					message = subCommand.execute(command.getArgs(), command, this);
+					if (subCommand.requiresArgument() && command.getArgs().isEmpty()) {
+						throw new IllegalArgumentException(
+								"This command requires an argument but none was given");
+					} else {
+						message = subCommand.execute(command.getArgs(), command, this);
+					}
 				} else {
 					throw new UnkownSubcommandException(command);
 				}
 			} else {
 				throw new UnkownCommandException(command);
 			}
-
 		} catch (Throwable e) {
 			mLog.e("onHandleIntent", e);
 			message = new org.projectmaxs.shared.global.Message("Exception: " + e.getMessage());

@@ -56,6 +56,10 @@ public class Message implements Parcelable {
 		mId = id;
 	}
 
+	public Message(int id) {
+		mId = id;
+	}
+
 	public void setId(int id) {
 		mId = id;
 	}

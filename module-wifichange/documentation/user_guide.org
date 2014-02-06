@@ -1,0 +1,40 @@
+#+TITLE:        MAXS Module WifiChange: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Perform changes to the WiFi subsystem.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                             | Use                   |
+|----------------------------------------+-----------------------|
+| =android.permission.CHANGE_WIFI_STATE= | Change the WiFi state |
+
+* Commands
+
+** =wifi= (short command: =w=)
+
+*** =wifi enable=
+
+Enable the WiFi adapter.
+
+#+BEGIN_SRC
+User: wifi enable
+AndroidDevice: Wifi enabled
+#+END_SRC
+
+*** =wifi disable=
+
+Disable the WiFi adapter.
+
+#+BEGIN_SRC
+User: wifi disable
+AndroidDevice: Wifi disabled
+#+END_SRC

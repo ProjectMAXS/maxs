@@ -1,0 +1,40 @@
+#+TITLE:        MAXS Module WifiAccess: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Query the current state of the WiFi subsystem.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                             | Use                                    |
+|----------------------------------------+----------------------------------------|
+| =android.permission.ACCESS_WIFI_STATE= | Query the status of the WiFi subsystem |
+
+* Commands
+
+** =wifi= (short command: =w=)
+
+*** =wifi list=
+
+List all configured WiFi networks.
+
+#+BEGIN_SRC
+User: wifi list
+AndroidDevice: ID: 0 Name: "eduroam"
+Status: Enabled
+ID: 1 Name: "MyNetwork"
+Status: Current connected network
+ID: 2 Name: "FritzBox"
+Status: Enabled
+ID: 3 Name: "accesspoint1"
+Status: Enabled
+ID: 4 Name: "backspace.int 2.4ghz"
+Status: Enabled
+#+END_SRC

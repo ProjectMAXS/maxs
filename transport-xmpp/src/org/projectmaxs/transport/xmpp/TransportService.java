@@ -68,6 +68,7 @@ public class TransportService extends MAXSTransportService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		LOG.d("onCreate");
 		mSmackAndroid = SmackAndroid.init(this);
 		JULHandler.init(Settings.getInstance(this));
 	}
@@ -75,6 +76,7 @@ public class TransportService extends MAXSTransportService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LOG.d("onDestroy");
 		mSmackAndroid.onDestroy();
 	}
 
@@ -113,6 +115,15 @@ public class TransportService extends MAXSTransportService {
 			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
 		} else {
 			throw new IllegalStateException("Unkown intent action: " + action);
+		}
+
+		// This hopefully fixes the situation where transport-xmpp is unable to connect
+		// I suppose that the TransportService is re-created by Android, but somehow without sending
+		// a null intent and therefore we don't replace that null intent with START_SERVICE. But it
+		// seems that mIsRunning is still set to true in this case.
+		if (isRunning() && !mXMPPService.isConnected()) {
+			LOG.d("onHandleIntent: service is running, but XMPPService is not connected, issueing connect()");
+			mXMPPService.connect();
 		}
 	}
 }

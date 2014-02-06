@@ -1,0 +1,48 @@
+#+TITLE:        MAXS Module Alarmset: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Set arlarms. Set and start timers.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                               | Use                              |
+|------------------------------------------+----------------------------------|
+| =com.android.alarm.permission.SET_ALARM= | Set Alarms. Set and start timers |
+
+* Commands
+
+** =timer= (short command: =t=)
+
+*** =timer set= (Default with arguments)
+
+#+BEGIN_SRC
+User: timer set 60
+AndroidDevice: Timer set
+#+END_SRC
+
+#+BEGIN_SRC
+User: t 60
+AndroidDevice: Timer set
+#+END_SRC
+
+#+BEGIN_SRC
+User: t 12m Pizza is ready
+AndroidDevice: Timer set
+#+END_SRC
+
+** =alarm= (short command: =a=)
+
+*** =alarm set= (Default with arguments)
+
+#+BEGIN_SRC
+User: alarm set 18:00 Meet with Joe
+AndroidDevice: Alarm set
+#+END_SRC
