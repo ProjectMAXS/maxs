@@ -31,7 +31,7 @@ HOMEPAGE="${BASEDIR}/homepage"
 DOCDIR="${BASEDIR}/documentation"
 MAINDIR="${BASEDIR}/main"
 TRANSPORTS="$(find $BASEDIR -mindepth 1 -maxdepth 1 -type d -name 'transport-*')"
-MODULES="$(find $BASEDIR -mindepth 1 -maxdepth 2 -path './module-*' -name AndroidManifest.xml -printf '%h\n')"
+MODULES="$(find $BASEDIR -mindepth 1 -maxdepth 2 -path '*module-*' -name AndroidManifest.xml -printf '%h\n')"
 COMPONENTS="${MAINDIR} ${TRANSPORTS} ${MODULES}"
 
 if command -v xml &> /dev/null; then
