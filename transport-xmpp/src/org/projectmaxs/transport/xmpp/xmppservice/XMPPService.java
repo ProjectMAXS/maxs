@@ -163,10 +163,6 @@ public class XMPPService {
 		mXMPPStatus.setStatus(status);
 	}
 
-	public Context getContext() {
-		return mContext;
-	}
-
 	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
 		// first disconnect if the network type changed and we are now connected
 		// with an now unusable network
@@ -210,6 +206,10 @@ public class XMPPService {
 
 	public Connection getConnection() {
 		return mConnection;
+	}
+
+	Context getContext() {
+		return mContext;
 	}
 
 	private void sendAsMessage(org.projectmaxs.shared.global.Message message,

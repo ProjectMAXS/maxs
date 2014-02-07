@@ -20,6 +20,10 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionListener;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.transport.xmpp.TransportService;
+
+import android.content.Intent;
 
 public class HandleConnectionListener extends StateChangeListener {
 
@@ -44,7 +48,13 @@ public class HandleConnectionListener extends StateChangeListener {
 			public void connectionClosedOnError(Exception arg0) {
 				LOG.w("connectionClosedOnError");
 				mXMPPService.disconnect();
-				mXMPPService.scheduleReconnect();
+				// We don't call scheduleReconnect() here, because this method is usually be called
+				// from Smack's PacketReader or PacketWriter thread, which will not have a Looper
+				// (and shouldn't get one) and therefore is unable to use the reconnect handler.
+				// Instead we send an START_SERVICE intent for the transport service
+				Intent intent = new Intent(mXMPPService.getContext(), TransportService.class);
+				intent.setAction(TransportConstants.ACTION_START_SERVICE);
+				mXMPPService.getContext().startService(intent);
 			}
 
 			@Override
