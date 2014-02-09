@@ -1,12 +1,31 @@
 #!/bin/bash
 
+set -e
+
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
 
-for m in "${!MOD2PKG[@]}"; do
-    versionCode=$(xml sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${m}/AndroidManifest.xml)
-    moduleName=${m#module-}
-    cat <<EOF > ${FDROIDMETA}/${MOD2PKG[${m}]}.txt
-Category:System
+while getopts dm: OPTION "$@"; do
+	case $OPTION in
+		d)
+			set -x
+			;;
+		m)
+			MODULE=${OPTARG}
+			;;
+		esac
+done
+
+if [[ -z $MODULE ]]; then
+	echo "usage: `basename $0` [-d] -m <moduleName>"
+	exit 1
+fi
+
+versionCode=$(xml sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
+versionName=$(xml sel -t -v "//manifest/@android:versionName" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
+moduleName=${MODULE#module-}
+
+cat <<EOF > ${FDROIDMETA}/${MOD2PKG[${MODULE}]}.txt
+Categories:System
 License:GPLv3
 Web Site:http://projectmaxs.org
 Source Code:http://projectmaxs.org/source
@@ -22,18 +41,18 @@ This is a Module for MAXS, which does not install any launcher.
 You need "MAXS Main" and a configured MAXS Transport to make use of it.
 .
 
-Repo Type:git
-Repo:https://bitbucket.org/projectmaxs/maxs.git
+Repo Type:srclib
+Repo:ProjectMAXS
 
-Auto Update Mode:None
-Update Check Mode:Tags
-Current Version:0.0.1.0
-Current Version Code:1
-
-Build Version:0.0.1.0,1
-    commit=0.0.1.0
-    subdir=${m}
-    init=cd .. && make ${m}/Makefile
+Build:${versionName},${versionCode}
+    commit=${versionName}
+    subdir=${MODULE}
+    init=cd .. && \\
+        make ${MODULE}/Makefile
     prebuild=make prebuild
+
+Auto Update Mode:Version %v
+Update Check Mode:Tags
+Current Version:${versionName}
+Current Version Code:${versionCode}
 EOF
-done
