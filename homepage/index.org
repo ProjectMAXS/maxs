@@ -121,18 +121,23 @@ following links to install MAXS.
 
 *Modules*
 
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.alarmset][org.projectmaxs.module.alarmset]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.bluetooth][org.projectmaxs.module.bluetooth]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.bluetoothadmin][org.projectmaxs.module.bluetoothadmin]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.clipboard][org.projectmaxs.module.clipboard]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.contactsread][org.projectmaxs.module.contactsread]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.fileread][org.projectmaxs.module.fileread]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.filewrite][org.projectmaxs.module.filewrite]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.locationfine][org.projectmaxs.module.locationfine]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.phonestateread][org.projectmaxs.module.phonestateread]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.ringermode][org.projectmaxs.module.ringermode]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.shell][org.projectmaxs.module.shell]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smsnotify][org.projectmaxs.module.smsnotify]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smsread][org.projectmaxs.module.smsread]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.wifiaccess][org.projectmaxs.module.wifiaccess]]
+- [[https://play.google.com/apps/testing/org.projectmaxs.module.wifichange][org.projectmaxs.module.wifichange]]
 
 * Support / Help
 
