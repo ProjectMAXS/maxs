@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.projectmaxs.module.shell.commands.ShellExecute;
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
@@ -58,5 +59,6 @@ public class ModuleService extends MAXSModuleIntentService {
 	@Override
 	public void initLog(Context context) {
 		LOG.initialize(Settings.getInstance(context));
+		JULHandler.init(Settings.getInstance(context));
 	}
 }

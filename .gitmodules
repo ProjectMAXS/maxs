@@ -3,4 +3,4 @@
 	url = https://github.com/Flowdalic/MemorizingTrustManager.git
 [submodule "module-shell/libraryProjects/root-commands"]
 	path = module-shell/libraryProjects/root-commands
-	url = https://github.com/dschuermann/root-commands.git
+	url = https://github.com/Flowdalic/root-commands.git
