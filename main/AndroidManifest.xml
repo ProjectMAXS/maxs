@@ -8,6 +8,10 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
     <permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
     <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" />

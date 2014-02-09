@@ -21,8 +21,8 @@
         android:targetSdkVersion="19" />
 
     <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="true" />
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
