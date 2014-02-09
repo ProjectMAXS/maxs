@@ -46,18 +46,24 @@ There is more documentation available at [[../documentation/index.org][projectma
 
 *Modules*
 
+- [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.alarmset][org.projectmaxs.module.alarmset]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.bluetooth][org.projectmaxs.module.bluetooth]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.bluetoothadmin][org.projectmaxs.module.bluetoothadmin]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.clipboard][org.projectmaxs.module.clipboard]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.contactsread][org.projectmaxs.module.contactsread]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.fileread][org.projectmaxs.module.fileread]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.filewrite][org.projectmaxs.module.filewrite]]
+- [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.locationfine][org.projectmaxs.module.locationfine]]
+- [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.misc][org.projectmaxs.module.misc]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.phonestateread][org.projectmaxs.module.phonestateread]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.ringermode][org.projectmaxs.module.ringermode]]
+- [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.shell][org.projectmaxs.module.shell]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.smsnotify][org.projectmaxs.module.smsnotify]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.smsread][org.projectmaxs.module.smsread]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
 - [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
+- [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.wifiaccess][org.projectmaxs.module.wifiaccess]]
+- [[https://play.google.com/store/apps/details?id=org.projectmaxs.module.wifichange][org.projectmaxs.module.wifichange]]
 
 ** F-Droid
 
@@ -71,18 +77,24 @@ There is more documentation available at [[../documentation/index.org][projectma
 
 *Modules*
 
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.alarmset][org.projectmaxs.module.alarmset]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.bluetooth][org.projectmaxs.module.bluetooth]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.bluetoothadmin][org.projectmaxs.module.bluetoothadmin]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.clipboard][org.projectmaxs.module.clipboard]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.contactsread][org.projectmaxs.module.contactsread]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.fileread][org.projectmaxs.module.fileread]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.filewrite][org.projectmaxs.module.filewrite]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.locationfine][org.projectmaxs.module.locationfine]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.misc][org.projectmaxs.module.misc]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.phonestateread][org.projectmaxs.module.phonestateread]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.ringermode][org.projectmaxs.module.ringermode]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.shell][org.projectmaxs.module.shell]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smsnotify][org.projectmaxs.module.smsnotify]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smsread][org.projectmaxs.module.smsread]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smssend][org.projectmaxs.module.smssend]]
 - [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.smswrite][org.projectmaxs.module.smswrite]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.wifiaccess][org.projectmaxs.module.wifiaccess]]
+- [[https://f-droid.org/repository/browse/?fdid=org.projectmaxs.module.wifichange][org.projectmaxs.module.wifichange]]
 
 ** Direct download (not recommened)
 
