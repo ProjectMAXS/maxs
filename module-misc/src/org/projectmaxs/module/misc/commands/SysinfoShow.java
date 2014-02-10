@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.module.misc.activities.commands;
+package org.projectmaxs.module.misc.commands;
 
 import org.projectmaxs.module.misc.ModuleService;
 import org.projectmaxs.shared.global.Message;

@@ -20,7 +20,7 @@ package org.projectmaxs.module.misc;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.projectmaxs.module.misc.activities.commands.SysinfoShow;
+import org.projectmaxs.module.misc.commands.SysinfoShow;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
