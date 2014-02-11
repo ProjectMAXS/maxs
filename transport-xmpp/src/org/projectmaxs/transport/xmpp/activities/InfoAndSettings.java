@@ -9,7 +9,7 @@ import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.ping.PingManagerV2;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.transport.xmpp.R;
@@ -305,7 +305,7 @@ public class InfoAndSettings extends Activity {
 
 		private final Button mPingServerButton;
 
-		private volatile PingManager mPingManager;
+		private volatile PingManagerV2 mPingManager;
 
 		public PingServerButtonHandler(Activity activity) {
 			mPingServerButton = (Button) activity.findViewById(R.id.pingServer);
@@ -323,7 +323,7 @@ public class InfoAndSettings extends Activity {
 				@Override
 				protected void onPostExecute(XMPPService xmppService) {
 					if (xmppService.isConnected()) {
-						PingServerButtonHandler.this.mPingManager = PingManager
+						PingServerButtonHandler.this.mPingManager = PingManagerV2
 								.getInstanceFor(xmppService.getConnection());
 						mPingServerButton.setEnabled(true);
 					}
@@ -340,9 +340,9 @@ public class InfoAndSettings extends Activity {
 		public synchronized void onClick(View v) {
 			Toast.makeText(InfoAndSettings.this, "Sending ping to server", Toast.LENGTH_SHORT)
 					.show();
-			new AsyncTask<PingManager, Void, Boolean>() {
+			new AsyncTask<PingManagerV2, Void, Boolean>() {
 				@Override
-				protected Boolean doInBackground(PingManager... pingManagers) {
+				protected Boolean doInBackground(PingManagerV2... pingManagers) {
 					return pingManagers[0].pingMyServer();
 				}
 
@@ -361,7 +361,7 @@ public class InfoAndSettings extends Activity {
 
 		@Override
 		public synchronized void connected(Connection connection) {
-			mPingManager = PingManager.getInstanceFor(connection);
+			mPingManager = PingManagerV2.getInstanceFor(connection);
 			setPingButtonEnabled(true);
 		}
 
