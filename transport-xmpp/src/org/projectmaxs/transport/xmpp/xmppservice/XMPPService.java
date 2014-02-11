@@ -217,7 +217,7 @@ public class XMPPService {
 		if (mConnection == null || !mConnection.isAuthenticated()) {
 			// TODO I think that this could for example happen when the service
 			// is not started but e.g. the SMS receiver get's a new message.
-			LOG.i("sendAsMessage: Not connected, adding message to DB");
+			LOG.i("sendAsMessage: Not connected, adding message to DB. mConnection=" + mConnection);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
 					originId);
 			return;
