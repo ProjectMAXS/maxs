@@ -28,13 +28,15 @@ public class StartStopReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		final String action = intent.getAction();
+		Intent i = new Intent(context, PhoneStateService.class);
 		if (GlobalConstants.ACTION_SERVICE_STARTED.equals(action)) {
-			context.startService(new Intent(Constants.START_PHONESTATE_SERVICE));
+			i.setAction(Constants.START_PHONESTATE_SERVICE);
 		} else if (GlobalConstants.ACTION_SERVICE_STOPED.equals(action)) {
-			context.startService(new Intent(Constants.STOP_PHONESTATE_SERVICE));
+			i.setAction(Constants.STOP_PHONESTATE_SERVICE);
 		} else {
 			throw new IllegalArgumentException();
 		}
+		context.startService(i);
 	}
 
 }
