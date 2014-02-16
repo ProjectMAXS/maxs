@@ -239,6 +239,12 @@ public class InfoAndSettings extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		mSettings.setPassword(mPassword.getText().toString());
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// Removing this handler yields actually a problem: If onDestroy() is called shortly after
