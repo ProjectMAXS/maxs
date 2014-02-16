@@ -438,6 +438,7 @@ public class XMPPService {
 				break;
 			case Disconnected:
 				newState(State.Disconnected);
+				mReconnectHandler.removeCallbacks(mReconnectRunnable);
 				break;
 			default:
 				throw new IllegalStateException();
