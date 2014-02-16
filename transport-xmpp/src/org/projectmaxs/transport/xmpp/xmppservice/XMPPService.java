@@ -72,6 +72,14 @@ public class XMPPService {
 				GlobalConstants.NAME, "bot"));
 	}
 
+	private final Runnable mReconnectRunnable = new Runnable() {
+		@Override
+		public void run() {
+			LOG.d("scheduleReconnect: calling tryToConnect");
+			tryToConnect();
+		}
+	};
+
 	/**
 	 * Switch boolean to ensure that the disconnected(Connection) listeners are
 	 * only run if there was a previous connected connection.
@@ -80,7 +88,6 @@ public class XMPPService {
 
 	private ConnectionConfiguration mConnectionConfiguration;
 	private XMPPConnection mConnection;
-	private Runnable mReconnectRunnable;
 	private Handler mReconnectHandler;
 
 	/**
@@ -321,16 +328,9 @@ public class XMPPService {
 
 	protected void scheduleReconnect() {
 		newState(State.WaitingForRetry);
-		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
 		if (mReconnectHandler == null) mReconnectHandler = new Handler();
 		mReconnectHandler.removeCallbacks(mReconnectRunnable);
-		mReconnectRunnable = new Runnable() {
-			@Override
-			public void run() {
-				LOG.d("scheduleReconnect: calling tryToConnect");
-				tryToConnect();
-			}
-		};
+		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
 		mReconnectHandler.postDelayed(mReconnectRunnable, 10000);
 	}
 
