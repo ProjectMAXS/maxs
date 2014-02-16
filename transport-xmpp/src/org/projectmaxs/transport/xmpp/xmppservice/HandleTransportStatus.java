@@ -77,6 +77,12 @@ public class HandleTransportStatus extends StateChangeListener {
 					LOG.e("connected", e);
 					privacyListStatus = "privacy unkown";
 				}
+			} catch (ClassCastException cce) {
+				// TODO we are going to catch ClassCastExceptions here, since there appears to be a
+				// bug in Smack that causes an ClassCastException to be thrown when the default
+				// privacy lists is going to be retrieved on some servers. Remove when this Smack
+				// bug is fixed.
+				privacyListStatus = "privacy unkown";
 			}
 		} else {
 			privacyListStatus = "privacy not supported";
