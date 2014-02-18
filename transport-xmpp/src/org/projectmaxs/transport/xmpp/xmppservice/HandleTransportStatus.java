@@ -24,6 +24,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.util.Constants;
 
 import android.content.Context;
@@ -59,7 +60,9 @@ public class HandleTransportStatus extends StateChangeListener {
 		}
 
 		String privacyListStatus;
-		if (XMPPPrivacyList.isSupported(connection)) {
+		if (!Settings.getInstance(mContext).privacyListsEnabled()) {
+			privacyListStatus = "privacy disabled";
+		} else if (XMPPPrivacyList.isSupported(connection)) {
 			final String privacyInactive = "privacy inactive";
 			try {
 				PrivacyList privacyList = PrivacyListManager.getInstanceFor(connection)
