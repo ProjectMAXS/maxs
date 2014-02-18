@@ -288,7 +288,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public boolean privacyListsEnabled() {
-		return mSharedPreferences.getBoolean(XMPP_STREAM_PRIVACY, true);
+		return mSharedPreferences.getBoolean(XMPP_STREAM_PRIVACY, false);
 	}
 
 	public SharedPreferences getSharedPreferences() {
