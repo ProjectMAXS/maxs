@@ -499,7 +499,8 @@ public class XMPPService {
 		LOG.d("tryToConnect: connect");
 		try {
 			connection.connect();
-		} catch (XMPPException e) {
+		} catch (Exception e) {
+			// TODO see notice a few lines below at connection.logion() try/catch
 			LOG.e("tryToConnect: Exception from connect()", e);
 			scheduleReconnect();
 			return;
@@ -509,7 +510,12 @@ public class XMPPService {
 			try {
 				connection.login(StringUtils.parseName(mSettings.getJid()),
 						mSettings.getPassword(), "MAXS");
-			} catch (XMPPException e) {
+			} catch (Exception e) {
+				// TODO we catch Exception instead of XMPPException here, since
+				// Connection.sendPacket may send an IllegalStateException if not connected. This
+				// could happen, and has happened, on login, when the connection goes down in the
+				// meantime. Once sendPacket doesn't send an ISE when not connected, but a
+				// XMPPException, this catch should be changed to XMPPException
 				String exceptionMessage = e.getMessage();
 				// Schedule a reconnect on certain exception causes
 				if ("No response from the server.".equals(exceptionMessage)) {
