@@ -18,6 +18,7 @@
 package org.projectmaxs.module.locationfine.commands;
 
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
@@ -25,6 +26,7 @@ public class LocateStart extends AbstractLocate {
 
 	public LocateStart() {
 		super("start");
+		setHelp(ArgType.NONE, "Try to start locating the device");
 	}
 
 	@Override

@@ -18,6 +18,7 @@
 package org.projectmaxs.module.locationfine.commands;
 
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
@@ -25,6 +26,7 @@ public class LocateOnce extends AbstractLocate {
 
 	public LocateOnce() {
 		super("once", true);
+		setHelp(ArgType.NONE, "Try to locate the device once");
 	}
 
 	@Override

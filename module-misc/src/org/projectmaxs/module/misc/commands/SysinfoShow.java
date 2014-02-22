@@ -19,6 +19,7 @@ package org.projectmaxs.module.misc.commands;
 
 import org.projectmaxs.module.misc.ModuleService;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
@@ -30,6 +31,7 @@ public class SysinfoShow extends SubCommand {
 
 	public SysinfoShow() {
 		super(ModuleService.SYSINFO, "show", true);
+		setHelp(ArgType.NONE, "Show system information");
 	}
 
 	@Override

@@ -18,6 +18,7 @@
 package org.projectmaxs.module.locationfine.commands;
 
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
@@ -25,6 +26,7 @@ public class LocateStop extends AbstractLocate {
 
 	public LocateStop() {
 		super("stop");
+		setHelp(ArgType.NONE, "Stop locating the device");
 	}
 
 	@Override
