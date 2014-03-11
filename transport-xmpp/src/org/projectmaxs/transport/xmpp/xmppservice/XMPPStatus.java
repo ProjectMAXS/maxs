@@ -17,7 +17,7 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPRoster.MasterJidListener;
@@ -29,7 +29,7 @@ public class XMPPStatus extends StateChangeListener {
 	private final XMPPRoster mXMPPRoster;
 	private final Settings mSettings;
 
-	private Connection mConnection;
+	private XMPPConnection mConnection;
 	private String mActiveStatus = null;
 	private String mDesiredStatus;
 
@@ -56,17 +56,17 @@ public class XMPPStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void newConnection(Connection connection) {
+	public void newConnection(XMPPConnection connection) {
 		mConnection = connection;
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		sendStatus();
 	}
 
 	@Override
-	public void disconnected(Connection connection) {}
+	public void disconnected(XMPPConnection connection) {}
 
 	private void sendStatus() {
 		if (mConnection == null || !mConnection.isAuthenticated()) return;

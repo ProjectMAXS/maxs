@@ -20,8 +20,8 @@ package org.projectmaxs.transport.xmpp.util;
 import java.util.List;
 
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smackx.XHTMLManager;
-import org.jivesoftware.smackx.XHTMLText;
+import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
+import org.jivesoftware.smackx.xhtmlim.XHTMLText;
 import org.projectmaxs.shared.global.messagecontent.FormatedText;
 
 public class XHTMLIMUtil {

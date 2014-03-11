@@ -19,7 +19,7 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.List;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
 import org.projectmaxs.transport.xmpp.database.MessagesTable.Entry;
 
@@ -38,7 +38,7 @@ public class HandleMessagesListener extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		List<Entry> entries = mMessagesTable.getAllAndDelete();
 		for (Entry e : entries)
 			mXMPPService.send(e.mMessage, e.mOrigin);

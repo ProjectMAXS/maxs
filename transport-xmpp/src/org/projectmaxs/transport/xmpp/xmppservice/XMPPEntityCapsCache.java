@@ -25,10 +25,11 @@ import java.util.Map.Entry;
 
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.provider.IQProvider;
-import org.jivesoftware.smackx.entitycaps.EntityCapsManager;
-import org.jivesoftware.smackx.entitycaps.cache.EntityCapsPersistentCache;
-import org.jivesoftware.smackx.packet.DiscoverInfo;
-import org.jivesoftware.smackx.provider.DiscoverInfoProvider;
+import org.jivesoftware.smackx.caps.EntityCapsManager;
+import org.jivesoftware.smackx.caps.cache.EntityCapsPersistentCache;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.database.XMPPEntityCapsTable;
 import org.xmlpull.v1.XmlPullParser;
@@ -40,6 +41,10 @@ import android.content.Context;
 public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
 	private final static Log LOG = Log.getLog();
+
+	static {
+		EntityCapsManager.setDefaultEntityNode(GlobalConstants.HOMEPAGE_URL);
+	}
 
 	private static XMPPEntityCapsCache sXMPPEntityCapsCache;
 

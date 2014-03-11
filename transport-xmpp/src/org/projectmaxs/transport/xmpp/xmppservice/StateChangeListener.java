@@ -17,13 +17,13 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 
 public class StateChangeListener {
 
-	public void newConnection(Connection connection) {}
+	public void newConnection(XMPPConnection connection) {}
 
-	public void connected(Connection connection) {}
+	public void connected(XMPPConnection connection) {}
 
 	/**
 	 * Invoked when we got disconnected from an active connection
@@ -31,7 +31,7 @@ public class StateChangeListener {
 	 * @param connection
 	 *            the connection that got disconnected, may be null
 	 */
-	public void disconnected(Connection connection) {}
+	public void disconnected(XMPPConnection connection) {}
 
 	/**
 	 * Invoked when get return to disconnected state, but there was never an

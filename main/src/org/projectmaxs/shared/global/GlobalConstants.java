@@ -77,6 +77,7 @@ public class GlobalConstants {
 			+ ".USE_MAIN_AS_TRANSPORT";
 
 	public static final String GIT_REPO_URL = "https://bitbucket.org/projectmaxs/maxs/raw/master";
+	public static final String HOMEPAGE_URL = "http://projectmaxs.org";
 
 	public static final File MAXS_EXTERNAL_STORAGE = new File(
 			Environment.getExternalStorageDirectory(), "MAXS");

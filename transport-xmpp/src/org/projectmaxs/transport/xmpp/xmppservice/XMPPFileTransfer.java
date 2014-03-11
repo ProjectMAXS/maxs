@@ -25,7 +25,7 @@ import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamManager;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
@@ -154,14 +154,14 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 	}
 
 	@Override
-	public void newConnection(Connection connection) {
+	public void newConnection(XMPPConnection connection) {
 		// disable streamhost prioritization
 		Socks5BytestreamManager s5bsm = Socks5BytestreamManager.getBytestreamManager(connection);
 		s5bsm.setProxyPrioritizationEnabled(false);
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		sFileTransferManager = new FileTransferManager(connection);
 		LOG.d("connect: created file transfer manager");
 		sFileTransferManager.addFileTransferListener(this);
@@ -170,7 +170,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 	}
 
 	@Override
-	public void disconnected(Connection connection) {
+	public void disconnected(XMPPConnection connection) {
 		sFileTransferManager.removeFileTransferListener(this);
 		sFileTransferManager = null;
 		mContext.unregisterReceiver(mWifiBroadcastReceiver);

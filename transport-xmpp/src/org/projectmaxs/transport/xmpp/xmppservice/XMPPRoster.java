@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
@@ -38,7 +38,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	private Settings mSettings;
 	private Roster mRoster;
-	private Connection mConnection;
+	private XMPPConnection mConnection;
 	private boolean mMasterJidAvailable;
 
 	public XMPPRoster(Settings settings) {
@@ -50,14 +50,14 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 */
 
 	@Override
-	public void newConnection(Connection connection) {
+	public void newConnection(XMPPConnection connection) {
 		mConnection = connection;
 		mRoster = connection.getRoster();
 		mRoster.addRosterListener(this);
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		Set<String> masterJids = mSettings.getMasterJids();
 		for (String jid : masterJids)
 			friendJid(jid);
@@ -66,7 +66,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	}
 
 	@Override
-	public void disconnected(Connection connection) {
+	public void disconnected(XMPPConnection connection) {
 		mMasterJidAvailable = false;
 	}
 
@@ -165,7 +165,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * @param jid
 	 * @param connection
 	 */
-	private static void grantSubscription(String jid, Connection connection) {
+	private static void grantSubscription(String jid, XMPPConnection connection) {
 		Presence presence = new Presence(Presence.Type.subscribed);
 		sendPresenceTo(jid, presence, connection);
 	}
@@ -176,12 +176,12 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * @param jid
 	 * @param connection
 	 */
-	private static void requestSubscription(String jid, Connection connection) {
+	private static void requestSubscription(String jid, XMPPConnection connection) {
 		Presence presence = new Presence(Presence.Type.subscribe);
 		sendPresenceTo(jid, presence, connection);
 	}
 
-	private static void sendPresenceTo(String to, Presence presence, Connection connection) {
+	private static void sendPresenceTo(String to, Presence presence, XMPPConnection connection) {
 		presence.setTo(to);
 		connection.sendPacket(presence);
 	}

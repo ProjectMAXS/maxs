@@ -17,7 +17,7 @@ package org.projectmaxs.transport.xmpp.xmppservice;
  along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.ConnectionListener;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
@@ -38,7 +38,7 @@ public class HandleConnectionListener extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		mConnectionListener = new ConnectionListener() {
 
 			@Override
@@ -77,7 +77,7 @@ public class HandleConnectionListener extends StateChangeListener {
 	}
 
 	@Override
-	public void disconnected(Connection connection) {
+	public void disconnected(XMPPConnection connection) {
 		connection.removeConnectionListener(mConnectionListener);
 		mConnectionListener = null;
 	}

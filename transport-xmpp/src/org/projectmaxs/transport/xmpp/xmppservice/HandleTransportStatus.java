@@ -17,10 +17,11 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.PrivacyList;
-import org.jivesoftware.smack.PrivacyListManager;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smackx.privacy.PrivacyList;
+import org.jivesoftware.smackx.privacy.PrivacyListManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
@@ -44,7 +45,7 @@ public class HandleTransportStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		String encryptionStatus;
 		if (connection.isSecureConnection()) {
 			encryptionStatus = "encrypted";
@@ -62,33 +63,29 @@ public class HandleTransportStatus extends StateChangeListener {
 		String privacyListStatus;
 		if (!Settings.getInstance(mContext).privacyListsEnabled()) {
 			privacyListStatus = "privacy disabled";
-		} else if (XMPPPrivacyList.isSupported(connection)) {
+		} else {
 			final String privacyInactive = "privacy inactive";
 			try {
-				PrivacyList privacyList = PrivacyListManager.getInstanceFor(connection)
-						.getDefaultList();
-				String privacyListName = privacyList.toString();
-				if (privacyListName.equals(XMPPPrivacyList.PRIVACY_LIST_NAME)) {
-					privacyListStatus = "privacy";
+				if (PrivacyListManager.getInstanceFor(connection).isSupported()) {
+					PrivacyList privacyList = PrivacyListManager.getInstanceFor(connection)
+							.getDefaultList();
+					String privacyListName = privacyList.getName();
+					if (privacyListName.equals(XMPPPrivacyList.PRIVACY_LIST_NAME)) {
+						privacyListStatus = "privacy";
+					} else {
+						privacyListStatus = privacyInactive;
+					}
 				} else {
-					privacyListStatus = privacyInactive;
+					privacyListStatus = "privacy not supported";
 				}
 			} catch (XMPPException e) {
-				if (e.getXMPPError().getCode() == 404) {
+				if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
 					privacyListStatus = privacyInactive;
 				} else {
 					LOG.e("connected", e);
 					privacyListStatus = "privacy unkown";
 				}
-			} catch (ClassCastException cce) {
-				// TODO we are going to catch ClassCastExceptions here, since there appears to be a
-				// bug in Smack that causes an ClassCastException to be thrown when the default
-				// privacy lists is going to be retrieved on some servers. Remove when this Smack
-				// bug is fixed.
-				privacyListStatus = "privacy unkown";
 			}
-		} else {
-			privacyListStatus = "privacy not supported";
 		}
 
 		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ", "

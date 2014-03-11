@@ -17,13 +17,13 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smackx.XHTMLManager;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 
 public class HandleXHTML extends StateChangeListener {
 
 	@Override
-	public void newConnection(Connection connection) {
+	public void newConnection(XMPPConnection connection) {
 		XHTMLManager.setServiceEnabled(connection, false);
 	}
 

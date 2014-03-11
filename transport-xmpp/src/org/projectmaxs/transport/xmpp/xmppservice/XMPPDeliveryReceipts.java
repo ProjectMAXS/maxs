@@ -17,13 +17,13 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
 
 public class XMPPDeliveryReceipts extends StateChangeListener {
 
 	@Override
-	public void newConnection(Connection connection) {
+	public void newConnection(XMPPConnection connection) {
 		final DeliveryReceiptManager drm = DeliveryReceiptManager.getInstanceFor(connection);
 		drm.enableAutoReceipts();
 	}

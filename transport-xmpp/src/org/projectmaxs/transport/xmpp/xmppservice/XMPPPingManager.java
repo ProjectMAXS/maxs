@@ -17,14 +17,18 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.ping.PingFailedListener;
-import org.jivesoftware.smackx.ping.PingManagerV2;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.projectmaxs.shared.global.util.Log;
 
 public class XMPPPingManager extends StateChangeListener implements PingFailedListener {
 
 	public static final int PING_INTERVAL_SECONDS = 60 * 30; // 30 minutes
+
+	static {
+		PingManager.setDefaultPingInterval(PING_INTERVAL_SECONDS);
+	}
 
 	private static final Log LOG = Log.getLog();
 
@@ -35,20 +39,13 @@ public class XMPPPingManager extends StateChangeListener implements PingFailedLi
 	}
 
 	@Override
-	public void newConnection(Connection connection) {
-		// setPingIntervall takes seconds (!) as parameter
-		PingManagerV2 pingManager = PingManagerV2.getInstanceFor(connection);
-		pingManager.setPingIntervall(PING_INTERVAL_SECONDS);
+	public void connected(XMPPConnection connection) {
+		PingManager.getInstanceFor(connection).registerPingFailedListener(this);
 	}
 
 	@Override
-	public void connected(Connection connection) {
-		PingManagerV2.getInstanceFor(connection).registerPingFailedListener(this);
-	}
-
-	@Override
-	public void disconnected(Connection connection) {
-		PingManagerV2.getInstanceFor(connection).unregisterPingFailedListener(this);
+	public void disconnected(XMPPConnection connection) {
+		PingManager.getInstanceFor(connection).unregisterPingFailedListener(this);
 	}
 
 	@Override

@@ -27,7 +27,6 @@ import java.util.Set;
 import javax.net.ssl.SSLContext;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
-import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
@@ -105,14 +104,14 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		XMPP_STREAM_PRIVACY = context.getString(R.string.pref_xmpp_stream_privacy_key);
 		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
+		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 
 		XMPP_CONNECTION_SETTINGS = new HashSet<String>(Arrays.asList(new String[] { JID, PASSWORD,
 				MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST,
 				MANUAL_SERVICE_SETTINGS_PORT, MANUAL_SERVICE_SETTINGS_SERVICE,
-				XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION }));
+				XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION, XMPP_DEBUG }));
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
-		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -273,6 +272,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			mConnectionConfiguration.setReconnectionAllowed(false);
 			mConnectionConfiguration.setSendPresence(false);
 
+			mConnectionConfiguration.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG,
+					false));
 			try {
 				SSLContext sc = SSLContext.getInstance("TLS");
 				sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
@@ -297,11 +298,12 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		for (String s : XMPP_CONNECTION_SETTINGS)
-			if (s.equals(key)) mConnectionConfiguration = null;
-
-		if (key.equals(XMPP_DEBUG))
-			Connection.DEBUG_ENABLED = sharedPreferences.getBoolean(XMPP_DEBUG, false);
+		for (String s : XMPP_CONNECTION_SETTINGS) {
+			if (s.equals(key)) {
+				mConnectionConfiguration = null;
+				break;
+			}
+		}
 	}
 
 	private void saveMasterJids(Set<String> newMasterJids) {

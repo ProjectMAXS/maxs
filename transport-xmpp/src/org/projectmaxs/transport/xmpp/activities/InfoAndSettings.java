@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.jivesoftware.smack.AccountManager;
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.ping.PingManagerV2;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.transport.xmpp.R;
@@ -153,7 +153,7 @@ public class InfoAndSettings extends Activity {
 				try {
 					final String username = StringUtils.parseName(mSettings.getJid());
 					final String password = mSettings.getPassword();
-					final Connection connection = new XMPPConnection(
+					final XMPPConnection connection = new TCPConnection(
 							mSettings.getConnectionConfiguration(InfoAndSettings.this));
 					showToast("Connecting to server", Toast.LENGTH_SHORT);
 					connection.connect();
@@ -311,7 +311,7 @@ public class InfoAndSettings extends Activity {
 
 		private final Button mPingServerButton;
 
-		private volatile PingManagerV2 mPingManager;
+		private volatile PingManager mPingManager;
 
 		public PingServerButtonHandler(Activity activity) {
 			mPingServerButton = (Button) activity.findViewById(R.id.pingServer);
@@ -329,7 +329,7 @@ public class InfoAndSettings extends Activity {
 				@Override
 				protected void onPostExecute(XMPPService xmppService) {
 					if (xmppService.isConnected()) {
-						PingServerButtonHandler.this.mPingManager = PingManagerV2
+						PingServerButtonHandler.this.mPingManager = PingManager
 								.getInstanceFor(xmppService.getConnection());
 						mPingServerButton.setEnabled(true);
 					}
@@ -346,9 +346,9 @@ public class InfoAndSettings extends Activity {
 		public synchronized void onClick(View v) {
 			Toast.makeText(InfoAndSettings.this, "Sending ping to server", Toast.LENGTH_SHORT)
 					.show();
-			new AsyncTask<PingManagerV2, Void, Boolean>() {
+			new AsyncTask<PingManager, Void, Boolean>() {
 				@Override
-				protected Boolean doInBackground(PingManagerV2... pingManagers) {
+				protected Boolean doInBackground(PingManager... pingManagers) {
 					return pingManagers[0].pingMyServer();
 				}
 
@@ -366,13 +366,13 @@ public class InfoAndSettings extends Activity {
 		}
 
 		@Override
-		public synchronized void connected(Connection connection) {
-			mPingManager = PingManagerV2.getInstanceFor(connection);
+		public synchronized void connected(XMPPConnection connection) {
+			mPingManager = PingManager.getInstanceFor(connection);
 			setPingButtonEnabled(true);
 		}
 
 		@Override
-		public synchronized void disconnected(Connection connection) {
+		public synchronized void disconnected(XMPPConnection connection) {
 			mPingManager = null;
 			setPingButtonEnabled(false);
 		}

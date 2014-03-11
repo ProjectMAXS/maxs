@@ -17,7 +17,7 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.filter.OrFilter;
@@ -62,12 +62,12 @@ public class HandleChatPacketListener extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(Connection connection) {
+	public void connected(XMPPConnection connection) {
 		connection.addPacketListener(mChatPacketListener, sMessageFilter);
 	}
 
 	@Override
-	public void disconnected(Connection connection) {
+	public void disconnected(XMPPConnection connection) {
 		connection.removePacketListener(mChatPacketListener);
 	}
 

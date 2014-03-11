@@ -9,7 +9,7 @@ SHARED_MAINTRANSPORT_SOURCE := $(SHARED_SOURCE)/maintransport
 DEBUG_APK := bin/maxs-$(TRANSPORT_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
+.PHONY: all assets asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
 all: transport eclipse
 
@@ -21,7 +21,10 @@ transport: prebuild
 release:
 	ANT_BUILD_TARGET=release $(MAKE) transport
 
-asmack:
+assets:
+	../scripts/getAssets.sh -f assets.db
+
+asmack: assets
 	./asmack.sh
 
 deploy: $(DEBUG_APK)

@@ -24,17 +24,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.MultipleRecipientManager;
-import org.jivesoftware.smackx.ServiceDiscoveryManager;
-import org.jivesoftware.smackx.XHTMLManager;
-import org.jivesoftware.smackx.packet.DiscoverInfo;
+import org.jivesoftware.smackx.address.MultipleRecipientManager;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
@@ -81,7 +81,7 @@ public class XMPPService {
 	};
 
 	/**
-	 * Switch boolean to ensure that the disconnected(Connection) listeners are
+	 * Switch boolean to ensure that the disconnected(XMPPConnection) listeners are
 	 * only run if there was a previous connected connection.
 	 */
 	private boolean mConnected = false;
@@ -211,7 +211,7 @@ public class XMPPService {
 		}
 	}
 
-	public Connection getConnection() {
+	public XMPPConnection getConnection() {
 		return mConnection;
 	}
 
@@ -477,7 +477,7 @@ public class XMPPService {
 			if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings
 			// We need to use an Application instance here, because some Context may not work.
 					.getConnectionConfiguration(mContext)) {
-				connection = new XMPPConnection(mSettings.getConnectionConfiguration(mContext));
+				connection = new TCPConnection(mSettings.getConnectionConfiguration(mContext));
 				newConnection = true;
 			} else {
 				connection = mConnection;
@@ -512,7 +512,7 @@ public class XMPPService {
 						mSettings.getPassword(), "MAXS");
 			} catch (Exception e) {
 				// TODO we catch Exception instead of XMPPException here, since
-				// Connection.sendPacket may send an IllegalStateException if not connected. This
+				// XMPPConnection.sendPacket may send an IllegalStateException if not connected. This
 				// could happen, and has happened, on login, when the connection goes down in the
 				// meantime. Once sendPacket doesn't send an ISE when not connected, but a
 				// XMPPException, this catch should be changed to XMPPException
