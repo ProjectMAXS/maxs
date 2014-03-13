@@ -24,10 +24,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.TCPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
@@ -240,7 +239,17 @@ public class XMPPService {
 		if (to == null) {
 			// Broadcast to all masterJID resources
 			for (String masterJid : mSettings.getMasterJids()) {
-				Iterator<Presence> presences = mConnection.getRoster().getPresences(masterJid);
+				Iterator<Presence> presences;
+				try {
+					presences = mConnection.getRoster().getPresences(masterJid);
+				} catch (Exception e) {
+					// TODO It's somehow inconvenient that getRoster throws no exceptions. Need to
+					// find a better solution
+					LOG.e("sendAsMessage", e);
+					mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE,
+							originIssuerInfo, originId);
+					return;
+				}
 				while (presences.hasNext()) {
 					Presence p = presences.next();
 					String fullJID = p.getFrom();
@@ -278,7 +287,11 @@ public class XMPPService {
 
 		boolean atLeastOneSupportsXHTMLIM = false;
 		for (String jid : toList) {
-			atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection, jid);
+			try {
+				atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection, jid);
+			} catch (Exception e) {
+				atLeastOneSupportsXHTMLIM = false;
+			}
 			if (atLeastOneSupportsXHTMLIM) break;
 		}
 		if (atLeastOneSupportsXHTMLIM)
@@ -286,16 +299,10 @@ public class XMPPService {
 
 		try {
 			MultipleRecipientManager.send(mConnection, packet, toList, null, null);
-		} catch (XMPPException e1) {
-			LOG.w("sendAsMessage: MultipleRecipientManager exception", e1);
-		} catch (IllegalStateException e2) {
-			if ("Not connected to server.".equals(e2.getMessage())) {
-				LOG.i("sendAsMessage: Got IllegalStateException (Not connected), adding message to DB");
-				mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE,
-						originIssuerInfo, originId);
-			} else {
-				throw e2;
-			}
+		} catch (Exception e) {
+			LOG.e("sendAsMessage: Got Exception, adding message to DB");
+			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
+					originId);
 		}
 	}
 
@@ -482,7 +489,7 @@ public class XMPPService {
 			} else {
 				connection = mConnection;
 			}
-		} catch (XMPPException e) {
+		} catch (Exception e) {
 			String exceptionMessage = e.getMessage();
 			// Schedule a reconnect on certain exception causes
 			if ("DNS lookup failure".equals(exceptionMessage)) {
@@ -512,7 +519,8 @@ public class XMPPService {
 						mSettings.getPassword(), "MAXS");
 			} catch (Exception e) {
 				// TODO we catch Exception instead of XMPPException here, since
-				// XMPPConnection.sendPacket may send an IllegalStateException if not connected. This
+				// XMPPConnection.sendPacket may send an IllegalStateException if not connected.
+				// This
 				// could happen, and has happened, on login, when the connection goes down in the
 				// meantime. Once sendPacket doesn't send an ISE when not connected, but a
 				// XMPPException, this catch should be changed to XMPPException

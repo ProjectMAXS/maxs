@@ -21,7 +21,7 @@ import org.jivesoftware.smack.XMPPConnection;
 
 public class StateChangeListener {
 
-	public void newConnection(XMPPConnection connection) {}
+	public void newConnection(XMPPConnection connection) throws Exception {}
 
 	public void connected(XMPPConnection connection) {}
 
@@ -37,7 +37,7 @@ public class StateChangeListener {
 	 * Invoked when get return to disconnected state, but there was never an
 	 * active connection. For example when something in the connection stage
 	 * went wrong
-	 *
+	 * 
 	 * @param reason
 	 */
 	public void disconnected(String reason) {}

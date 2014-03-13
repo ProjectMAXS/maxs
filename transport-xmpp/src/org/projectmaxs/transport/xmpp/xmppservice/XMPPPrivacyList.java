@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smackx.privacy.PrivacyList;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
@@ -79,7 +80,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 	public void connected(XMPPConnection connection) {
 		try {
 			if (!mPrivacyListManager.isSupported()) return;
-		} catch (XMPPException e) {
+		} catch (Exception e) {
 			LOG.e("isSupported", e);
 			return;
 		}
@@ -87,7 +88,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 		if (!mSettings.privacyListsEnabled()) {
 			try {
 				mPrivacyListManager.declineDefaultList();
-			} catch (XMPPException e) {
+			} catch (Exception e) {
 				LOG.e("Could not disable privacy lists", e);
 			}
 			return;
@@ -101,21 +102,24 @@ public class XMPPPrivacyList extends StateChangeListener {
 			// actually equal to the one we want. This should be changed so that the activeList is
 			// in fact compared item-by-item with the desired list
 			if (defaultList.getName().equals(PRIVACY_LIST_NAME)) return;
-		} catch (XMPPException e) {
+		} catch (XMPPErrorException e) {
 			// Log if not item-not-found(404)
 			if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
 				LOG.e("connected", e);
 			}
+		} catch (NoResponseException e) {
+			LOG.e("connected", e);
 		}
 		try {
 			setPrivacyList(connection);
-		} catch (XMPPException e) {
+		} catch (Exception e) {
 			LOG.e("connected", e);
 		}
 
 	}
 
-	private final void setPrivacyList(XMPPConnection connection) throws XMPPException {
+	private final void setPrivacyList(XMPPConnection connection) throws NoResponseException,
+			XMPPErrorException {
 		// This is an ugly workaround for XMPP servers that apply privacy lists also to stanzas
 		// originating from themselves. For example http://issues.igniterealtime.org/browse/OF-724
 		List<PrivacyItem> list = new ArrayList<PrivacyItem>(PRIVACY_LIST.size() + 1);

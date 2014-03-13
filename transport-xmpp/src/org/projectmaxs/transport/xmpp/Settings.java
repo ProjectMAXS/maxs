@@ -28,7 +28,7 @@ import javax.net.ssl.SSLContext;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
@@ -237,9 +237,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * 
 	 * @param context
 	 * @return
-	 * @throws XMPPException
+	 * @throws SmackException
 	 */
-	public ConnectionConfiguration getConnectionConfiguration(Context context) throws XMPPException {
+	public ConnectionConfiguration getConnectionConfiguration(Context context)
+			throws SmackException {
 		if (mConnectionConfiguration == null) {
 			if (getManualServiceSettings()) {
 				String host = getManualServiceSettingsHost();

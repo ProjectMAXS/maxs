@@ -17,8 +17,9 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smackx.privacy.PrivacyList;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
@@ -78,13 +79,16 @@ public class HandleTransportStatus extends StateChangeListener {
 				} else {
 					privacyListStatus = "privacy not supported";
 				}
-			} catch (XMPPException e) {
+			} catch (XMPPErrorException e) {
 				if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
 					privacyListStatus = privacyInactive;
 				} else {
 					LOG.e("connected", e);
 					privacyListStatus = "privacy unkown";
 				}
+			} catch (NoResponseException e) {
+				LOG.e("connected", e);
+				privacyListStatus = "privacy unkown";
 			}
 		}
 

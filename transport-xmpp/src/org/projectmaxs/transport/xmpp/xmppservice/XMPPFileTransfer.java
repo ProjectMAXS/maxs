@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamManager;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
@@ -96,7 +95,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		InputStream isTmp;
 		try {
 			isTmp = request.accept().recieveFile();
-		} catch (XMPPException e2) {
+		} catch (Exception e2) {
 			LOG.e("fileTransferRequest", e2);
 			return;
 		}

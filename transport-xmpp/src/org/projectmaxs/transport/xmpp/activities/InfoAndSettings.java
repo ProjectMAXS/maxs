@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.jivesoftware.smack.AccountManager;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.TCPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.projectmaxs.shared.global.util.Log;
@@ -161,7 +161,7 @@ public class InfoAndSettings extends Activity {
 					showToast("Connected, trying to create account", Toast.LENGTH_SHORT);
 					accountManager.createAccount(username, password);
 					connection.disconnect();
-				} catch (XMPPException e) {
+				} catch (Exception e) {
 					LOG.i("registerAccount", e);
 					showToast("Error creating account: " + e.getLocalizedMessage(),
 							Toast.LENGTH_LONG);
@@ -349,7 +349,12 @@ public class InfoAndSettings extends Activity {
 			new AsyncTask<PingManager, Void, Boolean>() {
 				@Override
 				protected Boolean doInBackground(PingManager... pingManagers) {
-					return pingManagers[0].pingMyServer();
+					try {
+						return pingManagers[0].pingMyServer();
+					} catch (SmackException e) {
+						LOG.e("pingMyServer", e);
+						return false;
+					}
 				}
 
 				@Override
