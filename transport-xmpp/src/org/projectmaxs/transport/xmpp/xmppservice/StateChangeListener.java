@@ -21,7 +21,7 @@ import org.jivesoftware.smack.XMPPConnection;
 
 public class StateChangeListener {
 
-	public void newConnection(XMPPConnection connection) throws Exception {}
+	public void newConnection(XMPPConnection connection) {}
 
 	public void connected(XMPPConnection connection) {}
 
