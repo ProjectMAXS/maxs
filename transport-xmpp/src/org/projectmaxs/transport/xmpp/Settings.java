@@ -66,6 +66,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String XMPP_STREAM_COMPRESSION;
 	private final String XMPP_STREAM_ENCYPTION;
 	private final String XMPP_STREAM_PRIVACY;
+	private final String XMPP_STREAM_SESSION;
 
 	// App settings
 	private final String DEBUG_LOG;
@@ -102,6 +103,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		XMPP_STREAM_COMPRESSION = context.getString(R.string.pref_xmpp_stream_compression_key);
 		XMPP_STREAM_ENCYPTION = context.getString(R.string.pref_xmpp_stream_encryption_key);
 		XMPP_STREAM_PRIVACY = context.getString(R.string.pref_xmpp_stream_privacy_key);
+		XMPP_STREAM_SESSION = context.getString(R.string.pref_xmpp_stream_session_key);
 		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
@@ -275,6 +277,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 			mConnectionConfiguration.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG,
 					false));
+			mConnectionConfiguration.setLegacySessionDisabled(!mSharedPreferences.getBoolean(
+					XMPP_STREAM_SESSION, true));
 			try {
 				SSLContext sc = SSLContext.getInstance("TLS");
 				sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());

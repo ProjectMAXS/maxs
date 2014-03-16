@@ -46,6 +46,12 @@
             android:summary="@string/pref_xmpp_stream_privacy_help"
             android:title="@string/pref_xmpp_stream_privacy" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_xmpp_stream_session_key"
+            android:summary="@string/pref_xmpp_stream_session_help"
+            android:title="@string/pref_xmpp_stream_session" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_settings" >
         <CheckBoxPreference
