@@ -25,7 +25,7 @@ import org.projectmaxs.shared.module.MAXSModuleIntentService;
 public class LsTilde extends AbstractLsCommand {
 
 	public LsTilde() {
-		super("~", false, true);
+		super("~", true, false);
 		setHelp(ArgType.NONE, "List MAXS directory");
 	}
 

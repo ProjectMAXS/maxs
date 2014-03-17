@@ -26,10 +26,6 @@ import org.projectmaxs.shared.global.Message;
 
 public abstract class AbstractLsCommand extends AbstractFilereadCommand {
 
-	public AbstractLsCommand(String name) {
-		super(ModuleService.LS, name);
-	}
-
 	public AbstractLsCommand(String name, boolean isDefaultWithoutArguments,
 			boolean isDefaultWithArguments) {
 		super(ModuleService.LS, name, isDefaultWithoutArguments, isDefaultWithArguments);

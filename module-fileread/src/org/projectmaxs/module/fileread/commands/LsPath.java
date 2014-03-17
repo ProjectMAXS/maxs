@@ -25,7 +25,7 @@ import org.projectmaxs.shared.module.MAXSModuleIntentService;
 public class LsPath extends AbstractLsCommand {
 
 	public LsPath() {
-		super("path");
+		super("path", false, true);
 		setHelp(ArgType.PATH, "List path");
 	}
 
