@@ -352,9 +352,11 @@ public class InfoAndSettings extends Activity {
 					try {
 						return pingManagers[0].pingMyServer();
 					} catch (SmackException e) {
-						LOG.e("pingMyServer", e);
-						return false;
+						LOG.w("pingMyServer", e);
+					} catch (RuntimeException e) {
+						LOG.e("pingMyServer: RuntimeException", e);
 					}
+					return false;
 				}
 
 				@Override
