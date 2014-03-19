@@ -26,7 +26,6 @@ import java.util.Set;
 
 import javax.net.ssl.SSLContext;
 
-import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.util.StringUtils;
@@ -251,7 +250,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
 			} else {
 				String service = StringUtils.parseServer(mSharedPreferences.getString(JID, ""));
-				mConnectionConfiguration = new AndroidConnectionConfiguration(service, 1234);
+				mConnectionConfiguration = new ConnectionConfiguration(service);
 			}
 			mConnectionConfiguration.setSocketFactory(XMPPSocketFactory.getInstance());
 

@@ -157,7 +157,7 @@ public class InfoAndSettings extends Activity {
 							mSettings.getConnectionConfiguration(InfoAndSettings.this));
 					showToast("Connecting to server", Toast.LENGTH_SHORT);
 					connection.connect();
-					AccountManager accountManager = new AccountManager(connection);
+					AccountManager accountManager = AccountManager.getInstance(connection);
 					showToast("Connected, trying to create account", Toast.LENGTH_SHORT);
 					accountManager.createAccount(username, password);
 					connection.disconnect();
