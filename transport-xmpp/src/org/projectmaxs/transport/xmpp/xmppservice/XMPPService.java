@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
@@ -356,8 +357,17 @@ public class XMPPService {
 	private void newState(State newState, String reason) {
 		switch (newState) {
 		case Connected:
-			for (StateChangeListener l : mStateChangeListeners)
-				l.connected(mConnection);
+			for (StateChangeListener l : mStateChangeListeners) {
+				try {
+					l.connected(mConnection);
+				} catch (NotConnectedException e) {
+					LOG.w("newState", e);
+					// Change the state to disconnected
+					changeState(State.Disconnected);
+					// Return here since we obviously didn't reach the connected state
+					return;
+				}
+			}
 			mConnected = true;
 			break;
 		case Disconnected:

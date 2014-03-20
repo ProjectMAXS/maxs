@@ -25,6 +25,7 @@ import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamManager;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
@@ -85,7 +86,11 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		final String requestor = request.getRequestor();
 		if (!mSettings.isMasterJID(requestor)) {
 			LOG.w("File transfer from non master jid " + requestor);
-			request.reject();
+			try {
+				request.reject();
+			} catch (NotConnectedException e) {
+				LOG.w("Not connected exception", e);
+			}
 			return;
 		}
 

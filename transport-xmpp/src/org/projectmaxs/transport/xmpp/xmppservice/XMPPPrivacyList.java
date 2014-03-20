@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
@@ -77,7 +78,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(XMPPConnection connection) {
+	public void connected(XMPPConnection connection) throws NotConnectedException {
 		try {
 			if (!mPrivacyListManager.isSupported()) return;
 		} catch (Exception e) {
@@ -119,7 +120,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 	}
 
 	private final void setPrivacyList(XMPPConnection connection) throws NoResponseException,
-			XMPPErrorException {
+			XMPPErrorException, NotConnectedException {
 		// This is an ugly workaround for XMPP servers that apply privacy lists also to stanzas
 		// originating from themselves. For example http://issues.igniterealtime.org/browse/OF-724
 		List<PrivacyItem> list = new ArrayList<PrivacyItem>(PRIVACY_LIST.size() + 1);

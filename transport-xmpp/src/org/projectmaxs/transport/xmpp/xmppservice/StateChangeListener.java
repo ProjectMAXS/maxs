@@ -17,13 +17,14 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 
 public class StateChangeListener {
 
 	public void newConnection(XMPPConnection connection) {}
 
-	public void connected(XMPPConnection connection) {}
+	public void connected(XMPPConnection connection) throws NotConnectedException {}
 
 	/**
 	 * Invoked when we got disconnected from an active connection

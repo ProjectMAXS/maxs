@@ -18,6 +18,7 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
@@ -46,7 +47,7 @@ public class HandleTransportStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(XMPPConnection connection) {
+	public void connected(XMPPConnection connection) throws NotConnectedException {
 		String encryptionStatus;
 		if (connection.isSecureConnection()) {
 			encryptionStatus = "encrypted";

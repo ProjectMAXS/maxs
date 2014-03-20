@@ -25,13 +25,16 @@ import java.util.Set;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.util.StringUtils;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 
 public class XMPPRoster extends StateChangeListener implements RosterListener {
+	private static final Log LOG = Log.getLog();
 
 	private final List<MasterJidListener> mMasterJidListeners = new LinkedList<MasterJidListener>();
 
@@ -182,7 +185,11 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	private static void sendPresenceTo(String to, Presence presence, XMPPConnection connection) {
 		presence.setTo(to);
-		connection.sendPacket(presence);
+		try {
+			connection.sendPacket(presence);
+		} catch (NotConnectedException e) {
+			LOG.w("sendPresenceTo", e);
+		}
 	}
 
 	public static class MasterJidListener {

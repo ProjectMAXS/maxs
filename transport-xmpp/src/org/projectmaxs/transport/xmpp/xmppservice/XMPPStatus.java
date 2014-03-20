@@ -17,14 +17,17 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPRoster.MasterJidListener;
 
 import android.content.Context;
 
 public class XMPPStatus extends StateChangeListener {
+	private static final Log LOG = Log.getLog();
 
 	private final XMPPRoster mXMPPRoster;
 	private final Settings mSettings;
@@ -73,7 +76,11 @@ public class XMPPStatus extends StateChangeListener {
 		Presence presence = new Presence(Presence.Type.available);
 		presence.setStatus(mDesiredStatus);
 		presence.setPriority(24);
-		mConnection.sendPacket(presence);
+		try {
+			mConnection.sendPacket(presence);
+		} catch (NotConnectedException e) {
+			LOG.w("sendStatus", e);
+		}
 		mActiveStatus = mDesiredStatus;
 		mSettings.setStatus(mActiveStatus);
 	}
