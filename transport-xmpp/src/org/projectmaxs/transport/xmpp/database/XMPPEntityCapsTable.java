@@ -55,12 +55,12 @@ public class XMPPEntityCapsTable {
 		mDatabase = XMPPDatabase.getInstance(context).getWritableDatabase();
 	}
 
-	public void addDiscoverInfo(String node, String info) {
+	public void addDiscoverInfo(String node, CharSequence info) {
 		if (containsNode(node)) return;
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_NODE, node);
-		values.put(COLUMN_NAME_INFO, info);
+		values.put(COLUMN_NAME_INFO, info.toString());
 
 		long res = mDatabase.insert(TABLE_NAME, null, values);
 		if (res == -1)
