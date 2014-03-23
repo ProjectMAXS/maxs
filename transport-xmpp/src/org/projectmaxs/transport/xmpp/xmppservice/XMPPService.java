@@ -25,12 +25,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
@@ -519,6 +521,13 @@ public class XMPPService {
 		} catch (Exception e) {
 			// TODO see notice a few lines below at connection.logion() try/catch
 			LOG.e("tryToConnect: Exception from connect()", e);
+			if (e instanceof ConnectionException) {
+				ConnectionException ce = (ConnectionException) e;
+				String error = "The following host's failed to connect to:";
+				for (HostAddress ha : ce.getFailedAddresses())
+					error += " " + ha;
+				LOG.d("tryToConnect: " + error);
+			}
 			scheduleReconnect();
 			return;
 		}
