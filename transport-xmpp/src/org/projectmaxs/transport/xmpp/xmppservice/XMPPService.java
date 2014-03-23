@@ -36,6 +36,7 @@ import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.iqlast.LastActivityManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
@@ -72,6 +73,10 @@ public class XMPPService {
 	static {
 		ServiceDiscoveryManager.setDefaultIdentity(new DiscoverInfo.Identity("client",
 				GlobalConstants.NAME, "bot"));
+		// TODO This is not really needed, but for some reason the static initializer block of
+		// LastActivityManager is not run. This could be a problem caused by aSmack together with
+		// dalvik, as the initializer is run on Smack's test cases.
+		LastActivityManager.setEnabledPerDefault(true);
 	}
 
 	private final Runnable mReconnectRunnable = new Runnable() {
