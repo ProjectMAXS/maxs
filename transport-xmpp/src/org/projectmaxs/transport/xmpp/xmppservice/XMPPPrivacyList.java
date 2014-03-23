@@ -18,6 +18,7 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +27,8 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
 import org.jivesoftware.smackx.privacy.PrivacyList;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
 import org.jivesoftware.smackx.privacy.packet.PrivacyItem;
@@ -121,10 +124,20 @@ public class XMPPPrivacyList extends StateChangeListener {
 
 	private final void setPrivacyList(XMPPConnection connection) throws NoResponseException,
 			XMPPErrorException, NotConnectedException {
+		List<PrivacyItem> list = new ArrayList<PrivacyItem>(PRIVACY_LIST.size() + 10);
+		list.addAll(PRIVACY_LIST);
+
+		// Whitelist all JIDs of the own service, e.g. conference.service.com, proxy.service.com
+		Iterator<Item> serviceItems = ServiceDiscoveryManager.getInstanceFor(connection)
+				.discoverItems(connection.getServiceName()).getItems();
+		while (serviceItems.hasNext()) {
+			Item i = serviceItems.next();
+			PrivacyItem allow = new PrivacyItem(Type.jid, i.getEntityID(), true, list.size() + 1);
+			list.add(allow);
+		}
+
 		// This is an ugly workaround for XMPP servers that apply privacy lists also to stanzas
 		// originating from themselves. For example http://issues.igniterealtime.org/browse/OF-724
-		List<PrivacyItem> list = new ArrayList<PrivacyItem>(PRIVACY_LIST.size() + 1);
-		list.addAll(PRIVACY_LIST);
 		// Because there are such services in the wild and XEP-0016 is not clear on that topic, we
 		// explicitly have to add a JID rule that allows stanzas from the service
 		PrivacyItem allowService = new PrivacyItem(Type.jid, connection.getServiceName(), true,
