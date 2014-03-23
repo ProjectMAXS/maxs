@@ -25,6 +25,8 @@ import android.os.IBinder;
 import android.os.IInterface;
 
 public abstract class AsyncServiceTask<I extends IInterface> {
+	private static final Log LOG = Log.getLog();
+
 	public final Context mContext;
 
 	final Intent mBindIntent;
@@ -77,7 +79,11 @@ public abstract class AsyncServiceTask<I extends IInterface> {
 			} catch (Exception e) {
 				onException(e);
 			}
-			mContext.unbindService(mConnection);
+			try {
+				mContext.unbindService(mConnection);
+			} catch (Exception e) {
+				LOG.w("unbindService", e);
+			}
 		}
 
 	}
