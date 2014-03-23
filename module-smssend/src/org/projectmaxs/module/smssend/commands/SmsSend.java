@@ -26,17 +26,14 @@ import org.projectmaxs.shared.global.messagecontent.FormatedText;
 import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
-import org.projectmaxs.shared.module.ContactUtil;
-import org.projectmaxs.shared.module.MAXSModuleIntentService;
-import org.projectmaxs.shared.module.ModuleConstants;
-import org.projectmaxs.shared.module.RecentContactUtil;
+import org.projectmaxs.shared.module.*;
 
 public class SmsSend extends AbstractSmsSendCommand {
 
 	public SmsSend() {
 		super(ModuleConstants.SMS, "send", false, true);
 		setHelp("<recipient info>  <sms content>",
-				"Send a sms. The contact needs to be seperated from the sms body with two spaces.");
+				"Send a sms. The contact needs to be seperated from the sms body with two spaces. Use \"all\" as recipient info to send to all contacts");
 	}
 
 	@Override
@@ -51,7 +48,18 @@ public class SmsSend extends AbstractSmsSendCommand {
 			contact = ContactUtil.getInstance(mService).contactByNumber(argsSplit[0]);
 			receiver = argsSplit[0];
 		} else {
-
+            if(argsSplit[0].equalsIgnoreCase("all")){
+                int smsCount=0;
+                Collection<Contact> contacts = ContactUtil.getInstance(mService).contacts();
+                for(contact: contacts){
+                    ContactNumber number = contact.getBestNumber(ContactNumber.NumberType.MOBILE);
+                    if(number!=null){
+                        MainUtil.send(sendSms(reciver, text, command.getId(), contact));
+                        smsCount++;
+                    }
+                }
+                return new Message("Sent SMS to "+smsCount+" contacts");
+            }
 			Collection<Contact> contacts = ContactUtil.getInstance(mService).lookupContacts(
 					argsSplit[0]);
 			if (contacts == null) {

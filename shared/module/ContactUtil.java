@@ -110,9 +110,9 @@ public class ContactUtil {
 
 	/**
 	 * Magical method that tries to find contacts based on a given String.
-	 * 
+	 *
 	 * Only returns null if the contacts module is not installed or on error.
-	 * 
+	 *
 	 * @param info
 	 * @return
 	 */
@@ -128,7 +128,7 @@ public class ContactUtil {
 
 	/**
 	 * Lookup exactly one contact for a given number
-	 * 
+	 *
 	 * @param phoneNumber
 	 * @return the contact, or null if none was found
 	 */
@@ -161,7 +161,7 @@ public class ContactUtil {
 
 	/**
 	 * Get all contacts for a given number
-	 * 
+	 *
 	 * @param phoneNumber
 	 * @return
 	 */
@@ -199,10 +199,10 @@ public class ContactUtil {
 
 	/**
 	 * Lookup a contact by a given nickname.
-	 * 
+	 *
 	 * The returned contact will come with all known contact numbers and a
 	 * lookup key.
-	 * 
+	 *
 	 * @param nickname
 	 * @return
 	 */
@@ -235,9 +235,9 @@ public class ContactUtil {
 
 	/**
 	 * Get all matching contacts for a given nickname.
-	 * 
+	 *
 	 * The contacts will come with all known contact numbers and a lookup key.
-	 * 
+	 *
 	 * @param nickname
 	 * @return
 	 */
@@ -271,9 +271,9 @@ public class ContactUtil {
 
 	/**
 	 * Get a contact for a given name
-	 * 
+	 *
 	 * The contact will come with all known contact numbers and a lookup key.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -296,9 +296,9 @@ public class ContactUtil {
 
 	/**
 	 * Get all known contacts for a given name
-	 * 
+	 *
 	 * The contacts will come with all known contact numbers and a lookup key.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -320,18 +320,42 @@ public class ContactUtil {
 		return res;
 	}
 
+    /**
+     * Get all known contacts
+     *
+     * The contacts will come with all known contact numbers and a lookup key.
+     *
+     * @return
+     */
+    public Collection<Contact> contacts() {
+
+        Cursor c = mContentResolver.query(ContactsContract.Contacnts.CONTENT_URI, null, null, null, null);
+
+        Collection<Contact> res = new ArrayList<Contact>();
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
+            String lookupKey = c.getString(c.getColumnIndexOrThrow(Data.LOOKUP_KEY));
+            Contact contact = new Contact(displayName, lookupKey);
+            lookupContactNumbersFor(contact);
+            res.add(contact);
+        }
+
+        c.close();
+        return res;
+    }
+
 	/**
 	 * Lookup the numbers for a given contact.
-	 * 
+	 *
 	 * Usually this is not needed because most methods already return the
 	 * contacts with all known contact numbers.
-	 * 
+	 *
 	 * @param contact
 	 */
 	public void lookupContactNumbersFor(Contact contact) {
 		String lookupKey = contact.getLookupKey();
 		// @formatter:off
-		final String[] projection = new String[] { 
+		final String[] projection = new String[] {
 				Phone.NUMBER,
 				Phone.TYPE,
 				Phone.LABEL,
@@ -360,11 +384,13 @@ public class ContactUtil {
 		c.close();
 	}
 
+
+
 	/**
 	 * Pretty print for a given contact and contactInfo. If contact is null, only contactInfo will
 	 * be returned. Otherwise {@code"<contact.getDisplayName()> (<contactInfo>)"} will get
 	 * returned.
-	 * 
+	 *
 	 * @param contact
 	 * @param contactInfo
 	 * @return
@@ -381,7 +407,7 @@ public class ContactUtil {
 	 * If the given collection contains only one contact with a number, then this contact is
 	 * returned. Otherwise, if more then one contact with a number exists or if none exists, null is
 	 * returned.
-	 * 
+	 *
 	 * @param contacts
 	 * @return the one and only contact with number(s) from contacts or null
 	 */
@@ -398,5 +424,7 @@ public class ContactUtil {
 		}
 		return res;
 	}
+
+
 
 }
