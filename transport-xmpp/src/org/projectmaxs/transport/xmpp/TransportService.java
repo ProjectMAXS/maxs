@@ -36,7 +36,7 @@ import android.os.IBinder;
 public class TransportService extends MAXSTransportService {
 
 	public static final String TRANSPORT_OUTGOING_FILESERVICE = Constants.PACKAGE
-			+ ".OUTGOING_FILETRANSFER_SERVICE";
+			+ ".xmppservice.XMPPFileTransfer$MAXSOutgoingFileTransferService";
 
 	public TransportService() {
 		super("XMPP");

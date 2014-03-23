@@ -35,6 +35,7 @@ import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
@@ -64,14 +65,18 @@ public class SendPath extends AbstractFilereadCommand {
 				MAXSContentProviderContract.OUTGOING_FILE_TRANSFER_URI, (long) command.getId());
 		Cursor c = cr.query(uri, null, null, null, null);
 		if (!c.moveToFirst()) throw new IllegalStateException("Empty cursor");
-		final String action = c.getString(c
+		final String outgoingFiletransferService = c.getString(c
 				.getColumnIndexOrThrow(MAXSContentProviderContract.OUTGOING_FILETRANSFER_SERVICE));
 		final String receiver = c.getString(c
 				.getColumnIndexOrThrow(MAXSContentProviderContract.RECEIVER_INFO));
+		final String pkg = c.getString(c
+				.getColumnIndexOrThrow(MAXSContentProviderContract.OUTGOING_FILESTRANSFER_PACKAGE));
 		c.close();
 
+		Intent bindIntent = new Intent(pkg + ".OUTGOING_FILETRANSFER_SERVICE");
+		bindIntent.setClassName(pkg, outgoingFiletransferService);
 		AsyncServiceTask<IMAXSOutgoingFileTransferService> ast = new AsyncServiceTask<IMAXSOutgoingFileTransferService>(
-				action, service) {
+				bindIntent, service) {
 			@Override
 			public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
 				return IMAXSOutgoingFileTransferService.Stub.asInterface(iBinder);
@@ -111,5 +116,4 @@ public class SendPath extends AbstractFilereadCommand {
 
 		return null;
 	}
-
 }

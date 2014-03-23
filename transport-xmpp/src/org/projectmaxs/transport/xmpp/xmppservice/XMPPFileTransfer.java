@@ -56,6 +56,13 @@ import android.os.RemoteException;
 public class XMPPFileTransfer extends StateChangeListener implements FileTransferListener {
 
 	private static final Log LOG = Log.getLog();
+	private static final Intent INCOMING_FILETRANSFER_BIND_INTENT;
+
+	static {
+		INCOMING_FILETRANSFER_BIND_INTENT = new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER);
+		INCOMING_FILETRANSFER_BIND_INTENT.setClassName(GlobalConstants.FILEWRITE_MODULE_PACKAGE,
+				GlobalConstants.FILEWRITE_MODULE_IFT_SERVICE);
+	}
 
 	private static FileTransferManager sFileTransferManager;
 
@@ -106,8 +113,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		}
 		final InputStream is = isTmp;
 
-		new AsyncServiceTask<IMAXSIncomingFileTransferService>(new Intent(
-				GlobalConstants.ACTION_INCOMING_FILETRANSFER), mContext) {
+		new AsyncServiceTask<IMAXSIncomingFileTransferService>(INCOMING_FILETRANSFER_BIND_INTENT,
+				mContext) {
 
 			@Override
 			public IMAXSIncomingFileTransferService asInterface(IBinder iBinder) {

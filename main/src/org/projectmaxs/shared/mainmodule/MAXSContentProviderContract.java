@@ -47,7 +47,8 @@ public class MAXSContentProviderContract {
 
 	public static final String OUTGOING_FILETRANSFER_SERVICE = "outgoing_filetransfer";
 	public static final String RECEIVER_INFO = "receiver_info";
+	public static final String OUTGOING_FILESTRANSFER_PACKAGE = "outgoing_filetransfer_package";
 
 	public static final String[] OUTGOING_FILETRANSFER_COLUMNS = new String[] {
-			OUTGOING_FILETRANSFER_SERVICE, RECEIVER_INFO };
+			OUTGOING_FILETRANSFER_SERVICE, RECEIVER_INFO, OUTGOING_FILESTRANSFER_PACKAGE };
 }

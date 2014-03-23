@@ -62,11 +62,12 @@ public class MAXSContentProvider extends ContentProvider {
 		case OUTGOING_FILETRANSFER:
 			int cmdId = Integer.valueOf(uri.getPathSegments().get(1));
 			Entry entry = CommandTable.getInstance(getContext()).geEntry(cmdId);
-			String service = TransportRegistry.getInstance(getContext()).getFiletransferService(
-					entry.mOrigin.getPackage());
+			String pkg = entry.mOrigin.getPackage();
+			String service = TransportRegistry.getInstance(getContext())
+					.getFiletransferService(pkg);
 			String receiverInfo = entry.mOrigin.getOriginIssuerInfo();
 			c = new MatrixCursor(MAXSContentProviderContract.OUTGOING_FILETRANSFER_COLUMNS);
-			c.addRow(new Object[] { service, receiverInfo });
+			c.addRow(new Object[] { service, receiverInfo, pkg });
 			break;
 		default:
 			throw new IllegalArgumentException("Unkown URI " + uri);

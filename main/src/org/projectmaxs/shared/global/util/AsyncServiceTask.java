@@ -58,19 +58,6 @@ public abstract class AsyncServiceTask<I extends IInterface> {
 		mContext = context;
 	}
 
-	/**
-	 * If required, use the application context to avoid
-	 * "ServiceConnection leaked" errors
-	 * 
-	 * @param bindIntentAction
-	 * @param context
-	 *            the context used to bind the service.
-	 */
-	public AsyncServiceTask(String bindIntentAction, Context context) {
-		mBindIntent = new Intent(bindIntentAction);
-		mContext = context;
-	}
-
 	public abstract I asInterface(IBinder iBinder);
 
 	public abstract void performTask(I iinterface) throws Exception;
