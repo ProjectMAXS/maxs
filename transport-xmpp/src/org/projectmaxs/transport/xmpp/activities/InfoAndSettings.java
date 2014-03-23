@@ -71,6 +71,7 @@ public class InfoAndSettings extends Activity {
 "<h1>Open Source</h1>" +
 "&#8226; <a href=\"http://asmack.org\">aSmack</a><br>" +
 "&#8226; <a	href=\"https://github.com/ge0rg/MemorizingTrustManager\">MemorizingTrustManager</a><br>" +
+"&#8226; <a	href=\"http://dnsjava.org\">dnsjava</a><br>" +
 "<h2>aSmack</h2>" +
 "<a href=\"http://asmack.org\">http://asmack.org</a><br>" +
 "<br>" +
@@ -82,6 +83,10 @@ public class InfoAndSettings extends Activity {
 "Copyright © 2013 Robin Collier<br>" +
 "Copyright © 2009 Jonas Ådahl<br>" +
 "Apache License, Version 2.0<br>" +
+"&#8226; aSmack custom code (various glue stuff)<br>" +
+"Copyright © 2011-2014 Florian Schmaus<br>" +
+"Copyright © 2009-2010 Rene Treffer<br>" +
+"Apache License, Version 2.0<br>" +
 "&#8226; Apache Harmony (SASL/XML)<br>" +
 "Copyright © 2006, 2010 Apache Software Foundation<br>" +
 "Apache License, Version 2.0<br>" +
@@ -91,23 +96,16 @@ public class InfoAndSettings extends Activity {
 "&#8226; Apache qpid (SASL)<br>" +
 "Copyright © 2006-2008 Apache Software Foundation<br>" +
 "Apache License, Version 2.0<br>" +
-"&#8226; jbosh (BOSH)<br>" +
-"Copyright © 2009 Guenther Niess<br>" +
-"Copyright © 2009 Mike Cumings<br>" +
-"Copyright © 2001-2003 Apache Software Foundation<br>" +
-"Apache License, Version 2.0<br>" +
-"&#8226; dnsjava (DNS SRV)<br>" +
-"Copyright © 1998-2011 Brian Wellington<br>" +
-"BSD 2-Clause License<br>" +
-"&#8226; aSmack custom code (various glue stuff)<br>" +
-"Copyright © 2011-2013 Florian Schmaus<br>" +
-"Copyright © 2009-2010 Rene Treffer<br>" +
-"Apache License, Version 2.0<br>" +
 "<h2>MemorizingTrustManager</h2>" +
 "<a href=\"https://github.com/ge0rg/MemorizingTrustManager\">https://github.com/ge0rg/MemorizingTrustManager</a><br>" +
 "<br>" +
 "Copyright © 2010 Georg Lukas<br>" +
 "MIT License<br>" +
+"<h2>dnsjava</h2>" +
+"<a href=\"http://dnsjava.org\">http://dnsjava.org<a/><br>" +
+"<br>" +
+"Copyright © 1998-2011 Brian Wellington<br>" +
+"BSD 2-Clause License<br>" +
 "<h1>License Links</h1>" +
 "&#8226; <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a><br>" +
 "&#8226; <a href=\"http://opensource.org/licenses/MIT\">MIT License</a><br>" +
