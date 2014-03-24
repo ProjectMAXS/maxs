@@ -362,6 +362,7 @@ public class XMPPService {
 	 *            the reason for the new state (only used is newState is Disconnected)
 	 */
 	private void newState(State newState, String reason) {
+		if (reason == null) reason = "";
 		switch (newState) {
 		case Connected:
 			for (StateChangeListener l : mStateChangeListeners) {
