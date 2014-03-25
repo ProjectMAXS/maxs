@@ -80,17 +80,19 @@ public class JULHandler extends Handler {
 
 	private static DebugLogSettings sDebugLogSettings;
 
-	public static synchronized void init(DebugLogSettings debugLogSettings) {
-		if (sDebugLogSettings != null) return;
-
-		sDebugLogSettings = debugLogSettings;
+	static {
+		boolean initialized = false;
 		try {
 			LogManager.getLogManager().readConfiguration(LOG_MANAGER_CONFIG);
+			initialized = true;
 		} catch (IOException e) {
 			Log.e("JULHandler", "Can not initialize configuration", e);
-			return;
 		}
-		LOGGER.info("Initialzied java.util.logging logger");
+		if (initialized) LOGGER.info("Initialzied java.util.logging logger");
+	}
+
+	public static void init(DebugLogSettings debugLogSettings) {
+		sDebugLogSettings = debugLogSettings;
 	}
 
 	public JULHandler() {
@@ -125,7 +127,7 @@ public class JULHandler extends Handler {
 		Log.println(priority, tag, msg);
 	}
 
-	static int getAndroidPriority(Level level) {
+	private static int getAndroidPriority(Level level) {
 		int value = level.intValue();
 		if (value >= SEVE_INT) {
 			return Log.ERROR;
