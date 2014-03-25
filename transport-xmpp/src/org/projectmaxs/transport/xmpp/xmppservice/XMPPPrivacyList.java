@@ -18,7 +18,6 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -128,10 +127,8 @@ public class XMPPPrivacyList extends StateChangeListener {
 		list.addAll(PRIVACY_LIST);
 
 		// Whitelist all JIDs of the own service, e.g. conference.service.com, proxy.service.com
-		Iterator<Item> serviceItems = ServiceDiscoveryManager.getInstanceFor(connection)
-				.discoverItems(connection.getServiceName()).getItems();
-		while (serviceItems.hasNext()) {
-			Item i = serviceItems.next();
+		for (Item i : ServiceDiscoveryManager.getInstanceFor(connection)
+				.discoverItems(connection.getServiceName()).getItems()) {
 			PrivacyItem allow = new PrivacyItem(Type.jid, i.getEntityID(), true, list.size() + 1);
 			list.add(allow);
 		}
