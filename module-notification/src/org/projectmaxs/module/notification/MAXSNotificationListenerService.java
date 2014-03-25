@@ -66,7 +66,7 @@ public class MAXSNotificationListenerService extends NotificationListenerService
 	private static void addSbnToElement(StatusBarNotification sbn, Element element) {
 		Notification notification = sbn.getNotification();
 
-		if (notification != null)
+		if (notification != null && notification.tickerText != null)
 			element.addChildElement(new Element("tickerText", notification.tickerText.toString(),
 					"Ticker Text: " + notification.tickerText));
 		element.addChildElement(new Element("packageName", sbn.getPackageName(), "Package: "
