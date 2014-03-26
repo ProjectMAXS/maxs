@@ -508,16 +508,9 @@ public class XMPPService {
 				connection = mConnection;
 			}
 		} catch (Exception e) {
-			String exceptionMessage = e.getMessage();
 			// Schedule a reconnect on certain exception causes
-			if ("DNS lookup failure".equals(exceptionMessage)) {
-				LOG.w("tryToConnect: connection configuration failed. Scheduling reconnect. exceptionMessage="
-						+ exceptionMessage);
-				scheduleReconnect();
-			} else {
-				LOG.e("tryToConnect: connection configuration failed. New State: Disconnected", e);
-				newState(State.Disconnected, e.getLocalizedMessage());
-			}
+			LOG.e("tryToConnect: connection configuration failed. New State: Disconnected", e);
+			newState(State.Disconnected, e.getLocalizedMessage());
 			return;
 		}
 
