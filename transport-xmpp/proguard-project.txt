@@ -44,6 +44,7 @@
 -keep class org.jivesoftware.smackx.privacy.PrivacyListManager
 -keep class org.jivesoftware.smackx.time.EntityTimeManager
 -keep class org.jivesoftware.smackx.vcardtemp.VCardManager
+-keep class org.jivesoftware.smack.CustomSmackConfiguration
 
 # Include general Android proguard settings
 -include ../build/proguard-project-shared.txt
