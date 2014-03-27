@@ -49,6 +49,7 @@ rm -f $TRANSPORT_DIR/libs-sources/asmack-android*
 
 cp $ASMACK_DIR/build/asmack-android-8.jar $TRANSPORT_DIR/libs/asmack-android-8-9999.jar
 cp $ASMACK_DIR/build/asmack-android-8-source.zip $TRANSPORT_DIR/libs-sources/asmack-android-8-source-9999.zip
+echo "src=../libs-sources/asmack-android-8-source-9999.zip" > $TRANSPORT_DIR/libs/asmack-android-8-9999.jar.properties
 
 pushd . > /dev/null
 cd libs
