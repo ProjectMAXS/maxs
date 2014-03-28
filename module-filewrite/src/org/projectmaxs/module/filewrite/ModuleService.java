@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.projectmaxs.module.filewrite.commands.RmPath;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
@@ -52,6 +53,8 @@ public class ModuleService extends MAXSModuleIntentService {
 		SupraCommand.register(RmPath.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
+
+		ensureMaxsDirectoryExists();
 	}
 
 	@Override
@@ -59,4 +62,12 @@ public class ModuleService extends MAXSModuleIntentService {
 		LOG.initialize(Settings.getInstance(context));
 	}
 
+	static boolean ensureMaxsDirectoryExists() {
+		if (!GlobalConstants.MAXS_EXTERNAL_STORAGE.isDirectory()
+				&& !GlobalConstants.MAXS_EXTERNAL_STORAGE.mkdirs()) {
+			LOG.e("ensureMaxsDirectoryExists: Could not create storage dir");
+			return false;
+		}
+		return true;
+	}
 }

@@ -25,6 +25,7 @@ import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
 public class Settings implements OnSharedPreferenceChangeListener, DebugLogSettings {
@@ -60,8 +61,13 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public File getCwd() {
-		final String cwd = mSharedPreferences.getString(CURRENT_WORKING_DIRECTORY,
-				GlobalConstants.MAXS_EXTERNAL_STORAGE.getAbsolutePath());
+		String defaultCwd;
+		if (GlobalConstants.MAXS_EXTERNAL_STORAGE.isDirectory()) {
+			defaultCwd = GlobalConstants.MAXS_EXTERNAL_STORAGE.getAbsolutePath();
+		} else {
+			defaultCwd = Environment.getExternalStorageDirectory().getAbsolutePath();
+		}
+		final String cwd = mSharedPreferences.getString(CURRENT_WORKING_DIRECTORY, defaultCwd);
 		return new File(cwd);
 	}
 
