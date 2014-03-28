@@ -27,7 +27,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
 
 public class ModuleRegistryTable {
 
@@ -89,10 +88,8 @@ public class ModuleRegistryTable {
 		do {
 			byte[] moduleInformationMarshalled = c.getBlob(c
 					.getColumnIndex(COLUMN_NAME_MODULE_INFORMATION));
-			Parcel parcel = ParcelableUtil.unmarshall(moduleInformationMarshalled);
-			// ModuleInformation moduleInformation =
-			// ModuleInformation.CREATOR.createFromParcel(parcel);
-			ModuleInformation moduleInformation = new ModuleInformation(parcel);
+			ModuleInformation moduleInformation = ParcelableUtil.unmarshall(
+					moduleInformationMarshalled, ModuleInformation.CREATOR);
 			res.add(moduleInformation);
 		} while (c.moveToNext());
 

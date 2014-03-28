@@ -39,4 +39,8 @@ public class ParcelableUtil {
 		return parcel;
 	}
 
+	public static <T> T unmarshall(byte[] bytes, Parcelable.Creator<T> creator) {
+		Parcel parcel = unmarshall(bytes);
+		return creator.createFromParcel(parcel);
+	}
 }

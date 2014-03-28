@@ -27,7 +27,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
 
 public class TransportRegistryTable {
 
@@ -88,10 +87,10 @@ public class TransportRegistryTable {
 		}
 
 		do {
-			byte[] TransportInformationMarshalled = c.getBlob(c
+			byte[] transportInformationMarshalled = c.getBlob(c
 					.getColumnIndex(COLUMN_NAME_TRANSPORT_INFORMATION));
-			Parcel parcel = ParcelableUtil.unmarshall(TransportInformationMarshalled);
-			TransportInformation transportInformation = new TransportInformation(parcel);
+			TransportInformation transportInformation = ParcelableUtil.unmarshall(
+					transportInformationMarshalled, TransportInformation.CREATOR);
 			res.add(transportInformation);
 		} while (c.moveToNext());
 

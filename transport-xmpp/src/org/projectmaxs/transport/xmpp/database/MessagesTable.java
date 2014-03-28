@@ -89,8 +89,7 @@ public class MessagesTable {
 
 		do {
 			byte[] messageBytes = c.getBlob(c.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE));
-			Message message = Message.CREATOR.createFromParcel(ParcelableUtil
-					.unmarshall(messageBytes));
+			Message message = ParcelableUtil.unmarshall(messageBytes, Message.CREATOR);
 			String intentAction = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INTENT_ACTION));
 			String issuerId = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_ID));
 			String issuerInfo = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_INFO));
