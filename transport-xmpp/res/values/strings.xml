@@ -30,6 +30,8 @@
     <string name="pref_app_xmpp_debug_help">Log all XMPP stanzas</string>
     <string name="pref_app_debug_network">Network Debug</string>
     <string name="pref_app_debug_network_help">Log extended network information</string>
+    <string name="pref_app_debug_dnsjava">dnsjava Debug</string>
+    <string name="pref_app_debug_dnsjava_help">Log extended dnsjava information</string>
 
     <string-array name="array_xmpp_connection_security_entries">
         <item>Disabled</item>

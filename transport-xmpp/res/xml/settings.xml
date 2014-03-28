@@ -67,6 +67,10 @@
             android:key="@string/pref_app_debug_network_key"
             android:summary="@string/pref_app_debug_network_help"
             android:title="@string/pref_app_debug_network" />
+        <CheckBoxPreference
+            android:key="@string/pref_app_debug_dnsjava_key"
+            android:summary="@string/pref_app_debug_dnsjava_help"
+            android:title="@string/pref_app_debug_dnsjava" />
     </PreferenceCategory>
 
 </PreferenceScreen>

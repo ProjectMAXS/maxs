@@ -32,6 +32,7 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
+import org.xbill.DNS.Options;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -71,6 +72,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String DEBUG_LOG;
 	private final String XMPP_DEBUG;
 	private final String DEBUG_NETWORK;
+	private final String DEBUG_DNSJAVA;
 	private final String LAST_ACTIVE_NETWORK;
 
 	private final Set<String> XMPP_CONNECTION_SETTINGS;
@@ -104,6 +106,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		XMPP_STREAM_PRIVACY = context.getString(R.string.pref_xmpp_stream_privacy_key);
 		XMPP_STREAM_SESSION = context.getString(R.string.pref_xmpp_stream_session_key);
 		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
+		DEBUG_DNSJAVA = context.getString(R.string.pref_app_debug_dnsjava_key);
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 
@@ -115,6 +118,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+		setDnsJavaDebug();
 	}
 
 	public String getJid() {
@@ -308,6 +313,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				break;
 			}
 		}
+		if (key.equals(DEBUG_DNSJAVA)) {
+			setDnsJavaDebug();
+		}
 	}
 
 	private void saveMasterJids(Set<String> newMasterJids) {
@@ -332,5 +340,18 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	private String getManualServiceSettingsService() {
 		return mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
+	}
+
+	private void setDnsJavaDebug() {
+		final String[] DNSJAVA_DEBUG_OPTIONS = { "verbose", "verbosemsg", "verbosecache" };
+		if (mSharedPreferences.getBoolean(DEBUG_DNSJAVA, false)) {
+			for (String s : DNSJAVA_DEBUG_OPTIONS) {
+				Options.set(s);
+			}
+		} else {
+			for (String s : DNSJAVA_DEBUG_OPTIONS) {
+				Options.unset(s);
+			}
+		}
 	}
 }
