@@ -461,7 +461,11 @@ public class XMPPService {
 				newState(State.WaitingForNetwork);
 				break;
 			case Connected:
-				tryToConnect();
+				// Do nothing here, instead, wait until the reconnect runnable did it's job.
+				// Otherwise deadlocks may occur, because the connection attempts will block the
+				// main thread, which will prevent SmackAndroid from receiving the
+				// ConnecvitvityChange receiver and calling Resolver.refresh(). So we have no
+				// up-to-date DNS server information, which will cause connect to fail.
 				break;
 			case Disconnected:
 				newState(State.Disconnected);
