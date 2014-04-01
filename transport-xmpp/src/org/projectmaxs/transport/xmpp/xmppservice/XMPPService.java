@@ -137,7 +137,7 @@ public class XMPPService {
 		addListener(mXMPPStatus);
 	}
 
-	public enum State {
+	public static enum State {
 		Connected, Connecting, Disconnecting, Disconnected, WaitingForNetwork, WaitingForRetry;
 	}
 
