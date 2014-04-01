@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
@@ -372,7 +373,8 @@ public class XMPPService {
 					LOG.w("newState", e);
 					// Change the state to disconnected
 					changeState(State.Disconnected);
-					// Return here since we obviously didn't reach the connected state
+					// Schedule reconnect since we obviously didn't reach the connected state
+					scheduleReconnect();
 					return;
 				}
 			}
@@ -498,27 +500,19 @@ public class XMPPService {
 		XMPPConnection connection;
 		boolean newConnection = false;
 
-		try {
-			if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings
-			// We need to use an Application instance here, because some Context may not work.
-					.getConnectionConfiguration(mContext)) {
-				connection = new TCPConnection(mSettings.getConnectionConfiguration(mContext));
-				newConnection = true;
-			} else {
-				connection = mConnection;
-			}
-		} catch (Exception e) {
-			// Schedule a reconnect on certain exception causes
-			LOG.e("tryToConnect: connection configuration failed. New State: Disconnected", e);
-			newState(State.Disconnected, e.getLocalizedMessage());
-			return;
+		if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings
+		// We need to use an Application context instance here, because some Contexts may not work.
+				.getConnectionConfiguration(mContext)) {
+			connection = new TCPConnection(mSettings.getConnectionConfiguration(mContext));
+			newConnection = true;
+		} else {
+			connection = mConnection;
 		}
 
 		LOG.d("tryToConnect: connect");
 		try {
 			connection.connect();
 		} catch (Exception e) {
-			// TODO see notice a few lines below at connection.logion() try/catch
 			LOG.e("tryToConnect: Exception from connect()", e);
 			if (e instanceof ConnectionException) {
 				ConnectionException ce = (ConnectionException) e;
@@ -535,23 +529,13 @@ public class XMPPService {
 			try {
 				connection.login(StringUtils.parseName(mSettings.getJid()),
 						mSettings.getPassword(), "MAXS");
+			} catch (NoResponseException e) {
+				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
+				scheduleReconnect();
+				return;
 			} catch (Exception e) {
-				// TODO we catch Exception instead of XMPPException here, since
-				// XMPPConnection.sendPacket may send an IllegalStateException if not connected.
-				// This
-				// could happen, and has happened, on login, when the connection goes down in the
-				// meantime. Once sendPacket doesn't send an ISE when not connected, but a
-				// XMPPException, this catch should be changed to XMPPException
-				String exceptionMessage = e.getMessage();
-				// Schedule a reconnect on certain exception causes
-				if ("No response from the server.".equals(exceptionMessage)) {
-					LOG.w("tryToConnect: login failed. Scheduling reconnect. exceptionMessage="
-							+ exceptionMessage);
-					scheduleReconnect();
-				} else {
-					LOG.e("tryToConnect: login failed. New State: Disconnected", e);
-					newState(State.Disconnected, e.getLocalizedMessage());
-				}
+				LOG.e("tryToConnect: login failed. New State: Disconnected", e);
+				newState(State.Disconnected, e.getLocalizedMessage());
 				return;
 			}
 		}
@@ -559,19 +543,13 @@ public class XMPPService {
 
 		mConnection = connection;
 
-		try {
-			if (newConnection) {
-				for (StateChangeListener l : mStateChangeListeners) {
-					l.newConnection(mConnection);
-				}
+		if (newConnection) {
+			for (StateChangeListener l : mStateChangeListeners) {
+				l.newConnection(mConnection);
 			}
-
-			newState(State.Connected);
-		} catch (Exception e) {
-			LOG.w("tryToConnect: Exception thrown by StateChangeListener", e);
-			scheduleReconnect();
-			return;
 		}
+
+		newState(State.Connected);
 
 		LOG.d("tryToConnect: successfully connected \\o/");
 	}

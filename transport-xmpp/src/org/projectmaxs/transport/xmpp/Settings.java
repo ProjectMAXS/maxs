@@ -245,8 +245,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * @return
 	 * @throws SmackException
 	 */
-	public ConnectionConfiguration getConnectionConfiguration(Context context)
-			throws SmackException {
+	public ConnectionConfiguration getConnectionConfiguration(Context context) {
 		if (mConnectionConfiguration == null) {
 			if (getManualServiceSettings()) {
 				String host = getManualServiceSettingsHost();
