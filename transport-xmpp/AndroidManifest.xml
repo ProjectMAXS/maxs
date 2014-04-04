@@ -34,7 +34,8 @@
         android:label="@string/app_name" >
         <activity
             android:name=".activities.InfoAndSettings"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.AdvancedSettings" />
         <activity android:name="de.duenndns.ssl.MemorizingActivity" />
 
