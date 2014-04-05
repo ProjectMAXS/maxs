@@ -114,7 +114,7 @@ public class ContactUtil {
 	 * Only returns null if the contacts module is not installed or on error.
 	 * 
 	 * @param info
-	 * @return
+	 * @return A collection of matching contacts.
 	 */
 	public Collection<Contact> lookupContacts(String info) {
 		String cleanNumber = ContactNumber.cleanNumber(info);
@@ -129,7 +129,7 @@ public class ContactUtil {
 	/**
 	 * Lookup exactly one contact for a given number
 	 * 
-	 * @param phoneNumber
+	 * @param number
 	 * @return the contact, or null if none was found
 	 */
 	public Contact contactByNumber(String number) {
@@ -162,8 +162,8 @@ public class ContactUtil {
 	/**
 	 * Get all contacts for a given number
 	 * 
-	 * @param phoneNumber
-	 * @return
+	 * @param number
+	 * @return All contacts with that number.
 	 */
 	public Collection<Contact> contactsByNumber(String number) {
 		if (!contactsReadModuleInstalled()) return null;
@@ -204,7 +204,7 @@ public class ContactUtil {
 	 * lookup key.
 	 * 
 	 * @param nickname
-	 * @return
+	 * @return A contact, or null if none found or on error.
 	 */
 	public Contact contactByNickname(String nickname) {
 		final String[] projection = new String[] { Data.LOOKUP_KEY, DISPLAY_NAME, Nickname.NAME };
@@ -239,7 +239,7 @@ public class ContactUtil {
 	 * The contacts will come with all known contact numbers and a lookup key.
 	 * 
 	 * @param nickname
-	 * @return
+	 * @return A contact, or null if none found or on error.
 	 */
 	public Collection<Contact> contactsByNickname(String nickname) {
 		final String[] projection = new String[] { Data.LOOKUP_KEY, DISPLAY_NAME, Nickname.NAME };
@@ -275,7 +275,7 @@ public class ContactUtil {
 	 * The contact will come with all known contact numbers and a lookup key.
 	 * 
 	 * @param name
-	 * @return
+	 * @return A contact, or null if none found or on error.
 	 */
 	public Contact contactByName(String name) {
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
@@ -300,7 +300,7 @@ public class ContactUtil {
 	 * The contacts will come with all known contact numbers and a lookup key.
 	 * 
 	 * @param name
-	 * @return
+	 * @return A collection of matching Contacts.
 	 */
 	public Collection<Contact> contactsByName(String name) {
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
@@ -365,16 +365,12 @@ public class ContactUtil {
 	 * be returned. Otherwise {@code"<contact.getDisplayName()> (<contactInfo>)"} will get
 	 * returned.
 	 * 
-	 * @param contact
 	 * @param contactInfo
-	 * @return
+	 * @param contact
+	 * @return The contact as String
 	 */
-	public static String prettyPrint(Contact contact, String contactInfo) {
-		if (contact == null) {
-			return contactInfo;
-		} else {
-			return contact.getDisplayName() + " (" + contactInfo + ")";
-		}
+	public static String prettyPrint(String contactInfo, Contact contact) {
+		return contact != null ? contact.getDisplayName() + " (" + contactInfo + ")" : contactInfo;
 	}
 
 	/**

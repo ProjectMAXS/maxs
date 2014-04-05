@@ -35,10 +35,10 @@ public class BooleanElement {
 	 * @param humanReadable
 	 *            A string where '%1$s' is replaced with enabled or disabled
 	 * @param xmlName
-	 *            The name of the xml elment that may be generated
+	 *            The name of the XML element that may be generated
 	 * @param isEnabled
 	 * @param context
-	 * @return
+	 * @return The element.
 	 */
 	public static Element enabled(String humanReadable, String xmlName, boolean isEnabled,
 			Context context) {

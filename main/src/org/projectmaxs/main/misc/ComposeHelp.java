@@ -35,7 +35,7 @@ public class ComposeHelp {
 	 * @param command
 	 * @param subCommand
 	 * @param context
-	 * @return
+	 * @return a Message with the help
 	 */
 	public final static Message getHelp(String command, String subCommand, Context context) {
 		Message msg;

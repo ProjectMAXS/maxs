@@ -27,7 +27,6 @@ import java.util.Set;
 import javax.net.ssl.SSLContext;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.util.StringUtils;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
@@ -142,7 +141,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * Returns a set of master JID Strings or an empty set if no master JID was
 	 * ever set.
 	 * 
-	 * @return
+	 * @return A set containing the master JIDs.
 	 */
 	public Set<String> getMasterJids() {
 		String s = mSharedPreferences.getString(MASTER_JIDS, "");
@@ -242,8 +241,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * Application, Service or Activity
 	 * 
 	 * @param context
-	 * @return
-	 * @throws SmackException
+	 * @return The ConnectionConfiguration.
 	 */
 	public ConnectionConfiguration getConnectionConfiguration(Context context) {
 		if (mConnectionConfiguration == null) {

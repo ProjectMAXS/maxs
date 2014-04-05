@@ -22,8 +22,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.projectmaxs.shared.global.messagecontent.Contact;
-
 public class SharedStringUtil {
 
 	private static final String POSITIVE_INTEGER_REGEX = "[0-9]+";
@@ -81,20 +79,6 @@ public class SharedStringUtil {
 		return res;
 	}
 
-	/**
-	 * Pretty print contact information. This either prints just contactString or, if contact is not
-	 * null, the display name of the contact with the contactString in parentheses.
-	 * 
-	 * @param contactString
-	 * @param contact
-	 *            , optional
-	 * @return
-	 */
-	public static final String prettyPrint(String contactString, Contact contact) {
-		return contact != null ? contact.getDisplayName() + " (" + contactString + ")"
-				: contactString;
-	}
-
 	public static final boolean isPositiveInteger(String s) {
 		return POSITIVE_INTEGER_PATTERN.matcher(s).matches();
 	}
@@ -123,7 +107,7 @@ public class SharedStringUtil {
 	 * "bar" = substringAfterLastDot("my.foo.bar");
 	 * 
 	 * @param string
-	 * @return
+	 * @return The substring after the last dot.
 	 */
 	public static String substringAfterLastDot(String string) {
 		return getSubstringAfter(string, '.');

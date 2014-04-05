@@ -160,7 +160,7 @@ public class MAXSService extends Service {
 	/**
 	 * Entry point for commands provided by transports.
 	 * 
-	 * @param command
+	 * @param fullCommand
 	 * @param origin
 	 *            the transport the command arrived with
 	 */

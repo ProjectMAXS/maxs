@@ -61,7 +61,7 @@ public class Contact extends AbstractElement {
 	/**
 	 * Check if the contact has at least one number
 	 * 
-	 * @return
+	 * @return true if the contact has at least one number
 	 */
 	public boolean hasNumbers() {
 		return mNumbers.size() > 0;
@@ -93,7 +93,7 @@ public class Contact extends AbstractElement {
 	 * 
 	 * This method needs to have lookup key set or it will throw an Exception.
 	 * 
-	 * @return
+	 * @return A new contact with minimal information set.
 	 */
 	public Contact getMinimal() {
 		if (mLookupKey == null) throw new IllegalStateException("lookup key not set");

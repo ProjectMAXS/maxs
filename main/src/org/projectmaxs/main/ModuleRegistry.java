@@ -67,7 +67,6 @@ public class ModuleRegistry {
 
 	private final Set<ChangeListener> mChangeListeners = new HashSet<ChangeListener>();
 
-	private Context mContext;
 	private ModuleRegistryTable mModuleRegistryTable;
 	private CommandHelpTable mCommandHelpTable;
 
@@ -80,7 +79,6 @@ public class ModuleRegistry {
 	 * @param context
 	 */
 	private ModuleRegistry(Context context) {
-		mContext = context;
 		mModuleRegistryTable = ModuleRegistryTable.getInstance(context);
 		mCommandHelpTable = CommandHelpTable.getInstance(context);
 

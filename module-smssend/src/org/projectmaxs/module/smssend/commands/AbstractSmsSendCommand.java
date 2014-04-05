@@ -28,6 +28,7 @@ import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
+import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 import org.projectmaxs.shared.module.SmsWriteUtil;
 import org.projectmaxs.shared.module.SubCommand;
@@ -109,7 +110,7 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 		sendingSMS.addChildElement(contact);
 
 		Message message = new Message("Sending SMS to "
-				+ SharedStringUtil.prettyPrint(receiver, contact) + ": " + text);
+				+ ContactUtil.prettyPrint(receiver, contact) + ": " + text);
 		message.add(sendingSMS);
 		return message;
 	}

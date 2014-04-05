@@ -34,7 +34,7 @@ public class RecentContactUtil {
 	 * Not that if a Contact is provided, all information but the display name
 	 * and lookup key will get stripped.
 	 * 
-	 * @param usedContactInfo
+	 * @param recentContactInfo
 	 *            some sort of string (e.g. number, e-mail address), most be
 	 *            provided
 	 * @param contact
@@ -56,7 +56,7 @@ public class RecentContactUtil {
 	 * But we assume that the key is stable most of the time.
 	 * 
 	 * @param context
-	 * @return
+	 * @return The recent contact.
 	 */
 	public static RecentContact getRecentContact(Context context) {
 		Cursor c = context.getContentResolver().query(

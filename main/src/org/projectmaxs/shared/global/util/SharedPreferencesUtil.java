@@ -53,7 +53,7 @@ public class SharedPreferencesUtil {
 	 * StringSets.
 	 * 
 	 * @param sharedPreferences
-	 * @param outDirectory
+	 * @param writer
 	 * @param doNotExport
 	 *            a set of keys that should not get exported (passwords, etc.),
 	 *            may be null
@@ -95,7 +95,7 @@ public class SharedPreferencesUtil {
 	 * 
 	 * @param sharedPreferences
 	 * @param in
-	 * @return
+	 * @return Returns true if the new values were successfully written to persistent storage.
 	 * @throws Exception
 	 */
 	public static boolean importFromReader(SharedPreferences sharedPreferences, Reader in)

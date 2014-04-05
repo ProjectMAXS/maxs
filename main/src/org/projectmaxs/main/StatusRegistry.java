@@ -62,8 +62,8 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 	 * not null, return the new status String that should get broadcasted to the
 	 * transports.
 	 * 
-	 * @param info
-	 * @return
+	 * @param infoList
+	 * @return the new status String
 	 */
 	public String add(List<StatusInformation> infoList) {
 		boolean shouldUpdateStatus = false;

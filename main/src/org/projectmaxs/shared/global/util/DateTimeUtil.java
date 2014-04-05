@@ -33,7 +33,7 @@ public class DateTimeUtil {
 	 * Convert to "HH:mm:ss"
 	 * 
 	 * @param milliseconds
-	 * @return
+	 * @return A time string in the format "HH:mm:ss"
 	 */
 	public static final String shortFromUtc(long milliseconds) {
 		Date date = dateFromUtc(milliseconds);
@@ -46,13 +46,11 @@ public class DateTimeUtil {
 	 * Convert to "yyyy-HH-dd HH:mm:ss" format from millisconds (epoch time)
 	 * 
 	 * @param milliseconds
-	 * @return
+	 * @return A date/time string in the format "yyyy-HH-dd HH:mm:ss"
 	 */
 	public static final String fullFromUtc(long milliseconds) {
 		Date date = dateFromUtc(milliseconds);
-		synchronized (DATE_FORMAT_FULL) {
-			return DATE_FORMAT_FULL.format(date);
-		}
+		return toFullDate(date);
 	}
 
 	public static final Date dateFromUtc(long milliseconds) {
@@ -62,17 +60,20 @@ public class DateTimeUtil {
 	}
 
 	/**
-	 * Convert a long to "yyyy-mm-dd HH:mm:ss"
+	 * Convert a timestamp from the system timezone to "yyyy-mm-dd HH:mm:ss"
 	 * 
 	 * @param timestamp
-	 * @return
+	 * @return A date/time string in the format "yyyy-HH-dd HH:mm:ss"
 	 */
 	public static final String toFullDate(long timestamp) {
 		Date date = new Date(timestamp);
+		return toFullDate(date);
+	}
+
+	public static final String toFullDate(Date date) {
 		// SimpleDateFormat is not synchronized
 		synchronized (DATE_FORMAT_FULL) {
 			return DATE_FORMAT_FULL.format(date);
 		}
 	}
-
 }

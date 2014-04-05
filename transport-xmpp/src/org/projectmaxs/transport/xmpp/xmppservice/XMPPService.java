@@ -107,7 +107,7 @@ public class XMPPService {
 	 * 
 	 * @param context
 	 *            as an instance of Application, Service or Activity.
-	 * @return
+	 * @return The XMPPService instance.
 	 */
 	public static synchronized XMPPService getInstance(Context context) {
 		if (sXMPPService == null) sXMPPService = new XMPPService(context);

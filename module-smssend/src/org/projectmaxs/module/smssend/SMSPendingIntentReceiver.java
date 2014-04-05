@@ -23,7 +23,6 @@ import org.projectmaxs.module.smssend.database.SMSTable.SMSInfo;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.MainUtil;
 
@@ -58,7 +57,7 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 			smsTable.updateIntents(cmdId, sentIntents, SMSTable.IntentType.SENT);
 			if (allMarkedNoError(sentIntents)) {
 				message = new Message("SMS sent to "
-						+ SharedStringUtil.prettyPrint(smsInfo.mReceiver, contact) + ": "
+						+ ContactUtil.prettyPrint(smsInfo.mReceiver, contact) + ": "
 						+ smsInfo.mShortText);
 			}
 			// TODO Add mechanism to display sent failure reasons
@@ -68,7 +67,7 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 			smsTable.updateIntents(cmdId, deliveredIntents, SMSTable.IntentType.DELIVERED);
 			if (allMarkedNoError(deliveredIntents)) {
 				message = new Message("SMS delivered to "
-						+ SharedStringUtil.prettyPrint(smsInfo.mReceiver, contact) + ": "
+						+ ContactUtil.prettyPrint(smsInfo.mReceiver, contact) + ": "
 						+ smsInfo.mShortText);
 			}
 		} else {

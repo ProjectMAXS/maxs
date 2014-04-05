@@ -33,7 +33,9 @@ public class SmsUtil {
 
 	private static final Log LOG = Log.getLog();
 	private static final Uri SMS_CONTENT_URI = Uri.parse("content://sms");
+	@SuppressWarnings("unused")
 	private static final Uri SMS_INBOX_CONTENT_URI = Uri.withAppendedPath(SMS_CONTENT_URI, "inbox");
+	@SuppressWarnings("unused")
 	private static final Uri SMS_SENTBOX_CONTENT_URI = Uri
 			.withAppendedPath(SMS_CONTENT_URI, "sent");
 
@@ -59,7 +61,7 @@ public class SmsUtil {
 			long date = c.getLong(c.getColumnIndexOrThrow("date"));
 
 			Contact contact = contactUtil.contactByNumber(address);
-			String contactInfo = ContactUtil.prettyPrint(contact, address);
+			String contactInfo = ContactUtil.prettyPrint(address, contact);
 			res.add(new Sms(contactInfo, body, getType(type), date));
 		} while (c.moveToNext());
 
