@@ -35,7 +35,7 @@ public class SmsSend extends AbstractSmsSendCommand {
 
 	public SmsSend() {
 		super(ModuleConstants.SMS, "send", false, true);
-		setHelp("<recipient info>  <sms content>",
+		setHelp("<recipient info>␣␣<sms content>",
 				"Send a sms. The contact needs to be seperated from the sms body with two spaces.");
 	}
 
