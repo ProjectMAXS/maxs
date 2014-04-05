@@ -1,0 +1,29 @@
+#+TITLE:        MAXS Module SmsNotify: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Notify about new incoming SMS messages.
+
+| Makes optional use of modules | ContactsRead |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.RECEIVE_SMS= | Receive new incoming SMS messages |
+
+* Commands
+
+This module does not expose any commands.
+
+* Notifications
+
+#+BEGIN_SRC
+AndroidDevice: New SMS Received
+From Jane Doe (+1 555 1231) 2014-04-04 13:12:12: Where do we meet later?
+#+END_SRC

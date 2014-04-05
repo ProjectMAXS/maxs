@@ -1,0 +1,38 @@
+#+TITLE:        MAXS Module BluetoothAdmin: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Enable or disable the bluetooth adapter.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.BLUETOOTHADMIN= | Enable or disable the bluetooth adapter |
+
+* Commands
+
+** =bluetooth= (short command: =bt=)
+
+*** =bluetooth enable=
+
+#+BEGIN_SRC
+User: bluetooth enable
+AndroidDevice: Enabling bluetooth adapter
+#+END_SRC
+
+*** =bluetooth disable=
+
+#+BEGIN_SRC
+User: bluetooth disable
+AndroidDevice: Disabling bluetooth adapter
+AndroidDevice: Bluetooth adapter changed state from 'on' to 'turning off'
+AndroidDevice: Bluetooth adapter changed state from 'turning off' to 'off'
+#+END_SRC

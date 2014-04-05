@@ -1,0 +1,34 @@
+#+TITLE:        MAXS Module Clipboard: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Set and retrieve the content of the Android clipboard
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+This module requires no permissions.
+
+* Commands
+
+** =clipboard= (short command: =clip=)
+
+*** =clipboard set <content>=
+
+#+BEGIN_SRC
+User: clipboard set Hello World
+AndroidDevice: Clipboard set to: Hello World
+#+END_SRC
+
+*** =clipboard get=
+
+#+BEGIN_SRC
+User: clipboard get
+AndroidDevice: Clipboard: Hello World
+#+END_SRC

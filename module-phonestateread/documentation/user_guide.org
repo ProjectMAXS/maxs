@@ -1,0 +1,28 @@
+#+TITLE:        MAXS Module PhonestateRead: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Notify about incoming calls.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.READ_PHONE_STATE= | Access the phone state (incoming calls, etc.) |
+
+* Commands
+
+This module does not expose any commands.
+
+* Notifications
+
+#+BEGIN_SRC
+AndroidDevice: Jane Doe (+1 555 1111) is calling
+#+END_SRC

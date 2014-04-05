@@ -1,0 +1,38 @@
+#+TITLE:        MAXS Module Ringermode: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Display and change the ringer mode (silent/vibration/normal).
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+This module requires no permissions.
+
+* Commands
+
+** =ringermode= (short command: =r=)
+
+*** =ringermode show=
+
+#+BEGIN_SRC
+User: ringermode show
+AndroidDevice: Ringer is in silent mode
+#+END_SRC
+
+*** =ringermode normal=
+
+#+BEGIN_SRC
+User: ringermode set normal
+AndroidDevice: Ringer set to normal
+#+END_SRC
+
+*** =ringermode vibrate=
+
+*** =ringermode silent=

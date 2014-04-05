@@ -1,0 +1,33 @@
+#+TITLE:        MAXS Module SmsRead: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Query the default bluetooth adapter for its status.
+
+| Makes optional use of modules | ContactsRead |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.SMS_READ= | Read-only access to SMS messages |
+
+* Commands
+
+** =sms= (short command: =s=)
+
+*** =sms show [<num>]=
+
+Show the last SMS messages. Defaults to 5. You can optionally specify
+the number of SMS messages to display.
+
+#+BEGIN_SRC
+User: sms show
+AndroidDevice: Last 5 SMS messages
+To Jane Doe (+1 555 1231) 2014-04-04 12:00:00: Hi, how are you?
+#+END_SRC

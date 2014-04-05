@@ -1,0 +1,48 @@
+#+TITLE:        MAXS Module ContactsRead: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Lookup contact information.
+
+This module is also used by other MAXS modules to map data to a
+contact name, e.g. SmsNotify will only display the contact name of an
+incoming SMS if ContactsRead is installed.
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | no   |
+
+** Permissions
+
+| Permission                     | Use                                               |
+|--------------------------------+---------------------------------------------------|
+| =android.permission.READ_CONTATS= | Read-only access to the contacts |
+
+* Commands
+
+** =contact= (short command: =c=)
+
+*** =contact lookup=
+
+Lookup contact information by a given String.
+
+#+BEGIN_SRC
+User: contact lookup Jane
+AndroidDevice: Jane Doe
+Home: +1 555 1231
+Mobile: +1 555 2222
+#+END_SRC
+
+*** =contact num <number>=
+
+Lookup a contact by a given number.
+
+#+BEGIN_SRC
+User: contact num +1 555 1231
+AndroidDevice: Jane Doe
+Home: +1 555 1231
+Mobile: +1 555 2222
+#+END_SRC
