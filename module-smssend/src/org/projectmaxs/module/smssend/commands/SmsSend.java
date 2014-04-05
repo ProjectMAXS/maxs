@@ -61,7 +61,7 @@ public class SmsSend extends AbstractSmsSendCommand {
 					contact = ContactUtil.getOnlyContactWithNumber(contacts);
 				if (contact == null) return new Message("Many matching contacts found");
 			} else if (contacts.size() == 0) {
-				Text failureText = new Text("No matching contact found.");
+				Text failureText = new Text("No matching contact for '" + argsSplit[0] + "' found.");
 				int spaceCount = SharedStringUtil.countMatches(argsSplit[0], ' ');
 				if (spaceCount > 2)
 					failureText
