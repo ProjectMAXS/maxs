@@ -32,7 +32,7 @@ import org.projectmaxs.shared.module.SubCommand;
 public class SmsShow extends SubCommand {
 
 	public SmsShow() {
-		super(ModuleConstants.SMS, "show");
+		super(ModuleConstants.SMS, "show", true);
 		setHelp("<count>", "Show the last 5 or $count SMS messages");
 	}
 
