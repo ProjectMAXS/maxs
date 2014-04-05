@@ -29,6 +29,13 @@
         <activity
             android:name=".activities.Settings"
             android:exported="true" />
+        <activity android:name=".activities.SendIntent" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".ModuleReceiver"
