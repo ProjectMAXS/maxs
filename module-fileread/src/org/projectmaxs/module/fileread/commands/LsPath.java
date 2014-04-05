@@ -32,6 +32,7 @@ public class LsPath extends AbstractLsCommand {
 	@Override
 	public Message execute(String arguments, Command command, MAXSModuleIntentService service)
 			throws Throwable {
+		super.execute(arguments, command, service);
 
 		return list(arguments);
 	}
