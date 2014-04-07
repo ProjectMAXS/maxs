@@ -257,11 +257,6 @@ public class MAXSService extends Service {
 		mHandler.postDelayed(mRecentContactRunnable, 5000);
 	}
 
-	protected Contact getContactFromAlias(String alias) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	protected void send(Message message) {
 		final int id = message.getId();
 
