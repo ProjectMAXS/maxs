@@ -258,6 +258,10 @@ public class MAXSService extends Service {
 	}
 
 	protected void send(Message message) {
+		if (!sIsRunning) {
+			LOG.d("send: MAXS main service not running, discarding messsage=" + message);
+			return;
+		}
 		final int id = message.getId();
 
 		CommandOrigin origin = null;
