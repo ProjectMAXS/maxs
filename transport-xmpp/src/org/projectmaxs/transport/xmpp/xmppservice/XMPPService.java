@@ -371,9 +371,10 @@ public class XMPPService {
 					l.connected(mConnection);
 				} catch (NotConnectedException e) {
 					LOG.w("newState", e);
-					// Change the state to disconnected
-					changeState(State.Disconnected);
-					// Schedule reconnect since we obviously didn't reach the connected state
+					// Do not call 'changeState(State.Disconnected)' here, instead simply schedule
+					// reconnect since we obviously didn't reach the connected state. Changing the
+					// state to Disconnected will create a transition from 'Connecting' to
+					// 'Disconnected', which why avoid implementing here
 					scheduleReconnect();
 					return;
 				}
