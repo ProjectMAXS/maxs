@@ -17,9 +17,9 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +28,8 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPTCPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
@@ -248,19 +248,8 @@ public class XMPPService {
 		if (to == null) {
 			// Broadcast to all masterJID resources
 			for (String masterJid : mSettings.getMasterJids()) {
-				Iterator<Presence> presences;
-				try {
-					presences = mConnection.getRoster().getPresences(masterJid);
-				} catch (Exception e) {
-					// TODO It's somehow inconvenient that getRoster throws no exceptions. Need to
-					// find a better solution
-					LOG.e("sendAsMessage", e);
-					mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE,
-							originIssuerInfo, originId);
-					return;
-				}
-				while (presences.hasNext()) {
-					Presence p = presences.next();
+				Collection<Presence> presences = mConnection.getRoster().getPresences(masterJid);
+				for (Presence p : presences) {
 					String fullJID = p.getFrom();
 					String resource = StringUtils.parseResource(fullJID);
 					// Don't send messages to GTalk Android devices
@@ -508,7 +497,7 @@ public class XMPPService {
 		if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings
 		// We need to use an Application context instance here, because some Contexts may not work.
 				.getConnectionConfiguration(mContext)) {
-			connection = new TCPConnection(mSettings.getConnectionConfiguration(mContext));
+			connection = new XMPPTCPConnection(mSettings.getConnectionConfiguration(mContext));
 			newConnection = true;
 		} else {
 			connection = mConnection;
