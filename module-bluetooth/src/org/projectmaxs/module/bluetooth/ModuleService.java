@@ -38,7 +38,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.bluetooth",      // Package of the Module
-			"bluetooth"                             // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module Bluetooth"                  // Name of the Module
 			);
 	// @formatter:on
 

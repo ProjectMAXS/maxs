@@ -27,8 +27,12 @@ import android.content.SharedPreferences;
 public class ModuleReceiver extends MAXSModuleReceiver {
 	private final static Log LOG = Log.getLog();
 
+	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
-			"org.projectmaxs.module.smsnotify");
+			"org.projectmaxs.module.smsnotify",
+			"MAXS Module SmsNotify"
+	);
+	// @formatter:on
 
 	public ModuleReceiver() {
 		super(LOG, sMODULE_INFORMATION);

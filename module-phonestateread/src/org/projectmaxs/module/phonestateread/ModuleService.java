@@ -37,7 +37,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			Constants.MODULE_PACKAGE,      // Package of the Module
-			"phonestateread"               // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module PhonestateRead"   // Name of the Module
 			);
 	// @formatter:on
 

@@ -44,7 +44,8 @@ public class ModuleService extends MAXSModuleIntentService {
 
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
-			LOCATIONFINE_MODULE_PACKAGE      // Package of the Module
+			LOCATIONFINE_MODULE_PACKAGE,      // Package of the Module
+			"MAXS Module LocationFine"
 			);
 	// @formatter:on
 

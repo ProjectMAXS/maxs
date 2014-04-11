@@ -38,7 +38,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.misc",      // Package of the Module
-			"misc"                             // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module Misc"                             // Name of the Module (if omitted, last substring after '.' is used)
 			);
 	// @formatter:on
 

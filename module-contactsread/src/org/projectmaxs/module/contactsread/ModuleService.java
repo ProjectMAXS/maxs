@@ -42,7 +42,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.contactsread",      // Package of the Module
-			"contactsread"                              // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module ContactsRead"                  // Name of the Module
 			);
 	// @formatter:on
 

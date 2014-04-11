@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MAXS Module smssend</string>
+    <string name="app_name">MAXS Module SmsSend</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
     <string name="pref_notify_send_key">NOTIFY_SEND</string>
     <string name="pref_notify_delivered_key">NOTIFY_DELIVERED</string>

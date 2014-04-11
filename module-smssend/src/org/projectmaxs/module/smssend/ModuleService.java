@@ -40,7 +40,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.smssend",      // Package of the Module
-			"smssend"                             // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module SmsSend"                             // Name of the Module (if omitted, last substring after '.' is used)
 			);
 	// @formatter:on
 

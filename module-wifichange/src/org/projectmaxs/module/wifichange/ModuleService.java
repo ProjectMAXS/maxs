@@ -39,7 +39,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.wifichange",      // Package of the Module
-			"wifichange"                             // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module WifiChange"                  // Name of the Module
 			);
 	// @formatter:on
 

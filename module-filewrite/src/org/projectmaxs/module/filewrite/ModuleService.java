@@ -39,7 +39,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:off
 	public static final ModuleInformation sMODULE_INFORMATION = new ModuleInformation(
 			"org.projectmaxs.module.filewrite",      // Package of the Module
-			"filewrite"                              // Name of the Module (if omitted, last substring after '.' is used)
+			"MAXS Module FileWrite"                  // Name of the Module
 			);
 	// @formatter:on
 
