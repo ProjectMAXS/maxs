@@ -22,6 +22,12 @@
                 android:text="@string/master_addresses"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
+           <TextView
+                android:id="@+id/textMasterAddressesHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/master_addresses_help" />
+
             <EditText
                 android:id="@+id/firstMasterAddress"
                 android:layout_width="match_parent"
