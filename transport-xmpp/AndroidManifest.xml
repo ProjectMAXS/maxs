@@ -38,6 +38,12 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.AdvancedSettings" />
         <activity android:name="de.duenndns.ssl.MemorizingActivity" />
+        <activity android:name=".activities.ExcludedResources">
+            <intent-filter>
+                <action android:name=".activities.ExcludedResources" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".TransportReceiver"

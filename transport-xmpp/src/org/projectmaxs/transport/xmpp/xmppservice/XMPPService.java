@@ -252,11 +252,7 @@ public class XMPPService {
 				for (Presence p : presences) {
 					String fullJID = p.getFrom();
 					String resource = StringUtils.parseResource(fullJID);
-					// Don't send messages to GTalk Android devices
-					// It would be nice if there was a better way to detect
-					// an Android gTalk XMPP client, but currently there is none
-					if (resource != null && !resource.equals("")
-							&& (!resource.startsWith("android"))) {
+					if (!mSettings.isExcludedResource(resource)) {
 						toList.add(fullJID);
 					}
 				}

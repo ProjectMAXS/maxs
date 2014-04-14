@@ -48,6 +48,8 @@ public abstract class EditTextWatcher implements OnFocusChangeListener,
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		switch (actionId) {
+		// Enter key pressed
+		case EditorInfo.IME_NULL:
 		case EditorInfo.IME_ACTION_DONE:
 		case EditorInfo.IME_ACTION_GO:
 		case EditorInfo.IME_ACTION_NEXT:

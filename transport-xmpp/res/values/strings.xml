@@ -5,6 +5,8 @@
     <string name="master_addresses_help">Those JIDs will receive notifcations from MAXS and are allowed to send commands. To delete an entry simply delete the text, it will get automatically removed</string>
     <string name="device_account">Device Account</string>
     <string name="hint_jid">user@server.tld</string>
+    <string name="excluded_resources">Excluded Resources</string>
+    <string name="hint_resource">resource</string>
     <string name="password">Password</string>
     <string name="advancedSettings">Advanced Settings</string>
     <string name="registerAccount">Register Account</string>
@@ -33,6 +35,8 @@
     <string name="pref_app_debug_network_help">Log extended network information</string>
     <string name="pref_app_debug_dnsjava">dnsjava Debug</string>
     <string name="pref_app_debug_dnsjava_help">Log extended dnsjava information</string>
+    <string name="pref_app_excluded_resources">Excluded Resources</string>
+    <string name="pref_app_excluded_resources_help">Specify XMPP resources from being excluded from notifications</string>
 
     <string-array name="array_xmpp_connection_security_entries">
         <item>Disabled</item>

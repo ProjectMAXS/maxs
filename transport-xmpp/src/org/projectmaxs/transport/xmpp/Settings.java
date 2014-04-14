@@ -47,6 +47,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private static final String LAST_RECIPIENT = "LAST_RECIPIENT";
 	private static final String CMD_ID = "CMD_ID";
 	private static final String STATUS = "STATUS";
+	private static final String EXCLUDED_RESOURCES = "EXCLUDED_RESOURCES";
 
 	/**
 	 * A set of keys that should not get exported
@@ -174,6 +175,49 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		for (String s : masterJids)
 			if (s.equals(bareJID)) return true;
 
+		return false;
+	}
+
+	public Set<String> getExcludedResources() {
+		String s = mSharedPreferences.getString(EXCLUDED_RESOURCES, "");
+		Set<String> res = SharedStringUtil.stringToSet(s);
+		return res;
+	}
+
+	/**
+	 * Don't sent broadcasts to certain resources. This is mostly usefull to avoid notifcation
+	 * loops, i.e. when MAXS broadcasts a message and a XMPP client on the same device running MAXS
+	 * receives and displays it.
+	 * <p>
+	 * Therefore this method current returns true if:
+	 * <li>The resource starts with 'android', to exclude hangout/gtalk
+	 * <li>The resource matches one of the user configured excluded resources
+	 *
+	 * @param resource
+	 * @return true if resource should be excluded from broadcasts
+	 */
+	public boolean isExcludedResource(String resource) {
+		final String[] ifStartsWith = new String[] { "android" };
+		for (String s : ifStartsWith) {
+			if (resource.startsWith(s)) return true;
+		}
+		Set<String> excludedResources = getExcludedResources();
+		if (excludedResources.contains(resource)) return true;
+		return false;
+	}
+
+	public void addExcludedResource(String resource) {
+		Set<String> excludedResources = getExcludedResources();
+		excludedResources.add(resource);
+		saveExcludedResources(excludedResources);
+	}
+
+	public boolean removeExcludedResource(String resource) {
+		Set<String> excludedResources = getExcludedResources();
+		if (excludedResources.remove(resource)) {
+			saveExcludedResources(excludedResources);
+			return true;
+		}
 		return false;
 	}
 
@@ -320,6 +364,14 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 		String masterJids = SharedStringUtil.setToString(newMasterJids);
 		e.putString(MASTER_JIDS, masterJids);
+		e.commit();
+	}
+
+	private void saveExcludedResources(Set<String> newExcludedResources) {
+		SharedPreferences.Editor e = mSharedPreferences.edit();
+
+		String excludedResources = SharedStringUtil.setToString(newExcludedResources);
+		e.putString(EXCLUDED_RESOURCES, excludedResources);
 		e.commit();
 	}
 

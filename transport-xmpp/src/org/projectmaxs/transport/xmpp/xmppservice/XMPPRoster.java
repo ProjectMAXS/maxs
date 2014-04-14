@@ -107,6 +107,10 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 		for (String jid : mSettings.getMasterJids()) {
 			Presence presence = mRoster.getPresence(jid);
 			if (presence.isAvailable()) {
+				if (mSettings.isExcludedResource(StringUtils.parseResource(presence.getFrom()))) {
+					// Skip excluded resources
+					continue;
+				}
 				masterJidAvailable = true;
 				// we found at least one available master JID, break here
 				break;

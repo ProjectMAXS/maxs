@@ -54,6 +54,11 @@
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_settings" >
+        <PreferenceScreen
+            android:summary="@string/pref_app_excluded_resources_help"
+            android:title="@string/pref_app_excluded_resources" >
+            <intent android:action=".activities.ExcludedResources" />
+        </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_app_debug_log_key"
