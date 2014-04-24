@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -78,6 +79,10 @@ public class XMPPService {
 		// LastActivityManager is not run. This could be a problem caused by aSmack together with
 		// dalvik, as the initializer is run on Smack's test cases.
 		LastActivityManager.setEnabledPerDefault(true);
+		// Some network types, especially GPRS or EDGE is rural areas have a very slow response
+		// time. Smack's default packet reply timeout of 5 seconds is way to low for such networks,
+		// so we increase it to 2 minutes.
+		SmackConfiguration.setDefaultPacketReplyTimeout(2 * 60 * 1000);
 	}
 
 	private final Runnable mReconnectRunnable = new Runnable() {
