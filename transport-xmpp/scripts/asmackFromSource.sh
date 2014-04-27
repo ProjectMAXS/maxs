@@ -40,7 +40,7 @@ fi
 
 pushd . > /dev/null
 cd $ASMACK_DIR
-./build.bash
+./build.bash $@
 popd > /dev/null
 
 rm -f $TRANSPORT_DIR/build/hashes/asmack-android*
