@@ -554,7 +554,11 @@ public class XMPPService {
 			if (mConnection.isConnected()) {
 				newState(State.Disconnecting);
 				LOG.d("disconnectConnection: disconnect start");
-				mConnection.disconnect();
+				try {
+					mConnection.disconnect();
+				} catch (NotConnectedException e) {
+					LOG.i("disconnectConnection", e);
+				}
 				LOG.d("disconnectConnection: disconnect stop");
 			}
 			newState(State.Disconnected);
