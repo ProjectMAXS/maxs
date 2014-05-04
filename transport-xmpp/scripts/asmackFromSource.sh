@@ -47,11 +47,16 @@ rm -f $TRANSPORT_DIR/build/hashes/asmack-android*
 rm -f $TRANSPORT_DIR/libs/asmack-android*
 rm -f $TRANSPORT_DIR/libs-sources/asmack-android*
 
-cp $ASMACK_DIR/build/asmack-android-8.jar $TRANSPORT_DIR/libs/asmack-android-8-9999.jar
-cp $ASMACK_DIR/build/asmack-android-8-source.zip $TRANSPORT_DIR/libs-sources/asmack-android-8-source-9999.zip
-echo "src=../libs-sources/asmack-android-8-source-9999.zip" > $TRANSPORT_DIR/libs/asmack-android-8-9999.jar.properties
+TODAYS_SNAPSHOT_DIR=$(ls -d $ASMACK_DIR/releases/* |grep $(date "+%Y-%m-%d"))
+TODAYS_ASMACK_JAR_FULL=$(ls ${TODAYS_SNAPSHOT_DIR}/*.jar)
+TODAYS_ASMACK_SOURCE_FULL=$(ls ${TODAYS_SNAPSHOT_DIR}/*.zip)
+TODAYS_ASMACK_JAR=$(basename ${TODAYS_ASMACK_JAR_FULL})
+TODAYS_ASMACK_SOURCE=$(basename ${TODAYS_ASMACK_SOURCE_FULL})
+cp ${TODAYS_ASMACK_JAR_FULL} $TRANSPORT_DIR/libs/${TODAYS_ASMACK_JAR}
+cp ${TODAYS_ASMACK_SOURCE_FULL} $TRANSPORT_DIR/libs-sources/${TODAYS_ASMACK_SOURCE}
+echo "src=../libs-sources/${TODAYS_ASMACK_SOURCE}" > $TRANSPORT_DIR/libs/${TODAYS_ASMACK_JAR}.properties
 
 pushd . > /dev/null
 cd libs
-sha256sum asmack-android-8-9999.jar > $TRANSPORT_DIR/build/hashes/asmack-android-8-9999.jar.sha256
+sha256sum ${TODAYS_ASMACK_JAR} > $TRANSPORT_DIR/build/hashes/${TODAYS_ASMACK_JAR}.sha256
 popd > /dev/null
