@@ -30,7 +30,7 @@ import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;

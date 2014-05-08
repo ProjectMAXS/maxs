@@ -7,7 +7,7 @@ import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.projectmaxs.shared.global.util.Log;
