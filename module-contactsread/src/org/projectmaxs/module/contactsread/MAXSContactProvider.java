@@ -17,6 +17,8 @@
 
 package org.projectmaxs.module.contactsread;
 
+import org.projectmaxs.shared.global.CrossProcessCursorWrapper;
+
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -51,8 +53,9 @@ public class MAXSContactProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
 			String sortOrder) {
 		ContentResolver contentResolver = getContext().getContentResolver();
-		return contentResolver.query(getContactsProviderUri(uri), projection, selection,
+		Cursor cursor = contentResolver.query(getContactsProviderUri(uri), projection, selection,
 				selectionArgs, sortOrder);
+		return new CrossProcessCursorWrapper(cursor);
 	}
 
 	@Override
