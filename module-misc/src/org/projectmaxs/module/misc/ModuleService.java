@@ -20,6 +20,7 @@ package org.projectmaxs.module.misc;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.projectmaxs.module.misc.commands.SysinfoMaxs;
 import org.projectmaxs.module.misc.commands.SysinfoShow;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
@@ -50,6 +51,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		Set<SupraCommand> commands = new HashSet<SupraCommand>();
 
 		SupraCommand.register(SysinfoShow.class, commands);
+		SupraCommand.register(SysinfoMaxs.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
