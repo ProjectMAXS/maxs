@@ -66,11 +66,15 @@ public class RecentContactUtil {
 
 		String contactInfo = c.getString(c
 				.getColumnIndexOrThrow(MAXSContentProviderContract.CONTACT_INFO));
-		String lookupKey = c.getString(c.getColumnIndex(MAXSContentProviderContract.LOOKUP_KEY));
+		String lookupKey = c.getString(c
+				.getColumnIndexOrThrow(MAXSContentProviderContract.LOOKUP_KEY));
 		String displayName = c.getString(c
 				.getColumnIndexOrThrow(MAXSContentProviderContract.DISPLAY_NAME));
 
-		Contact contact = new Contact(displayName, lookupKey);
+		Contact contact = null;
+		if (lookupKey != null) {
+			contact = new Contact(displayName, lookupKey);
+		}
 		return new RecentContact(contactInfo, contact);
 	}
 }

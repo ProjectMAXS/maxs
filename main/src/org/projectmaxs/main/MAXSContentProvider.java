@@ -51,12 +51,14 @@ public class MAXSContentProvider extends ContentProvider {
 			c = new MatrixCursor(MAXSContentProviderContract.RECENT_CONTACT_COLUMNS, 1);
 			RecentContact recentContact = MAXSService.getRecentContact();
 			if (recentContact == null) return c;
-			// If the recent contact is set, the it must always have also a
-			// number attached with it. So no need to check getBestNumber() for
-			// null
+
 			String contactInfo = recentContact.mContactInfo;
-			String lookupKey = recentContact.mContact.getLookupKey();
-			String displayName = recentContact.mContact.getDisplayName();
+			String lookupKey = null;
+			String displayName = null;
+			if (recentContact.mContact != null) {
+				lookupKey = recentContact.mContact.getLookupKey();
+				displayName = recentContact.mContact.getDisplayName();
+			}
 			c.addRow(new Object[] { contactInfo, lookupKey, displayName });
 			break;
 		case OUTGOING_FILETRANSFER:
