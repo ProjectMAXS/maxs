@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
@@ -250,19 +251,26 @@ public class XMPPService {
 		packet.setThread(originId);
 
 		List<String> toList = new LinkedList<String>();
+		// No 'to' specified. The message is typical a notification, so we are going to broadcast
+		// it to all master JIDs.
 		if (to == null) {
+			Set<String> jidsWithExcludedResources = new HashSet<String>();
+			Roster roster = mConnection.getRoster();
 			// Broadcast to all masterJID resources
 			for (String masterJid : mSettings.getMasterJids()) {
-				Collection<Presence> presences = mConnection.getRoster().getPresences(masterJid);
+				Collection<Presence> presences = roster.getPresences(masterJid);
 				for (Presence p : presences) {
 					String fullJID = p.getFrom();
 					String resource = StringUtils.parseResource(fullJID);
 					if (!mSettings.isExcludedResource(resource)) {
 						toList.add(fullJID);
+					} else {
+						jidsWithExcludedResources.add(StringUtils.parseBareAddress(fullJID));
 					}
 				}
 			}
 
+			// Broadcast to all offline masterJIDs
 			for (String masterJid : mSettings.getMasterJids()) {
 				boolean found = false;
 				for (String toJid : toList) {
@@ -271,10 +279,21 @@ public class XMPPService {
 						break;
 					}
 				}
-				// Add this master JID, if it isn't already contained in toList
-				if (!found) toList.add(masterJid);
+				// Maybe add this master JID, if it isn't already contained in toList
+				if (!found) {
+					if (jidsWithExcludedResources.contains(masterJid)
+							&& roster.getPresences(masterJid).size() == 1) {
+						// Do not send a message to this JID if it would get received by an excluded
+						// resource, ie. when the excluded resource is the only online presence.
+						continue;
+					}
+					toList.add(masterJid);
+				}
 			}
-		} else {
+		}
+		// A JID was specified as receiver. This are typical replies to a command send by the
+		// receiver. This is not a notification, do not broadcast.
+		else {
 			toList.add(to);
 		}
 
