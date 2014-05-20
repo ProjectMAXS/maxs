@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.aidl.IMAXSIncomingFileTransferService;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.ParcelFileDescriptorUtil;
@@ -77,10 +76,4 @@ public class IncomingFileTransferService extends Service {
 
 		}
 	};
-
-	public void send(Message message) {
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-		startService(replyIntent);
-	}
 }
