@@ -30,9 +30,9 @@ import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
@@ -263,16 +263,16 @@ public class XMPPService {
 				}
 			}
 
-			for (String jid : mSettings.getMasterJids()) {
+			for (String masterJid : mSettings.getMasterJids()) {
 				boolean found = false;
 				for (String toJid : toList) {
-					if (StringUtils.parseBareAddress(toJid).equals(jid)) {
+					if (StringUtils.parseBareAddress(toJid).equals(masterJid)) {
 						found = true;
 						break;
 					}
 				}
 				// Add this master JID, if it isn't already contained in toList
-				if (!found) toList.add(jid);
+				if (!found) toList.add(masterJid);
 			}
 		} else {
 			toList.add(to);
