@@ -511,7 +511,8 @@ public class XMPPService {
 		if (mConnectionConfiguration == null || mConnectionConfiguration != mSettings
 		// We need to use an Application context instance here, because some Contexts may not work.
 				.getConnectionConfiguration(mContext)) {
-			connection = new XMPPTCPConnection(mSettings.getConnectionConfiguration(mContext));
+			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
+			connection = new XMPPTCPConnection(mConnectionConfiguration);
 			newConnection = true;
 		} else {
 			connection = mConnection;
