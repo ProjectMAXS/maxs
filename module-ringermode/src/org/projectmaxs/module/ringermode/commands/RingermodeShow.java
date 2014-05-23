@@ -27,7 +27,7 @@ import android.media.AudioManager;
 public class RingermodeShow extends AbstractRingermodeCommand {
 
 	public RingermodeShow() {
-		super("show");
+		super("show", true, false);
 		setHelp(ArgType.NONE, "Show the current mode of the ringer");
 	}
 

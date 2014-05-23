@@ -34,6 +34,11 @@ public abstract class AbstractRingermodeCommand extends SubCommand {
 		super(ModuleService.RINGERMODE, name);
 	}
 
+	public AbstractRingermodeCommand(String name, boolean isDefaultWithoutArguments,
+			boolean isDefaultWithArguments) {
+		super(ModuleService.RINGERMODE, name, isDefaultWithoutArguments, isDefaultWithArguments);
+	}
+
 	@Override
 	public Message execute(String arguments, Command command, MAXSModuleIntentService service)
 			throws Throwable {
