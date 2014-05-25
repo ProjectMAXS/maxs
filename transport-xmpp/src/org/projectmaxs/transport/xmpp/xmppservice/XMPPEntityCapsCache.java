@@ -36,7 +36,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
@@ -65,6 +68,13 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 		} catch (IOException e) {
 			LOG.w("setPersistentCache", e);
 		}
+		context.registerReceiver(new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				LOG.i("ACTION_DEVICE_STORAGE_LOW received, emptying EntityCapsCache");
+				emptyCache();
+			}
+		}, new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW));
 	}
 
 	@Override
