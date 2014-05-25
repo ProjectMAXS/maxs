@@ -44,6 +44,9 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
 	static {
 		EntityCapsManager.setDefaultEntityNode(GlobalConstants.HOMEPAGE_URL);
+		// We assume the number of XMPP entities the MAXS account is able to retrieve the presence
+		// from is not big and therefore we limit the Cache size to 50
+		EntityCapsManager.setCapsMaxCacheSize(50);
 	}
 
 	private static XMPPEntityCapsCache sXMPPEntityCapsCache;
