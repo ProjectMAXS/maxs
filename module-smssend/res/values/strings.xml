@@ -2,9 +2,9 @@
 <resources>
     <string name="app_module_receiver_label">MAXS smsend Module Receiver</string>
     <string name="pref_notify_send">Send Notifications</string>
-    <string name="pref_notify_send_help">Request notifications if the SMS message has been send</string>
+    <string name="pref_notify_send_help">Request notifications if the SMS message has been send.</string>
     <string name="pref_notify_delivered">Delivered Notifications</string>
-    <string name="pref_notify_delivered_help">Request notifications if the SMS message has been delivered</string>
+    <string name="pref_notify_delivered_help">Request notifications if the SMS message has been delivered.</string>
     <string name="pref_use_best_contact">Use best contact as receiver</string>
     <string name="pref_use_best_contact_help">If there are multiple contacts that match the contact name, use the best matching, e.g. the only one with a number. Be careful as this could result in sending messages to the wrong contact.</string>
 </resources>
