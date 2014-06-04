@@ -15,12 +15,16 @@ set -e
 releaseVersion=${1}
 nextVersion=${2}
 
-set_version $MAINDIR $releaseVersion
+# update_version set's the version *and* increases the versionCode of
+# the components. This ensures that users that are currently on a
+# pre-release version will automaticlly receive updates if their
+# pre-release version got released.
+update_version $MAINDIR $releaseVersion
 for t in $TRANSPORTS ; do
-    set_version $t $releaseVersion
+    update_version $t $releaseVersion
 done
 for m in $MODULES ; do
-    set_version $m $releaseVersion
+    update_version $m $releaseVersion
 done
 
 if git diff --exit-code ; then

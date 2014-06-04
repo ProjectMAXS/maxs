@@ -23,11 +23,3 @@ update_version() {
     sed -i "s/android:versionCode=\"[^\"]*\"/android:versionCode=\"${newVersionCode}\"/" ${manifest}
     sed -i "s/android:versionName=\"[^\"]*\"/android:versionName=\"${newVersionName}\"/" ${manifest}
 }
-
-set_version() {
-    local dir=${1}
-    local newVersionName=${2}
-
-    local manifest=${dir}/AndroidManifest.xml
-    sed -i "s/android:versionName=\"[^\"]*\"/android:versionName=\"${newVersionName}\"/" ${manifest}
-}
