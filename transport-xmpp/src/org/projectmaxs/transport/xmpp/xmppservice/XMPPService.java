@@ -312,7 +312,7 @@ public class XMPPService {
 		try {
 			MultipleRecipientManager.send(mConnection, packet, toList, null, null);
 		} catch (Exception e) {
-			LOG.e("sendAsMessage: Got Exception, adding message to DB");
+			LOG.e("sendAsMessage: Got Exception, adding message to DB", e);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
 					originId);
 		}
