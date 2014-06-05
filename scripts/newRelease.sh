@@ -27,11 +27,6 @@ for m in $MODULES ; do
     update_version $m $releaseVersion
 done
 
-if git diff --exit-code ; then
-    echo "No unstaged changes. Not creating a release commit"
-else
-    git commit -a -m "MAXS Release $releaseVersion"
-fi
 git tag -s -u flo@geekplace.eu -m "MAXS Release $releaseVersion" $releaseVersion
 
 update_version $MAINDIR $nextVersion
