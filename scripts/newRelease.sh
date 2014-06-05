@@ -27,7 +27,10 @@ for m in $MODULES ; do
     update_version $m $releaseVersion
 done
 
-git tag -s -u flo@geekplace.eu -m "MAXS Release $releaseVersion" $releaseVersion
+declare -r MESSAGE="MAXS Release $releaseVersion"
+
+git commit -a -m "${MESSAGE}"
+git tag -s -u flo@geekplace.eu -m "${MESSAGE}" $releaseVersion
 
 update_version $MAINDIR $nextVersion
 for t in $TRANSPORTS ; do
