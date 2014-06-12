@@ -22,6 +22,7 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.module.ContactUtil;
 
 import android.app.Service;
@@ -86,7 +87,7 @@ public class PhoneStateService extends Service {
 
 				mManageIncoming = false;
 				String caller = incomingNumber;
-				if (incomingNumber == null) {
+				if (SharedStringUtil.isNullOrEmpty(incomingNumber)) {
 					// Hidden incomingNumber
 					caller = "Hidden Number";
 				} else if (ContactNumber.isNumber(incomingNumber)) {

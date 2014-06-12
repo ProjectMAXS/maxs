@@ -112,4 +112,8 @@ public class SharedStringUtil {
 	public static String substringAfterLastDot(String string) {
 		return getSubstringAfter(string, '.');
 	}
+
+	public static boolean isNullOrEmpty(CharSequence cs) {
+		return cs == null || cs.length() == 0;
+	}
 }
