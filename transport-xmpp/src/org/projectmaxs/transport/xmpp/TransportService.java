@@ -77,6 +77,10 @@ public class TransportService extends MAXSTransportService {
 	public void onDestroy() {
 		super.onDestroy();
 		LOG.d("onDestroy");
+		// Ensure that all receivers are unregistered by calling disconnect()
+		if (mXMPPService != null) {
+			mXMPPService.disconnect();
+		}
 		mSmackAndroid.onDestroy();
 	}
 
