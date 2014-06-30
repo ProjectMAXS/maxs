@@ -17,6 +17,8 @@
 
 package org.projectmaxs.shared.module;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 
@@ -154,7 +157,14 @@ public abstract class MAXSModuleIntentService extends Service {
 			}
 		} catch (Throwable e) {
 			mLog.e("onHandleIntent", e);
-			message = new org.projectmaxs.shared.global.Message("Exception: " + e.getMessage());
+			Text text = new Text();
+			text.addBold("Exception").addNL(" handling command " + command + ": " + e.getMessage());
+			// Let's also include the stacktrace as String, this involves some boilerplate code
+			StringWriter stringWriter = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(stringWriter);
+			e.printStackTrace(printWriter);
+			text.add(printWriter.toString());
+			message = new org.projectmaxs.shared.global.Message(text);
 		}
 		if (message == null) return;
 
