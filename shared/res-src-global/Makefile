@@ -10,4 +10,4 @@ clean:
 
 ../res/%.png: %.svg
 	mkdir -p $(dir $@)
-	convert -background none $< $@
+	convert -background none -resize 128x128 $< $@
