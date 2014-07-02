@@ -67,6 +67,10 @@ public abstract class EditTextWatcher implements OnFocusChangeListener,
 		mBeforeText = mEditText.getText().toString();
 	}
 
+	public void onPause() {
+		lostFocusOrDone(mEditText);
+	}
+
 	public abstract void lostFocusOrDone(View v);
 
 	private void maybeCallLostFocusOrDone(View v) {

@@ -46,8 +46,10 @@ public class InfoAndSettings extends Activity {
 	private LinearLayout mMasterAddresses;
 	private EditText mFirstMasterAddress;
 	private EditText mJID;
+	private EditTextWatcher mJidEditTextWatcher;
 	private String mLastJidText;
 	private EditText mPassword;
+	private EditTextWatcher mPasswordEditTextWachter;
 	private Button mAdvancedSettings;
 
 	public void openAdvancedSettings(View view) {
@@ -198,12 +200,12 @@ public class InfoAndSettings extends Activity {
 		mAdvancedSettings.requestFocus();
 
 		new MasterAddressCallbacks(mFirstMasterAddress);
-		new EditTextWatcher(mJID) {
+		mJidEditTextWatcher = new EditTextWatcher(mJID) {
 			@Override
 			public void lostFocusOrDone(View v) {
 				String text = mJID.getText().toString();
 				if (!XMPPUtil.isValidBareJid(text)) {
-					Toast.makeText(InfoAndSettings.this, "This is not a valid bare JID",
+					Toast.makeText(InfoAndSettings.this, "'" + text + "' is not a valid bare JID",
 							Toast.LENGTH_LONG).show();
 					mJID.setText(mLastJidText);
 					return;
@@ -211,7 +213,7 @@ public class InfoAndSettings extends Activity {
 				mSettings.setJid(text);
 			}
 		};
-		new EditTextWatcher(mPassword) {
+		mPasswordEditTextWachter = new EditTextWatcher(mPassword) {
 			@Override
 			public void lostFocusOrDone(View v) {
 				mSettings.setPassword(mPassword.getText().toString());
@@ -239,7 +241,8 @@ public class InfoAndSettings extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mSettings.setPassword(mPassword.getText().toString());
+		mJidEditTextWatcher.onPause();
+		mPasswordEditTextWachter.onPause();
 	}
 
 	@Override
