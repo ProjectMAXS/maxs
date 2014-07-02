@@ -26,7 +26,7 @@ deploy: $(DEBUG_APK)
 	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 $(DEBUG_APK):
-	make main ANT_BUILD_TARGET=debug
+	$(MAKE) main ANT_BUILD_TARGET=debug
 
 setupResourceLinks:
 	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
