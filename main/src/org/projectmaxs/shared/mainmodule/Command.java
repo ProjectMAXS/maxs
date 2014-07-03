@@ -101,7 +101,12 @@ public class Command implements Parcelable {
 
 	@Override
 	public String toString() {
-		return '\'' + mCommand + ' ' + mSubCommand + ' ' + mArgs + "(cmdId=" + mId + ")'";
+		StringBuilder sb = new StringBuilder();
+		sb.append('\'').append(mCommand).append(' ').append(mSubCommand);
+		if (mArgs != null) {
+			sb.append(' ').append(mArgs);
+		}
+		sb.append(" cmdId=").append(mId).append(")'");
+		return sb.toString();
 	}
-
 }

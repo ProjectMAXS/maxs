@@ -20,6 +20,7 @@ package org.projectmaxs.module.misc;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.projectmaxs.module.misc.commands.ExceptionThrow;
 import org.projectmaxs.module.misc.commands.RecentcontactShow;
 import org.projectmaxs.module.misc.commands.SysinfoMaxs;
 import org.projectmaxs.module.misc.commands.SysinfoShow;
@@ -45,6 +46,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	// @formatter:on
 
 	public static final SupraCommand SYSINFO = new SupraCommand("sysinfo");
+	public static final SupraCommand EXCEPTION = new SupraCommand("exception");
 	public static final SupraCommand RECENT_CONTACT = new SupraCommand("recentcontact", "recent");
 
 	public static final SupraCommand[] sCOMMANDS;
@@ -55,6 +57,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		SupraCommand.register(SysinfoShow.class, commands);
 		SupraCommand.register(SysinfoMaxs.class, commands);
 		SupraCommand.register(RecentcontactShow.class, commands);
+		SupraCommand.register(ExceptionThrow.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}

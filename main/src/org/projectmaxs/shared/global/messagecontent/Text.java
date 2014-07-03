@@ -33,21 +33,7 @@ public class Text extends AbstractElement {
 	}
 
 	public Text(CharSequence charSequence, boolean newLine) {
-		// Transform all new line characters to NewLine. This is necessary since certain formats,
-		// like XHTML-IM require all new lines to be replaced with <br>
-		StringBuilder sb = new StringBuilder(512);
-		for (int i = 0; i < charSequence.length(); i++) {
-			char c = charSequence.charAt(i);
-			if (c == '\n') {
-				mTexts.add(new FormatedText(sb.toString()));
-				mTexts.add(NewLine.getInstance());
-				sb.delete(0, sb.length());
-			} else {
-				sb.append(c);
-			}
-		}
-		// Ensure that we also add the list line, even if it's not '\n' terminated
-		if (sb.length() > 0) mTexts.add(new FormatedText(sb.toString()));
+		addWithNewLines(charSequence);
 		// Only add a NewLine if it's required and if it's not already there
 		if (newLine && mTexts.get(mTexts.size() - 1) != NewLine.getInstance())
 			mTexts.add(NewLine.getInstance());
@@ -74,6 +60,24 @@ public class Text extends AbstractElement {
 
 	public Text add(CharSequence charSequence) {
 		mTexts.add(new FormatedText(charSequence));
+		return this;
+	}
+
+	public Text addWithNewLines(CharSequence charSequence) {
+		// Transform all new line characters to NewLine. This is necessary since certain formats,
+		// like XHTML-IM require all new lines to be replaced with <br>
+		StringBuilder sb = new StringBuilder(512);
+		for (int i = 0; i < charSequence.length(); i++) {
+			char c = charSequence.charAt(i);
+			if (c == '\n') {
+				addNL(sb.toString());
+				sb.delete(0, sb.length());
+			} else {
+				sb.append(c);
+			}
+		}
+		// Ensure that we also add the list line, even if it's not '\n' terminated
+		if (sb.length() > 0) mTexts.add(new FormatedText(sb.toString()));
 		return this;
 	}
 

@@ -19,6 +19,7 @@ package org.projectmaxs.shared.module;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,8 @@ public abstract class MAXSModuleIntentService extends Service {
 	private volatile Set<Object> mPendingActions = Collections
 			.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
 
+	private String mVersion;
+
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
 			super(looper);
@@ -96,6 +99,27 @@ public abstract class MAXSModuleIntentService extends Service {
 
 		mServiceLooper = thread.getLooper();
 		mServiceHandler = new ServiceHandler(mServiceLooper);
+		int versionResource = -1;
+		// TODO convert multi-catch once when can build with source=1.7
+		try {
+			Class<?> r = Class.forName(getPackageName() + ".R$string");
+			Field versionField = r.getField("version");
+			versionResource = (Integer) versionField.get(null);
+		} catch (ClassNotFoundException e) {
+			mLog.e("Exception when retrieving version resource ID with reflection", e);
+		} catch (NoSuchFieldException e) {
+			mLog.e("Exception when retrieving version resource ID with reflection", e);
+		} catch (IllegalAccessException e) {
+			mLog.e("Exception when retrieving version resource ID with reflection", e);
+		} catch (IllegalArgumentException e) {
+			mLog.e("Exception when retrieving version resource ID with reflection", e);
+		}
+
+		if (versionResource != -1) {
+			mVersion = getString(versionResource);
+		} else {
+			mVersion = "Unkown";
+		}
 	}
 
 	@Override
@@ -159,11 +183,12 @@ public abstract class MAXSModuleIntentService extends Service {
 			mLog.e("onHandleIntent", e);
 			Text text = new Text();
 			text.addBold("Exception").addNL(" handling command " + command + ": " + e.getMessage());
+			text.addItalic("Version: ").addNL(mVersion);
 			// Let's also include the stacktrace as String, this involves some boilerplate code
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(stringWriter);
 			e.printStackTrace(printWriter);
-			text.add(printWriter.toString());
+			text.addWithNewLines(stringWriter.toString());
 			message = new org.projectmaxs.shared.global.Message(text);
 		}
 		if (message == null) return;
