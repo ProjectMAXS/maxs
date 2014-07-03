@@ -106,7 +106,7 @@ public class Command implements Parcelable {
 		if (mArgs != null) {
 			sb.append(' ').append(mArgs);
 		}
-		sb.append(" cmdId=").append(mId).append(")'");
+		sb.append(" (cmdId=").append(mId).append(")'");
 		return sb.toString();
 	}
 }
