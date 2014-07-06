@@ -18,7 +18,6 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,8 +61,7 @@ public class XMPPService {
 
 	private static XMPPService sXMPPService;
 
-	private final Set<StateChangeListener> mStateChangeListeners = Collections
-			.synchronizedSet(new HashSet<StateChangeListener>());
+	private final Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
 
 	private final Settings mSettings;
 	private final MessagesTable mMessagesTable;
@@ -164,7 +162,9 @@ public class XMPPService {
 	}
 
 	public void removeListener(StateChangeListener listener) {
-		mStateChangeListeners.remove(listener);
+		synchronized (mStateChangeListeners) {
+			mStateChangeListeners.remove(listener);
+		}
 	}
 
 	public void connect() {
@@ -367,48 +367,50 @@ public class XMPPService {
 	 */
 	private void newState(State newState, String reason) {
 		if (reason == null) reason = "";
-		switch (newState) {
-		case Connected:
-			for (StateChangeListener l : mStateChangeListeners) {
-				try {
-					l.connected(mConnection);
-				} catch (NotConnectedException e) {
-					LOG.w("newState", e);
-					// Do not call 'changeState(State.Disconnected)' here, instead simply schedule
-					// reconnect since we obviously didn't reach the connected state. Changing the
-					// state to Disconnected will create a transition from 'Connecting' to
-					// 'Disconnected', which why avoid implementing here
-					scheduleReconnect();
-					return;
+		synchronized (mStateChangeListeners) {
+			switch (newState) {
+			case Connected:
+				for (StateChangeListener l : mStateChangeListeners) {
+					try {
+						l.connected(mConnection);
+					} catch (NotConnectedException e) {
+						LOG.w("newState", e);
+						// Do not call 'changeState(State.Disconnected)' here, instead simply
+						// schedule reconnect since we obviously didn't reach the connected state.
+						// Changing the state to Disconnected will create a transition from
+						// 'Connecting' to 'Disconnected', which why avoid implementing here
+						scheduleReconnect();
+						return;
+					}
 				}
+				mConnected = true;
+				break;
+			case Disconnected:
+				for (StateChangeListener l : mStateChangeListeners) {
+					l.disconnected(reason);
+					if (mConnection != null && mConnected) l.disconnected(mConnection);
+				}
+				mConnected = false;
+				break;
+			case Connecting:
+				for (StateChangeListener l : mStateChangeListeners)
+					l.connecting();
+				break;
+			case Disconnecting:
+				for (StateChangeListener l : mStateChangeListeners)
+					l.disconnecting();
+				break;
+			case WaitingForNetwork:
+				for (StateChangeListener l : mStateChangeListeners)
+					l.waitingForNetwork();
+				break;
+			case WaitingForRetry:
+				for (StateChangeListener l : mStateChangeListeners)
+					l.waitingForRetry();
+				break;
+			default:
+				break;
 			}
-			mConnected = true;
-			break;
-		case Disconnected:
-			for (StateChangeListener l : mStateChangeListeners) {
-				l.disconnected(reason);
-				if (mConnection != null && mConnected) l.disconnected(mConnection);
-			}
-			mConnected = false;
-			break;
-		case Connecting:
-			for (StateChangeListener l : mStateChangeListeners)
-				l.connecting();
-			break;
-		case Disconnecting:
-			for (StateChangeListener l : mStateChangeListeners)
-				l.disconnecting();
-			break;
-		case WaitingForNetwork:
-			for (StateChangeListener l : mStateChangeListeners)
-				l.waitingForNetwork();
-			break;
-		case WaitingForRetry:
-			for (StateChangeListener l : mStateChangeListeners)
-				l.waitingForRetry();
-			break;
-		default:
-			break;
 		}
 		mState = newState;
 	}
@@ -553,8 +555,10 @@ public class XMPPService {
 		mConnection = connection;
 
 		if (newConnection) {
-			for (StateChangeListener l : mStateChangeListeners) {
-				l.newConnection(mConnection);
+			synchronized (mStateChangeListeners) {
+				for (StateChangeListener l : mStateChangeListeners) {
+					l.newConnection(mConnection);
+				}
 			}
 		}
 
