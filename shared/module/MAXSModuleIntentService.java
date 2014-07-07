@@ -100,18 +100,12 @@ public abstract class MAXSModuleIntentService extends Service {
 		mServiceLooper = thread.getLooper();
 		mServiceHandler = new ServiceHandler(mServiceLooper);
 		int versionResource = -1;
-		// TODO convert multi-catch once when can build with source=1.7
 		try {
 			Class<?> r = Class.forName(getPackageName() + ".R$string");
 			Field versionField = r.getField("version");
 			versionResource = (Integer) versionField.get(null);
-		} catch (ClassNotFoundException e) {
-			mLog.e("Exception when retrieving version resource ID with reflection", e);
-		} catch (NoSuchFieldException e) {
-			mLog.e("Exception when retrieving version resource ID with reflection", e);
-		} catch (IllegalAccessException e) {
-			mLog.e("Exception when retrieving version resource ID with reflection", e);
-		} catch (IllegalArgumentException e) {
+		} catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException
+				| IllegalArgumentException e) {
 			mLog.e("Exception when retrieving version resource ID with reflection", e);
 		}
 
