@@ -10,6 +10,7 @@ import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.TransportRegistry;
 import org.projectmaxs.main.TransportRegistry.ChangeListener;
 import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.main.util.PermCheck.PermCheckAsyncTask;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.DialogUtil;
 import org.projectmaxs.shared.global.util.Log;
@@ -41,12 +42,15 @@ public class MainActivity extends Activity {
 
 	private static final Log LOG = Log.getLog();
 
+	private static final String INTEGRITY_STATUS_KEY = "INTEGRITY_STATUS_KEY";
+
 	private Settings mSettings;
 	private StartStopListener mListener;
 
 	private Button mStartStopButton;
 	private ListView mTransportList;
 	private TransportInformationAdapter mTIAdapter;
+	private TextView mIntegrityStatus;
 
 	private List<TransportInformation> mTransportInformationList;
 	private TransportRegistry.ChangeListener mTransportRegistryListener = new TransportRegistry.ChangeListener() {
@@ -88,6 +92,7 @@ public class MainActivity extends Activity {
 		// Views
 		mStartStopButton = (Button) findViewById(R.id.buttonStartStop);
 		mTransportList = (ListView) findViewById(R.id.transportsList);
+		mIntegrityStatus = (TextView) findViewById(R.id.textIntegrityStatus);
 
 		mStartStopButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -151,6 +156,14 @@ public class MainActivity extends Activity {
 					+ TransportConstants.TRANSPORT_SERVICE);
 			startService(intent);
 		}
+
+		if (savedInstanceState != null && savedInstanceState.containsKey(INTEGRITY_STATUS_KEY)) {
+			mIntegrityStatus.setText(savedInstanceState.getCharSequence(INTEGRITY_STATUS_KEY));
+			LOG.d("onCreate: SavedInstanceState did contain INTEGRITY_STATUS_KEY. Information restored");
+		} else {
+			mSettings.setPermCheckTimestamp(-1);
+			LOG.d("onCreate: SavedInstanceState null or did *not* contain INTEGRITY_STATUS_KEY. Information *not* restored");
+		}
 	}
 
 	@Override
@@ -158,6 +171,24 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 		MAXSService.removeStartStopListener(mListener);
 		TransportRegistry.getInstance(this).removeChangeListener(mTransportRegistryListener);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		final long RECHECK_PERIOD = 1000 * 60 * 60; // 60 minutes
+		long millies = System.currentTimeMillis();
+		long permCheckTimestamp = mSettings.getPermCheckTimestamp();
+		if (permCheckTimestamp == -1 || millies - permCheckTimestamp > RECHECK_PERIOD) {
+			new PermCheckAsyncTask(mIntegrityStatus, this).execute(this);
+			mSettings.setPermCheckTimestamp(millies);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putCharSequence(INTEGRITY_STATUS_KEY, mIntegrityStatus.getText());
 	}
 
 	private void status(final String startStopButtonText) {

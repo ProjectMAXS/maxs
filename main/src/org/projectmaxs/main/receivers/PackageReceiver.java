@@ -18,6 +18,7 @@
 package org.projectmaxs.main.receivers;
 
 import org.projectmaxs.main.ModuleRegistry;
+import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.util.Constants;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
@@ -52,11 +53,19 @@ public class PackageReceiver extends BroadcastReceiver {
 			intent.setClassName(packageName, packageName + '.' + receiver);
 			context.sendBroadcast(intent);
 		}
+		// A new package has been installed, make sure we do a permission check
+		resetPermCheckTimestamp(context);
 	}
 
 	private void onRemoved(Context context, String packageName) {
 		LOG.d("onRemoved: packageName=" + packageName);
 		ModuleRegistry.getInstance(context).unregisterModule(packageName);
+		resetPermCheckTimestamp(context);
+		// A package has been removed, permission check results may be outdated
+		resetPermCheckTimestamp(context);
 	}
 
+	private void resetPermCheckTimestamp(Context context) {
+		Settings.getInstance(context).setPermCheckTimestamp(-1);
+	}
 }

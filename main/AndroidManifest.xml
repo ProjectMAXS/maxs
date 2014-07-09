@@ -12,13 +12,69 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
-    <permission android:name="org.projectmaxs.permission.USE_MAIN" />
-    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
-    <permission android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" />
-    <permission android:name="org.projectmaxs.permission.USE_MODULE" />
-    <permission android:name="org.projectmaxs.permission.USE_TRANSPORT" />
-    <permission android:name="org.projectmaxs.permission.USE_FILEWRITE" />
-    <permission android:name="org.projectmaxs.permission.USE_FILEREAD" />
+    <permission-group
+        android:name="org.projectmaxs.permissions"
+        android:description="@string/perm_group_maxs_desc"
+        android:label="@string/perm_group_maxs_label" />
+
+    <permission
+        android:name="org.projectmaxs.permission.USE_MAIN"
+        android:description="@string/perm_use_main_desc"
+        android:label="@string/perm_use_main_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE"
+        android:description="@string/perm_use_main_as_module_desc"
+        android:label="@string/perm_use_main_as_module_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT"
+        android:protectionLevel="dangerous"
+        android:description="@string/perm_use_main_as_transport_desc"
+        android:label="@string/perm_use_main_as_transport_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_MODULE"
+        android:protectionLevel="dangerous"
+        android:description="@string/perm_use_module_desc"
+        android:label="@string/perm_use_module_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_TRANSPORT"
+        android:description="@string/perm_use_main_as_transport_desc"
+        android:label="@string/perm_use_transport_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_FILEWRITE"
+        android:description="@string/perm_use_filewrite_desc"
+        android:label="@string/perm_use_filewrite_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_FILEREAD"
+        android:description="@string/perm_use_fileread_desc"
+        android:label="@string/perm_use_fileread_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.READ_CONTACTS"
+        android:protectionLevel="dangerous"
+        android:description="@string/perm_use_read_contacts_desc"
+        android:label="@string/perm_use_read_contacts_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.WRITE_SMS"
+        android:description="@string/perm_use_write_sms_desc"
+        android:label="@string/perm_use_write_sms_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_INCOMING_FILETRANSFER_SERVICE"
+        android:description="@string/perm_use_incoming_filetransfer_service_desc"
+        android:label="@string/perm_use_incoming_filetransfer_service_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE"
+        android:description="@string/perm_use_outgoing_filetransfer_service_desc"
+        android:label="@string/perm_use_outgoing_filetransfer_service_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
 
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />

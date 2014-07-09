@@ -33,6 +33,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private static final String RECENT_CONTACT_INFO = "RECENT_CONTACT_INFO";
 	private static final String RECENT_CONTACT_DISPLAY_NAME = "RECENT_CONTACT_DISPLAY_NAME";
 	private static final String RECENT_CONTACT_LOOKUP_KEY = "RECENT_CONTACT_LOOKUP_KEY";
+	private static final String PERM_CHECK_TIMESTAMP_KEY = "PERM_CHECK_TIMESTAMP_KEY";
 
 	// App settings
 	private final String DEBUG_LOG;
@@ -114,6 +115,14 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			Contact contact = new Contact(displayName, lookupKey);
 			return new RecentContact(recentContactInfo, contact);
 		}
+	}
+
+	public long getPermCheckTimestamp() {
+		return mSharedPreferences.getLong(PERM_CHECK_TIMESTAMP_KEY, -1);
+	}
+
+	public boolean setPermCheckTimestamp(long value) {
+		return mSharedPreferences.edit().putLong(PERM_CHECK_TIMESTAMP_KEY, value).commit();
 	}
 
 	public SharedPreferences getSharedPreferences() {
