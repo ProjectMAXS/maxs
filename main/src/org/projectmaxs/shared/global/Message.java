@@ -56,6 +56,10 @@ public class Message implements Parcelable {
 		mId = id;
 	}
 
+	public Message(Collection<? extends AbstractElement> elements) {
+		mElements.addAll(elements);
+	}
+
 	public Message(int id) {
 		mId = id;
 	}

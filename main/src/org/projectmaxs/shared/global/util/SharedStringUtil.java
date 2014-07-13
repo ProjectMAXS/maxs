@@ -116,4 +116,16 @@ public class SharedStringUtil {
 	public static boolean isNullOrEmpty(CharSequence cs) {
 		return cs == null || cs.length() == 0;
 	}
+
+	public static String byteToHex(byte b) {
+		return String.format("x%02X", b);
+	}
+
+	public static String byteToHexString(byte[] byteArray) {
+		StringBuilder sb = new StringBuilder(byteArray.length * 3);
+		for (byte b : byteArray) {
+			sb.append(byteToHex(b));
+		}
+		return sb.toString();
+	}
 }

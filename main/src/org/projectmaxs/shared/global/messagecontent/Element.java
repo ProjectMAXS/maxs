@@ -17,6 +17,7 @@
 
 package org.projectmaxs.shared.global.messagecontent;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,11 +49,11 @@ public class Element extends AbstractElement {
 	 * displayed to human users of MAXS
 	 * 
 	 * @param xmlName
-	 * @param text
+	 * @param humanReadableDescription
 	 */
-	public Element(String xmlName, String text) {
-		this(xmlName);
-		setText(text);
+	public Element(String xmlName, String humanReadableDescription) {
+		mXMLName = xmlName;
+		mHumanReadableName = new Text(humanReadableDescription);
 	}
 
 	public Element(String xmlName, String text, Text humanReadableDescription) {
@@ -126,6 +127,10 @@ public class Element extends AbstractElement {
 	public void addChildElement(AbstractElement element) {
 		if (element == null) return;
 		mChildElements.add(element);
+	}
+
+	public void addChildElements(Collection<AbstractElement> elements) {
+		mChildElements.addAll(elements);
 	}
 
 	public Iterator<AbstractElement> getChildElementIterator() {

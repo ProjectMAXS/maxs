@@ -1,0 +1,10 @@
+.classpath
+.project
+.settings
+local.properties
+Makefile
+bin/
+gen/
+libs/
+build.xml
+res-src/
