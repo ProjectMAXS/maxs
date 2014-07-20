@@ -40,6 +40,8 @@ if [[ ! -d $OUTDIR ]]; then
     exit 1
 fi
 
+OUTDIR=$(readlink -f $OUTDIR)
+
 maybeCheckHash() {
     if [ $SHA256 != 0 -a \
 	$(sha256sum $FILE | cut -f 1 -d ' ') != $SHA256 ]; then
