@@ -29,6 +29,7 @@ import org.projectmaxs.shared.module.MAXSModuleIntentService;
 import org.projectmaxs.shared.module.SubCommand;
 import org.projectmaxs.shared.module.messagecontent.BooleanElement;
 
+import android.annotation.TargetApi;
 import android.nfc.NfcAdapter;
 import android.os.Build;
 
@@ -39,6 +40,7 @@ public class NfcStatus extends SubCommand {
 		setHelp(ArgType.NONE, "Show the current status of the nfc adapter");
 	}
 
+	@TargetApi(16)
 	@Override
 	public Message execute(String arguments, Command command, MAXSModuleIntentService service) {
 		final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(service);

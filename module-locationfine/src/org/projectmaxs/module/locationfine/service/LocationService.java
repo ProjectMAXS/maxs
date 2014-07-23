@@ -32,6 +32,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MainUtil;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -215,6 +216,7 @@ public class LocationService extends Service {
 
 	}
 
+	@TargetApi(17)
 	private boolean isBetterLocation(Location newLocation) {
 		if (mCurrentBestLocation == null) return true;
 

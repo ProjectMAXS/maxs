@@ -17,10 +17,12 @@
 
 package org.projectmaxs.shared.global;
 
+import android.annotation.TargetApi;
 import android.database.CrossProcessCursor;
 import android.database.Cursor;
 import android.database.CursorWindow;
 import android.database.CursorWrapper;
+import android.os.Build;
 
 public class CrossProcessCursorWrapper extends CursorWrapper implements CrossProcessCursor {
 
@@ -76,6 +78,7 @@ public class CrossProcessCursorWrapper extends CursorWrapper implements CrossPro
 	 * @param window
 	 *            The window to fill.
 	 */
+	@TargetApi(11)
 	private static void cursorFillWindow(final Cursor cursor, int position,
 			final CursorWindow window) {
 		if (position < 0 || position >= cursor.getCount()) {
@@ -92,6 +95,12 @@ public class CrossProcessCursorWrapper extends CursorWrapper implements CrossPro
 					break;
 				}
 				for (int i = 0; i < numColumns; i++) {
+					// Cursor.getType() is only available from API 11 on, throw at least a
+					// meaningful error message.
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+						throw new UnsupportedOperationException(
+								"This method is only availble on devices running Honeycomb (API 11) or higher");
+					}
 					final int type = cursor.getType(i);
 					final boolean success;
 					switch (type) {

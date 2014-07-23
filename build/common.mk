@@ -9,5 +9,18 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 .IGNORE : $(GIT_LOG_HEAD)
 
+.PHONY: lint
+
 res/values/version.xml: $(GIT_LOG_HEAD) AndroidManifest.xml
 	$(BASE)/scripts/createVersionXML.sh -c .
+
+LINT_BINARY := $(ANDROID_HOME)/tools/lint
+
+lint: lint.xml
+	 $(LINT_BINARY) --nowarn --exitcode --quiet --html lint-report.html --disable LintError .
+
+lintFull: lint.xml
+	$(LINT_BINARY) --exitcode --html lint-report-full.html --disable LintError .
+
+lint.xml:
+	ln -rs $(BASE)/build/lint.xml

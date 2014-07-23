@@ -15,8 +15,10 @@ all: transport eclipse
 
 include $(BASE)/build/common.mk
 
+# Android lint needs to be run *after* the project has been build
 transport: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
+	$(MAKE) lint
 
 release:
 	ANT_BUILD_TARGET=release $(MAKE) transport

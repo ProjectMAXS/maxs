@@ -23,6 +23,7 @@ import java.util.List;
 import org.projectmaxs.main.R;
 import org.projectmaxs.shared.global.GlobalConstants;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +42,8 @@ import android.view.View;
 import android.widget.TextView;
 
 public class PermCheck {
+
+	@TargetApi(16)
 	public static List<PackageProblem> performCheck(Context context) {
 		List<PackageProblem> res = new LinkedList<PackageProblem>();
 		PackageManager packageManager = context.getPackageManager();

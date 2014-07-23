@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconMissingDensityFolder" severity="ignore" />
+    <issue id="MissingTranslation" severity="ignore" />
+	<issue id="ExportedPreferenceActivity" severity="ignore" />
+	<issue id="TypographyDashes" severity="ignore" />
+	<issue id="HardcodedText" severity="ignore" />
+
+	<issue id="UnusedResources">
+		<ignore path="res/values/sharedglobalstrings.xml" />
+		<ignite path="res/values/sharedmodulestrings.xml" />
+	</issue>
+</lint>

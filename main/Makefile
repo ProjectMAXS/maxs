@@ -8,8 +8,10 @@ all: main eclipse
 
 include $(BASE)/build/common.mk
 
+# Android lint needs to be run *after* the project has been build
 main: prebuild
 	ant $(ANT_ARGS) $(ANT_BUILD_TARGET)
+	$(MAKE) lint
 
 prebuild: build.xml resources $(VERSION_XML)
 
