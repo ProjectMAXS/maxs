@@ -25,5 +25,5 @@ Query the default bluetooth adapter for its status.
 
 #+BEGIN_SRC
 User: bluetooth status
-AndroidDevice: Bluetooth is enabled: true
+AndroidDevice: Bluetooth is enabled
 #+END_SRC

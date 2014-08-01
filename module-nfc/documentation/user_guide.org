@@ -1,4 +1,4 @@
-#+TITLE:        MAXS Module Bluetooth: User Guide
+#+TITLE:        MAXS Module NFC: User Guide
 #+AUTHOR:       Florian Schmaus
 #+EMAIL:        flo@geekplace.eu
 #+OPTIONS:      author:nil
@@ -6,7 +6,7 @@
 
 * Overview
 
-Query the default nfc adapter for its status.
+Query the default bluetooth adapter for its status.
 
 | Makes optional use of modules | none |
 | Uses *inoffical* Android API  | no   |
@@ -15,15 +15,15 @@ Query the default nfc adapter for its status.
 
 | Permission                     | Use                                               |
 |--------------------------------+---------------------------------------------------|
-| =android.permission.BLUETOOTH= | Query the status of the default nfc adapter |
+| =android.permission.NFC= | Query the status of the NFC adapter |
 
 * Commands
 
-** =nfc= (short command: =bt=)
+** =nfc= (short command: =n=)
 
 *** =nfc status=
 
 #+BEGIN_SRC
 User: nfc status
-AndroidDevice: Bluetooth is enabled: true
+AndroidDevice: NFC Adapter is enabled
 #+END_SRC
