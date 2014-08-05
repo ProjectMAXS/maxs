@@ -37,6 +37,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
+import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
@@ -87,6 +88,10 @@ public class XMPPService {
 		// Ensure that the hostname of SSL/TLS enabled services is verified against the XMPP service
 		// name to prevent MitM-Attacks.
 		SmackConfiguration.setDefaultHostnameVerifier(new StrictHostnameVerifier());
+
+		// Set to a negative value to try next ports if the current one is already in use.
+		// TODO Remove when Smack >= 4.0.3 is used, since it's the default there
+		Socks5Proxy.setLocalSocks5ProxyPort(-7777);
 	}
 
 	private final Runnable mReconnectRunnable = new Runnable() {
