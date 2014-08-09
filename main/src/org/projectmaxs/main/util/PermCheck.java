@@ -17,11 +17,13 @@
 
 package org.projectmaxs.main.util;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.projectmaxs.main.R;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.Log;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -29,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,12 +46,21 @@ import android.widget.TextView;
 
 public class PermCheck {
 
+	private static final Log LOG = Log.getLog();
+
 	@TargetApi(16)
 	public static List<PackageProblem> performCheck(Context context) {
 		List<PackageProblem> res = new LinkedList<PackageProblem>();
 		PackageManager packageManager = context.getPackageManager();
-		for (PackageInfo packageInfo : packageManager
-				.getInstalledPackages(PackageManager.GET_PERMISSIONS)) {
+		for (PackageInfo packageInfoIter : packageManager.getInstalledPackages(0)) {
+			PackageInfo packageInfo;
+			try {
+				packageInfo = packageManager.getPackageInfo(packageInfoIter.packageName,
+						PackageManager.GET_PERMISSIONS);
+			} catch (NameNotFoundException e) {
+				LOG.d("Seems like a package has been uninstalled in the meantime", e);
+				continue;
+			}
 			if (packageInfo.permissions != null) {
 				for (PermissionInfo permissionInfo : packageInfo.permissions) {
 					if (permissionInfo.name.startsWith(GlobalConstants.PACKAGE)
@@ -93,7 +105,12 @@ public class PermCheck {
 
 		@Override
 		protected List<PackageProblem> doInBackground(Context... params) {
-			return performCheck(params[0]);
+			try {
+				return performCheck(params[0]);
+			} catch (Exception e) {
+				LOG.w("Exception while performing check", e);
+				return Collections.emptyList();
+			}
 		}
 
 		@Override
