@@ -34,11 +34,6 @@ EOF
     esac
 done
 
-if $PUBLISH && [[ -z $RELEASE_TAG ]]; then
-    echo "error: publishing (-p), but no release tag specified (-t)"
-    exit 1
-fi
-
 TMPDIR=$(mktemp -d)
 trap "rm -rf ${TMPDIR}" EXIT
 
@@ -92,11 +87,12 @@ fi
 
 ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
 
+BUILT_DATE=$(date +"%Y-%m-%d_-_%H:%M_%Z")
 # It doesn't matter that $RELEASE_TAG may be empty in case we havn't
 # defined a release tag. It's still a good idea to copy the apks to
 # one location.
 if $REMOTE; then
-    TARGET_DIR=$(date +"%Y-%m-%d_-_%H:%M_%Z")
+    TARGET_DIR=$BUILT_DATE
 else
     TARGET_DIR=${RELEASE_TAG}
 fi
@@ -111,9 +107,14 @@ if [[ -n $RELEASE_TAG ]]; then
     git checkout master
 fi
 
-if $PUBLISH; then
+if $PUBLISH && [[ -n $RELEASE_TAG ]]; then
     cat <<EOF | sftp $RELEASE_HOST
 mkdir ${RELEASE_DIR}/${RELEASE_TAG}
 put releases/${RELEASE_TAG}/* ${RELEASE_DIR}/${RELEASE_TAG}
+EOF
+elif $PUBLISH; then
+    cat <<EOF | sftp $RELEASE_HOST
+mkdir ${RELEASE_DIR}/nightlies/${BUILT_DATE}
+put releases/*.apk ${RELEASE_DIR}/nightlies/${BUILT_DATE}
 EOF
 fi
