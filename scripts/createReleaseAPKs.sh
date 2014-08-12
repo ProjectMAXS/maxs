@@ -113,8 +113,20 @@ mkdir ${RELEASE_DIR}/${RELEASE_TAG}
 put releases/${RELEASE_TAG}/* ${RELEASE_DIR}/${RELEASE_TAG}
 EOF
 elif $PUBLISH; then
+	BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	# If we are building from a non-master branch, then add the branch
+	# name to the target directory.
+	if [[ "$BRANCH" != "master" ]]; then
+		SUBDIR=$BRANCH
+		TARGET_DIR="${BRANCH}/"
+	else
+		SUBDIR=""
+		TARGET_DIR=""
+	fi
+	TARGET_DIR+=$BUILT_DATE
     cat <<EOF | sftp $RELEASE_HOST
-mkdir ${RELEASE_DIR}/nightlies/${BUILT_DATE}
-put releases/*.apk ${RELEASE_DIR}/nightlies/${BUILT_DATE}
+mkdir ${RELEASE_DIR}/nightlies/${SUBDIR}
+mkdir ${RELEASE_DIR}/nightlies/${TARGET_DIR}
+put releases/*.apk ${RELEASE_DIR}/nightlies/${TARGET_DIR}
 EOF
 fi
