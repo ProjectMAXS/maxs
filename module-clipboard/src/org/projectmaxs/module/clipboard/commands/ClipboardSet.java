@@ -25,7 +25,7 @@ import org.projectmaxs.shared.module.MAXSModuleIntentService;
 public class ClipboardSet extends AbstractClipboardCommand {
 
 	public ClipboardSet() {
-		super(ModuleService.sCLIPBOARD, "set");
+		super(ModuleService.sCLIPBOARD, "set", false, true);
 		setHelp("clipboard content", "Set the clipboard to the given text");
 	}
 

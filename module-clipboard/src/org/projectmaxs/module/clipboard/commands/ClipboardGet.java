@@ -26,7 +26,7 @@ import org.projectmaxs.shared.module.MAXSModuleIntentService;
 public class ClipboardGet extends AbstractClipboardCommand {
 
 	public ClipboardGet() {
-		super(ModuleService.sCLIPBOARD, "get");
+		super(ModuleService.sCLIPBOARD, "get", true, false);
 		setHelp(ArgType.NONE, "Show the content of the clipboard");
 	}
 

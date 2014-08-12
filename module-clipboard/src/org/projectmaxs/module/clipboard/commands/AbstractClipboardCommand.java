@@ -35,6 +35,11 @@ public abstract class AbstractClipboardCommand extends SubCommand {
 		super(supraCommand, name);
 	}
 
+	public AbstractClipboardCommand(SupraCommand supraCommand, String name,
+			boolean isDefaultWithoutArguments, boolean isDefaultWithArguments) {
+		super(supraCommand, name, isDefaultWithoutArguments, isDefaultWithArguments);
+	}
+
 	@Override
 	public Message execute(String arguments, Command command, MAXSModuleIntentService service)
 			throws Throwable {
