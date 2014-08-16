@@ -20,6 +20,7 @@ package org.projectmaxs.module.shell;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.projectmaxs.module.shell.commands.RootShellExecute;
 import org.projectmaxs.module.shell.commands.ShellExecute;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
@@ -52,6 +53,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		Set<SupraCommand> commands = new HashSet<SupraCommand>();
 
 		SupraCommand.register(ShellExecute.class, commands);
+		SupraCommand.register(RootShellExecute.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
