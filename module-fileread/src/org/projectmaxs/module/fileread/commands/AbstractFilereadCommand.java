@@ -67,7 +67,7 @@ public abstract class AbstractFilereadCommand extends SubCommand {
 			final long size = file.length();
 			Text text = new Text(path + " " + SharedStringUtil.humandReadableByteCount(size));
 			element = new Element("file", file.getAbsolutePath(), text);
-			element.addChildElement(new Element("size", String.valueOf(size)));
+			element.addChildElement(Element.newNonHumandReadable("size", String.valueOf(size)));
 		}
 		return element;
 	}

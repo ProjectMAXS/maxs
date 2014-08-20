@@ -74,6 +74,12 @@ public class Element extends AbstractElement {
 		this(xmlName, text, new Text(humanReadableDescription));
 	}
 
+	public static Element newNonHumandReadable(String xmlName, String text) {
+		Element element = new Element(xmlName);
+		element.setText(text);
+		return element;
+	}
+
 	public void setText(String text) {
 		mText = text;
 	}
