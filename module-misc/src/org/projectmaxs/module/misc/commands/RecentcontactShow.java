@@ -47,8 +47,8 @@ public class RecentcontactShow extends SubCommand {
 				element.addChildElement(new Element("contactDisplayName", recentContact.mContact
 						.getDisplayName(), "Name: " + recentContact.mContact.getDisplayName()));
 				// Don't expose the lookup key to the user
-				element.addChildElement(new Element("contactLookupId", recentContact.mContact
-						.getLookupKey()));
+				element.addChildElement(Element.newNonHumandReadable("contactLookupId",
+						recentContact.mContact.getLookupKey()));
 			}
 		} else {
 			element = new Element("recentContact", "false", "No Recent Contact");
