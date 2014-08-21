@@ -68,7 +68,7 @@ public class JULHandler extends Handler {
 			if (thrown != null) {
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw, false);
-				sw.write(logRecord.getMessage());
+				sw.write(logRecord.getMessage() + ' ');
 				thrown.printStackTrace(pw);
 				pw.flush();
 				return sw.toString();
