@@ -340,6 +340,12 @@ public class XMPPService {
 			return;
 		}
 
+		// Trim the command to remove extra whitespace, which e.g. could be send by clients trying
+		// to negotiate OTR. References:
+		// - https://github.com/python-otr/gajim-otr/issues/9
+		// - https://trac-plugins.gajim.org/ticket/97
+		command = command.trim();
+
 		String issuerInfo = message.getFrom();
 		LOG.d("newMessageFromMasterJID: command=" + command + " from=" + issuerInfo);
 
