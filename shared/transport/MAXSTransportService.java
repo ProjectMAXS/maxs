@@ -82,7 +82,7 @@ public abstract class MAXSTransportService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) {
-			LOG.d("onStartCommand: null intent received, issueing START_SERVICE");
+			LOG.d("onStartCommand: null intent received, issuing START_SERVICE");
 			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
 		}
 		LOG.d("onStartCommand: intent=" + intent.getAction() + " flags=" + flags + " startId="
