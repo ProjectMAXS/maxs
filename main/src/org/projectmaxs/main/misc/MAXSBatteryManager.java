@@ -115,6 +115,9 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		case BatteryManager.BATTERY_PLUGGED_USB:
 			powerSource = USB;
 			break;
+		case 4: // BatteryManager.BATTERY_PLUGGED_WIRELESS is API 17
+			powerSource = "WirelessPower";
+			break;
 		case 0:
 			powerSource = BAT;
 			break;
