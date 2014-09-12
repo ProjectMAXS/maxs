@@ -38,7 +38,6 @@ import org.projectmaxs.shared.global.util.AsyncServiceTask;
 import org.projectmaxs.shared.global.util.DialogUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
-import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 
 import android.app.Activity;
 import android.content.Context;
@@ -49,6 +48,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.View;
 import android.widget.TextView;
+import eu.geekplace.iesp.ImportExportSharedPreferences;
 
 public class ImportExportSettings extends Activity {
 
@@ -101,8 +101,8 @@ public class ImportExportSettings extends Activity {
 		final String file = mainOutFile.getAbsolutePath();
 		Writer writer = new CharArrayWriter();
 		try {
-			SharedPreferencesUtil.export(Settings.getInstance(this).getSharedPreferences(), writer,
-					null);
+			ImportExportSharedPreferences.export(Settings.getInstance(this).getSharedPreferences(),
+					writer, null);
 			final byte[] bytes = writer.toString().getBytes();
 			tryToExport(file, bytes, this);
 		} catch (IOException e1) {
@@ -170,7 +170,7 @@ public class ImportExportSettings extends Activity {
 
 				final byte[] bytes = iinterface.readFileBytes(importFile);
 				final String fileContents = new String(bytes, "UTF-8");
-				SharedPreferencesUtil.importFromReader(
+				ImportExportSharedPreferences.importFromReader(
 						Settings.getInstance(ImportExportSettings.this).getSharedPreferences(),
 						new StringReader(fileContents));
 				appendStatus(GlobalConstants.MAIN_PACKAGE + ": Imported");

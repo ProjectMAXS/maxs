@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringBufferInputStream;
 import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -61,6 +63,8 @@ public class JULHandler extends Handler {
 
 	private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
+	private static final Set<String> NO_LOG_PKGS = new HashSet<String>();
+
 	private static final Formatter FORMATTER = new Formatter() {
 		@Override
 		public String format(LogRecord logRecord) {
@@ -95,6 +99,14 @@ public class JULHandler extends Handler {
 		sDebugLogSettings = debugLogSettings;
 	}
 
+	public static void addNoLogPkg(String pkg) {
+		NO_LOG_PKGS.add(pkg);
+	}
+
+	public static void removeNoLogPkg(String pkg) {
+		NO_LOG_PKGS.remove(pkg);
+	}
+
 	public JULHandler() {
 		setFormatter(FORMATTER);
 	}
@@ -107,6 +119,15 @@ public class JULHandler extends Handler {
 
 	@Override
 	public boolean isLoggable(LogRecord record) {
+		final String sourceClass = record.getSourceClassName();
+		if (sourceClass != null) {
+			for (String noLogPkg : NO_LOG_PKGS) {
+				if (sourceClass.startsWith(noLogPkg)) {
+					return false;
+				}
+			}
+		}
+
 		final boolean debugLog = sDebugLogSettings == null ? true : sDebugLogSettings
 				.isDebugLogEnabled();
 

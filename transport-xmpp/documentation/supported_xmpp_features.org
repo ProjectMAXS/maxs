@@ -69,6 +69,11 @@ account from within the application on servers supporting it.
 
 This extension needs server support.
 
+* [[http://www.xmpp.org/extensions/xep-0092.html][XEP-0092]] Software Version
+
+MAXS Transport XMPP will report it's version including the git revision and built date when queried by a master JID for it.
+Furthermore the returned information will also include the used Android version and API Level and the Smack (the used XMPP library) version, git revision and built date.
+
 * [[http://xmpp.org/extensions/xep-0095.html][XEP-0095]] Stream Initiation
 
 This extension needs client support.
@@ -106,6 +111,11 @@ Tip: Get [[http://gajim.org][Gajim]] 0.16 and set [[https://trac.gajim.org/ticke
 "Advanced Configuration Editor" to get the most out of XEP-0184 :)
 
 This extension needs clients supporting it.
+
+* [[http://xmpp.org/extensions/xep-0198.html][XEP-0198]] Stream Management
+
+XMPP Stream Management enables fast resumption of the XMPP Connection in case there is a sudden disconnect (e.g. Wifi ↔ GSM switch).
+Using MAXS with enabled Stream Mangement on XMPP services that support this feature will improve the connection reliablitiy somewhat.
 
 * [[http://xmpp.org/extensions/xep-0199.html][XEP-0199]] XMPP Ping
 

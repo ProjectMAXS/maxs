@@ -22,6 +22,8 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.sm.packet.StreamManagement;
 import org.jivesoftware.smackx.privacy.PrivacyList;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -38,12 +40,14 @@ public class HandleTransportStatus extends StateChangeListener {
 	private static final Log LOG = Log.getLog();
 
 	private final Context mContext;
+	private final Settings mSettings;
 
 	private String mStatusString;
 
 	public HandleTransportStatus(Context context) {
 		mContext = context;
 		mStatusString = "inactive";
+		mSettings = Settings.getInstance(context);
 	}
 
 	@Override
@@ -63,7 +67,7 @@ public class HandleTransportStatus extends StateChangeListener {
 		}
 
 		String privacyListStatus;
-		if (!Settings.getInstance(mContext).privacyListsEnabled()) {
+		if (!mSettings.privacyListsEnabled()) {
 			privacyListStatus = "privacy disabled";
 		} else {
 			final String privacyInactive = "privacy inactive";
@@ -93,8 +97,27 @@ public class HandleTransportStatus extends StateChangeListener {
 			}
 		}
 
+		String streamManagementStatus = "stream management ";
+		if (connection instanceof XMPPTCPConnection) {
+			if (mSettings.isStreamManagementEnabled()) {
+				XMPPTCPConnection c = (XMPPTCPConnection) connection;
+				if (c.hasFeature(StreamManagement.StreamManagementFeature.ELEMENT,
+						StreamManagement.NAMESPACE)) {
+					if (c.isSmEnabled()) {
+						streamManagementStatus += "active";
+					} else {
+						streamManagementStatus += "not active";
+					}
+				}
+			} else {
+				streamManagementStatus += "not enabled";
+			}
+		} else {
+			streamManagementStatus += "not supported by connnection";
+		}
+
 		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ", "
-				+ privacyListStatus + ")");
+				+ privacyListStatus + ", " + streamManagementStatus + ")");
 	}
 
 	@Override

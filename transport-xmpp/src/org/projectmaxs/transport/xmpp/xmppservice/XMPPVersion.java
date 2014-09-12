@@ -15,19 +15,20 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.transport.xmpp.util;
+package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jxmpp.util.XmppStringUtils;
+import org.jivesoftware.smackx.iqversion.VersionManager;
+import org.projectmaxs.transport.xmpp.R;
 
-public class XMPPUtil {
-	public static final boolean isValidBareJid(String jid) {
-		if (jid.indexOf('\\') != -1) return false;
-		if (XmppStringUtils.parseLocalpart(jid).equals("")) return false;
+import android.content.Context;
 
-		String serverPart = XmppStringUtils.parseDomain(jid);
-		if (serverPart.equals("")) return false;
-		if (serverPart.indexOf('.') == -1) return false;
+public class XMPPVersion {
 
-		return true;
+	public static void initialize(Context context) {
+		String version = context.getString(R.string.version);
+		String os = "Android " + android.os.Build.VERSION.RELEASE + " (API "
+				+ android.os.Build.VERSION.SDK_INT + ')';
+		VersionManager.setDefaultVersion("MAXS", version, os);
 	}
+
 }

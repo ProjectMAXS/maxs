@@ -29,9 +29,22 @@
     <PreferenceCategory android:title="@string/pref_xmpp_stream_settings" >
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="@string/pref_xmpp_stream_management_key"
+            android:summary="@string/pref_xmpp_stream_management_help"
+            android:title="@string/pref_xmpp_stream_management" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/pref_xmpp_stream_compression_key"
             android:summary="@string/pref_xmpp_stream_compression_help"
             android:title="@string/pref_xmpp_stream_compression" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="@string/pref_xmpp_stream_compression_key"
+            android:key="@string/pref_xmpp_stream_compression_sync_flush_key"
+            android:summary="@string/pref_xmpp_stream_compression_sync_flush_help"
+            android:title="@string/pref_xmpp_stream_compression_sync_flush" />
 
         <ListPreference
             android:entries="@array/array_xmpp_connection_security_entries"
@@ -73,9 +86,9 @@
             android:summary="@string/pref_app_debug_network_help"
             android:title="@string/pref_app_debug_network" />
         <CheckBoxPreference
-            android:key="@string/pref_app_debug_dnsjava_key"
-            android:summary="@string/pref_app_debug_dnsjava_help"
-            android:title="@string/pref_app_debug_dnsjava" />
+            android:key="@string/pref_app_debug_dns_key"
+            android:summary="@string/pref_app_debug_dns_help"
+            android:title="@string/pref_app_debug_dns" />
     </PreferenceCategory>
 
 </PreferenceScreen>

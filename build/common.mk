@@ -9,7 +9,9 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 .IGNORE : $(GIT_LOG_HEAD)
 
-.PHONY: lintFull
+.PHONY: artifacts lintFull
+
+prebuild: artifacts
 
 res/values/version.xml: $(GIT_LOG_HEAD) AndroidManifest.xml
 	$(BASE)/scripts/createVersionXML.sh -c .
@@ -24,3 +26,6 @@ lintFull: lint.xml
 
 lint.xml:
 	ln -rs $(BASE)/build/lint.xml
+
+artifacts:
+	$(BASE)/scripts/MavenToAndroidAnt/getMavenArtifacts.py -f $(BASE)/build/global_artifacts.csv -p .

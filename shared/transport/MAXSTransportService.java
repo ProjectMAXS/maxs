@@ -17,6 +17,8 @@
 
 package org.projectmaxs.shared.transport;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 
@@ -55,7 +57,14 @@ public abstract class MAXSTransportService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		HandlerThread thread = new HandlerThread("MAXSTransportService[" + mName + "]");
+		final String threadName = "MAXSTransportService[" + mName + "]";
+		HandlerThread thread = new HandlerThread(threadName);
+		thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread thread, Throwable ex) {
+				LOG.e(threadName + " thread: uncaught Exception!", ex);
+			}
+		});
 		thread.start();
 
 		mServiceLooper = thread.getLooper();

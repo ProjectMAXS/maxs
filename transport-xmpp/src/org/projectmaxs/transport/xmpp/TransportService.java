@@ -17,7 +17,7 @@
 
 package org.projectmaxs.transport.xmpp;
 
-import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smackx.ping.android.ServerPingWithAlarmManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.jul.JULHandler;
@@ -58,7 +58,6 @@ public class TransportService extends MAXSTransportService {
 	private static final Log LOG = Log.getLog();
 
 	private XMPPService mXMPPService;
-	private SmackAndroid mSmackAndroid;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -69,8 +68,8 @@ public class TransportService extends MAXSTransportService {
 	public void onCreate() {
 		super.onCreate();
 		LOG.d("onCreate");
-		mSmackAndroid = SmackAndroid.init(this);
 		JULHandler.init(Settings.getInstance(this));
+		ServerPingWithAlarmManager.onCreate(this);
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public class TransportService extends MAXSTransportService {
 		if (mXMPPService != null) {
 			mXMPPService.disconnect();
 		}
-		mSmackAndroid.onDestroy();
+		ServerPingWithAlarmManager.onDestory();
 	}
 
 	@Override
@@ -120,6 +119,7 @@ public class TransportService extends MAXSTransportService {
 		} else {
 			throw new IllegalStateException("Unkown intent action: " + action);
 		}
+		LOG.d("onHandleIntent: " + action + " handled");
 
 		// This hopefully fixes the situation where transport-xmpp is unable to connect
 		// I suppose that the TransportService is re-created by Android, but somehow without sending

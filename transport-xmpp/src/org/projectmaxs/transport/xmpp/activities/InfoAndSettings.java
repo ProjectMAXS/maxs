@@ -3,13 +3,13 @@ package org.projectmaxs.transport.xmpp.activities;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.jivesoftware.smack.AccountManager;
-import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.transport.xmpp.R;
@@ -71,48 +71,34 @@ public class InfoAndSettings extends Activity {
 		sb.append(Html.fromHtml(
 // @formatter:off
 "<h1>Open Source</h1>" +
-"&#8226; <a href=\"http://asmack.org\">aSmack</a><br>" +
+"&#8226; <a href=\"http://www.igniterealtime.org/projects/smack\">Smack</a><br>" +
 "&#8226; <a	href=\"https://github.com/ge0rg/MemorizingTrustManager\">MemorizingTrustManager</a><br>" +
-"&#8226; <a	href=\"http://dnsjava.org\">dnsjava</a><br>" +
-"<h2>aSmack</h2>" +
-"<a href=\"http://asmack.org\">http://asmack.org</a><br>" +
+"&#8226; <a	href=\"https://github.com/rtreffer/minidns\">minidns</a><br>" +
+"<h2>Smack (XMPP Client Library)</h2>" +
+"<a href=\"http://www.igniterealtime.org/projects/smack\">http://www.igniterealtime.org/projects/smack</a><br>" +
 "<br>" +
-"&#8226; Smack (XMPP Client Library)<br>" +
+"Copyright © 2011-2014 Florian Schmaus<br>" +
+"Copyright © 2013-2014 Georg Lukas<br>" +
+"Copyright © 2014 Lars Noschinski<br>" +
+"Copyright © 2014 Vyacheslav Blinov<br>" +
+"Copyright © 2014 Andriy Tsykholyas<br>" +
+"Copyright © 2009-2013 Robin Collier<br>" +
+"Copyright © 2009 Jonas Ådahl<br>" +
 "Copyright © 2003-2010 Jive Software<br>" +
 "Copyright © 2001-2004 Apache Software Foundation<br>" +
-"Copyright © 2011-2013 Florian Schmaus<br>" +
-"Copyright © 2013 Georg Lukas<br>" +
-"Copyright © 2013 Robin Collier<br>" +
-"Copyright © 2009 Jonas Ådahl<br>" +
-"Apache License, Version 2.0<br>" +
-"&#8226; aSmack custom code (various glue stuff)<br>" +
-"Copyright © 2011-2014 Florian Schmaus<br>" +
-"Copyright © 2009-2010 Rene Treffer<br>" +
-"Apache License, Version 2.0<br>" +
-"&#8226; Apache Harmony (SASL/XML)<br>" +
-"Copyright © 2006, 2010 Apache Software Foundation<br>" +
-"Apache License, Version 2.0<br>" +
-"&#8226; novell-openldap-jldap (SASL)<br>" +
-"Copyright © 2002-2003 Novell, Inc.<br>" +
-"OpenLDAP Public License, Version 2.8<br>" +
-"&#8226; Apache qpid (SASL)<br>" +
-"Copyright © 2006-2008 Apache Software Foundation<br>" +
 "Apache License, Version 2.0<br>" +
 "<h2>MemorizingTrustManager</h2>" +
 "<a href=\"https://github.com/ge0rg/MemorizingTrustManager\">https://github.com/ge0rg/MemorizingTrustManager</a><br>" +
 "<br>" +
-"Copyright © 2010 Georg Lukas<br>" +
+"Copyright © 2010-2104 Georg Lukas<br>" +
 "MIT License<br>" +
-"<h2>dnsjava</h2>" +
-"<a href=\"http://dnsjava.org\">http://dnsjava.org<a/><br>" +
+"<h2>minidns</h2>" +
+"<a href=\"https://github.com/rtreffer/minidns\">https://github.com/rtreffer/minidns<a/><br>" +
 "<br>" +
-"Copyright © 1998-2011 Brian Wellington<br>" +
-"BSD 2-Clause License<br>" +
+"Apache License, Version 2.0<br>" +
 "<h1>License Links</h1>" +
 "&#8226; <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a><br>" +
-"&#8226; <a href=\"http://opensource.org/licenses/MIT\">MIT License</a><br>" +
-"&#8226; <a href=\"http://opensource.org/licenses/BSD-2-Clause\">BSD 2-Clause License</a><br>" +
-"&#8226; <a	href=\"http://www.openldap.org/devel/gitweb.cgi?p=openldap-jldap.git;a=blob_plain;f=LICENSE;h=05ad7571e448b9d83ead5d4691274d9484574714;hb=HEAD\">OpenLDAP Public License, Version 2.8</a>"
+"&#8226; <a href=\"http://opensource.org/licenses/MIT\">MIT License</a>"
 // @formatter:on
 				));
 		final TextView textView = new TextView(this);
@@ -144,16 +130,15 @@ public class InfoAndSettings extends Activity {
 
 			@Override
 			public void run() {
-				SmackAndroid.init(InfoAndSettings.this);
 				if (!ConnectivityManagerUtil.hasDataConnection(InfoAndSettings.this)) {
 					showToast("Data connection not available", Toast.LENGTH_SHORT);
 					return;
 				}
 
 				try {
-					final String username = StringUtils.parseName(mSettings.getJid());
+					final String username = XmppStringUtils.parseLocalpart(mSettings.getJid());
 					final String password = mSettings.getPassword();
-					final XMPPConnection connection = new XMPPTCPConnection(
+					final AbstractXMPPConnection connection = new XMPPTCPConnection(
 							mSettings.getConnectionConfiguration(InfoAndSettings.this));
 					showToast("Connecting to server", Toast.LENGTH_SHORT);
 					connection.connect();

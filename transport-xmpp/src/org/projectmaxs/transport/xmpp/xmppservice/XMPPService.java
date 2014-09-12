@@ -34,14 +34,15 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
+import org.jivesoftware.smackx.ping.android.ServerPingWithAlarmManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
+import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
@@ -92,6 +93,8 @@ public class XMPPService {
 		// Set to a negative value to try next ports if the current one is already in use.
 		// TODO Remove when Smack >= 4.0.3 is used, since it's the default there
 		Socks5Proxy.setLocalSocks5ProxyPort(-7777);
+
+		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
 	}
 
 	private final Runnable mReconnectRunnable = new Runnable() {
@@ -109,7 +112,7 @@ public class XMPPService {
 	private boolean mConnected = false;
 
 	private ConnectionConfiguration mConnectionConfiguration;
-	private XMPPConnection mConnection;
+	private XMPPTCPConnection mConnection;
 	private Handler mReconnectHandler;
 
 	/**
@@ -130,6 +133,7 @@ public class XMPPService {
 
 	private XMPPService(Context context) {
 		XMPPEntityCapsCache.initialize(context);
+		XMPPVersion.initialize(context);
 
 		mContext = context;
 		mSettings = Settings.getInstance(context);
@@ -152,7 +156,7 @@ public class XMPPService {
 	}
 
 	public static enum State {
-		Connected, Connecting, Disconnecting, Disconnected, WaitingForNetwork, WaitingForRetry;
+		Connected, Connecting, Disconnecting, Disconnected, InstantDisconnected, WaitingForNetwork, WaitingForRetry;
 	}
 
 	public State getCurrentState() {
@@ -185,6 +189,10 @@ public class XMPPService {
 		changeState(XMPPService.State.Disconnected);
 	}
 
+	public void instantDisconnect() {
+		changeState(XMPPService.State.InstantDisconnected);
+	}
+
 	public void reconnect() {
 		disconnect();
 		connect();
@@ -201,7 +209,7 @@ public class XMPPService {
 			LOG.d("newConnectivityInformation: calling disconnect() networkTypeChanged="
 					+ networkTypeChanged + " connected=" + connected + " isConnected="
 					+ isConnected());
-			disconnect();
+			instantDisconnect();
 		}
 
 		// if we have an connected network but we are not connected, connect
@@ -271,11 +279,11 @@ public class XMPPService {
 				Collection<Presence> presences = roster.getPresences(masterJid);
 				for (Presence p : presences) {
 					String fullJID = p.getFrom();
-					String resource = StringUtils.parseResource(fullJID);
+					String resource = XmppStringUtils.parseResource(fullJID);
 					if (!mSettings.isExcludedResource(resource)) {
 						toList.add(fullJID);
 					} else {
-						jidsWithExcludedResources.add(StringUtils.parseBareAddress(fullJID));
+						jidsWithExcludedResources.add(XmppStringUtils.parseBareAddress(fullJID));
 					}
 				}
 			}
@@ -284,7 +292,7 @@ public class XMPPService {
 			for (String masterJid : mSettings.getMasterJids()) {
 				boolean found = false;
 				for (String toJid : toList) {
-					if (StringUtils.parseBareAddress(toJid).equals(masterJid)) {
+					if (XmppStringUtils.parseBareAddress(toJid).equals(masterJid)) {
 						found = true;
 						break;
 					}
@@ -401,6 +409,7 @@ public class XMPPService {
 				}
 				mConnected = true;
 				break;
+			case InstantDisconnected:
 			case Disconnected:
 				for (StateChangeListener l : mStateChangeListeners) {
 					l.disconnected(reason);
@@ -439,18 +448,21 @@ public class XMPPService {
 			case Connected:
 				break;
 			case Disconnected:
-				disconnectConnection();
+				disconnectConnection(false);
 				break;
+			case InstantDisconnected:
 			case WaitingForNetwork:
-				disconnectConnection();
-				newState(State.WaitingForNetwork);
+				disconnectConnection(true);
+				newState(desiredState);
 				break;
 			default:
 				throw new IllegalStateException();
 			}
 			break;
+		case InstantDisconnected:
 		case Disconnected:
 			switch (desiredState) {
+			case InstantDisconnected:
 			case Disconnected:
 				break;
 			case Connected:
@@ -470,8 +482,9 @@ public class XMPPService {
 			case Connected:
 				tryToConnect();
 				break;
+			case InstantDisconnected:
 			case Disconnected:
-				newState(State.Disconnected);
+				newState(desiredState);
 				break;
 			default:
 				throw new IllegalStateException();
@@ -489,8 +502,9 @@ public class XMPPService {
 				// ConnecvitvityChange receiver and calling Resolver.refresh(). So we have no
 				// up-to-date DNS server information, which will cause connect to fail.
 				break;
+			case InstantDisconnected:
 			case Disconnected:
-				newState(State.Disconnected);
+				newState(desiredState);
 				mReconnectHandler.removeCallbacks(mReconnectRunnable);
 				break;
 			default:
@@ -523,7 +537,7 @@ public class XMPPService {
 
 		newState(State.Connecting);
 
-		XMPPConnection connection;
+		XMPPTCPConnection connection;
 		boolean newConnection = false;
 
 		if (mConnection == null || mConnectionConfiguration != mSettings
@@ -531,10 +545,14 @@ public class XMPPService {
 				.getConnectionConfiguration(mContext)) {
 			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
 			connection = new XMPPTCPConnection(mConnectionConfiguration);
+			ServerPingWithAlarmManager.getInstanceFor(connection);
 			newConnection = true;
 		} else {
 			connection = mConnection;
 		}
+
+		// Stream Management (XEP-198)
+		connection.setUseStreamManagement(mSettings.isStreamManagementEnabled());
 
 		LOG.d("tryToConnect: connect");
 		try {
@@ -554,7 +572,7 @@ public class XMPPService {
 
 		if (!connection.isAuthenticated()) {
 			try {
-				connection.login(StringUtils.parseName(mSettings.getJid()),
+				connection.login(XmppStringUtils.parseLocalpart(mSettings.getJid()),
 						mSettings.getPassword(), "MAXS");
 			} catch (NoResponseException e) {
 				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
@@ -583,15 +601,19 @@ public class XMPPService {
 		LOG.d("tryToConnect: successfully connected \\o/");
 	}
 
-	private synchronized void disconnectConnection() {
+	private synchronized void disconnectConnection(boolean instant) {
 		if (mConnection != null) {
 			if (mConnection.isConnected()) {
 				newState(State.Disconnecting);
-				LOG.d("disconnectConnection: disconnect start");
-				try {
-					mConnection.disconnect();
-				} catch (NotConnectedException e) {
-					LOG.i("disconnectConnection", e);
+				LOG.d("disconnectConnection: disconnect start. instant=" + instant);
+				if (instant) {
+					mConnection.instantShutdown();
+				} else {
+					try {
+						mConnection.disconnect();
+					} catch (NotConnectedException e) {
+						LOG.i("disconnectConnection", e);
+					}
 				}
 				LOG.d("disconnectConnection: disconnect stop");
 			}

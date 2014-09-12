@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.global.util.SharedPreferencesUtil;
 import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
@@ -32,6 +31,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import eu.geekplace.iesp.ImportExportSharedPreferences;
 
 public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 	private final Log mLog;
@@ -102,7 +102,8 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 	private Intent exportSettings(Context context, String directory) {
 		StringWriter writer = new StringWriter();
 		try {
-			SharedPreferencesUtil.export(getSharedPreferences(context), writer, doNotExport());
+			ImportExportSharedPreferences.export(getSharedPreferences(context), writer,
+					doNotExport());
 		} catch (IOException e) {
 			mLog.e("exportSettings", e);
 			return importExportStatus(e.getMessage());
@@ -116,8 +117,8 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 
 	private Intent importSettings(Context context, String settings) {
 		try {
-			SharedPreferencesUtil.importFromReader(getSharedPreferences(context), new StringReader(
-					settings));
+			ImportExportSharedPreferences.importFromReader(getSharedPreferences(context),
+					new StringReader(settings));
 		} catch (Exception e) {
 			mLog.e("importSettings", e);
 			return importExportStatus(e.getMessage());

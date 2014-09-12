@@ -85,6 +85,17 @@ public class XMPPEntityCapsTable {
 		return res;
 	}
 
+	public String getDiscoverInfo(String node) {
+		String res = null;
+		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_NODE + "= ?",
+				new String[] { node }, null, null, null);
+		if (c.moveToFirst()) {
+			res = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INFO));
+		}
+		c.close();
+		return res;
+	}
+
 	public boolean containsNode(String node) {
 		Cursor c = mDatabase.query(TABLE_NAME, null, COLUMN_NAME_NODE + "= ?",
 				new String[] { node }, null, null, null);

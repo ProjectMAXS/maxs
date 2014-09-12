@@ -9,7 +9,7 @@ SHARED_MAINTRANSPORT_SOURCE := $(SHARED_SOURCE)/maintransport
 DEBUG_APK := bin/maxs-$(TRANSPORT_NAME)-debug.apk
 ANT_BUILD_TARGET ?= debug
 
-.PHONY: all assets asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
+.PHONY: all clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
 all: transport eclipse
 
@@ -22,12 +22,6 @@ transport: prebuild
 
 release:
 	ANT_BUILD_TARGET=release $(MAKE) transport
-
-assets:
-	../scripts/getAssets.sh -f assets.db
-
-asmack: assets
-	./asmack.sh
 
 deploy: $(DEBUG_APK)
 	adb $(ADB_ARGS) install -r $(DEBUG_APK)
@@ -43,7 +37,7 @@ distclean: clean
 	rm -f build.xml
 	rm -f $(VERSION_XML)
 
-prebuild: asmack build.xml resources shared $(VERSION_XML)
+prebuild: build.xml resources shared $(VERSION_XML)
 
 build.xml:
 	android update project -p . -n maxs-$(TRANSPORT_NAME) -s

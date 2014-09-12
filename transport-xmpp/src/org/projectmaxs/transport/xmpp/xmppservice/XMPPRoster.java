@@ -29,7 +29,7 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.RosterPacket;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 
@@ -107,7 +107,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 		for (String jid : mSettings.getMasterJids()) {
 			Presence presence = mRoster.getPresence(jid);
 			if (presence.isAvailable()) {
-				if (mSettings.isExcludedResource(StringUtils.parseResource(presence.getFrom()))) {
+				if (mSettings.isExcludedResource(XmppStringUtils.parseResource(presence.getFrom()))) {
 					// Skip excluded resources
 					continue;
 				}
@@ -134,7 +134,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	private void friendJid(String userID) {
 		if (!mRoster.contains(userID)) {
 			try {
-				mRoster.createEntry(userID, StringUtils.parseBareAddress(userID), null);
+				mRoster.createEntry(userID, XmppStringUtils.parseBareAddress(userID), null);
 				grantSubscription(userID, mConnection);
 				requestSubscription(userID, mConnection);
 			} catch (Exception e) {

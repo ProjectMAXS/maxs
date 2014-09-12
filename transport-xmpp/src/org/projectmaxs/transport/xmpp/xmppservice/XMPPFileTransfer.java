@@ -169,21 +169,18 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		// disable streamhost prioritization
 		Socks5BytestreamManager s5bsm = Socks5BytestreamManager.getBytestreamManager(connection);
 		s5bsm.setProxyPrioritizationEnabled(false);
+		sFileTransferManager = FileTransferManager.getInstanceFor(connection);
+		sFileTransferManager.addFileTransferListener(this);
 	}
 
 	@Override
 	public void connected(XMPPConnection connection) {
-		sFileTransferManager = new FileTransferManager(connection);
-		LOG.d("connect: created file transfer manager");
-		sFileTransferManager.addFileTransferListener(this);
 		mContext.registerReceiver(mWifiBroadcastReceiver, new IntentFilter(
 				WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION));
 	}
 
 	@Override
 	public void disconnected(XMPPConnection connection) {
-		sFileTransferManager.removeFileTransferListener(this);
-		sFileTransferManager = null;
 		mContext.unregisterReceiver(mWifiBroadcastReceiver);
 	}
 

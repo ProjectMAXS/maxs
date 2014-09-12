@@ -6,7 +6,7 @@
 -optimizations !code/simplification/cast,!field/*,!class/merging/*
 
 -dontobfuscate
--optimizationpasses 2
+-optimizationpasses 4
 -dontpreverify
 -allowaccessmodification
 -verbose

@@ -17,6 +17,7 @@
 
 package org.projectmaxs.transport.xmpp;
 
+import java.io.File;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -27,11 +28,16 @@ import java.util.Set;
 import javax.net.ssl.SSLContext;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.compression.XMPPInputOutputStream;
+import org.jivesoftware.smack.compression.XMPPInputOutputStream.FlushMethod;
+import org.jivesoftware.smack.rosterstore.DirectoryRosterStore;
+import org.jivesoftware.smack.rosterstore.RosterStore;
+import org.jxmpp.util.XmppStringUtils;
+import org.projectmaxs.shared.global.jul.JULHandler;
+import org.projectmaxs.shared.global.util.FileUtil;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
-import org.xbill.DNS.Options;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -63,7 +69,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String MANUAL_SERVICE_SETTINGS_HOST;
 	private final String MANUAL_SERVICE_SETTINGS_PORT;
 	private final String MANUAL_SERVICE_SETTINGS_SERVICE;
+	private final String XMPP_STREAM_MANAGEMENT;
 	private final String XMPP_STREAM_COMPRESSION;
+	private final String XMPP_STREAM_COMPRESSION_SYNC_FLUSH;
 	private final String XMPP_STREAM_ENCYPTION;
 	private final String XMPP_STREAM_PRIVACY;
 	private final String XMPP_STREAM_SESSION;
@@ -72,7 +80,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String DEBUG_LOG;
 	private final String XMPP_DEBUG;
 	private final String DEBUG_NETWORK;
-	private final String DEBUG_DNSJAVA;
+	private final String DEBUG_DNS;
 	private final String LAST_ACTIVE_NETWORK;
 
 	private final Set<String> XMPP_CONNECTION_SETTINGS;
@@ -101,12 +109,15 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				.getString(R.string.pref_manual_service_settings_port_key);
 		MANUAL_SERVICE_SETTINGS_SERVICE = context
 				.getString(R.string.pref_manual_service_settings_service_key);
+		XMPP_STREAM_MANAGEMENT = context.getString(R.string.pref_xmpp_stream_management_key);
 		XMPP_STREAM_COMPRESSION = context.getString(R.string.pref_xmpp_stream_compression_key);
+		XMPP_STREAM_COMPRESSION_SYNC_FLUSH = context
+				.getString(R.string.pref_xmpp_stream_compression_sync_flush_key);
 		XMPP_STREAM_ENCYPTION = context.getString(R.string.pref_xmpp_stream_encryption_key);
 		XMPP_STREAM_PRIVACY = context.getString(R.string.pref_xmpp_stream_privacy_key);
 		XMPP_STREAM_SESSION = context.getString(R.string.pref_xmpp_stream_session_key);
 		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
-		DEBUG_DNSJAVA = context.getString(R.string.pref_app_debug_dnsjava_key);
+		DEBUG_DNS = context.getString(R.string.pref_app_debug_dns_key);
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 
@@ -119,7 +130,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-		setDnsJavaDebug();
+		setDnsDebug();
 	}
 
 	public String getJid() {
@@ -170,7 +181,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public boolean isMasterJID(String jid) {
-		String bareJID = StringUtils.parseBareAddress(jid);
+		String bareJID = XmppStringUtils.parseBareAddress(jid);
 		Set<String> masterJids = getMasterJids();
 		for (String s : masterJids)
 			if (s.equals(bareJID)) return true;
@@ -192,7 +203,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * Therefore this method current returns true if:
 	 * <li>The resource starts with 'android', to exclude hangout/gtalk
 	 * <li>The resource matches one of the user configured excluded resources
-	 *
+	 * 
 	 * @param resource
 	 * @return true if resource should be excluded from broadcasts
 	 */
@@ -278,6 +289,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return null;
 	}
 
+	public boolean isStreamManagementEnabled() {
+		return mSharedPreferences.getBoolean(XMPP_STREAM_MANAGEMENT, false);
+	}
+
 	/**
 	 * Retrieve a ConnectionConfiguration.
 	 * 
@@ -295,7 +310,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				String service = getManualServiceSettingsService();
 				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
 			} else {
-				String service = StringUtils.parseServer(mSharedPreferences.getString(JID, ""));
+				String service = XmppStringUtils.parseDomain(mSharedPreferences.getString(JID, ""));
 				mConnectionConfiguration = new ConnectionConfiguration(service);
 			}
 			mConnectionConfiguration.setSocketFactory(XMPPSocketFactory.getInstance());
@@ -333,6 +348,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			} catch (KeyManagementException e) {
 				throw new IllegalStateException(e);
 			}
+
+			File rosterStoreDirectory = FileUtil.getFileDir(context, "rosterStore");
+			RosterStore rosterStore = DirectoryRosterStore.init(rosterStoreDirectory);
+			mConnectionConfiguration.setRosterStore(rosterStore);
 		}
 
 		return mConnectionConfiguration;
@@ -354,8 +373,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				break;
 			}
 		}
-		if (key.equals(DEBUG_DNSJAVA)) {
-			setDnsJavaDebug();
+		if (key.equals(DEBUG_DNS)) {
+			setDnsDebug();
+		} else if (key.equals(XMPP_STREAM_COMPRESSION_SYNC_FLUSH)) {
+			setSyncFlush();
 		}
 	}
 
@@ -391,16 +412,20 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
 	}
 
-	private void setDnsJavaDebug() {
-		final String[] DNSJAVA_DEBUG_OPTIONS = { "verbose", "verbosemsg", "verbosecache" };
-		if (mSharedPreferences.getBoolean(DEBUG_DNSJAVA, false)) {
-			for (String s : DNSJAVA_DEBUG_OPTIONS) {
-				Options.set(s);
-			}
+	private void setDnsDebug() {
+		final String minidnsPkg = "de.measite.minidns";
+		if (mSharedPreferences.getBoolean(DEBUG_DNS, false)) {
+			JULHandler.removeNoLogPkg(minidnsPkg);
 		} else {
-			for (String s : DNSJAVA_DEBUG_OPTIONS) {
-				Options.unset(s);
-			}
+			JULHandler.addNoLogPkg(minidnsPkg);
+		}
+	}
+
+	private void setSyncFlush() {
+		if (mSharedPreferences.getBoolean(XMPP_STREAM_COMPRESSION_SYNC_FLUSH, false)) {
+			XMPPInputOutputStream.setFlushMethod(FlushMethod.SYNC_FLUSH);
+		} else {
+			XMPPInputOutputStream.setFlushMethod(FlushMethod.FULL_FLUSH);
 		}
 	}
 }

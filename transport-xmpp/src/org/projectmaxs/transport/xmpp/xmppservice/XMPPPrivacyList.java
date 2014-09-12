@@ -138,7 +138,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 		// Because there are such services in the wild and XEP-0016 is not clear on that topic, we
 		// explicitly have to add a JID rule that allows stanzas from the service
 		PrivacyItem allowService = new PrivacyItem(Type.jid, connection.getServiceName(), true,
-				Integer.MAX_VALUE - 1);
+				list.size() + 1);
 		list.add(allowService);
 
 		mPrivacyListManager.createPrivacyList(PRIVACY_LIST_NAME, list);

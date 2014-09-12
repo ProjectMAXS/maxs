@@ -35,6 +35,8 @@ fi
 
 [[ -z $OUTDIR ]] && OUTDIR=$(dirname $ASSETSFILE)
 
+OUTDIR=$(readlink -f $OUTDIR)
+
 if [[ ! -d $OUTDIR ]]; then
     echo "Not a directory: " $OUTDIR
     exit 1

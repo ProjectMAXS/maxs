@@ -20,8 +20,6 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.provider.IQProvider;
@@ -49,7 +47,7 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 		EntityCapsManager.setDefaultEntityNode(GlobalConstants.HOMEPAGE_URL);
 		// We assume the number of XMPP entities the MAXS account is able to retrieve the presence
 		// from is not big and therefore we limit the Cache size to 50
-		EntityCapsManager.setCapsMaxCacheSize(50);
+		EntityCapsManager.setMaxsCacheSizes(50, 50);
 	}
 
 	private static XMPPEntityCapsCache sXMPPEntityCapsCache;
@@ -63,11 +61,8 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
 	private XMPPEntityCapsCache(Context context) {
 		mXMPPEntityCapsTable = XMPPEntityCapsTable.getInstance(context);
-		try {
-			EntityCapsManager.setPersistentCache(this);
-		} catch (IOException e) {
-			LOG.w("setPersistentCache", e);
-		}
+		EntityCapsManager.setPersistentCache(this);
+
 		context.registerReceiver(new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
@@ -88,21 +83,14 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 	}
 
 	@Override
-	public void replay() throws IOException {
-		Iterator<Entry<String, String>> it = mXMPPEntityCapsTable.getDiscoverInfos().entrySet()
-				.iterator();
-		while (it.hasNext()) {
-			Entry<String, String> entry = it.next();
-			String node = entry.getKey();
-			DiscoverInfo info = discoverInfoFromString(entry.getValue());
-			if (info == null) continue;
-			EntityCapsManager.addDiscoverInfoByNode(node, info);
-		}
+	public DiscoverInfo lookup(String nodeVer) {
+		String infoString = mXMPPEntityCapsTable.getDiscoverInfo(nodeVer);
+		if (infoString == null) return null;
+
+		return discoverInfoFromString(infoString);
 	}
 
-	// TODO this code should be provided by smack instead
-	// I guess what Smack needs is an convenient way to transform Strings into
-	// all kinds of Packets.
+	// TODO This code is now available in Smack 4.1 and should be used instead
 	private DiscoverInfo discoverInfoFromString(String string) {
 		Reader reader = new StringReader(string);
 		String id;
@@ -143,7 +131,7 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 		iqPacket.setPacketID(id);
 		iqPacket.setFrom(from);
 		iqPacket.setTo(to);
-		iqPacket.setType(IQ.Type.RESULT);
+		iqPacket.setType(IQ.Type.result);
 		return iqPacket;
 	}
 }

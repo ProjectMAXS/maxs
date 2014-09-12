@@ -11,8 +11,12 @@
     <string name="advancedSettings">Advanced Settings</string>
     <string name="registerAccount">Register Account</string>
     <string name="pref_xmpp_stream_settings">XMPP Stream Settings</string>
+    <string name="pref_xmpp_stream_management">Stream management</string>
+    <string name="pref_xmpp_stream_management_help">Use XMPP stream management (XEP-198) if supported by server. Stream management improves reliability by ensuring that no stanza ist lost.</string>
     <string name="pref_xmpp_stream_compression">Stream compression</string>
     <string name="pref_xmpp_stream_compression_help">Use XMPP stream compression if supported by server.</string>
+    <string name="pref_xmpp_stream_compression_sync_flush">Sync flush</string>
+    <string name="pref_xmpp_stream_compression_sync_flush_help">Use sync flush when using compression. Increases compression efficiency but could lead to privacy leaks. Also causes some problems with stream resumption and Prosody (See Prosody Issue 433)</string>
     <string name="pref_xmpp_stream_encryption">Stream encryption</string>
     <string name="pref_xmpp_stream_encryption_help">Chose the level of encryption.</string>
     <string name="pref_xmpp_stream_privacy">Use Privacy Lists</string>
@@ -33,8 +37,8 @@
     <string name="pref_app_xmpp_debug_help">Log all XMPP stanzas.</string>
     <string name="pref_app_debug_network">Network Debug</string>
     <string name="pref_app_debug_network_help">Log extended network information.</string>
-    <string name="pref_app_debug_dnsjava">dnsjava Debug</string>
-    <string name="pref_app_debug_dnsjava_help">Log extended dnsjava information.</string>
+    <string name="pref_app_debug_dns">minidns Debug</string>
+    <string name="pref_app_debug_dns_help">Log extended minidns information.</string>
     <string name="pref_app_excluded_resources">Excluded Resources</string>
     <string name="pref_app_excluded_resources_help">Specify XMPP resources from being excluded from notifications.</string>
 

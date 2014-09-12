@@ -45,7 +45,7 @@ public class HandleConnectionListener extends StateChangeListener {
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
 				LOG.w("connectionClosedOnError");
-				mXMPPService.disconnect();
+				mXMPPService.instantDisconnect();
 				// We don't call scheduleReconnect() here, because this method is usually be called
 				// from Smack's PacketReader or PacketWriter thread, which will not have a Looper
 				// (and shouldn't get one) and therefore is unable to use the reconnect handler.

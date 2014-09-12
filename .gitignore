@@ -1,6 +1,6 @@
-releases/
-maxs-binary/
-config
+/releases/
+/maxs-binary/
+/config
 
 lint.xml
 lint-report.html
@@ -8,3 +8,4 @@ lint-report_files/
 lint-report-full.html
 lint-report-full_files/
 
+libs-sources/

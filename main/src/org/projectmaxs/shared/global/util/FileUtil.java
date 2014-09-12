@@ -15,10 +15,32 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jivesoftware.smack;
+package org.projectmaxs.shared.global.util;
 
-public class CustomSmackConfiguration {
+import java.io.File;
 
-	public static final String[] DISABLED_SMACK_CLASSES = { "org.jivesoftware.smackx.hoxt.HOXTManager" };
+import android.content.Context;
+
+public class FileUtil {
+
+	/**
+	 * Returns and creates if necessary a new directory within the applications file directory on
+	 * internal storage.
+	 * 
+	 * @param context
+	 * @param directoryName
+	 * @return a directory
+	 * @see Context#getFilesDir
+	 */
+	public static File getFileDir(Context context, String directoryName) {
+		File result = new File(context.getFilesDir(), directoryName);
+		if (!result.isDirectory()) {
+			boolean success = result.mkdir();
+			if (!success) {
+				throw new IllegalStateException("Could not create directory: " + result);
+			}
+		}
+		return result;
+	}
 
 }
