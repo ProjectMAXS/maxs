@@ -56,4 +56,24 @@ public class BooleanElement {
 		return new Element(xmlName, Boolean.toString(isEnabled), humanReadable);
 	}
 
+	public static Element trueOrFalse(String humanReadableTrue, String humanReadableFalse,
+			String xmlName, boolean b) {
+		String string;
+		if (b) {
+			string = humanReadableTrue;
+		} else {
+			string = humanReadableFalse;
+		}
+		return new Element(xmlName, Boolean.toString(b), string);
+	}
+
+	public static Element successOrUnsuccessfully(String what, String xmlName, boolean b) {
+		String conditionText;
+		if (b) {
+			conditionText = "Successfully ";
+		} else {
+			conditionText = "Unsuccessfully ";
+		}
+		return new Element(xmlName, Boolean.toString(b), conditionText + what);
+	}
 }

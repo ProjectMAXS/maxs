@@ -1,0 +1,49 @@
+#+TITLE:        MAXS Module PhonestateModify: User Guide
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      author:nil
+#+STARTUP:      noindent
+
+* Overview
+
+Modify the phone state.
+This MAXS Module needs to be an system app in order to get the required permissions granted.
+You can read more about how to convert an app to an system app at projectmaxs.org/systemapp
+
+| Makes optional use of modules | none |
+| Uses *inoffical* Android API  | yes  |
+
+** Permissions
+
+| Permission                              | Use                                                            |
+|-----------------------------------------+----------------------------------------------------------------|
+| =android.permission.MODIFY_PHONE_STATE= | Query the status of the default phonestatemodify adapter       |
+| =android.permissions.CALL_PHONE=        | Required not only to place calls but also to e.g. to end calls |
+
+
+* Commands
+
+** =reject= (short command: =rej=)
+
+*** =reject call=
+
+#+BEGIN_SRC
+User: reject
+AndroidDevice: Successfully rejected phone call
+#+END_SRC
+
+** =radio=
+
+Disable or enable the phones mobile radio
+
+*** =radio off=
+
+*** =radio on=
+
+** =data=
+
+Disable or enable mobile data
+
+*** =data disable=
+
+*** =data enable=

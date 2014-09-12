@@ -21,8 +21,10 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 
 public class PackageManagerUtil {
@@ -34,10 +36,12 @@ public class PackageManagerUtil {
 		return sPackageManagerUtil;
 	}
 
-	final PackageManager mPackageManager;
+	private final PackageManager mPackageManager;
+	private final String mPackageName;
 
 	private PackageManagerUtil(Context context) {
 		mPackageManager = context.getPackageManager();
+		mPackageName = context.getPackageName();
 	}
 
 	public boolean isPackageInstalled(String packageName) {
@@ -51,5 +55,15 @@ public class PackageManagerUtil {
 		List<ResolveInfo> list = mPackageManager.queryIntentActivities(intent,
 				PackageManager.MATCH_DEFAULT_ONLY);
 		return list.size() > 0;
+	}
+
+	public boolean isSystemApp() {
+		ApplicationInfo applicationInfo;
+		try {
+			applicationInfo = mPackageManager.getApplicationInfo(mPackageName, 0);
+		} catch (NameNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
+		return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
 	}
 }
