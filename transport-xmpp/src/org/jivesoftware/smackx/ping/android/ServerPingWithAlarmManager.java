@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Florian Schmaus
+ * Copyright © 2014 Florian Schmaus
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,10 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
+import org.jivesoftware.smack.ConnectionCreationListener;
 import org.jivesoftware.smack.Manager;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPConnectionRegistry;
 import org.jivesoftware.smackx.ping.PingManager;
 
 import android.app.AlarmManager;
@@ -35,6 +37,28 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.SystemClock;
 
+/**
+ * Send automatic server pings with the help of {@link AlarmManager}.
+ * <p>
+ * Smack's {@link PingManager} uses a <code>ScheduledThreadPoolExecutor</code> to schedule the
+ * automatic server pings, but on Android, those scheduled pings are not reliable. This is because
+ * the Android device may go into deep sleep where the system will not continue to run this causes
+ * <ul>
+ * <li>the system time to not move forward, which means that the time spent in deep sleep is not
+ * counted towards the scheduled delay time</li>
+ * <li>the scheduled Runnable is not run while the system is in deep sleep.</li>
+ * </ul>
+ * That is the reason Android comes with an API to schedule those tasks: AlarmManager. Which this
+ * class uses to determine every 30 minutes if a server ping is necessary. The interval of 30
+ * minutes is the ideal trade-off between reliability and low resource (battery) consumption.
+ * </p>
+ * <p>
+ * In order to use this class you need to call {@link #onCreate(Context)} <b>once</b>, for example
+ * in the <code>onCreate()</code> method of your Service holding the XMPPConnection. And to avoid
+ * leaking any resources, you should call {@link #onDestroy()} when you no longer need any of its
+ * functionality.
+ * </p>
+ */
 public class ServerPingWithAlarmManager extends Manager {
 
 	private static final Logger LOGGER = Logger.getLogger(ServerPingWithAlarmManager.class
@@ -45,6 +69,15 @@ public class ServerPingWithAlarmManager extends Manager {
 	private static final Map<XMPPConnection, ServerPingWithAlarmManager> INSTANCES = Collections
 			.synchronizedMap(new WeakHashMap<XMPPConnection, ServerPingWithAlarmManager>());
 
+	static {
+		XMPPConnectionRegistry.addConnectionCreationListener(new ConnectionCreationListener() {
+			@Override
+			public void connectionCreated(XMPPConnection connection) {
+				getInstanceFor(connection);
+			}
+		});
+	}
+
 	public static synchronized ServerPingWithAlarmManager getInstanceFor(XMPPConnection connection) {
 		ServerPingWithAlarmManager serverPingWithAlarmManager = INSTANCES.get(connection);
 		if (serverPingWithAlarmManager == null) {
@@ -54,7 +87,7 @@ public class ServerPingWithAlarmManager extends Manager {
 		return serverPingWithAlarmManager;
 	}
 
-	private static boolean mEnabled = true;
+	private boolean mEnabled = true;
 
 	private ServerPingWithAlarmManager(XMPPConnection connection) {
 		super(connection);
@@ -101,7 +134,7 @@ public class ServerPingWithAlarmManager extends Manager {
 				AlarmManager.INTERVAL_HALF_HOUR, sPendingIntent);
 	}
 
-	public static void onDestory() {
+	public static void onDestroy() {
 		sContext.unregisterReceiver(sAlarmBroadcastReceiver);
 		sAlarmManager.cancel(sPendingIntent);
 	}

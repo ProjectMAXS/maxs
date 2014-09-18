@@ -40,7 +40,6 @@ import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
-import org.jivesoftware.smackx.ping.android.ServerPingWithAlarmManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -545,7 +544,6 @@ public class XMPPService {
 				.getConnectionConfiguration(mContext)) {
 			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
 			connection = new XMPPTCPConnection(mConnectionConfiguration);
-			ServerPingWithAlarmManager.getInstanceFor(connection);
 			newConnection = true;
 		} else {
 			connection = mConnection;

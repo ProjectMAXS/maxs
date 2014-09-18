@@ -80,7 +80,7 @@ public class TransportService extends MAXSTransportService {
 		if (mXMPPService != null) {
 			mXMPPService.disconnect();
 		}
-		ServerPingWithAlarmManager.onDestory();
+		ServerPingWithAlarmManager.onDestroy();
 	}
 
 	@Override
