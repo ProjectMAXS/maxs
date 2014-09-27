@@ -34,6 +34,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.util.DNSUtil;
+import org.jivesoftware.smack.util.StringTransformer;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
@@ -94,6 +96,13 @@ public class XMPPService {
 		Socks5Proxy.setLocalSocks5ProxyPort(-7777);
 
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
+
+		DNSUtil.setIdnaTransformer(new StringTransformer() {
+			@Override
+			public String transform(String string) {
+				return java.net.IDN.toASCII(string);
+			}
+		});
 	}
 
 	private final Runnable mReconnectRunnable = new Runnable() {

@@ -26,6 +26,7 @@
 -keep class * implements org.jivesoftware.smack.initializer.SmackInitializer
 -keep class * implements org.jivesoftware.smack.provider.IQProvider
 -keep class * implements org.jivesoftware.smack.provider.PacketExtensionProvider
+-keep class * implements org.jivesoftware.smack.provider.StreamFeatureProvider
 -keep class * extends org.jivesoftware.smack.packet.Packet
 -keep class org.jivesoftware.smack.XMPPConnection
 -keep class org.jivesoftware.smack.ReconnectionManager

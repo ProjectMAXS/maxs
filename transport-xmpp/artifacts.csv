@@ -1,10 +1,10 @@
-org.igniterealtime.smack,smack-android,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
-org.igniterealtime.smack,smack-core,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
-org.igniterealtime.smack,smack-tcp,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
-org.igniterealtime.smack,smack-extensions,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
-org.igniterealtime.smack,smack-experimental,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
-org.igniterealtime.smack,smack-resolver-minidns,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
-org.igniterealtime.smack,smack-sasl-provided,4.1.0-alpha1,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-android,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-core,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-tcp,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-extensions,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-experimental,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-resolver-minidns,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
+org.igniterealtime.smack,smack-sasl-provided,4.1.0-alpha2,1357B01865B2503C18453D208CAC2A9678548E35
 org.jxmpp,jxmpp-core,0.3.0,1357B01865B2503C18453D208CAC2A9678548E35
 org.jxmpp,jxmpp-util-cache,0.3.0,1357B01865B2503C18453D208CAC2A9678548E35
 de.measite.minidns,minidns,0.1.1,4677EF84C286721DA33C09C98D2028BA8AF1E192
