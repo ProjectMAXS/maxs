@@ -114,6 +114,8 @@ public class XMPPService {
 	private XMPPTCPConnection mConnection;
 	private Handler mReconnectHandler;
 
+	private int mReconnectionAttemptCount;
+
 	/**
 	 * Get an XMPPService
 	 * 
@@ -368,12 +370,25 @@ public class XMPPService {
 		}
 	}
 
-	protected void scheduleReconnect() {
+	private void scheduleReconnect() {
 		newState(State.WaitingForRetry);
 		if (mReconnectHandler == null) mReconnectHandler = new Handler();
 		mReconnectHandler.removeCallbacks(mReconnectRunnable);
-		LOG.d("scheduleReconnect: scheduling reconnect in 10 seconds");
-		mReconnectHandler.postDelayed(mReconnectRunnable, 10000);
+		int reconnectDelaySeconds;
+		final int MINIMAL_DELAY_SECONDS = 10;
+		final int ATTEMPTS_WITHOUT_PENALTY = 60;
+		if (mReconnectionAttemptCount <= ATTEMPTS_WITHOUT_PENALTY) {
+			reconnectDelaySeconds = MINIMAL_DELAY_SECONDS;
+		} else {
+			int delayFunctionResult = MINIMAL_DELAY_SECONDS
+					* ((int) Math
+							.pow(mReconnectionAttemptCount - ATTEMPTS_WITHOUT_PENALTY - 1, 1.2));
+			// Maximum delay is 30 minutes
+			reconnectDelaySeconds = Math.max(delayFunctionResult, 60 * 30);
+		}
+		mReconnectionAttemptCount++;
+		LOG.d("scheduleReconnect: scheduling reconnect in " + reconnectDelaySeconds + " seconds");
+		mReconnectHandler.postDelayed(mReconnectRunnable, reconnectDelaySeconds * 1000);
 	}
 
 	private void newState(State newState) {
@@ -594,6 +609,7 @@ public class XMPPService {
 			}
 		}
 
+		mReconnectionAttemptCount = 0;
 		newState(State.Connected);
 
 		LOG.d("tryToConnect: successfully connected \\o/");
