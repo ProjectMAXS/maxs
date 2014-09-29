@@ -120,14 +120,5 @@ public class TransportService extends MAXSTransportService {
 			throw new IllegalStateException("Unkown intent action: " + action);
 		}
 		LOG.d("onHandleIntent: " + action + " handled");
-
-		// This hopefully fixes the situation where transport-xmpp is unable to connect
-		// I suppose that the TransportService is re-created by Android, but somehow without sending
-		// a null intent and therefore we don't replace that null intent with START_SERVICE. But it
-		// seems that mIsRunning is still set to true in this case.
-		if (isRunning() && !mXMPPService.isConnected()) {
-			LOG.d("onHandleIntent: service is running, but XMPPService is not connected, issuing connect()");
-			mXMPPService.connect();
-		}
 	}
 }
