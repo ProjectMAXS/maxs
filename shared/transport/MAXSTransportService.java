@@ -33,7 +33,8 @@ import android.os.Message;
 public abstract class MAXSTransportService extends Service {
 	private static final Log LOG = Log.getLog();
 
-	private boolean mIsRunning = false;
+	private static boolean sIsRunning = false;
+
 	private volatile Looper mServiceLooper;
 	private volatile ServiceHandler mServiceHandler;
 	private String mName;
@@ -85,6 +86,7 @@ public abstract class MAXSTransportService extends Service {
 	public void performInServiceHandler(Intent intent) {
 		Message msg = mServiceHandler.obtainMessage();
 		msg.obj = intent;
+		msg.what = intent.getAction().hashCode();
 		mServiceHandler.sendMessage(msg);
 	}
 
@@ -95,20 +97,20 @@ public abstract class MAXSTransportService extends Service {
 			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
 		}
 		LOG.d("onStartCommand: intent=" + intent.getAction() + " flags=" + flags + " startId="
-				+ startId + " mIsRunning=" + mIsRunning);
+				+ startId + " sIsRunning=" + sIsRunning);
 
 		boolean stickyStart = true;
 		final String action = intent.getAction();
 		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
-			mIsRunning = false;
+			sIsRunning = false;
 			stickyStart = false;
 		} else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
-			mIsRunning = true;
+			sIsRunning = true;
 		}
 		// If the service is not running, and we receive something else then
 		// START_SERVICE, then don't start sticky to prevent the service from
 		// running
-		else if (!mIsRunning && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
+		else if (!sIsRunning && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			LOG.d("onStartCommand: service not running and action (" + action
 					+ ") not start. Don't start sticky");
 			stickyStart = false;
@@ -118,8 +120,12 @@ public abstract class MAXSTransportService extends Service {
 		return stickyStart ? START_STICKY : START_NOT_STICKY;
 	}
 
-	public boolean isRunning() {
-		return mIsRunning;
+	public static boolean isRunning() {
+		return sIsRunning;
+	}
+
+	protected boolean hasMessage(int what) {
+		return mServiceHandler.hasMessages(what);
 	}
 
 	public abstract void onHandleIntent(Intent intent);

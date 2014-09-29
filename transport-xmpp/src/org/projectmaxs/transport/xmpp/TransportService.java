@@ -96,10 +96,18 @@ public class TransportService extends MAXSTransportService {
 		final String action = intent.getAction();
 		LOG.d("onHandleIntent: " + action);
 		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
-			mXMPPService.connect();
+			if (hasMessage(TransportConstants.ACTION_STOP_SERVICE.hashCode())) {
+				LOG.d("Not starting service because there is a stop service action queued");
+			} else {
+				mXMPPService.connect();
+			}
 		} else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
-			mXMPPService.disconnect();
-			stopSelf();
+			if (hasMessage(TransportConstants.ACTION_START_SERVICE.hashCode())) {
+				LOG.d("Not stopping service because there is a start service action queued");
+			} else {
+				mXMPPService.disconnect();
+				stopSelf();
+			}
 		} else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mXMPPService.setStatus(status);
@@ -111,14 +119,26 @@ public class TransportService extends MAXSTransportService {
 			CommandOrigin origin = intent
 					.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			mXMPPService.send(message, origin);
-		} else if (Constants.ACTION_NETWORK_STATUS_CHANGED.equals(action)) {
-			// Don't react on network status changes if the service isn't even running
-			if (!isRunning()) return;
-
-			boolean connected = intent.getBooleanExtra(Constants.EXTRA_NETWORK_CONNECTED, false);
-			boolean networkTypeChanged = intent.getBooleanExtra(
-					Constants.EXTRA_NETWORK_TYPE_CHANGED, false);
-			mXMPPService.newConnecitivytInformation(connected, networkTypeChanged);
+		} else if (Constants.ACTION_NETWORK_CONNECTED.equals(action)) {
+			if (hasMessage(Constants.ACTION_NETWORK_CONNECTED.hashCode())) {
+				LOG.d("Not handling NETWORK_CONNECTED because another intent of the same type is in the queue");
+			} else {
+				mXMPPService.connect();
+			}
+		} else if (Constants.ACTION_NETWORK_DISCONNECTED.equals(action)) {
+			if (hasMessage(Constants.ACTION_NETWORK_DISCONNECTED.hashCode())) {
+				LOG.d("Not handling NETWORK_DISCONNECTED because another intent of the same type is in the queue");
+			} else {
+				mXMPPService.networkDisconnected();
+			}
+		} else if (Constants.ACTION_NETWORK_TYPE_CHANGED.equals(action)) {
+			if (hasMessage(Constants.ACTION_NETWORK_TYPE_CHANGED.hashCode())) {
+				LOG.d("Not handling NETWORK_TYPE_CHANGED because another intent of the same type is in the queue");
+			} else if (mXMPPService.fastPingServer()) {
+				LOG.d("Not issueing instantDisconnect as result of NETWORK_TYPE_CHANGED, because connection already available");
+			} else {
+				mXMPPService.instantDisconnect();
+			}
 		} else {
 			throw new IllegalStateException("Unkown intent action: " + action);
 		}

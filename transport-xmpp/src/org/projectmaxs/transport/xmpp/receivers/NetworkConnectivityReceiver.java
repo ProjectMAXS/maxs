@@ -17,6 +17,9 @@
 
 package org.projectmaxs.transport.xmpp.receivers;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.TransportService;
@@ -51,6 +54,11 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			log(activeNetworkInfo);
 		}
 
+		if (!TransportService.isRunning()) {
+			LOG.d("Service not running, aborting");
+			return;
+		}
+
 		boolean connected;
 		boolean networkTypeChanged;
 
@@ -76,13 +84,23 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			}
 			settings.setLastActiveNetwork("");
 		}
-		LOG.d("Sending NETWORK_STATUS_CHANGED connected=" + connected + " changed="
-				+ networkTypeChanged);
-		Intent i = new Intent(context, TransportService.class);
-		i.setAction(Constants.ACTION_NETWORK_STATUS_CHANGED);
-		i.putExtra(Constants.EXTRA_NETWORK_TYPE_CHANGED, networkTypeChanged);
-		i.putExtra(Constants.EXTRA_NETWORK_CONNECTED, connected);
-		context.startService(i);
+
+		List<String> actions = new LinkedList<String>();
+		// The order how we send those intents is important, NETWORK_TYPE_CHANGED must come first
+		if (networkTypeChanged) {
+			actions.add(Constants.ACTION_NETWORK_TYPE_CHANGED);
+		}
+		if (connected) {
+			actions.add(Constants.ACTION_NETWORK_CONNECTED);
+		} else {
+			actions.add(Constants.ACTION_NETWORK_DISCONNECTED);
+		}
+		for (String action : actions) {
+			Intent i = new Intent(context, TransportService.class);
+			i.setAction(action);
+			LOG.d("Sending action: " + action);
+			context.startService(i);
+		}
 	}
 
 	private static void log(NetworkInfo networkInfo) {

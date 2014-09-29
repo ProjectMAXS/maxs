@@ -42,6 +42,7 @@ import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -211,24 +212,8 @@ public class XMPPService {
 		mXMPPStatus.setStatus(status);
 	}
 
-	public void newConnecitivytInformation(boolean connected, boolean networkTypeChanged) {
-		// first disconnect if the network type changed and we are now connected
-		// with an now unusable network
-		if ((networkTypeChanged && isConnected()) || !connected) {
-			LOG.d("newConnectivityInformation: calling disconnect() networkTypeChanged="
-					+ networkTypeChanged + " connected=" + connected + " isConnected="
-					+ isConnected());
-			instantDisconnect();
-		}
-
-		// if we have an connected network but we are not connected, connect
-		if (connected && !isConnected()) {
-			LOG.d("newConnectivityInformation: calling connect()");
-			connect();
-		} else if (!connected) {
-			LOG.d("newConnectivityInformation: we are not connected any more, changing state to WaitingForNetwork");
-			newState(State.WaitingForNetwork);
-		}
+	public void networkDisconnected() {
+		newState(State.WaitingForNetwork);
 	}
 
 	public void send(org.projectmaxs.shared.global.Message message, CommandOrigin origin) {
@@ -254,6 +239,16 @@ public class XMPPService {
 
 	public XMPPConnection getConnection() {
 		return mConnection;
+	}
+
+	public boolean fastPingServer() {
+		if (mConnection == null) return false;
+		PingManager pingManager = PingManager.getInstanceFor(mConnection);
+		try {
+			return pingManager.pingMyServer(false, 1500);
+		} catch (NotConnectedException e) {
+			return false;
+		}
 	}
 
 	Context getContext() {

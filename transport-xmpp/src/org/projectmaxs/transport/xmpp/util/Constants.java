@@ -25,10 +25,8 @@ public class Constants {
 
 	public static final String ACTION_SEND_AS_MESSAGE = PACKAGE + ".SEND_AS_MESSAGE";
 	public static final String ACTION_SEND_AS_IQ = PACKAGE + ".SEND_AS_IQ";
-	public static final String ACTION_NETWORK_STATUS_CHANGED = PACKAGE + ".NETWORK_STATUS_CHANGED";
-
-	public static final String ACTION_EXTRA = PACKAGE + ".EXTRA";
-	public static final String EXTRA_NETWORK_TYPE_CHANGED = ACTION_EXTRA + "NETWORK_TYPE_CHANGED";
-	public static final String EXTRA_NETWORK_CONNECTED = ACTION_EXTRA + "NETWORK_CONNECTED";
+	public static final String ACTION_NETWORK_TYPE_CHANGED = PACKAGE + ".NETWORK_TYPE_CHANGED";
+	public static final String ACTION_NETWORK_CONNECTED = PACKAGE + ".NETWORK_CONNECTED";
+	public static final String ACTION_NETWORK_DISCONNECTED = PACKAGE + ".NETWORK_DISCONNECTED";
 
 }
