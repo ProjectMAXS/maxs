@@ -52,24 +52,33 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
 	private static XMPPEntityCapsCache sXMPPEntityCapsCache;
 
-	public static void initialize(Context context) {
+	public static void onCreate(Context context) {
 		if (sXMPPEntityCapsCache != null) return;
 		sXMPPEntityCapsCache = new XMPPEntityCapsCache(context);
 	}
 
-	private XMPPEntityCapsTable mXMPPEntityCapsTable;
+	public static void onDestroy(Context context) {
+		if (sXMPPEntityCapsCache == null) return;
+		context.unregisterReceiver(sXMPPEntityCapsCache.mStorageLowReceiver);
+		sXMPPEntityCapsCache = null;
+	}
+
+	private final XMPPEntityCapsTable mXMPPEntityCapsTable;
+	private final BroadcastReceiver mStorageLowReceiver;
 
 	private XMPPEntityCapsCache(Context context) {
 		mXMPPEntityCapsTable = XMPPEntityCapsTable.getInstance(context);
 		EntityCapsManager.setPersistentCache(this);
 
-		context.registerReceiver(new BroadcastReceiver() {
+		mStorageLowReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				LOG.i("ACTION_DEVICE_STORAGE_LOW received, emptying EntityCapsCache");
 				emptyCache();
 			}
-		}, new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW));
+		};
+		context.registerReceiver(mStorageLowReceiver, new IntentFilter(
+				Intent.ACTION_DEVICE_STORAGE_LOW));
 	}
 
 	@Override

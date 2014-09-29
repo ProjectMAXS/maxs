@@ -142,7 +142,6 @@ public class XMPPService {
 	}
 
 	private XMPPService(Context context) {
-		XMPPEntityCapsCache.initialize(context);
 		XMPPVersion.initialize(context);
 
 		mContext = context;

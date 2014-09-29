@@ -28,6 +28,7 @@ import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
 import org.projectmaxs.shared.transport.MAXSTransportService;
 import org.projectmaxs.transport.xmpp.util.Constants;
+import org.projectmaxs.transport.xmpp.xmppservice.XMPPEntityCapsCache;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
 import android.content.Intent;
@@ -69,6 +70,7 @@ public class TransportService extends MAXSTransportService {
 		super.onCreate();
 		LOG.d("onCreate");
 		JULHandler.init(Settings.getInstance(this));
+		XMPPEntityCapsCache.onCreate(this);
 		ServerPingWithAlarmManager.onCreate(this);
 	}
 
@@ -80,6 +82,7 @@ public class TransportService extends MAXSTransportService {
 		if (mXMPPService != null) {
 			mXMPPService.disconnect();
 		}
+		XMPPEntityCapsCache.onDestroy(this);
 		ServerPingWithAlarmManager.onDestroy();
 	}
 
