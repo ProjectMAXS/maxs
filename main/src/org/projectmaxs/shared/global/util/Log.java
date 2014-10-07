@@ -17,6 +17,8 @@
 
 package org.projectmaxs.shared.global.util;
 
+import org.projectmaxs.shared.global.GlobalConstants;
+
 public class Log {
 
 	private static DebugLogSettings sDebugLogSettings;
@@ -36,7 +38,7 @@ public class Log {
 	}
 
 	private Log(String logTag) {
-		this.mLogTag = logTag;
+		this.mLogTag = GlobalConstants.MAXS + '/' + logTag;
 	}
 
 	public void initialize(DebugLogSettings settings) {

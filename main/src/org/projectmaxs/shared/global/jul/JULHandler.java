@@ -31,6 +31,7 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 
@@ -142,7 +143,8 @@ public class JULHandler extends Handler {
 		if (!isLoggable(record)) return;
 
 		final int priority = getAndroidPriority(record.getLevel());
-		final String tag = SharedStringUtil.substringAfterLastDot(record.getSourceClassName());
+		final String tag = GlobalConstants.MAXS + '/'
+				+ SharedStringUtil.substringAfterLastDot(record.getSourceClassName());
 		final String msg = getFormatter().format(record);
 
 		Log.println(priority, tag, msg);
