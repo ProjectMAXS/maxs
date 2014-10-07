@@ -589,7 +589,7 @@ public class XMPPService {
 		if (!connection.isAuthenticated()) {
 			try {
 				connection.login(XmppStringUtils.parseLocalpart(mSettings.getJid()),
-						mSettings.getPassword(), "MAXS");
+						mSettings.getPassword(), GlobalConstants.MAXS);
 			} catch (NoResponseException e) {
 				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
 				scheduleReconnect();

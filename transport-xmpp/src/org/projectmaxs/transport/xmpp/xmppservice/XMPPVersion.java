@@ -18,6 +18,7 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import org.jivesoftware.smackx.iqversion.VersionManager;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.transport.xmpp.R;
 
 import android.content.Context;
@@ -28,7 +29,7 @@ public class XMPPVersion {
 		String version = context.getString(R.string.version);
 		String os = "Android " + android.os.Build.VERSION.RELEASE + " (API "
 				+ android.os.Build.VERSION.SDK_INT + ')';
-		VersionManager.setDefaultVersion("MAXS", version, os);
+		VersionManager.setDefaultVersion(GlobalConstants.MAXS, version, os);
 	}
 
 }

@@ -81,5 +81,5 @@ public class GlobalConstants {
 	public static final String HOMEPAGE_URL = "http://projectmaxs.org";
 
 	public static final File MAXS_EXTERNAL_STORAGE = new File(
-			Environment.getExternalStorageDirectory(), "MAXS");
+			Environment.getExternalStorageDirectory(), MAXS);
 }
