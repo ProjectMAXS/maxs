@@ -82,7 +82,7 @@ public class ExcludedResources extends Activity {
 			String text = mEditText.getText().toString();
 			if (text.isEmpty() && !mBeforeText.isEmpty()) {
 				int childCount = mExcludedResources.getChildCount();
-				mSettings.removeMasterJid(mBeforeText);
+				mSettings.removeExcludedResource(mBeforeText);
 				mExcludedResources.removeView(mEditText);
 				if (childCount <= 2) {
 					mExcludedResources.addView(mEditText, 2);
