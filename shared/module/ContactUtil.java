@@ -25,7 +25,6 @@ import java.util.Map;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
-import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
 
 import android.annotation.SuppressLint;
@@ -78,8 +77,6 @@ public class ContactUtil {
 	private static final String LIMIT = " LIMIT";
 	private static final String LIMIT_1 = LIMIT + " 1";
 
-	private static final Log LOG = Log.getLog();
-
 	public static Uri maxsContactUriFrom(Uri uri) {
 		String pathSegment = uri.getEncodedPath();
 		return Uri.withAppendedPath(CONTACTS_MODULE_AUTHORITY, pathSegment);
@@ -117,6 +114,8 @@ public class ContactUtil {
 	 * @return A collection of matching contacts.
 	 */
 	public Collection<Contact> lookupContacts(String info) {
+		if (!contactsReadModuleInstalled()) return null;
+
 		String cleanNumber = ContactNumber.cleanNumber(info);
 		if (ContactNumber.isNumber(cleanNumber)) return contactsByNumber(cleanNumber);
 
@@ -127,10 +126,10 @@ public class ContactUtil {
 	}
 
 	/**
-	 * Lookup exactly one contact for a given number
+	 * Lookup exactly one contact for a given number.
 	 * 
 	 * @param number
-	 * @return the contact, or null if none was found
+	 * @return the contact, or null if none was found or the contactsread module is not installed.
 	 */
 	public Contact contactByNumber(String number) {
 		if (!contactsReadModuleInstalled()) return null;
@@ -141,11 +140,6 @@ public class ContactUtil {
 		Uri uri = Uri.withAppendedPath(MAXS_PHONE_LOOKUP_CONTENT_FILTER_URI, Uri.encode(number));
 		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
 		Cursor c = mContentResolver.query(uri, projection, null, null, null);
-
-		if (c == null) {
-			LOG.e("contactByNumber: returned cursor is null");
-			return null;
-		}
 
 		Contact contact = null;
 		if (c.moveToFirst()) {
@@ -175,11 +169,6 @@ public class ContactUtil {
 		final String[] projection = new String[] { PhoneLookup.LOOKUP_KEY, DISPLAY_NAME };
 		Cursor c = mContentResolver.query(uri, projection, null, null, null);
 
-		if (c == null) {
-			LOG.e("contactsByNumber: returned cursor is null");
-			return null;
-		}
-
 		Map<String, Contact> contactMap = new HashMap<String, Contact>();
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 			String displayName = c.getString(c.getColumnIndexOrThrow(DISPLAY_NAME));
@@ -207,17 +196,14 @@ public class ContactUtil {
 	 * @return A contact, or null if none found or on error.
 	 */
 	public Contact contactByNickname(String nickname) {
+		if (!contactsReadModuleInstalled()) return null;
+
 		final String[] projection = new String[] { Data.LOOKUP_KEY, DISPLAY_NAME, Nickname.NAME };
 		final String selection = Nickname.NAME + "=?" + AND + Data.MIMETYPE + "='"
 				+ Nickname.CONTENT_ITEM_TYPE + "'" + LIMIT_1;
 		final String[] selectionArgs = new String[] { nickname };
 		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection,
 				selectionArgs, null);
-
-		if (c == null) {
-			LOG.e("lookupKeyByNickanme: returned cursor is null");
-			return null;
-		}
 
 		Contact contact = null;
 		if (c.moveToFirst()) {
@@ -242,17 +228,14 @@ public class ContactUtil {
 	 * @return A contact, or null if none found or on error.
 	 */
 	public Collection<Contact> contactsByNickname(String nickname) {
+		if (!contactsReadModuleInstalled()) return null;
+
 		final String[] projection = new String[] { Data.LOOKUP_KEY, DISPLAY_NAME, Nickname.NAME };
 		final String selection = Nickname.NAME + "=?" + AND + Data.MIMETYPE + "='"
 				+ Nickname.CONTENT_ITEM_TYPE + "'";
 		final String[] selectionArgs = new String[] { nickname };
 		Cursor c = mContentResolver.query(MAXS_DATA_CONTENT_URI, projection, selection,
 				selectionArgs, null);
-
-		if (c == null) {
-			LOG.e("lookupKesyByNickanme: returned cursor is null");
-			return null;
-		}
 
 		Collection<Contact> contacts = new ArrayList<Contact>();
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -275,9 +258,11 @@ public class ContactUtil {
 	 * The contact will come with all known contact numbers and a lookup key.
 	 * 
 	 * @param name
-	 * @return A contact, or null if none found or on error.
+	 * @return A contact, or null if none found, contactsread is not installed or on error.
 	 */
 	public Contact contactByName(String name) {
+		if (!contactsReadModuleInstalled()) return null;
+
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
 		final String[] projection = new String[] { Contacts.LOOKUP_KEY, DISPLAY_NAME };
 		Cursor c = mContentResolver.query(uri, projection, LIMIT_1, null, null);
@@ -300,9 +285,11 @@ public class ContactUtil {
 	 * The contacts will come with all known contact numbers and a lookup key.
 	 * 
 	 * @param name
-	 * @return A collection of matching Contacts.
+	 * @return A collection of matching Contacts or null if contactsread is not installed.
 	 */
 	public Collection<Contact> contactsByName(String name) {
+		if (!contactsReadModuleInstalled()) return null;
+
 		Uri uri = Uri.withAppendedPath(MAXS_CONTACTS_CONTENT_FILTER_URI, Uri.encode(name));
 		final String[] projection = new String[] { Contacts.LOOKUP_KEY, DISPLAY_NAME };
 		Cursor c = mContentResolver.query(uri, projection, null, null, null);
@@ -324,11 +311,14 @@ public class ContactUtil {
 	 * Lookup the numbers for a given contact.
 	 * 
 	 * Usually this is not needed because most methods already return the
-	 * contacts with all known contact numbers.
+	 * contacts with all known contact numbers. Make sure to call
+	 * {@link #contactsReadModuleInstalled()} first.
 	 * 
 	 * @param contact
 	 */
 	public void lookupContactNumbersFor(Contact contact) {
+		if (!contactsReadModuleInstalled()) return;
+
 		String lookupKey = contact.getLookupKey();
 		// @formatter:off
 		final String[] projection = new String[] { 
