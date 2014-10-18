@@ -9,13 +9,16 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.ping.PingManager;
-import org.jxmpp.util.XmppStringUtils;
+import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.util.JidUtil;
+import org.jxmpp.jid.util.JidUtil.NotABareJidStringException;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.transport.xmpp.R;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
-import org.projectmaxs.transport.xmpp.util.XMPPUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.StateChangeListener;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
@@ -116,7 +119,7 @@ public class InfoAndSettings extends Activity {
 	}
 
 	public void registerAccount(View view) {
-		final String jid = mSettings.getJid();
+		final String jid = mSettings.getJid().toString();
 		final String password = mSettings.getPassword();
 		if (jid.isEmpty()) {
 			Toast.makeText(this, "Please enter a valid bare JID", Toast.LENGTH_SHORT).show();
@@ -136,7 +139,7 @@ public class InfoAndSettings extends Activity {
 				}
 
 				try {
-					final String username = XmppStringUtils.parseLocalpart(mSettings.getJid());
+					final String username = mSettings.getJid().getLocalpart();
 					final String password = mSettings.getPassword();
 					final AbstractXMPPConnection connection = new XMPPTCPConnection(
 							mSettings.getConnectionConfiguration(InfoAndSettings.this));
@@ -189,13 +192,17 @@ public class InfoAndSettings extends Activity {
 			@Override
 			public void lostFocusOrDone(View v) {
 				String text = mJID.getText().toString();
-				if (!XMPPUtil.isValidBareJid(text)) {
-					Toast.makeText(InfoAndSettings.this, "'" + text + "' is not a valid bare JID",
+				BareJid jid;
+				try {
+					jid = JidUtil.validateBareJid(text);
+				} catch (NotABareJidStringException | XmppStringprepException e) {
+					Toast.makeText(InfoAndSettings.this,
+							"'" + text + "' is not a valid bare JID: " + e.getLocalizedMessage(),
 							Toast.LENGTH_LONG).show();
 					mJID.setText(mLastJidText);
 					return;
 				}
-				mSettings.setJid(text);
+				mSettings.setJid(jid);
 			}
 		};
 		mPasswordEditTextWachter = new EditTextWatcher(mPassword) {
@@ -207,9 +214,9 @@ public class InfoAndSettings extends Activity {
 
 		// initialize the master jid linear layout if there are already some
 		// configured
-		Set<String> masterJids = mSettings.getMasterJids();
+		Set<BareJid> masterJids = mSettings.getMasterJids();
 		if (!masterJids.isEmpty()) {
-			Iterator<String> it = masterJids.iterator();
+			Iterator<BareJid> it = masterJids.iterator();
 			mFirstMasterAddress.setText(it.next());
 			while (it.hasNext()) {
 				EditText et = addEmptyMasterJidEditText();
@@ -258,9 +265,17 @@ public class InfoAndSettings extends Activity {
 
 		public void lostFocusOrDone(View v) {
 			String text = mEditText.getText().toString();
-			if (text.equals("") && !mBeforeText.equals("")) {
+			BareJid beforeJid = null;
+			if (!mBeforeText.equals("")) {
+				try {
+					beforeJid = JidCreate.bareFrom("mBeforeText");
+				} catch (XmppStringprepException e) {
+					throw new AssertionError(e);
+				}
+			}
+			if (text.equals("") && beforeJid != null) {
 				int childCount = mMasterAddresses.getChildCount();
-				mSettings.removeMasterJid(mBeforeText);
+				mSettings.removeMasterJid(beforeJid);
 				mMasterAddresses.removeView(mEditText);
 				if (childCount <= 2) {
 					mMasterAddresses.addView(mEditText, 2);
@@ -273,20 +288,26 @@ public class InfoAndSettings extends Activity {
 
 			// an attempt to change an empty master jid to an invalid jid. abort
 			// here and leave the original value untouched
-			if (!XMPPUtil.isValidBareJid(text)) {
-				Toast.makeText(InfoAndSettings.this, "This is not a valid bare JID",
+			BareJid newJid;
+			try {
+				newJid = JidUtil.validateBareJid(text);
+			} catch (NotABareJidStringException | XmppStringprepException e) {
+				Toast.makeText(InfoAndSettings.this,
+						"This is not a valid bare JID: " + e.getLocalizedMessage(),
 						Toast.LENGTH_LONG).show();
 				mEditText.setText(mBeforeText);
+				return;
 			}
+
 			// an empty master jid was change to a valid jid
-			else if (mBeforeText.equals("")) {
-				mSettings.addMasterJid(text);
+			if (beforeJid == null) {
+				mSettings.addMasterJid(newJid);
 				addEmptyMasterJidEditText();
 			}
 			// a valid master jid was changed with another valid value
 			else if (!mBeforeText.equals(text)) {
-				mSettings.removeMasterJid(mBeforeText);
-				mSettings.addMasterJid(text);
+				mSettings.removeMasterJid(beforeJid);
+				mSettings.addMasterJid(newJid);
 			}
 			return;
 		}

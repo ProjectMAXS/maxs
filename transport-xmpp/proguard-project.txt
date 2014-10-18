@@ -29,7 +29,6 @@
 -keep class * implements org.jivesoftware.smack.provider.StreamFeatureProvider
 -keep class * extends org.jivesoftware.smack.packet.Packet
 -keep class org.jivesoftware.smack.XMPPConnection
--keep class org.jivesoftware.smack.ReconnectionManager
 -keep class org.jivesoftware.smack.CustomSmackConfiguration
 -keep class org.jivesoftware.smack.util.dns.minidns.MiniDnsResolver
 -keep class org.jivesoftware.smackx.disco.ServiceDiscoveryManager

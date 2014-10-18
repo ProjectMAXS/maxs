@@ -24,6 +24,9 @@ import org.jivesoftware.smack.filter.OrFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 
@@ -49,7 +52,14 @@ public class HandleChatPacketListener extends StateChangeListener {
 			@Override
 			public void processPacket(Packet packet) {
 				Message message = (Message) packet;
-				String from = message.getFrom();
+				String fromString = message.getFrom();
+				Jid from;
+				try {
+					from = JidCreate.from(fromString);
+				} catch (XmppStringprepException e) {
+					LOG.e("Not a valid 'from' JID string, ignoring message", e);
+					return;
+				}
 				if (mSettings.isMasterJID(from)) {
 					mXMPPService.newMessageFromMasterJID(message);
 				} else {

@@ -32,6 +32,10 @@ import org.jivesoftware.smack.compression.XMPPInputOutputStream;
 import org.jivesoftware.smack.compression.XMPPInputOutputStream.FlushMethod;
 import org.jivesoftware.smack.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.rosterstore.RosterStore;
+import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.FileUtil;
@@ -97,6 +101,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private SharedPreferences mSharedPreferences;
 	private ConnectionConfiguration mConnectionConfiguration;
 
+	private BareJid mJidCache;
+	private Set<BareJid> mMasterJidCache;
+
 	private Settings(Context context) {
 		// this.mSharedPreferences =
 		// context.getSharedPreferences(Constants.MAIN_PACKAGE,
@@ -133,12 +140,29 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		setDnsDebug();
 	}
 
-	public String getJid() {
-		return mSharedPreferences.getString(JID, "");
+	public BareJid getJid() {
+		if (mJidCache != null) {
+			return mJidCache;
+		}
+		String jidString = mSharedPreferences.getString(JID, "");
+		if (jidString.isEmpty()) {
+			return null;
+		}
+		BareJid bareJid;
+		try {
+			bareJid = JidCreate.bareFrom(jidString);
+		} catch (XmppStringprepException e) {
+			throw new AssertionError(e);
+		}
+		return bareJid;
 	}
 
-	public void setJid(String jid) {
-		mSharedPreferences.edit().putString(JID, jid).commit();
+	public void setJid(BareJid jid) {
+		if (jid.hasResource()) {
+			throw new IllegalArgumentException();
+		}
+		mSharedPreferences.edit().putString(JID, jid.toString()).commit();
+		mJidCache = jid;
 	}
 
 	public String getPassword() {
@@ -155,9 +179,21 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * 
 	 * @return A set containing the master JIDs.
 	 */
-	public Set<String> getMasterJids() {
+	public Set<BareJid> getMasterJids() {
+		if (mMasterJidCache != null) {
+			return mMasterJidCache;
+		}
 		String s = mSharedPreferences.getString(MASTER_JIDS, "");
-		Set<String> res = SharedStringUtil.stringToSet(s);
+		Set<String> resString = SharedStringUtil.stringToSet(s);
+		Set<BareJid> res = new HashSet<BareJid>();
+		for (String jidString : resString) {
+			try {
+				BareJid bareJid = JidCreate.bareFrom(jidString);
+				res.add(bareJid);
+			} catch (XmppStringprepException e) {
+				throw new AssertionError(e);
+			}
+		}
 		return res;
 	}
 
@@ -165,14 +201,14 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return getMasterJids().size();
 	}
 
-	public void addMasterJid(String jid) {
-		Set<String> masterJids = getMasterJids();
+	public void addMasterJid(BareJid jid) {
+		Set<BareJid> masterJids = getMasterJids();
 		masterJids.add(jid);
 		saveMasterJids(masterJids);
 	}
 
-	public boolean removeMasterJid(String jid) {
-		Set<String> masterJids = getMasterJids();
+	public boolean removeMasterJid(BareJid jid) {
+		Set<BareJid> masterJids = getMasterJids();
 		if (masterJids.remove(jid)) {
 			saveMasterJids(masterJids);
 			return true;
@@ -180,11 +216,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return false;
 	}
 
-	public boolean isMasterJID(String jid) {
-		String bareJID = XmppStringUtils.parseBareAddress(jid);
-		Set<String> masterJids = getMasterJids();
-		for (String s : masterJids)
-			if (s.equals(bareJID)) return true;
+	public boolean isMasterJID(Jid jid) {
+		BareJid bareJid = jid.asBareJidIfPossible();
+
+		if (bareJid == null) {
+			return false;
+		}
+
+		if (getMasterJids().contains(bareJid)) {
+			return true;
+		}
 
 		return false;
 	}
@@ -278,7 +319,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 */
 	public String checkIfReadyToConnect() {
 		if (getPassword().isEmpty()) return "Password not set or empty";
-		if (getJid().isEmpty()) return "JID not set or empty";
+		if (getJid() == null) return "JID not set or empty";
 		if (getMasterJidCount() == 0) return "Master JID(s) not configured";
 		if (getManualServiceSettings()) {
 			if (getManualServiceSettingsHost().isEmpty()) return "XMPP Server Host not specified";
@@ -332,7 +373,6 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			}
 			mConnectionConfiguration.setSecurityMode(securityMode);
 
-			mConnectionConfiguration.setReconnectionAllowed(false);
 			mConnectionConfiguration.setSendPresence(false);
 
 			mConnectionConfiguration.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG,
@@ -380,12 +420,17 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		}
 	}
 
-	private void saveMasterJids(Set<String> newMasterJids) {
+	private void saveMasterJids(Set<BareJid> newMasterJids) {
 		SharedPreferences.Editor e = mSharedPreferences.edit();
 
-		String masterJids = SharedStringUtil.setToString(newMasterJids);
+		Set<String> jidStrings = new HashSet<String>();
+		for (BareJid bareJid : newMasterJids) {
+			jidStrings.add(bareJid.toString());
+		}
+		String masterJids = SharedStringUtil.setToString(jidStrings);
 		e.putString(MASTER_JIDS, masterJids);
 		e.commit();
+		mMasterJidCache = newMasterJids;
 	}
 
 	private void saveExcludedResources(Set<String> newExcludedResources) {

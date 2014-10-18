@@ -33,6 +33,9 @@ import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.aidl.IMAXSIncomingFileTransferService;
 import org.projectmaxs.shared.global.aidl.IMAXSOutgoingFileTransferService;
@@ -90,7 +93,14 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void fileTransferRequest(FileTransferRequest request) {
-		final String requestor = request.getRequestor();
+		final String requestorString = request.getRequestor();
+		Jid requestor;
+		try {
+			requestor = JidCreate.from(requestorString);
+		} catch (XmppStringprepException e) {
+			LOG.e("Not a valid JID string, ignoring file transfer request", e);
+			return;
+		}
 		if (!mSettings.isMasterJID(requestor)) {
 			LOG.w("File transfer from non master jid " + requestor);
 			try {

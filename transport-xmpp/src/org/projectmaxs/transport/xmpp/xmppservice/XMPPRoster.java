@@ -29,6 +29,7 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.RosterPacket;
+import org.jxmpp.jid.BareJid;
 import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
@@ -60,8 +61,8 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	@Override
 	public void connected(XMPPConnection connection) {
-		Set<String> masterJids = mSettings.getMasterJids();
-		for (String jid : masterJids)
+		Set<BareJid> masterJids = mSettings.getMasterJids();
+		for (BareJid jid : masterJids)
 			friendJid(jid);
 
 		checkMasterJids();
@@ -104,8 +105,8 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 
 	private void checkMasterJids() {
 		boolean masterJidAvailable = false;
-		for (String jid : mSettings.getMasterJids()) {
-			Presence presence = mRoster.getPresence(jid);
+		for (BareJid jid : mSettings.getMasterJids()) {
+			Presence presence = mRoster.getPresence(jid.toString());
 			if (presence.isAvailable()) {
 				if (mSettings.isExcludedResource(XmppStringUtils.parseResource(presence.getFrom()))) {
 					// Skip excluded resources
@@ -131,10 +132,10 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * 
 	 * @param userID
 	 */
-	private void friendJid(String userID) {
-		if (!mRoster.contains(userID)) {
+	private void friendJid(BareJid userID) {
+		if (!mRoster.contains(userID.asBareJid().toString())) {
 			try {
-				mRoster.createEntry(userID, XmppStringUtils.parseBareAddress(userID), null);
+				mRoster.createEntry(userID.toString(), userID.toString(), null);
 				grantSubscription(userID, mConnection);
 				requestSubscription(userID, mConnection);
 			} catch (Exception e) {
@@ -142,7 +143,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 				return;
 			}
 		}
-		RosterEntry rosterEntry = mRoster.getEntry(userID);
+		RosterEntry rosterEntry = mRoster.getEntry(userID.asBareJid().toString());
 		// async code here, the server may not have added the entry yet, so bail
 		// out here
 		if (rosterEntry == null) return;
@@ -171,7 +172,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * @param jid
 	 * @param connection
 	 */
-	private static void grantSubscription(String jid, XMPPConnection connection) {
+	private static void grantSubscription(BareJid jid, XMPPConnection connection) {
 		Presence presence = new Presence(Presence.Type.subscribed);
 		sendPresenceTo(jid, presence, connection);
 	}
@@ -182,13 +183,13 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * @param jid
 	 * @param connection
 	 */
-	private static void requestSubscription(String jid, XMPPConnection connection) {
+	private static void requestSubscription(BareJid jid, XMPPConnection connection) {
 		Presence presence = new Presence(Presence.Type.subscribe);
 		sendPresenceTo(jid, presence, connection);
 	}
 
-	private static void sendPresenceTo(String to, Presence presence, XMPPConnection connection) {
-		presence.setTo(to);
+	private static void sendPresenceTo(BareJid to, Presence presence, XMPPConnection connection) {
+		presence.setTo(to.asBareJid().toString());
 		try {
 			connection.sendPacket(presence);
 		} catch (NotConnectedException e) {

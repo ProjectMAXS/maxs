@@ -38,13 +38,16 @@ import org.jivesoftware.smack.util.DNSUtil;
 import org.jivesoftware.smack.util.StringTransformer;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
-import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
-import org.jxmpp.util.XmppStringUtils;
+import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.FullJid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.util.JidUtil;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
@@ -92,11 +95,8 @@ public class XMPPService {
 		// name to prevent MitM-Attacks.
 		SmackConfiguration.setDefaultHostnameVerifier(new StrictHostnameVerifier());
 
-		// Set to a negative value to try next ports if the current one is already in use.
-		// TODO Remove when Smack >= 4.0.3 is used, since it's the default there
-		Socks5Proxy.setLocalSocks5ProxyPort(-7777);
-
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
+		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.ReconnectionManager");
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
@@ -266,37 +266,42 @@ public class XMPPService {
 			return;
 		}
 
-		String to = originIssuerInfo;
 		Message packet = new Message();
 		packet.setType(Message.Type.chat);
 		packet.setBody(TransformMessageContent.toString(message));
 		packet.setThread(originId);
 
-		List<String> toList = new LinkedList<String>();
-		// No 'to' specified. The message is typical a notification, so we are going to broadcast
-		// it to all master JIDs.
-		if (to == null) {
-			Set<String> jidsWithExcludedResources = new HashSet<String>();
+		List<BareJid> toList = new LinkedList<BareJid>();
+		// No 'originIssueInfo (which is the to JID in this case) specified. The message is typical
+		// a notification, so we are going to broadcast it to all master JIDs.
+		if (originIssuerInfo == null) {
+			Set<BareJid> jidsWithExcludedResources = new HashSet<BareJid>();
 			Roster roster = mConnection.getRoster();
 			// Broadcast to all masterJID resources
-			for (String masterJid : mSettings.getMasterJids()) {
-				Collection<Presence> presences = roster.getPresences(masterJid);
+			for (BareJid masterJid : mSettings.getMasterJids()) {
+				Collection<Presence> presences = roster.getPresences(masterJid.toString());
 				for (Presence p : presences) {
-					String fullJID = p.getFrom();
-					String resource = XmppStringUtils.parseResource(fullJID);
-					if (!mSettings.isExcludedResource(resource)) {
+					String fullJIDString = p.getFrom();
+					FullJid fullJID;
+					try {
+						fullJID = JidCreate.fullFrom(fullJIDString);
+					} catch (XmppStringprepException e) {
+						LOG.e("Could not convert string to full JID", e);
+						continue;
+					}
+					if (!mSettings.isExcludedResource(fullJID.getResource())) {
 						toList.add(fullJID);
 					} else {
-						jidsWithExcludedResources.add(XmppStringUtils.parseBareAddress(fullJID));
+						jidsWithExcludedResources.add(fullJID.asBareJid());
 					}
 				}
 			}
 
 			// Broadcast to all offline masterJIDs
-			for (String masterJid : mSettings.getMasterJids()) {
+			for (BareJid masterJid : mSettings.getMasterJids()) {
 				boolean found = false;
-				for (String toJid : toList) {
-					if (XmppStringUtils.parseBareAddress(toJid).equals(masterJid)) {
+				for (BareJid toJid : toList) {
+					if (toJid.asBareJid().equals(masterJid)) {
 						found = true;
 						break;
 					}
@@ -304,7 +309,7 @@ public class XMPPService {
 				// Maybe add this master JID, if it isn't already contained in toList
 				if (!found) {
 					if (jidsWithExcludedResources.contains(masterJid)
-							&& roster.getPresences(masterJid).size() == 1) {
+							&& roster.getPresences(masterJid.toString()).size() == 1) {
 						// Do not send a message to this JID if it would get received by an excluded
 						// resource, ie. when the excluded resource is the only online presence.
 						continue;
@@ -316,13 +321,21 @@ public class XMPPService {
 		// A JID was specified as receiver. This are typical replies to a command send by the
 		// receiver. This is not a notification, do not broadcast.
 		else {
+			BareJid to;
+			try {
+				to = JidCreate.bareFrom(originIssuerInfo);
+			} catch (XmppStringprepException e) {
+				LOG.e("Could not convert originIssueInfo to string", e);
+				return;
+			}
 			toList.add(to);
 		}
 
 		boolean atLeastOneSupportsXHTMLIM = false;
-		for (String jid : toList) {
+		for (BareJid jid : toList) {
 			try {
-				atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection, jid);
+				atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection,
+						jid.toString());
 			} catch (Exception e) {
 				atLeastOneSupportsXHTMLIM = false;
 			}
@@ -332,7 +345,8 @@ public class XMPPService {
 			XHTMLIMUtil.addXHTMLIM(packet, TransformMessageContent.toFormatedText(message));
 
 		try {
-			MultipleRecipientManager.send(mConnection, packet, toList, null, null);
+			List<String> toListStrings = JidUtil.toStringList(toList);
+			MultipleRecipientManager.send(mConnection, packet, toListStrings, null, null);
 		} catch (Exception e) {
 			LOG.e("sendAsMessage: Got Exception, adding message to DB", e);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
@@ -588,8 +602,8 @@ public class XMPPService {
 
 		if (!connection.isAuthenticated()) {
 			try {
-				connection.login(XmppStringUtils.parseLocalpart(mSettings.getJid()),
-						mSettings.getPassword(), GlobalConstants.MAXS);
+				connection.login(mSettings.getJid().getLocalpart(), mSettings.getPassword(),
+						GlobalConstants.MAXS);
 			} catch (NoResponseException e) {
 				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
 				scheduleReconnect();

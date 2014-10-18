@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.provider.IQProvider;
 import org.jivesoftware.smackx.caps.EntityCapsManager;
 import org.jivesoftware.smackx.caps.cache.EntityCapsPersistentCache;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
@@ -116,7 +115,7 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 		}
 
 		DiscoverInfo iqPacket;
-		IQProvider provider = new DiscoverInfoProvider();
+		DiscoverInfoProvider provider = new DiscoverInfoProvider();
 
 		// Parse the IQ, we only need the id
 		try {
@@ -132,7 +131,7 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 		}
 
 		try {
-			iqPacket = (DiscoverInfo) provider.parseIQ(parser);
+			iqPacket = provider.parse(parser);
 		} catch (Exception e) {
 			return null;
 		}
