@@ -97,6 +97,8 @@ public class XMPPService {
 
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.ReconnectionManager");
+		SmackConfiguration
+				.addDisabledSmackClass("org.jivesoftware.smackx.muc.MultiUserChatManager");
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
