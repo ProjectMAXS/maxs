@@ -68,8 +68,9 @@ public class SmsSend extends AbstractSmsSendCommand {
 							.add(FormatedText
 									.from("Did you forget to seperate the name from the content with two spaces (sms␣send␣<name>␣␣<content>)? "));
 				return new Message(failureText);
+			} else {
+				contact = contacts.iterator().next();
 			}
-			contact = contacts.iterator().next();
 			receiver = contact.getBestNumber(ContactNumber.NumberType.MOBILE).getNumber();
 		}
 		String text = argsSplit[1];
