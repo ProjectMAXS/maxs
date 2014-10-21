@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.http.conn.ssl.StrictHostnameVerifier;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SmackConfiguration;
@@ -90,10 +89,6 @@ public class XMPPService {
 		// time. Smack's default packet reply timeout of 5 seconds is way to low for such networks,
 		// so we increase it to 2 minutes.
 		SmackConfiguration.setDefaultPacketReplyTimeout(2 * 60 * 1000);
-
-		// Ensure that the hostname of SSL/TLS enabled services is verified against the XMPP service
-		// name to prevent MitM-Attacks.
-		SmackConfiguration.setDefaultHostnameVerifier(new StrictHostnameVerifier());
 
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.ReconnectionManager");
