@@ -106,6 +106,16 @@ MAXS =.apk='s, signed with the same key as the Play Store releases,
 can be directly downloaded from [[../releases/][projectmaxs.org/releases.]] Use this
 method of obtaining MAXS only if you really have to.
 
+** Nightlies
+
+MAXS Nightlies, signed with the release key, can be found at [[http://projectmaxs.org/releases/nightlies/][http://projectmaxs.org/releases/nightlies]].
+
+If you want to update MAXS to the latest nightlies you can use the =installNightlies.sh= script.
+
+#+BEGIN_SRC bash
+curl https://bitbucket.org/projectmaxs/maxs/raw/master/scripts/installNightlies.sh |bash
+#+END_SRC
+
 * Beta Testing
   :PROPERTIES:
   :CUSTOM_ID: beta
