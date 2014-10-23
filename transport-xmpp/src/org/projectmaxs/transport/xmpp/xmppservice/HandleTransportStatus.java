@@ -108,6 +108,8 @@ public class HandleTransportStatus extends StateChangeListener {
 					} else {
 						streamManagementStatus += "not active";
 					}
+				} else {
+					streamManagementStatus += "not supported";
 				}
 			} else {
 				streamManagementStatus += "not enabled";
