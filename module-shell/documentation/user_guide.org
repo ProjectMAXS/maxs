@@ -13,7 +13,7 @@ Execute a shell command and return the result.
 
 ** Permissions
 
-No speical permissions are required. May ask for root access if
+No special permissions are required. May ask for root access if
 superuser is installed and 
 
 * Commands

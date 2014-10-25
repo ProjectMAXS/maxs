@@ -31,5 +31,5 @@ storage.
 This module allows /transports/ to *receive* incoming file transfers
 by allowing the file to be stored on the devices storage. For example
 the XMPP transport will automatically accept all incoming file
-transfers from any /master JID/ if this module is isntalled.
+transfers from any /master JID/ if this module is installed.
 
