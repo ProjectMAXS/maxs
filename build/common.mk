@@ -28,4 +28,4 @@ lint.xml:
 	ln -rs $(BASE)/build/lint.xml
 
 artifacts:
-	$(BASE)/scripts/MavenToAndroidAnt/getMavenArtifacts.py -f $(BASE)/build/global_artifacts.csv -p .
+	$(BASE)/scripts/MavenToAndroidAnt/getMavenArtifactsNG.py -f $(BASE)/build/global_artifacts.csv -p .

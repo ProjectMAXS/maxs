@@ -17,6 +17,8 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,6 +34,7 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.DNSUtil;
 import org.jivesoftware.smack.util.StringTransformer;
@@ -94,11 +97,19 @@ public class XMPPService {
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.ReconnectionManager");
 		SmackConfiguration
 				.addDisabledSmackClass("org.jivesoftware.smackx.muc.MultiUserChatManager");
+		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.json");
+		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.gcm");
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
 			public String transform(String string) {
 				return java.net.IDN.toASCII(string);
+			}
+		});
+		SASLMechanism.setSaslPrepTransformer(new StringTransformer() {
+			@Override
+			public String transform(String string) {
+				return Normalizer.normalize(string, Form.NFKC);
 			}
 		});
 	}
