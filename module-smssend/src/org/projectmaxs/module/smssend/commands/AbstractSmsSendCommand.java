@@ -78,8 +78,11 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 	 */
 	final Message sendSms(String receiver, String text, int cmdId, Contact contact) {
 		SmsManager smsManager = SmsManager.getDefault();
-		ArrayList<PendingIntent> sentIntents = null;
-		ArrayList<PendingIntent> deliveryIntents = null;
+		// Note that sentIntents and deliveryIntents could be null based on the API contract
+		// of sendMultipartTextMessage(), which clearly states "if not null". Sadly some devices
+		// throw a NPE if those are null, so we initialize them here with an empty ArrayList.
+		ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(0);
+		ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(0);
 		ArrayList<String> parts = smsManager.divideMessage(text);
 		int partCount = parts.size();
 		SMSTable smsTable = SMSTable.getInstance(mService);
