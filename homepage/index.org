@@ -123,7 +123,7 @@ curl https://bitbucket.org/projectmaxs/maxs/raw/master/scripts/installNightlies.
 
 If you like help testing new versions, you need to become a member of
 the Google+ [[https://plus.google.com/communities/104520928563180749625]["MAXS Beta Testers"]] community. Then you can use the
-following links to install MAXS.
+following links to become a beta tester for the particular MAXS component.
 
 *Main*
 
