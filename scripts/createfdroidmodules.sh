@@ -47,9 +47,11 @@ Repo:ProjectMAXS
 Build:${versionName},${versionCode}
     commit=${versionName}
     subdir=${MODULE}
+    submodules=yes
     init=cd .. && \\
         make ${MODULE}/Makefile
-    prebuild=make prebuild
+    prebuild=make prebuild && \
+        rm -rf ../module-shell/libraryProjects/root-commands/ExampleApp
 
 Auto Update Mode:Version %v
 Update Check Mode:Tags
