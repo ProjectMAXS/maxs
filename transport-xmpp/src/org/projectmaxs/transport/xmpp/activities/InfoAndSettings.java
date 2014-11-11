@@ -119,9 +119,9 @@ public class InfoAndSettings extends Activity {
 	}
 
 	public void registerAccount(View view) {
-		final String jid = mSettings.getJid().toString();
+		final BareJid jid = mSettings.getJid();
 		final String password = mSettings.getPassword();
-		if (jid.isEmpty()) {
+		if (jid == null) {
 			Toast.makeText(this, "Please enter a valid bare JID", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -139,8 +139,7 @@ public class InfoAndSettings extends Activity {
 				}
 
 				try {
-					final String username = mSettings.getJid().getLocalpart();
-					final String password = mSettings.getPassword();
+					final String username = jid.getLocalpart();
 					final AbstractXMPPConnection connection = new XMPPTCPConnection(
 							mSettings.getConnectionConfiguration(InfoAndSettings.this));
 					showToast("Connecting to server", Toast.LENGTH_SHORT);
@@ -224,7 +223,7 @@ public class InfoAndSettings extends Activity {
 			}
 			addEmptyMasterJidEditText();
 		}
-		if (!mSettings.getJid().equals("")) mJID.setText(mSettings.getJid());
+		if (mSettings.getJid() != null) mJID.setText(mSettings.getJid());
 		if (!mSettings.getPassword().equals("")) mPassword.setText(mSettings.getPassword());
 
 		mPingServerButtonHandler = new PingServerButtonHandler(this);
