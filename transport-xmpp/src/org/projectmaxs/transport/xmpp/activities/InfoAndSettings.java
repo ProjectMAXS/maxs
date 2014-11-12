@@ -268,8 +268,8 @@ public class InfoAndSettings extends Activity {
 			if (!mBeforeText.equals("")) {
 				try {
 					beforeJid = JidCreate.bareFrom(mBeforeText);
-				} catch (XmppStringprepException e) {
-					throw new AssertionError(e);
+				} catch (Exception e) {
+					LOG.d("Could not transform '" + mBeforeText + "' to bare JID", e);
 				}
 			}
 			if (text.equals("") && beforeJid != null) {
@@ -310,7 +310,6 @@ public class InfoAndSettings extends Activity {
 			}
 			return;
 		}
-
 	}
 
 	class PingServerButtonHandler extends StateChangeListener implements OnClickListener {
