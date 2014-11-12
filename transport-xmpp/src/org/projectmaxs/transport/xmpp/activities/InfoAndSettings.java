@@ -267,7 +267,7 @@ public class InfoAndSettings extends Activity {
 			BareJid beforeJid = null;
 			if (!mBeforeText.equals("")) {
 				try {
-					beforeJid = JidCreate.bareFrom("mBeforeText");
+					beforeJid = JidCreate.bareFrom(mBeforeText);
 				} catch (XmppStringprepException e) {
 					throw new AssertionError(e);
 				}
