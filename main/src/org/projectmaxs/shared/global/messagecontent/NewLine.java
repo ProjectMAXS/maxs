@@ -35,7 +35,7 @@ public class NewLine extends FormatedText implements Parcelable {
 
 	private NewLine() {
 		super("\n");
-	};
+	}
 
 	@Override
 	public int describeContents() {

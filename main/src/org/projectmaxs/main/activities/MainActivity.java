@@ -242,7 +242,7 @@ public class MainActivity extends Activity {
 				public void transportStatusChanged(String changedTransportPackage, String status) {
 					if (transportPackage.equals(changedTransportPackage))
 						setText(textTransportStatus, status);
-				};
+				}
 			};
 			row.setTag(cl);
 			TransportRegistry.getInstance(mContext).addChangeListener(cl);

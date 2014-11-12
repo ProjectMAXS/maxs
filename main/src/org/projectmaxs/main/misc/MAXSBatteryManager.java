@@ -47,7 +47,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			onBatteryChangedReceived(intent);
-		};
+		}
 	};
 
 	private String mLastBatteryPct = "";

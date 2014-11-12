@@ -43,5 +43,5 @@ public class HandleMessagesListener extends StateChangeListener {
 		for (Entry e : entries)
 			mXMPPService.send(e.mMessage, e.mOrigin);
 
-	};
+	}
 }

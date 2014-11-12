@@ -33,7 +33,7 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 	private final String mModulePackage;
 	private final String mModuleName;
 	private final Set<Command> mCommands;
-	private final Set<CommandHelp> mHelp = new HashSet<CommandHelp>();;
+	private final Set<CommandHelp> mHelp = new HashSet<CommandHelp>();
 
 	public ModuleInformation(String modulePackage, String moduleName) {
 		mModulePackage = modulePackage;
