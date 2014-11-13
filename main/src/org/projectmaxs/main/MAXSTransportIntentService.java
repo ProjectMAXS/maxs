@@ -43,6 +43,12 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 
 	@Override
 	protected void onHandleIntent(MAXSService maxsService, Intent intent) {
+		if (intent == null) {
+			// There was a NPE in MAXS main because intent is null. This is likely happens when the
+			// system has killed and restarted MAXS main.
+			LOG.d("Null intent received");
+			return;
+		}
 
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
