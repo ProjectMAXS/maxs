@@ -19,9 +19,7 @@ package org.projectmaxs.shared.global.jul;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.StringBufferInputStream;
-import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Formatter;
@@ -71,12 +69,8 @@ public class JULHandler extends Handler {
 		public String format(LogRecord logRecord) {
 			Throwable thrown = logRecord.getThrown();
 			if (thrown != null) {
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw, false);
-				sw.write(logRecord.getMessage() + ' ');
-				thrown.printStackTrace(pw);
-				pw.flush();
-				return sw.toString();
+				String stacktrace = Log.getStackTraceString(thrown);
+				return logRecord.getMessage() + ' ' + stacktrace;
 			} else {
 				return logRecord.getMessage();
 			}

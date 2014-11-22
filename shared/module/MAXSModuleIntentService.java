@@ -17,8 +17,6 @@
 
 package org.projectmaxs.shared.module;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
@@ -178,11 +176,8 @@ public abstract class MAXSModuleIntentService extends Service {
 			Text text = new Text();
 			text.addBold("Exception").addNL(" handling command " + command + ": " + e.getMessage());
 			text.addItalic("Version: ").addNL(mVersion);
-			// Let's also include the stacktrace as String, this involves some boilerplate code
-			StringWriter stringWriter = new StringWriter();
-			PrintWriter printWriter = new PrintWriter(stringWriter);
-			e.printStackTrace(printWriter);
-			text.addWithNewLines(stringWriter.toString());
+			// Let's also include the stacktrace as String
+			text.addWithNewLines(android.util.Log.getStackTraceString(e));
 			message = new org.projectmaxs.shared.global.Message(text);
 		}
 		if (message == null) return;
