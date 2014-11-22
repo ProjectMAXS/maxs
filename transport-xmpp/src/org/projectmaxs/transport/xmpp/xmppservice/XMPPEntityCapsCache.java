@@ -17,21 +17,13 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
-import org.jivesoftware.smack.packet.IQ;
+import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jivesoftware.smackx.caps.EntityCapsManager;
 import org.jivesoftware.smackx.caps.cache.EntityCapsPersistentCache;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
-import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.database.XMPPEntityCapsTable;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -95,51 +87,11 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 		String infoString = mXMPPEntityCapsTable.getDiscoverInfo(nodeVer);
 		if (infoString == null) return null;
 
-		return discoverInfoFromString(infoString);
-	}
-
-	// TODO This code is now available in Smack 4.1 and should be used instead
-	private DiscoverInfo discoverInfoFromString(String string) {
-		Reader reader = new StringReader(string);
-		String id;
-		String from;
-		String to;
-		XmlPullParser parser;
 		try {
-			parser = XmlPullParserFactory.newInstance().newPullParser();
-			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
-			parser.setInput(reader);
-		} catch (XmlPullParserException xppe) {
-			xppe.printStackTrace();
-			return null;
-		}
-
-		DiscoverInfo iqPacket;
-		DiscoverInfoProvider provider = new DiscoverInfoProvider();
-
-		// Parse the IQ, we only need the id
-		try {
-			parser.next();
-			id = parser.getAttributeValue("", "id");
-			from = parser.getAttributeValue("", "from");
-			to = parser.getAttributeValue("", "to");
-			parser.next();
-		} catch (XmlPullParserException e1) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
-
-		try {
-			iqPacket = provider.parse(parser);
+			return (DiscoverInfo) PacketParserUtils.parseStanza(infoString);
 		} catch (Exception e) {
+			LOG.e("Could not parse looked up DiscoverInfo from EntityCaps cache", e);
 			return null;
 		}
-
-		iqPacket.setPacketID(id);
-		iqPacket.setFrom(from);
-		iqPacket.setTo(to);
-		iqPacket.setType(IQ.Type.result);
-		return iqPacket;
 	}
 }
