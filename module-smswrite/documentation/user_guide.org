@@ -1,4 +1,4 @@
-#+TITLE:        MAXS Module SmsRead: User Guide
+#+TITLE:        MAXS Module SmsWrite: User Guide
 #+AUTHOR:       Florian Schmaus
 #+EMAIL:        flo@geekplace.eu
 #+OPTIONS:      author:nil
@@ -6,7 +6,9 @@
 
 * Overview
 
-Query the system's SMS database for messages.
+Modify the system's SMS database, e.g. add new messages to it.
+
+The main purpose is to add messages send by module-smssend, to the outbox.
 
 | Makes optional use of modules | ContactsRead |
 | Uses *inoffical* Android API  | no   |
@@ -15,19 +17,12 @@ Query the system's SMS database for messages.
 
 | Permission                     | Use                                               |
 |--------------------------------+---------------------------------------------------|
-| =android.permission.SMS_READ= | Read-only access to SMS messages |
+| =android.permission.SMS_WRITE= | Write access to system's SMS database             |
 
 * Commands
 
 ** =sms= (short command: =s=)
 
-*** =sms show [<num>]=
+*** =sms write=
 
-Show the last SMS messages. Defaults to 5. You can optionally specify
-the number of SMS messages to display.
-
-#+BEGIN_SRC
-User: sms show
-AndroidDevice: Last 5 SMS messages
-To Jane Doe (+1 555 1231) 2014-04-04 12:00:00: Hi, how are you?
-#+END_SRC
+This command is not yet implemented.
