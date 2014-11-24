@@ -133,7 +133,7 @@ public class LocationService extends Service {
 			}
 			stopSelfResult(startId);
 		} else {
-			throw new IllegalStateException("Unkown action: " + action);
+			throw new IllegalStateException("Unknown action: " + action);
 		}
 		return START_STICKY;
 	}

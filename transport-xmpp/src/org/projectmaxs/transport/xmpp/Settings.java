@@ -369,7 +369,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			} else if ("dis".equals(securityModeString)) {
 				securityMode = ConnectionConfiguration.SecurityMode.disabled;
 			} else {
-				throw new IllegalArgumentException("Unkown security mode: " + securityModeString);
+				throw new IllegalArgumentException("Unknown security mode: " + securityModeString);
 			}
 			mConnectionConfiguration.setSecurityMode(securityMode);
 

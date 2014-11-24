@@ -47,7 +47,7 @@ public class FormatedTextTransformator {
 		} else if (element instanceof CommandHelp) {
 			toFormatedText((CommandHelp) element, ft);
 		} else {
-			throw new IllegalStateException("Unkown sublcass of AbstractElement");
+			throw new IllegalStateException("Unknown sublcass of AbstractElement");
 		}
 	}
 

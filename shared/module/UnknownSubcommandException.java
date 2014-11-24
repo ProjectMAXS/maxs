@@ -20,10 +20,10 @@ package org.projectmaxs.shared.module;
 import org.projectmaxs.shared.mainmodule.Command;
 
 @SuppressWarnings("serial")
-public class UnkownCommandException extends IllegalStateException {
+public class UnknownSubcommandException extends IllegalStateException {
 
-	public UnkownCommandException(Command command) {
-		super("Unkown command cmd=" + command.getCommand() + " subCmd=" + command.getSubCommand());
+	public UnknownSubcommandException(Command command) {
+		super("Unknown subcommand cmd=" + command.getCommand() + " subCmd="
+				+ command.getSubCommand());
 	}
-
 }

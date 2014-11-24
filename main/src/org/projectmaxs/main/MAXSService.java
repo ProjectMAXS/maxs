@@ -182,7 +182,7 @@ public class MAXSService extends Service {
 		} else {
 			ci = mModuleRegistry.get(command);
 			if (ci == null) {
-				errorMsg = new Message("Unkown command: " + command);
+				errorMsg = new Message("Unknown command: " + command);
 			} else {
 				// Map a possible short command to the long version, so that the modules only have
 				// to care about the long versions

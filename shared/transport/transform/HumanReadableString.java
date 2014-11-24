@@ -45,7 +45,7 @@ public class HumanReadableString {
 		} else if (element instanceof CommandHelp) {
 			toSB((CommandHelp) element, sb);
 		} else {
-			throw new IllegalStateException("Unkown sublcass of AbstractElement");
+			throw new IllegalStateException("Unknown sublcass of AbstractElement");
 		}
 	}
 

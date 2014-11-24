@@ -110,7 +110,7 @@ public abstract class MAXSModuleIntentService extends Service {
 		if (versionResource != -1) {
 			mVersion = getString(versionResource);
 		} else {
-			mVersion = "Unkown";
+			mVersion = "Unknown";
 		}
 	}
 
@@ -166,10 +166,10 @@ public abstract class MAXSModuleIntentService extends Service {
 						message = subCommand.execute(command.getArgs(), command, this);
 					}
 				} else {
-					throw new UnkownSubcommandException(command);
+					throw new UnknownSubcommandException(command);
 				}
 			} else {
-				throw new UnkownCommandException(command);
+				throw new UnknownCommandException(command);
 			}
 		} catch (Throwable e) {
 			mLog.e("onHandleIntent", e);

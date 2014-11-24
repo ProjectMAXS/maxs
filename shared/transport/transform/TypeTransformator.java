@@ -27,7 +27,7 @@ public class TypeTransformator {
 	private static String sMobile = "Mobile";
 	private static String sHome = "Home";
 	private static String sWork = "Work";
-	private static String sUnkown = "Unkown";
+	private static String sUnknown = "Unknown";
 	private static String sOther = "Other";
 
 	private static String sFile = "file";
@@ -48,7 +48,7 @@ public class TypeTransformator {
 		case OTHER:
 			return sOther;
 		default:
-			return sUnkown;
+			return sUnknown;
 		}
 	}
 
@@ -69,7 +69,7 @@ public class TypeTransformator {
 		case QUEUED:
 			return "Queued";
 		default:
-			throw new IllegalStateException("Unkown sms type: " + type);
+			throw new IllegalStateException("Unknown sms type: " + type);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class TypeTransformator {
 				sb.append(commandHelp.mArgString);
 				break;
 			default:
-				throw new IllegalArgumentException("Unkown ArgType: " + commandHelp.mArgType);
+				throw new IllegalArgumentException("Unknown ArgType: " + commandHelp.mArgType);
 			}
 			sb.append('>');
 		}

@@ -71,7 +71,7 @@ public class SMSPendingIntentReceiver extends BroadcastReceiver {
 						+ smsInfo.mShortText);
 			}
 		} else {
-			throw new IllegalStateException("Unkown action=" + action
+			throw new IllegalStateException("Unknown action=" + action
 					+ " in SMSPendingIntentReceiver");
 		}
 		if (message != null) MainUtil.send(message, context);

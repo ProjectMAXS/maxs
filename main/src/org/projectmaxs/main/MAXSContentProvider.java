@@ -72,7 +72,7 @@ public class MAXSContentProvider extends ContentProvider {
 			c.addRow(new Object[] { service, receiverInfo, pkg });
 			break;
 		default:
-			throw new IllegalArgumentException("Unkown URI " + uri);
+			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
 		return c;

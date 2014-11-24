@@ -122,7 +122,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 			powerSource = BAT;
 			break;
 		default:
-			powerSource = "Unkown";
+			powerSource = "Unknown";
 			break;
 		}
 		return powerSource;

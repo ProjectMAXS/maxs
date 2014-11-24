@@ -140,7 +140,7 @@ public class TransportService extends MAXSTransportService {
 				mXMPPService.instantDisconnect();
 			}
 		} else {
-			throw new IllegalStateException("Unkown intent action: " + action);
+			throw new IllegalStateException("Unknown intent action: " + action);
 		}
 		LOG.d("onHandleIntent: " + action + " handled");
 	}
