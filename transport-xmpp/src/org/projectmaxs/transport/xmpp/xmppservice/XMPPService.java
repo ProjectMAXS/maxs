@@ -329,11 +329,11 @@ public class XMPPService {
 		// A JID was specified as receiver. This are typical replies to a command send by the
 		// receiver. This is not a notification, do not broadcast.
 		else {
-			BareJid to;
+			FullJid to;
 			try {
-				to = JidCreate.bareFrom(originIssuerInfo);
+				to = JidCreate.fullFrom(originIssuerInfo);
 			} catch (XmppStringprepException e) {
-				LOG.e("Could not convert originIssueInfo to string", e);
+				LOG.e("Could not convert originIssueInfo to full JID", e);
 				return;
 			}
 			toList.add(to);
@@ -551,8 +551,9 @@ public class XMPPService {
 			}
 			break;
 		default:
-			throw new IllegalStateException("changeState: Unknown state change combination. mState="
-					+ mState + ", desiredState=" + desiredState);
+			throw new IllegalStateException(
+					"changeState: Unknown state change combination. mState=" + mState
+							+ ", desiredState=" + desiredState);
 		}
 	}
 
