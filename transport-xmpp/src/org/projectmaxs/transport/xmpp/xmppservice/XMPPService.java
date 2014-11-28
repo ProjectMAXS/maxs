@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.Roster;
@@ -71,7 +72,7 @@ public class XMPPService {
 
 	private static XMPPService sXMPPService;
 
-	private final Set<StateChangeListener> mStateChangeListeners = new HashSet<StateChangeListener>();
+	private final Set<StateChangeListener> mStateChangeListeners = new CopyOnWriteArraySet<StateChangeListener>();
 
 	private final Settings mSettings;
 	private final MessagesTable mMessagesTable;
