@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
@@ -37,6 +36,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.DNSUtil;
 import org.jivesoftware.smack.util.StringTransformer;
 import org.jivesoftware.smack.util.dns.HostAddress;
@@ -100,6 +100,9 @@ public class XMPPService {
 				.addDisabledSmackClass("org.jivesoftware.smackx.muc.MultiUserChatManager");
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.json");
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.gcm");
+		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.xdata.XDataManager");
+		SmackConfiguration
+				.addDisabledSmackClass("org.jivesoftware.smackx.xdatalayout.XDataLayoutManager");
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
@@ -129,7 +132,7 @@ public class XMPPService {
 	 */
 	private boolean mConnected = false;
 
-	private ConnectionConfiguration mConnectionConfiguration;
+	private XMPPTCPConnectionConfiguration mConnectionConfiguration;
 	private XMPPTCPConnection mConnection;
 	private Handler mReconnectHandler;
 
@@ -612,8 +615,7 @@ public class XMPPService {
 
 		if (!connection.isAuthenticated()) {
 			try {
-				connection.login(mSettings.getJid().getLocalpart(), mSettings.getPassword(),
-						GlobalConstants.MAXS);
+				connection.login();
 			} catch (NoResponseException e) {
 				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
 				scheduleReconnect();

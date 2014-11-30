@@ -32,11 +32,14 @@ import org.jivesoftware.smack.compression.XMPPInputOutputStream;
 import org.jivesoftware.smack.compression.XMPPInputOutputStream.FlushMethod;
 import org.jivesoftware.smack.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.rosterstore.RosterStore;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.jxmpp.util.XmppStringUtils;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.FileUtil;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
@@ -99,7 +102,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	private SharedPreferences mSharedPreferences;
-	private ConnectionConfiguration mConnectionConfiguration;
+	private XMPPTCPConnectionConfiguration mConnectionConfiguration;
 
 	private BareJid mJidCache;
 	private Set<BareJid> mMasterJidCache;
@@ -343,20 +346,27 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * @param context
 	 * @return The ConnectionConfiguration.
 	 */
-	public ConnectionConfiguration getConnectionConfiguration(Context context) {
+	public XMPPTCPConnectionConfiguration getConnectionConfiguration(Context context) {
 		if (mConnectionConfiguration == null) {
+			String service;
+			XMPPTCPConnectionConfigurationBuilder confBuilder = XMPPTCPConnectionConfiguration
+					.builder();
 			if (getManualServiceSettings()) {
 				String host = getManualServiceSettingsHost();
 				int port = getManualServiceSettingsPort();
-				String service = getManualServiceSettingsService();
-				mConnectionConfiguration = new ConnectionConfiguration(host, port, service);
+				service = getManualServiceSettingsService();
+				confBuilder.setHost(host);
+				confBuilder.setPort(port);
+				confBuilder.setServiceName(service);
 			} else {
-				String service = XmppStringUtils.parseDomain(mSharedPreferences.getString(JID, ""));
-				mConnectionConfiguration = new ConnectionConfiguration(service);
+				service = XmppStringUtils.parseDomain(mSharedPreferences.getString(JID, ""));
 			}
-			mConnectionConfiguration.setSocketFactory(XMPPSocketFactory.getInstance());
+			confBuilder.setUsernameAndPassword(getJid().getLocalpart(), getPassword());
+			confBuilder.setServiceName(service);
+			confBuilder.setResource(GlobalConstants.MAXS);
+			confBuilder.setSocketFactory(XMPPSocketFactory.getInstance());
 
-			mConnectionConfiguration.setCompressionEnabled(mSharedPreferences.getBoolean(
+			confBuilder.setCompressionEnabled(mSharedPreferences.getBoolean(
 					XMPP_STREAM_COMPRESSION, false));
 
 			ConnectionConfiguration.SecurityMode securityMode;
@@ -371,18 +381,17 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			} else {
 				throw new IllegalArgumentException("Unknown security mode: " + securityModeString);
 			}
-			mConnectionConfiguration.setSecurityMode(securityMode);
+			confBuilder.setSecurityMode(securityMode);
 
-			mConnectionConfiguration.setSendPresence(false);
+			confBuilder.setSendPresence(false);
 
-			mConnectionConfiguration.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG,
-					false));
-			mConnectionConfiguration.setLegacySessionDisabled(!mSharedPreferences.getBoolean(
+			confBuilder.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG, false));
+			confBuilder.setLegacySessionDisabled(!mSharedPreferences.getBoolean(
 					XMPP_STREAM_SESSION, true));
 			try {
 				SSLContext sc = SSLContext.getInstance("TLS");
 				sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
-				mConnectionConfiguration.setCustomSSLContext(sc);
+				confBuilder.setCustomSSLContext(sc);
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException(e);
 			} catch (KeyManagementException e) {
@@ -391,7 +400,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 			File rosterStoreDirectory = FileUtil.getFileDir(context, "rosterStore");
 			RosterStore rosterStore = DirectoryRosterStore.init(rosterStoreDirectory);
-			mConnectionConfiguration.setRosterStore(rosterStore);
+			confBuilder.setRosterStore(rosterStore);
+
+			mConnectionConfiguration = confBuilder.build();
 		}
 
 		return mConnectionConfiguration;

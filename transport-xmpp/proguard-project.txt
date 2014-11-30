@@ -22,7 +22,7 @@
 -optimizations !code/allocation/variable
 
 # Smack specific configuration
--keep class org.jivesoftware.smackx.debugger.android.AndroidDebugger { *; }
+-keep class org.jivesoftware.smack.debugger.JulDebugger { *; }
 -keep class * implements org.jivesoftware.smack.initializer.SmackInitializer
 -keep class * implements org.jivesoftware.smack.provider.IQProvider
 -keep class * implements org.jivesoftware.smack.provider.PacketExtensionProvider
