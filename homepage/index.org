@@ -156,10 +156,11 @@ following links to become a beta tester for the particular MAXS component.
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.wifiaccess][org.projectmaxs.module.wifiaccess]]
 - [[https://play.google.com/apps/testing/org.projectmaxs.module.wifichange][org.projectmaxs.module.wifichange]]
 
-* Support / Help
+* Support / Help / Reporting Issues
 
-See [[*Contact][contact]] on how to contact us and ask for help. A full =adb log=
-will be helpful.
+See [[*Contact][contact]] on how to contact us and ask for help.
+
+If you want to report an issue, have a look at [[file:report_issue.org][Report an Issue]]
 
 * Development
 

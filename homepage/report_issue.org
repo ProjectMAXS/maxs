@@ -1,0 +1,51 @@
+#+TITLE:        MAXS: Report an Issue
+#+AUTHOR:       Florian Schmaus
+#+EMAIL:        flo@geekplace.eu
+#+OPTIONS:      H:2 num:nil author:nil toc:nil
+#+OPTIONS:      timestamp:nil
+#+STARTUP:      noindent
+
+* How to report an Issue
+
+(Nearly) every MAXS issue report should come with an debug
+log. Otherwise it's hard to analyze and solve the problem.
+
+First make sure that the "Debug Log" setting of the relevant MAXS
+components are checked. Then you need re-create the issue and shortly
+after that gather the log. This can be done either via =adb= from the
+Android SDK, which requires the device to have the developer
+connection enabled, or via Apps like CatLog, which require root
+access.
+
+After you have obtained the log, post the issue at
+http://forums.geekplace.eu/c/maxs/bug-reports
+
+** Using an CatLog
+
+If you have root, you can use [[https://play.google.com/store/apps/details?id=com.nolanlawson.logcat][CatLog]] to export the log.
+
+** Using Android SDK: =adb shell logcat=
+
+This requires the [[http://developer.android.com/tools/help/adb.html][Android Debug Bridge]]: =adb=.
+
+Using the =logcat= binary, available on every Android device, without
+any argument will print the current logs and follow them. Usually you
+want to only dump the logs, and since having a timestamp is always
+nice when it comes to logs, the recommend way of invocation to obtain
+useful log information for MAXS is
+
+#+BEGIN_SRC bash
+adb shell logcat -v time -d
+#+END_SRC
+
+Since MAXS does prefix every log tag with 'MAXS', you can restrict the
+output using grep
+
+#+BEGIN_SRC bash
+adb shell logcat -v time -d |grep -i MAXS |less
+#+END_SRC
+
+** Further information about the Android log
+
+There is also a good summary on Android Enthusiasts: [[http://android.stackexchange.com/q/14430/440][How can I view
+and examine the Android log?]]
