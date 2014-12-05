@@ -596,6 +596,11 @@ public class XMPPService {
 
 		// Stream Management (XEP-198)
 		connection.setUseStreamManagement(mSettings.isStreamManagementEnabled());
+		// Again a value that's hard to get right. Right now, we try it with 5 minutes, as Stream
+		// resumption is meant for situations where the network switches, not when the Android
+		// system kills and later restarts the service (in which case, SM resumption would be not
+		// possible anyways).
+		connection.setPreferredResumptionTime(5 * 60); // 5 minutes
 
 		LOG.d("tryToConnect: connect");
 		try {
