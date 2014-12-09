@@ -82,6 +82,9 @@
                     <pathelement path="${proguard.config}"/>
                 </path>
 
+                <!-- The following code is submited to upstream under
+                     https://android-review.googlesource.com/#/c/79060/
+                -->
                 <union id="project.all.proguard.input">
                   <path refid="proguard.configpath"/>
                   <path refid="project.all.jars.path"/>
