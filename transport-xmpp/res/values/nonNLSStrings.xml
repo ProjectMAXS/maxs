@@ -16,5 +16,7 @@
     <string name="pref_app_last_active_network_key">LAST_ACTIVE_NETWORK</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
     <string name="pref_app_debug_dns_key">DEBUG_DNS</string>
+    <string name="pref_app_xmpp_intent_key">XMPP_INTENT</string>
+    <string name="pref_app_xmpp_intent_shared_token_key">XMPP_INTENT_SHARED_TOKEN</string>
 
 </resources>

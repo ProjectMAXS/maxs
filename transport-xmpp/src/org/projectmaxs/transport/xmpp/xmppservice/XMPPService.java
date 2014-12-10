@@ -228,6 +228,30 @@ public class XMPPService {
 		newState(State.WaitingForNetwork);
 	}
 
+	public void send(String to, String body) {
+		switch (mState) {
+		case Disconnected:
+		case Disconnecting:
+			LOG.w("Transport is disconnected, not going to send message to " + to);
+			return;
+		default:
+			break;
+		}
+		if (!(mConnection.isConnected() || mConnection.isDisconnectedButSmResumptionPossible())) {
+			LOG.w("Connection is not connected and no resumption possible, not going to send message to "
+					+ to);
+			return;
+		}
+		Message message = new Message();
+		message.setTo(to);
+		message.setBody(body);
+		try {
+			mConnection.sendPacket(message);
+		} catch (NotConnectedException e) {
+			LOG.w("send", e);
+		}
+	}
+
 	public void send(org.projectmaxs.shared.global.Message message, CommandOrigin origin) {
 		// If the origin is null, then we are receiving a broadcast message from
 		// main. TODO document that origin can be null

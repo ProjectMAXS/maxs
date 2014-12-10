@@ -72,6 +72,18 @@
             android:title="@string/pref_app_excluded_resources" >
             <intent android:action=".activities.ExcludedResources" />
         </PreferenceScreen>
+        <PreferenceScreen android:title="@string/pref_app_settings_xmpp_intent">
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/pref_app_xmpp_intent_key"
+                android:summary="@string/pref_app_xmpp_intent_help"
+                android:title="@string/pref_app_xmpp_intent" />
+            <EditTextPreference
+                android:key="@string/pref_app_xmpp_intent_shared_token_key"
+                android:summary="@string/pref_app_xmpp_intent_shared_token_help"
+                android:title="@string/pref_app_xmpp_intent_shared_token"
+                android:dependency="@string/pref_app_xmpp_intent_key" />
+        </PreferenceScreen>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_app_debug_log_key"

@@ -72,6 +72,12 @@
                 <action android:name="org.projectmaxs.transport.xmpp.OUTGOING_FILETRANSFER_SERVICE" />
             </intent-filter>
         </service>
+        <service
+            android:name=".XmppIntentService">
+            <intent-filter>
+                <action android:name="org.projectmaxs.transport.xmpp.SEND_XMPP_MESSAGE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

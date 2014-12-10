@@ -41,6 +41,11 @@
     <string name="pref_app_debug_dns_help">Log extended minidns information.</string>
     <string name="pref_app_excluded_resources">Excluded Resources</string>
     <string name="pref_app_excluded_resources_help">Specify XMPP resources from being excluded from notifications.</string>
+    <string name="pref_app_settings_xmpp_intent">XMPP Intent</string>
+    <string name="pref_app_xmpp_intent">Enable XMPP Intent</string>
+    <string name="pref_app_xmpp_intent_help">Send XMPP messages with an intent</string>
+    <string name="pref_app_xmpp_intent_shared_token">XMPP Intent Shared Token</string>
+    <string name="pref_app_xmpp_intent_shared_token_help">A shared token in form of a string.</string>
 
     <string-array name="array_xmpp_connection_security_entries">
         <item>Disabled</item>

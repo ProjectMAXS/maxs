@@ -89,6 +89,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String DEBUG_NETWORK;
 	private final String DEBUG_DNS;
 	private final String LAST_ACTIVE_NETWORK;
+	private final String XMPP_INTENT;
+	private final String XMPP_INTENT_SHARED_TOKEN;
 
 	private final Set<String> XMPP_CONNECTION_SETTINGS;
 
@@ -138,6 +140,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 
+		XMPP_INTENT = context.getString(R.string.pref_app_xmpp_intent_key);
+		XMPP_INTENT_SHARED_TOKEN = context
+				.getString(R.string.pref_app_xmpp_intent_shared_token_key);
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
 		setDnsDebug();
@@ -414,6 +419,31 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public SharedPreferences getSharedPreferences() {
 		return mSharedPreferences;
+	}
+
+	/**
+	 * 
+	 * @return true if the XMPP intent is enabled
+	 */
+	public boolean isXmppIntentEnabled() {
+		return mSharedPreferences.getBoolean(XMPP_INTENT, false);
+	}
+
+	/**
+	 * 
+	 * @return the XMPP intent shared token or null
+	 */
+	public String getXmppIntentSharedToken() {
+		// always ensure that we return null if the XMPP intent is disabled, so that we don't end up
+		// comparing the token while the XMPP intent is disabled
+		if (!isXmppIntentEnabled()) {
+			return null;
+		}
+		String res = mSharedPreferences.getString(XMPP_INTENT_SHARED_TOKEN, "");
+		if (res.isEmpty()) {
+			return null;
+		}
+		return res;
 	}
 
 	@Override
