@@ -40,7 +40,7 @@ public class TransportService extends MAXSTransportService {
 			+ ".xmppservice.XMPPFileTransfer$MAXSOutgoingFileTransferService";
 
 	public TransportService() {
-		super("XMPP");
+		super("XMPP", TransportService.class);
 	}
 
 	// @formatter:off

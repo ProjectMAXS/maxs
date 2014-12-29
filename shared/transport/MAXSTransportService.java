@@ -23,7 +23,9 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -33,11 +35,27 @@ import android.os.Message;
 public abstract class MAXSTransportService extends Service {
 	private static final Log LOG = Log.getLog();
 
+	private static final String IS_RUNNING_KEY = "isRunning";
+
+	/**
+	 * Non persistent state boolean, used to track differences in the persistently saved state.
+	 */
 	private static boolean sIsRunning = false;
+
+	/**
+	 * SharedPreferences exclusively to persistently save the service state.
+	 */
+	private static SharedPreferences sSharedPreferences;
 
 	private volatile Looper mServiceLooper;
 	private volatile ServiceHandler mServiceHandler;
-	private String mName;
+	private final String mName;
+
+	/**
+	 * The actual class of this service. Required to issue START/STOP actions to it in case its
+	 * state went out of sync.
+	 */
+	private final Class<?> mServiceClass;
 
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
@@ -50,9 +68,10 @@ public abstract class MAXSTransportService extends Service {
 		}
 	}
 
-	public MAXSTransportService(String name) {
+	public MAXSTransportService(String name, Class<?> serviceClass) {
 		super();
 		mName = name;
+		mServiceClass = serviceClass;
 	}
 
 	@Override
@@ -70,6 +89,7 @@ public abstract class MAXSTransportService extends Service {
 
 		mServiceLooper = thread.getLooper();
 		mServiceHandler = new ServiceHandler(mServiceLooper);
+		sSharedPreferences = getSharedPreferences("MAXSTransportService", Context.MODE_PRIVATE);
 	}
 
 	@Override
@@ -95,22 +115,42 @@ public abstract class MAXSTransportService extends Service {
 		if (intent == null) {
 			LOG.d("onStartCommand: null intent received, issuing START_SERVICE");
 			intent = new Intent(TransportConstants.ACTION_START_SERVICE);
+		} else if (isRunning() != sSharedPreferences.getBoolean(IS_RUNNING_KEY, false)) {
+			// The persistently saved state, returned by isRunning(), is different from the one the
+			// static boolean reports. Recover the persistent state.
+			String action;
+			if (!isRunning()) {
+				// Service is not running, but the persistent state says it was. Restore the running
+				// state.
+				action = TransportConstants.ACTION_START_SERVICE;
+			} else {
+				// This case should not really happen. Usually the situation is that a running
+				// service got killed by Android and is then restarted without a null intent
+				// (probably because there is an intent to be delivered at restart time). In which
+				// case isRunning() should return 'true', but sIsRunning is set to 'false'.
+				action = TransportConstants.ACTION_STOP_SERVICE;
+			}
+			LOG.i("onStartCommand: Service running state went out of sync: isRunning()="
+					+ isRunning() + ". Start service with action: " + action);
+			Intent startOrStopIntent = new Intent(action);
+			startOrStopIntent.setClass(this, mServiceClass);
+			startService(startOrStopIntent);
 		}
 		LOG.d("onStartCommand: intent=" + intent.getAction() + " flags=" + flags + " startId="
-				+ startId + " sIsRunning=" + sIsRunning);
+				+ startId + " isRunning=" + isRunning());
 
 		boolean stickyStart = true;
 		final String action = intent.getAction();
 		if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
-			sIsRunning = false;
+			setIsRunning(false);
 			stickyStart = false;
 		} else if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
-			sIsRunning = true;
+			setIsRunning(true);
 		}
 		// If the service is not running, and we receive something else then
 		// START_SERVICE, then don't start sticky to prevent the service from
 		// running
-		else if (!sIsRunning && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
+		else if (!isRunning() && !TransportConstants.ACTION_START_SERVICE.equals(action)) {
 			LOG.d("onStartCommand: service not running and action (" + action
 					+ ") not start. Don't start sticky");
 			stickyStart = false;
@@ -118,6 +158,11 @@ public abstract class MAXSTransportService extends Service {
 		performInServiceHandler(intent);
 		LOG.d("onStartCommand: stickyStart=" + stickyStart + " action=" + action);
 		return stickyStart ? START_STICKY : START_NOT_STICKY;
+	}
+
+	private static void setIsRunning(boolean isRunning) {
+		sSharedPreferences.edit().putBoolean(IS_RUNNING_KEY, isRunning).apply();
+		sIsRunning = isRunning;
 	}
 
 	public static boolean isRunning() {
