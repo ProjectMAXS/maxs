@@ -17,13 +17,13 @@
 
 package org.projectmaxs.module.phonestateread;
 
-import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.ContactNumber;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.module.ContactUtil;
+import org.projectmaxs.shared.module.MainUtil;
 
 import android.app.Service;
 import android.content.Context;
@@ -76,7 +76,7 @@ public class PhoneStateService extends Service {
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (!mManageIncoming) {
 					mManageIncoming = true;
-					send(new Message("Stopped calling"));
+					send("Stopped calling");
 				}
 				break;
 			case TelephonyManager.CALL_STATE_OFFHOOK:
@@ -95,7 +95,7 @@ public class PhoneStateService extends Service {
 							.contactByNumber(incomingNumber);
 					caller = ContactUtil.prettyPrint(incomingNumber, contact);
 				}
-				send(new Message(caller + " is calling"));
+				send(caller + " is calling");
 				break;
 			}
 		}
@@ -113,9 +113,11 @@ public class PhoneStateService extends Service {
 		}
 	}
 
+	public final void send(String message) {
+		send(new Message(message));
+	}
+
 	public final void send(Message message) {
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-		startService(replyIntent);
+		MainUtil.send(message, this);
 	}
 }
