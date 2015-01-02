@@ -4,10 +4,6 @@
 -keep class org.projectmaxs.shared.global.util.Log
 -keep class org.projectmaxs.shared.maintransport.TransportInformation
 
--keepclasseswithmembers class * extends org.jivesoftware.smack.sasl.SASLMechanism {
-    public <init>(org.jivesoftware.smack.SASLAuthentication);
-}
-
 ################################################################################
 # Custom proguard settings
 
@@ -42,6 +38,9 @@
 -keep class org.jivesoftware.smackx.time.EntityTimeManager
 -keep class org.jivesoftware.smackx.vcardtemp.VCardManager
 
+-keepclasseswithmembers class * extends org.jivesoftware.smack.sasl.SASLMechanism {
+    public <init>(org.jivesoftware.smack.SASLAuthentication);
+}
 
 # Include general Android proguard settings
 -include ../build/proguard-project-shared.txt

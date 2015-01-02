@@ -6,7 +6,8 @@
 -optimizations !code/simplification/cast,!field/*,!class/merging/*
 
 -dontobfuscate
--optimizationpasses 4
+# ProGuard will automatically abort if no further optimizations where possible. This happens usually after e.g. fourth passes for transport-xmpp. With the fifth pass proguard will be unable to apply further optimizations and abort.
+-optimizationpasses 10
 -dontpreverify
 -allowaccessmodification
 -verbose
