@@ -72,13 +72,8 @@ public class HandleChatPacketListener extends StateChangeListener {
 	}
 
 	@Override
-	public void connected(XMPPConnection connection) {
+	public void newConnection(XMPPConnection connection) {
 		connection.addPacketListener(mChatPacketListener, sMessageFilter);
-	}
-
-	@Override
-	public void disconnected(XMPPConnection connection) {
-		connection.removePacketListener(mChatPacketListener);
 	}
 
 }
