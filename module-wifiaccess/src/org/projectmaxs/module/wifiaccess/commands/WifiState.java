@@ -30,7 +30,7 @@ import android.net.wifi.WifiManager;
 
 public class WifiState extends AbstractWifi {
 
-	private static final int RSSI_NUM_LEVELS = 5;
+	private static final int RSSI_NUM_LEVELS = 10;
 
 	public WifiState() {
 		super("state", true);
@@ -73,7 +73,8 @@ public class WifiState extends AbstractWifi {
 			String linkSpeed = Integer.toString(info.getLinkSpeed());
 			wifiInfo.addChildElement(new Element("linkSpeed", linkSpeed, "Link speed: " + linkSpeed
 					+ WifiInfo.LINK_SPEED_UNITS));
-			wifiInfo.addChildElement(new Element("linkSpeedUnits", WifiInfo.LINK_SPEED_UNITS));
+			wifiInfo.addChildElement(Element.newNonHumandReadable("linkSpeedUnits",
+					WifiInfo.LINK_SPEED_UNITS));
 
 			int rssiInt = info.getRssi();
 			String rssi = Integer.toString(rssiInt);
@@ -83,7 +84,7 @@ public class WifiState extends AbstractWifi {
 			String rssiLevel = Integer.toString(WifiManager.calculateSignalLevel(rssiInt,
 					RSSI_NUM_LEVELS));
 			wifiInfo.addChildElement(new Element("rssiLevel", rssiLevel,
-					"RSSI on a scole from 1 to " + RSSI_NUM_LEVELS + ": " + rssiLevel));
+					"RSSI on a scale from 1 to " + RSSI_NUM_LEVELS + ": " + rssiLevel));
 
 			msg.add(wifiInfo);
 		}
