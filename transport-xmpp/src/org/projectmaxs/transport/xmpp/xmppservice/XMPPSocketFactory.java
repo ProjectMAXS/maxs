@@ -36,6 +36,13 @@ public class XMPPSocketFactory extends SocketFactory {
 	}
 
 	@Override
+	public Socket createSocket() throws IOException {
+		socket = sDefaultFactory.createSocket();
+		setSockOpt(socket);
+		return socket;
+	}
+
+	@Override
 	public Socket createSocket(String arg0, int arg1) throws IOException, UnknownHostException {
 		socket = sDefaultFactory.createSocket(arg0, arg1);
 		setSockOpt(socket);

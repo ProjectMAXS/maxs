@@ -24,7 +24,6 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.sm.packet.StreamManagement;
-import org.jivesoftware.smackx.privacy.PrivacyList;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
@@ -73,9 +72,8 @@ public class HandleTransportStatus extends StateChangeListener {
 			final String privacyInactive = "privacy inactive";
 			try {
 				if (PrivacyListManager.getInstanceFor(connection).isSupported()) {
-					PrivacyList privacyList = PrivacyListManager.getInstanceFor(connection)
-							.getDefaultList();
-					String privacyListName = privacyList.getName();
+					String privacyListName = PrivacyListManager.getInstanceFor(connection)
+							.getDefaultListName();
 					if (privacyListName.equals(XMPPPrivacyList.PRIVACY_LIST_NAME)) {
 						privacyListStatus = "privacy";
 					} else {

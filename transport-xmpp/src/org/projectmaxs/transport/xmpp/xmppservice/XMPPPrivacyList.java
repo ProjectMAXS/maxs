@@ -28,7 +28,6 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
-import org.jivesoftware.smackx.privacy.PrivacyList;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
 import org.jivesoftware.smackx.privacy.packet.PrivacyItem;
 import org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type;
@@ -97,14 +96,14 @@ public class XMPPPrivacyList extends StateChangeListener {
 			return;
 		}
 
-		PrivacyList defaultList = null;
+		String defaultList = null;
 		try {
-			defaultList = mPrivacyListManager.getDefaultList();
+			defaultList = mPrivacyListManager.getDefaultListName();
 			LOG.d("Default privacy list: " + defaultList);
 			// TODO We now assume if there is a privacy list with our name, then this list is
-			// actually equal to the one we want. This should be changed so that the activeList is
-			// in fact compared item-by-item with the desired list
-			if (defaultList.getName().equals(PRIVACY_LIST_NAME)) return;
+			// actually equal to the one we want. This should be changed so that the effective list
+			// is in fact compared item-by-item with the desired list
+			if (defaultList.equals(PRIVACY_LIST_NAME)) return;
 		} catch (XMPPErrorException e) {
 			// Log if not item-not-found(404)
 			if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {

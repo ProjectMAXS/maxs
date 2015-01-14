@@ -103,6 +103,11 @@ public class XMPPService {
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.xdata.XDataManager");
 		SmackConfiguration
 				.addDisabledSmackClass("org.jivesoftware.smackx.xdatalayout.XDataLayoutManager");
+		// We prefer the JULDebugger over the Android debugger by disabling the Android debugger
+		SmackConfiguration
+				.addDisabledSmackClass("org.jivesoftware.smackx.debugger.android.AndroidDebugger");
+		SmackConfiguration
+				.addDisabledSmackClass("org.jivesoftware.smackx.xdatavalidation.XDataValidationManager");
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
@@ -315,7 +320,7 @@ public class XMPPService {
 			Roster roster = mConnection.getRoster();
 			// Broadcast to all masterJID resources
 			for (BareJid masterJid : mSettings.getMasterJids()) {
-				Collection<Presence> presences = roster.getPresences(masterJid.toString());
+				Collection<Presence> presences = roster.getAvailablePresences(masterJid.toString());
 				for (Presence p : presences) {
 					String fullJIDString = p.getFrom();
 					FullJid fullJID;
@@ -681,11 +686,7 @@ public class XMPPService {
 				if (instant) {
 					mConnection.instantShutdown();
 				} else {
-					try {
-						mConnection.disconnect();
-					} catch (NotConnectedException e) {
-						LOG.i("disconnectConnection", e);
-					}
+					mConnection.disconnect();
 				}
 				LOG.d("disconnectConnection: disconnect stop");
 			}

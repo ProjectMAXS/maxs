@@ -45,7 +45,8 @@ public class XHTMLIMUtil {
 			if (italic) xhtmlText.appendCloseEmTag();
 			if (bold) xhtmlText.appendCloseStrongTag();
 		}
-		XHTMLManager.addBody(message, xhtmlText.toString());
+		xhtmlText.appendCloseBodyTag();
+		XHTMLManager.addBody(message, xhtmlText);
 		return message;
 	}
 }

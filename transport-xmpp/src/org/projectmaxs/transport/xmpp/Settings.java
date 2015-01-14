@@ -33,7 +33,6 @@ import org.jivesoftware.smack.compression.XMPPInputOutputStream.FlushMethod;
 import org.jivesoftware.smack.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.rosterstore.RosterStore;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -354,7 +353,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	public XMPPTCPConnectionConfiguration getConnectionConfiguration(Context context) {
 		if (mConnectionConfiguration == null) {
 			String service;
-			XMPPTCPConnectionConfigurationBuilder confBuilder = XMPPTCPConnectionConfiguration
+			XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration
 					.builder();
 			if (getManualServiceSettings()) {
 				String host = getManualServiceSettingsHost();

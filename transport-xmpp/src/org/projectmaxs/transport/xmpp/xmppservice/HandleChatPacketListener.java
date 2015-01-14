@@ -20,8 +20,6 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
-import org.jivesoftware.smack.filter.OrFilter;
-import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jxmpp.jid.Jid;
@@ -31,12 +29,6 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 
 public class HandleChatPacketListener extends StateChangeListener {
-
-	/**
-	 * A filter for all relevant one-to-one message types, namely Chat and Normal
-	 */
-	private static final PacketFilter sMessageFilter = new OrFilter(MessageTypeFilter.CHAT,
-			MessageTypeFilter.NORMAL);
 
 	private static Log LOG = Log.getLog();
 
@@ -73,7 +65,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 
 	@Override
 	public void newConnection(XMPPConnection connection) {
-		connection.addPacketListener(mChatPacketListener, sMessageFilter);
+		connection.addAsyncPacketListener(mChatPacketListener, MessageTypeFilter.NORMAL_OR_CHAT);
 	}
 
 }
