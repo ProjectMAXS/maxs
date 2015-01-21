@@ -71,6 +71,8 @@ public class FilereadUtil {
 
 		Intent intent = new Intent(ACTION_SET_CWD);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, cwd.getAbsolutePath());
+		intent.setClassName(GlobalConstants.FILEREAD_MODULE_PACKAGE,
+				GlobalConstants.FILEREAD_MODULE_PACKAGE + ".SetCWDService");
 		mContext.startService(intent);
 	}
 

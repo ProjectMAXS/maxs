@@ -17,6 +17,8 @@
 
 package org.projectmaxs.shared.module;
 
+import org.projectmaxs.shared.global.GlobalConstants;
+
 public class ModuleConstants {
 
 	public static final SupraCommand SMS = new SupraCommand("sms", "s");
@@ -24,4 +26,7 @@ public class ModuleConstants {
 	public static final SupraCommand CONTACT = new SupraCommand("contact", "c");
 	public static final SupraCommand WIFI = new SupraCommand("wifi", "w");
 
+	public static final String SMSWRITE_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE
+			+ ".smswrite";
+	public static final String SMSWRITE_SERVICE = SMSWRITE_MODULE_PACKAGE + ".SMSWriteService";
 }

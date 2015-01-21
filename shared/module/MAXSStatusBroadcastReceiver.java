@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.content.BroadcastReceiver;
@@ -46,6 +47,8 @@ public abstract class MAXSStatusBroadcastReceiver extends BroadcastReceiver {
 		for (StatusInformation info : infos) {
 			Intent replyIntent = new Intent(GlobalConstants.ACTION_UPDATE_STATUS);
 			replyIntent.putExtra(GlobalConstants.EXTRA_CONTENT, info);
+			replyIntent.setClassName(GlobalConstants.MAIN_PACKAGE,
+					MainModuleConstants.MAIN_MODULE_SERVICE);
 			context.startService(replyIntent);
 		}
 	}

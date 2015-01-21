@@ -37,9 +37,7 @@ public abstract class MAXSBroadcastReceiver extends BroadcastReceiver {
 			return;
 		}
 
-		Intent replyIntent = new Intent(GlobalConstants.ACTION_SEND_MESSAGE);
-		replyIntent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
-		context.startService(replyIntent);
+		MainUtil.send(message, context);
 	}
 
 	public abstract Message onReceiveReturnMessage(Context context, Intent intent);

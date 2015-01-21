@@ -20,6 +20,7 @@ package org.projectmaxs.shared.module;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
+import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 import org.projectmaxs.shared.mainmodule.RecentContact;
 
 import android.content.Context;
@@ -46,6 +47,7 @@ public class RecentContactUtil {
 			throw new IllegalArgumentException("recentContactInfo must not be null");
 
 		final Intent intent = new Intent(GlobalConstants.ACTION_SET_RECENT_CONTACT);
+		intent.setClassName(GlobalConstants.MAIN_PACKAGE, MainModuleConstants.MAIN_MODULE_SERVICE);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, recentContactInfo);
 		if (contact != null) intent.putExtra(GlobalConstants.EXTRA_CONTACT, contact.getMinimal());
 		context.startService(intent);

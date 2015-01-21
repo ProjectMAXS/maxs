@@ -37,6 +37,8 @@ public class SmsWriteUtil {
 
 		Intent intent = new Intent(MainModuleConstants.ACTION_SMS_TO_INBOX);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, sms);
+		intent.setClassName(ModuleConstants.SMSWRITE_MODULE_PACKAGE,
+				ModuleConstants.SMSWRITE_SERVICE);
 		ComponentName componentName = context.startService(intent);
 		if (componentName == null) throw new IllegalStateException("Component not found");
 		return true;
