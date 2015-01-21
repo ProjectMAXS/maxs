@@ -103,7 +103,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 			// TODO We now assume if there is a privacy list with our name, then this list is
 			// actually equal to the one we want. This should be changed so that the effective list
 			// is in fact compared item-by-item with the desired list
-			if (defaultList.equals(PRIVACY_LIST_NAME)) return;
+			if (PRIVACY_LIST_NAME.equals(defaultList)) return;
 		} catch (XMPPErrorException e) {
 			// Log if not item-not-found(404)
 			if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {

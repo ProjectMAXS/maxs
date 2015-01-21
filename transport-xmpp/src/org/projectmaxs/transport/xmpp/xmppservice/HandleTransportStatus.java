@@ -74,7 +74,7 @@ public class HandleTransportStatus extends StateChangeListener {
 				if (PrivacyListManager.getInstanceFor(connection).isSupported()) {
 					String privacyListName = PrivacyListManager.getInstanceFor(connection)
 							.getDefaultListName();
-					if (privacyListName.equals(XMPPPrivacyList.PRIVACY_LIST_NAME)) {
+					if (XMPPPrivacyList.PRIVACY_LIST_NAME.equals(privacyListName)) {
 						privacyListStatus = "privacy";
 					} else {
 						privacyListStatus = privacyInactive;
