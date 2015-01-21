@@ -150,8 +150,7 @@ public class InfoAndSettings extends Activity {
 					connection.disconnect();
 				} catch (Exception e) {
 					LOG.i("registerAccount", e);
-					showToast("Error creating account: " + e.getLocalizedMessage(),
-							Toast.LENGTH_LONG);
+					showToast("Error creating account: " + e, Toast.LENGTH_LONG);
 					return;
 				}
 				showToast("Account created", Toast.LENGTH_SHORT);
