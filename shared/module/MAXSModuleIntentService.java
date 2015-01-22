@@ -32,6 +32,7 @@ import org.projectmaxs.shared.mainmodule.Command;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -178,6 +179,12 @@ public abstract class MAXSModuleIntentService extends Service {
 			text.addItalic("Version: ").addNL(mVersion);
 			// Let's also include the stacktrace as String
 			text.addWithNewLines(android.util.Log.getStackTraceString(e));
+			text.addBoldNL("Further Info");
+			text.addItalic("OS Version: ").addNL(
+					System.getProperty("os.version") + " (" + Build.VERSION.INCREMENTAL + ")");
+			text.addItalic("OS API Level: ").addNL(Integer.toString(Build.VERSION.SDK_INT));
+			text.addItalic("Device: ").addNL(Build.DEVICE);
+			text.addItalic("Model (and Product): ").addNL(Build.MODEL + " (" + Build.PRODUCT + ")");
 			message = new org.projectmaxs.shared.global.Message(text);
 		}
 		if (message == null) return;
