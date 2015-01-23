@@ -17,6 +17,8 @@ prebuild: build.xml resources $(VERSION_XML)
 
 build.xml:
 	android update project -p . -n maxs-main -s
+#	tools/android may fail but not set its exit status
+	test -f build.xml
 
 resources: setupResourceLinks
 	cd res-src && $(MAKE)

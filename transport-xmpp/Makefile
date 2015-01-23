@@ -41,6 +41,8 @@ prebuild: build.xml resources shared $(VERSION_XML)
 
 build.xml:
 	android update project -p . -n maxs-$(TRANSPORT_NAME) -s
+#	tools/android may fail but not set its exit status
+	test -f build.xml
 
 resources: shared setupResourceLinks
 	cd res-src && $(MAKE)
