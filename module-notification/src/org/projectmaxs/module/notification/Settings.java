@@ -63,11 +63,11 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return mSharedPreferences.getBoolean(NOTIFICATION_TICKERTEXT, false);
 	}
 
-	public boolean notifcationPosted() {
+	public boolean notificationPosted() {
 		return mSharedPreferences.getBoolean(NOTIFICATION_POSTED, true);
 	}
 
-	public boolean notifcationRemoved() {
+	public boolean notificationRemoved() {
 		return mSharedPreferences.getBoolean(NOTIFICATION_REMOVED, false);
 	}
 

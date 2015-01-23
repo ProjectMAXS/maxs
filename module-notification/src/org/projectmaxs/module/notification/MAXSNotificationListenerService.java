@@ -42,7 +42,7 @@ public class MAXSNotificationListenerService extends NotificationListenerService
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn) {
 		LOG.d("onNotificationPosted: sbn=" + sbn);
-		if (!mSettings.notifcationPosted()) return;
+		if (!mSettings.notificationPosted()) return;
 		if (mSettings.notificationTickertext() && !hasTickertextElement(sbn)) return;
 
 		Element element = new Element("notificationPosted", null, "New notification posted");
@@ -55,10 +55,10 @@ public class MAXSNotificationListenerService extends NotificationListenerService
 	@Override
 	public void onNotificationRemoved(StatusBarNotification sbn) {
 		LOG.d("onNotificationRemoved: sbn=" + sbn);
-		if (!mSettings.notifcationRemoved()) return;
+		if (!mSettings.notificationRemoved()) return;
 		if (mSettings.notificationTickertext() && !hasTickertextElement(sbn)) return;
 
-		Element element = new Element("notificationRemoved", null, "Notifcation removed");
+		Element element = new Element("notificationRemoved", null, "Notification removed");
 		addSbnToElement(sbn, element);
 
 		Message message = new Message(element);
