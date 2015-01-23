@@ -2,6 +2,8 @@
 <resources>
     <string name="app_module_receiver_label">MAXS notification Module Receiver</string>
     <string name="notification_listener_service_label">MAXS notification Module Listener Service</string>
+    <string name="pref_notification_tickertext">Only with text</string>
+    <string name="pref_notification_tickertext_help">Suppress notifications which do not include some text.</string>
     <string name="pref_notification_posted">Notification posted</string>
     <string name="pref_notification_posted_help">Notify the master addresses if a new notification is posted.</string>
     <string name="pref_notification_removed">Notification removed</string>

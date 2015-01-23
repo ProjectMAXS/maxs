@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">MAXS Module Notification</string>
     <string name="pref_app_debug_log_key">DEBUG_LOG</string>
+    <string name="pref_notification_tickertext_key">NOTIFICATION_TICKERTEXT</string>
     <string name="pref_notification_posted_key">NOTIFICATION_POSTED</string>
     <string name="pref_notification_removed_key">NOTIFICATION_REMOVED</string>
 </resources>

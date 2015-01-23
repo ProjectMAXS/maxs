@@ -18,6 +18,11 @@
             android:key="@string/pref_notification_removed_key"
             android:summary="@string/pref_notification_removed_help"
             android:title="@string/pref_notification_removed" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_notification_tickertext_key"
+            android:summary="@string/pref_notification_tickertext_help"
+            android:title="@string/pref_notification_tickertext" />
     </PreferenceCategory>
 
 </PreferenceScreen>

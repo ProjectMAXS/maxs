@@ -28,6 +28,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	// App settings
 	private final String DEBUG_LOG;
 
+	private final String NOTIFICATION_TICKERTEXT;
 	private final String NOTIFICATION_POSTED;
 	private final String NOTIFICATION_REMOVED;
 
@@ -47,6 +48,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 
+		NOTIFICATION_TICKERTEXT = context.getString(R.string.pref_notification_tickertext_key);
 		NOTIFICATION_POSTED = context.getString(R.string.pref_notification_posted_key);
 		NOTIFICATION_REMOVED = context.getString(R.string.pref_notification_removed_key);
 
@@ -55,6 +57,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public boolean isDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
+	}
+
+	public boolean notificationTickertext() {
+		return mSharedPreferences.getBoolean(NOTIFICATION_TICKERTEXT, false);
 	}
 
 	public boolean notifcationPosted() {

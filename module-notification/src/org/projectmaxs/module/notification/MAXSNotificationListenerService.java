@@ -43,6 +43,7 @@ public class MAXSNotificationListenerService extends NotificationListenerService
 	public void onNotificationPosted(StatusBarNotification sbn) {
 		LOG.d("onNotificationPosted: sbn=" + sbn);
 		if (!mSettings.notifcationPosted()) return;
+		if (mSettings.notificationTickertext() && !hasTickertextElement(sbn)) return;
 
 		Element element = new Element("notificationPosted", null, "New notification posted");
 		addSbnToElement(sbn, element);
@@ -55,12 +56,23 @@ public class MAXSNotificationListenerService extends NotificationListenerService
 	public void onNotificationRemoved(StatusBarNotification sbn) {
 		LOG.d("onNotificationRemoved: sbn=" + sbn);
 		if (!mSettings.notifcationRemoved()) return;
+		if (mSettings.notificationTickertext() && !hasTickertextElement(sbn)) return;
 
 		Element element = new Element("notificationRemoved", null, "Notifcation removed");
 		addSbnToElement(sbn, element);
 
 		Message message = new Message(element);
 		MainUtil.send(message, this);
+	}
+
+	private static boolean hasTickertextElement(StatusBarNotification sbn) {
+		Notification notification = sbn.getNotification();
+
+		if (notification == null)
+			return false;
+		if (notification.tickerText == null)
+			return false;
+		return true;
 	}
 
 	private static void addSbnToElement(StatusBarNotification sbn, Element element) {
