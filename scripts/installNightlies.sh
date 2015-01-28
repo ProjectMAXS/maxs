@@ -1,17 +1,32 @@
 #!/usr/bin/env bash
 set -e
 
-declare -r NIGHTLIES_URL=http://projectmaxs.org/releases/nightlies/
+NIGHTLIES_URL=http://projectmaxs.org/releases/nightlies
 
 FILTER="module-phonestatemodify"
+DRY_RUN=false
 
-while getopts df: OPTION "$@"; do
+while getopts b:df:ht OPTION "$@"; do
 	case $OPTION in
+		b)
+			NIGHTLIES_URL+=/${OPTARG}/
+			;;
 		d)
 			set -x
 			;;
 		f)
 			FILTER=$OPTARG
+			;;
+		h)
+			echo "usage: `basename $0` [-b <branch>] [-d] [-f <filter>] [-t]"
+            echo " -b  optional branch"
+			echo " -d  enable debug output"
+            echo " -f  filter components from getting installed"
+			echo " -t  dry-run, just print what would get installed"
+			exit 1
+			;;
+		t)
+			DRY_RUN=true
 			;;
 	esac
 done
@@ -48,5 +63,7 @@ for apk in *.apk; do
 		done
 	fi
 	echo "Installing $apk"
-	adb install -r $apk
+	if ! $DRY_RUN; then
+		adb install -r $apk
+	fi
 done
