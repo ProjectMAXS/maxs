@@ -17,6 +17,7 @@
 
 package org.projectmaxs.main.receivers;
 
+import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.util.Constants;
 
@@ -28,8 +29,11 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (Settings.getInstance(context).connectOnBootCompleted())
-			context.startService(new Intent(Constants.ACTION_START_SERVICE));
+		if (Settings.getInstance(context).connectOnBootCompleted()) {
+			Intent startServiceIntent = new Intent(Constants.ACTION_START_SERVICE);
+			startServiceIntent.setClass(context, MAXSService.class);
+			context.startService(startServiceIntent);
+		}
 	}
 
 }
