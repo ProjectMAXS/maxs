@@ -17,6 +17,7 @@
 
 package org.projectmaxs.module.fileread.commands;
 
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.mainmodule.Command;
@@ -34,7 +35,7 @@ public class LsTilde extends AbstractLsCommand {
 			throws Throwable {
 		super.execute(arguments, command, service);
 
-		return list(mSettings.getCwd());
+		return list(GlobalConstants.MAXS_EXTERNAL_STORAGE);
 	}
 
 }
