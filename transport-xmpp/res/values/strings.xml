@@ -21,8 +21,8 @@
     <string name="pref_xmpp_stream_encryption_help">Chose the level of encryption.</string>
     <string name="pref_xmpp_stream_privacy">Use Privacy Lists</string>
     <string name="pref_xmpp_stream_privacy_help">Make use of XMPP Privacy Lists, if supported by server, to avoid non master JIDs to flood us with stanzas.</string>
-    <string name="pref_xmpp_stream_session">Use legacy session binding</string>
-    <string name="pref_xmpp_stream_session_help">Legacy RFC3921 session binding may be required by some old servers. Saves an extra roundtrip on connection establishment if disabled. This results in shorter connection times and a tiny bit less battery usage.</string>
+    <string name="pref_xmpp_stream_hostname_verify">Hostname verification</string>
+    <string name="pref_xmpp_stream_hostname_verify_help">Verify the hostname/servicename found in the TLS certificate if TLS is used. <b>Warning:</b> Disabling verification (may) invalidates all security guarantees provided by TLS. Only disable this setting if you understand the implications.</string>
     <string name="pref_xmpp_service_settings">XMPP Service Settings</string>
     <string name="pref_manual_service_settings">Manual service settings</string>
     <string name="pref_manual_service_settings_help">Allows you to specifiy the XMPP service settings.</string>

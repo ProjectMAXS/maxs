@@ -37,6 +37,7 @@
 -keep class org.jivesoftware.smackx.privacy.PrivacyListManager
 -keep class org.jivesoftware.smackx.time.EntityTimeManager
 -keep class org.jivesoftware.smackx.vcardtemp.VCardManager
+-keep class org.jivesoftware.smackx.receipts.DeliveryReceiptManager
 
 -keepclasseswithmembers class * extends org.jivesoftware.smack.sasl.SASLMechanism {
     public <init>(org.jivesoftware.smack.SASLAuthentication);

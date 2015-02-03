@@ -6,7 +6,7 @@
     <string name="pref_xmpp_stream_compression_sync_flush_key">XMPP_STREAM_COMPRESSION_SYNC_FLUSH</string>
     <string name="pref_xmpp_stream_encryption_key">XMPP_STREAM_ENCRYPTION_LEVEL</string>
     <string name="pref_xmpp_stream_privacy_key">XMPP_STREAM_PRIVACY</string>
-    <string name="pref_xmpp_stream_session_key">XMPP_STREAM_SESSION</string>
+    <string name="pref_xmpp_stream_hostname_verify_key">XMPP_STREAM_HOSTNAME_VERIFY</string>
     <string name="pref_manual_service_settings_key">MANUAL_SERVICE_SETTINGS</string>
     <string name="pref_manual_service_settings_host_key">MANUAL_SERVICE_SETTINGS_HOST_KEY</string>
     <string name="pref_manual_service_settings_port_key">MANUAL_SERVICE_SETTINGS_PORT</string>

@@ -17,6 +17,9 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.io.File;
+import java.io.Reader;
+import java.io.Writer;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Collection;
@@ -26,14 +29,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.debugger.JulDebugger;
+import org.jivesoftware.smack.debugger.SmackDebugger;
+import org.jivesoftware.smack.debugger.SmackDebuggerFactory;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
+import org.jivesoftware.smack.roster.rosterstore.RosterStore;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -52,6 +60,7 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.util.JidUtil;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.FileUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.TransportConstants;
@@ -103,9 +112,6 @@ public class XMPPService {
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.xdata.XDataManager");
 		SmackConfiguration
 				.addDisabledSmackClass("org.jivesoftware.smackx.xdatalayout.XDataLayoutManager");
-		// We prefer the JULDebugger over the Android debugger by disabling the Android debugger
-		SmackConfiguration
-				.addDisabledSmackClass("org.jivesoftware.smackx.debugger.android.AndroidDebugger");
 		SmackConfiguration
 				.addDisabledSmackClass("org.jivesoftware.smackx.xdatavalidation.XDataValidationManager");
 
@@ -119,6 +125,12 @@ public class XMPPService {
 			@Override
 			public String transform(String string) {
 				return Normalizer.normalize(string, Form.NFKC);
+			}
+		});
+		SmackConfiguration.setDebuggerFactory(new SmackDebuggerFactory() {
+			@Override
+			public SmackDebugger create(XMPPConnection connection, Writer writer, Reader reader) {
+				return new JulDebugger(connection, writer, reader);
 			}
 		});
 	}
@@ -171,7 +183,6 @@ public class XMPPService {
 		addListener(new HandleMessagesListener(this));
 		addListener(new XMPPPingManager(this));
 		addListener(new XMPPFileTransfer(context));
-		addListener(new XMPPDeliveryReceipts());
 		addListener(new XMPPPrivacyList(mSettings));
 
 		mHandleTransportStatus = new HandleTransportStatus(context);
@@ -317,7 +328,7 @@ public class XMPPService {
 		// a notification, so we are going to broadcast it to all master JIDs.
 		if (originIssuerInfo == null) {
 			Set<BareJid> jidsWithExcludedResources = new HashSet<BareJid>();
-			Roster roster = mConnection.getRoster();
+			Roster roster = Roster.getInstanceFor(mConnection);
 			// Broadcast to all masterJID resources
 			for (BareJid masterJid : mSettings.getMasterJids()) {
 				Collection<Presence> presences = roster.getAvailablePresences(masterJid.toString());
@@ -618,6 +629,12 @@ public class XMPPService {
 				.getConnectionConfiguration(mContext)) {
 			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
 			connection = new XMPPTCPConnection(mConnectionConfiguration);
+
+			// Setup the roster store
+			File rosterStoreDirectory = FileUtil.getFileDir(mContext, "rosterStore");
+			RosterStore rosterStore = DirectoryRosterStore.init(rosterStoreDirectory);
+			Roster.getInstanceFor(connection).setRosterStore(rosterStore);
+
 			newConnection = true;
 		} else {
 			connection = mConnection;

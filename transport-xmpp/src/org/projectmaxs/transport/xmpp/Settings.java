@@ -17,7 +17,6 @@
 
 package org.projectmaxs.transport.xmpp;
 
-import java.io.File;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -30,9 +29,8 @@ import javax.net.ssl.SSLContext;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.compression.XMPPInputOutputStream;
 import org.jivesoftware.smack.compression.XMPPInputOutputStream.FlushMethod;
-import org.jivesoftware.smack.rosterstore.DirectoryRosterStore;
-import org.jivesoftware.smack.rosterstore.RosterStore;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.TLSUtils;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -40,7 +38,6 @@ import org.jxmpp.stringprep.XmppStringprepException;
 import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
-import org.projectmaxs.shared.global.util.FileUtil;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPSocketFactory;
@@ -80,7 +77,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private final String XMPP_STREAM_COMPRESSION_SYNC_FLUSH;
 	private final String XMPP_STREAM_ENCYPTION;
 	private final String XMPP_STREAM_PRIVACY;
-	private final String XMPP_STREAM_SESSION;
+	private final String XMPP_STREAM_HOSTNAME_VERIFY;
 
 	// App settings
 	private final String DEBUG_LOG;
@@ -126,7 +123,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				.getString(R.string.pref_xmpp_stream_compression_sync_flush_key);
 		XMPP_STREAM_ENCYPTION = context.getString(R.string.pref_xmpp_stream_encryption_key);
 		XMPP_STREAM_PRIVACY = context.getString(R.string.pref_xmpp_stream_privacy_key);
-		XMPP_STREAM_SESSION = context.getString(R.string.pref_xmpp_stream_session_key);
+		XMPP_STREAM_HOSTNAME_VERIFY = context
+				.getString(R.string.pref_xmpp_stream_hostname_verify_key);
 		DEBUG_NETWORK = context.getString(R.string.pref_app_debug_network_key);
 		DEBUG_DNS = context.getString(R.string.pref_app_debug_dns_key);
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
@@ -390,8 +388,12 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			confBuilder.setSendPresence(false);
 
 			confBuilder.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG, false));
-			confBuilder.setLegacySessionDisabled(!mSharedPreferences.getBoolean(
-					XMPP_STREAM_SESSION, true));
+			if (!mSharedPreferences.getBoolean(XMPP_STREAM_HOSTNAME_VERIFY, true)) {
+				TLSUtils.disableHostnameVerificationForTlsCertificicates(confBuilder);
+			} else {
+				// Smack >= 4.1 verifies the hostname per default
+			}
+
 			try {
 				SSLContext sc = SSLContext.getInstance("TLS");
 				sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
@@ -401,10 +403,6 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			} catch (KeyManagementException e) {
 				throw new IllegalStateException(e);
 			}
-
-			File rosterStoreDirectory = FileUtil.getFileDir(context, "rosterStore");
-			RosterStore rosterStore = DirectoryRosterStore.init(rosterStoreDirectory);
-			confBuilder.setRosterStore(rosterStore);
 
 			mConnectionConfiguration = confBuilder.build();
 		}

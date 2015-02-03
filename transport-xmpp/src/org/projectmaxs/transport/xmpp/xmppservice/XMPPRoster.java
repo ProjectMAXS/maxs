@@ -22,13 +22,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.RosterPacket;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
+import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.util.Log;
@@ -55,7 +55,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	@Override
 	public void newConnection(XMPPConnection connection) {
 		mConnection = connection;
-		mRoster = connection.getRoster();
+		mRoster = Roster.getInstanceFor(connection);
 		mRoster.addRosterListener(this);
 	}
 
