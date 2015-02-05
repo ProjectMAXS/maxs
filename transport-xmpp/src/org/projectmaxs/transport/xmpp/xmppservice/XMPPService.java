@@ -93,7 +93,7 @@ public class XMPPService {
 
 	static {
 		ServiceDiscoveryManager.setDefaultIdentity(new DiscoverInfo.Identity("client",
-				GlobalConstants.NAME, "bot"));
+				GlobalConstants.HUMAN_READABLE_NAME, "bot"));
 		// TODO This is not really needed, but for some reason the static initializer block of
 		// LastActivityManager is not run. This could be a problem caused by aSmack together with
 		// dalvik, as the initializer is run on Smack's test cases.
