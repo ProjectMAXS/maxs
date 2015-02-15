@@ -21,7 +21,7 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -42,7 +42,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 		mChatPacketListener = new PacketListener() {
 
 			@Override
-			public void processPacket(Packet packet) {
+			public void processPacket(Stanza packet) {
 				Message message = (Message) packet;
 				String fromString = message.getFrom();
 				Jid from;

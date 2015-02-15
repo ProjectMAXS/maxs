@@ -375,7 +375,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			final String securityModeString = mSharedPreferences.getString(XMPP_STREAM_ENCYPTION,
 					"opt");
 			if ("opt".equals(securityModeString)) {
-				securityMode = ConnectionConfiguration.SecurityMode.enabled;
+				securityMode = ConnectionConfiguration.SecurityMode.ifpossible;
 			} else if ("req".equals(securityModeString)) {
 				securityMode = ConnectionConfiguration.SecurityMode.required;
 			} else if ("dis".equals(securityModeString)) {
