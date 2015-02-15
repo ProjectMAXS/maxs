@@ -178,6 +178,8 @@ public class XMPPService {
 		mSettings = Settings.getInstance(context);
 		mMessagesTable = MessagesTable.getInstance(context);
 
+		// SendStanzaDatabaseHandler should be the first
+		addListener(new SendStanzaDatabaseHandler(this));
 		addListener(new HandleChatPacketListener(this));
 		addListener(new HandleConnectionListener(this));
 		addListener(new HandleMessagesListener(this));

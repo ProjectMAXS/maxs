@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class XMPPDatabase extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = Constants.PACKAGE + ".db";
 
 	public static final String TEXT_TYPE = " TEXT";
@@ -41,10 +41,12 @@ public class XMPPDatabase extends SQLiteOpenHelper {
 	private static final String[] SQL_CREATE_ENTRIES = new String[] {
 				XMPPEntityCapsTable.CREATE_TABLE,
 				MessagesTable.CREATE_TABLE, 
+				SendUnackedStanzasTable.CREATE_TABLE,
 	};
 	private static final String[] SQL_DELETE_ENTRIES = new String[] {
 		XMPPEntityCapsTable.DELETE_TABLE,
 		MessagesTable.DELETE_TABLE,
+		SendUnackedStanzasTable.DELETE_TABLE,
 	};
 	// @formatter:on
 
