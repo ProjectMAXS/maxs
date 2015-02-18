@@ -2,7 +2,7 @@
 <resources>
     <string name="pref_app_debug_log">Debug Log</string>
     <string name="pref_app_debug_log_help">Enables extensive logging of debug messages. Useful to find bugs.</string>
-    <string name="copyright">Copyright © 2013-2014  Project MAXS</string>
+    <string name="copyright">Copyright © 2013-2015  Project MAXS</string>
     <string name="gplv3">is free software and licensed under the <a href="https://www.gnu.org/licenses/gpl.html">GNU General Public License version 3</a>, or (at your option) any later version.</string>
     <string name="authors">Authors</string>
     <string name="close">Close</string>
