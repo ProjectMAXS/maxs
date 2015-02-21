@@ -80,7 +80,7 @@ public class InfoAndSettings extends Activity {
 "<h2>Smack (XMPP Client Library)</h2>" +
 "<a href=\"http://www.igniterealtime.org/projects/smack\">http://www.igniterealtime.org/projects/smack</a><br>" +
 "<br>" +
-"Copyright © 2011-2014 Florian Schmaus<br>" +
+"Copyright © 2011-2015 Florian Schmaus<br>" +
 "Copyright © 2013-2014 Georg Lukas<br>" +
 "Copyright © 2014 Lars Noschinski<br>" +
 "Copyright © 2014 Vyacheslav Blinov<br>" +
