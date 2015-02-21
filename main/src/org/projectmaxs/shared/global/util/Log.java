@@ -70,15 +70,19 @@ public class Log {
 	}
 
 	public void d(CharSequence msg) {
-		if (sDebugLogSettings == null || sDebugLogSettings.isDebugLogEnabled()) {
+		if (isDebugLogEnabled()) {
 			android.util.Log.d(mLogTag, msg.toString());
 		}
 	}
 
 	public void d(CharSequence msg, Throwable tr) {
-		if (sDebugLogSettings == null || sDebugLogSettings.isDebugLogEnabled()) {
+		if (isDebugLogEnabled()) {
 			android.util.Log.d(mLogTag, msg.toString(), tr);
 		}
+	}
+
+	public boolean isDebugLogEnabled() {
+		return sDebugLogSettings == null || sDebugLogSettings.isDebugLogEnabled();
 	}
 
 	public static interface DebugLogSettings {

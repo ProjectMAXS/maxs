@@ -40,6 +40,7 @@ import org.jivesoftware.smack.debugger.SmackDebuggerFactory;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterLoadedListener;
 import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.roster.rosterstore.RosterStore;
 import org.jivesoftware.smack.sasl.SASLMechanism;
@@ -174,6 +175,7 @@ public class XMPPService {
 
 	private XMPPService(Context context) {
 		XMPPVersion.initialize(context);
+		XMPPBundleAndDefer.initialize(context);
 
 		mContext = context;
 		mSettings = Settings.getInstance(context);
@@ -638,10 +640,19 @@ public class XMPPService {
 			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
 			connection = new XMPPTCPConnection(mConnectionConfiguration);
 
+			final Roster roster = Roster.getInstanceFor(connection);
+
 			// Setup the roster store
 			File rosterStoreDirectory = FileUtil.getFileDir(mContext, "rosterStore");
 			RosterStore rosterStore = DirectoryRosterStore.init(rosterStoreDirectory);
-			Roster.getInstanceFor(connection).setRosterStore(rosterStore);
+			roster.setRosterStore(rosterStore);
+
+			roster.addRosterLoadedListener(new RosterLoadedListener() {
+				@Override
+				public void onRosterLoaded(Roster roster) {
+					LOG.d("RosterLoadedListener.onRosterLoaded() invoked, roster has been loaded");
+				}
+			});
 
 			newConnection = true;
 		} else {
