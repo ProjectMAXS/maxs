@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -78,6 +79,7 @@ public class InfoAndSettings extends Activity {
 "&#8226; <a	href=\"https://github.com/ge0rg/MemorizingTrustManager\">MemorizingTrustManager</a><br>" +
 "&#8226; <a	href=\"https://github.com/rtreffer/minidns\">MiniDNS</a><br>" +
 "<h2>Smack (XMPP Client Library)</h2>" +
+SmackConfiguration.getVersion() + "<br>" +
 "<a href=\"http://www.igniterealtime.org/projects/smack\">http://www.igniterealtime.org/projects/smack</a><br>" +
 "<br>" +
 "Copyright © 2011-2015 Florian Schmaus<br>" +
