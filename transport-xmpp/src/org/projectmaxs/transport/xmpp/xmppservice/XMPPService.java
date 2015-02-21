@@ -49,6 +49,7 @@ import org.jivesoftware.smack.util.DNSUtil;
 import org.jivesoftware.smack.util.StringTransformer;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
+import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
@@ -324,6 +325,11 @@ public class XMPPService {
 		packet.setType(Message.Type.chat);
 		packet.setBody(TransformMessageContent.toString(message));
 		packet.setThread(originId);
+
+		// Add a private carbon extension so that this message wont get carbon copied. MAXS does
+		// already send the message to all resources. If a recipient has carbons enabled and we
+		// wouldn't add the private element, then he would receive the message multiple times.
+		CarbonExtension.Private.addTo(packet);
 
 		List<BareJid> toList = new LinkedList<BareJid>();
 		// No 'originIssueInfo (which is the to JID in this case) specified. The message is typical
