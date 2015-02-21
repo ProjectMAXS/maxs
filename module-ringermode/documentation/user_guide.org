@@ -17,7 +17,7 @@ This module requires no permissions.
 
 * Commands
 
-** =ringermode= (short command: =r=)
+** =ringermode= (short command: =ringer=)
 
 *** =ringermode show=
 
