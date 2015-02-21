@@ -37,8 +37,8 @@
     <string name="pref_app_xmpp_debug_help">Log all XMPP stanzas.</string>
     <string name="pref_app_debug_network">Network Debug</string>
     <string name="pref_app_debug_network_help">Log extended network information.</string>
-    <string name="pref_app_debug_dns">minidns Debug</string>
-    <string name="pref_app_debug_dns_help">Log extended minidns information.</string>
+    <string name="pref_app_debug_dns">MiniDNS Debug</string>
+    <string name="pref_app_debug_dns_help">Log extended MiniDNS information.</string>
     <string name="pref_app_excluded_resources">Excluded Resources</string>
     <string name="pref_app_excluded_resources_help">Specify XMPP resources from being excluded from notifications.</string>
     <string name="pref_app_settings_xmpp_intent">XMPP Intent</string>

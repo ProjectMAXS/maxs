@@ -76,7 +76,7 @@ public class InfoAndSettings extends Activity {
 "<h1>Open Source</h1>" +
 "&#8226; <a href=\"http://www.igniterealtime.org/projects/smack\">Smack</a><br>" +
 "&#8226; <a	href=\"https://github.com/ge0rg/MemorizingTrustManager\">MemorizingTrustManager</a><br>" +
-"&#8226; <a	href=\"https://github.com/rtreffer/minidns\">minidns</a><br>" +
+"&#8226; <a	href=\"https://github.com/rtreffer/minidns\">MiniDNS</a><br>" +
 "<h2>Smack (XMPP Client Library)</h2>" +
 "<a href=\"http://www.igniterealtime.org/projects/smack\">http://www.igniterealtime.org/projects/smack</a><br>" +
 "<br>" +
@@ -95,7 +95,7 @@ public class InfoAndSettings extends Activity {
 "<br>" +
 "Copyright © 2010-2104 Georg Lukas<br>" +
 "MIT License<br>" +
-"<h2>minidns</h2>" +
+"<h2>MiniDNS</h2>" +
 "<a href=\"https://github.com/rtreffer/minidns\">https://github.com/rtreffer/minidns<a/><br>" +
 "<br>" +
 "Apache License, Version 2.0<br>" +
