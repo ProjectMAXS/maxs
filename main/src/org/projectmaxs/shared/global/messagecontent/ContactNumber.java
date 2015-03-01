@@ -178,7 +178,9 @@ public class ContactNumber extends AbstractElement {
 				.replace("-", "")
 				.replace(".", "")
 				.replace("/", "")
-				.replace(" ", "");
+				.replace("#", "")
+				.replaceAll("\\s+", "")
+				;
 		// @formatter:on
 	}
 
