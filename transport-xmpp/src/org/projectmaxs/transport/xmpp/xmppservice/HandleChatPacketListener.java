@@ -17,7 +17,7 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
@@ -32,14 +32,14 @@ public class HandleChatPacketListener extends StateChangeListener {
 
 	private static Log LOG = Log.getLog();
 
-	private final PacketListener mChatPacketListener;
+	private final StanzaListener mChatPacketListener;
 	private final XMPPService mXMPPService;
 	private final Settings mSettings;
 
 	public HandleChatPacketListener(XMPPService xmppService) {
 		mXMPPService = xmppService;
 		mSettings = Settings.getInstance(xmppService.getContext());
-		mChatPacketListener = new PacketListener() {
+		mChatPacketListener = new StanzaListener() {
 
 			@Override
 			public void processPacket(Stanza packet) {
@@ -65,7 +65,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 
 	@Override
 	public void newConnection(XMPPConnection connection) {
-		connection.addAsyncPacketListener(mChatPacketListener, MessageTypeFilter.NORMAL_OR_CHAT);
+		connection.addAsyncStanzaListener(mChatPacketListener, MessageTypeFilter.NORMAL_OR_CHAT);
 	}
 
 }
