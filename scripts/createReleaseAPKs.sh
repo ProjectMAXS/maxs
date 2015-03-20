@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
+. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/functions.sh"
 
 set -e
 
@@ -83,6 +84,18 @@ cd ${BASEDIR}
 
 if [[ -n $RELEASE_TAG ]]; then
     git checkout $RELEASE_TAG
+elif $REMOTE; then
+    # If we perform a remote build (e.g. on Jenkins), then set the
+    # versionCode of all components to the POSIX time, so that they
+    # can get published to the Play Store beta channel
+    versionCode=$(date +%s)
+    set_versionCode $MAINDIR $versionCode
+    for t in $TRANSPORTS ; do
+        set_versionCode $t $versionCode
+    done
+    for m in $MODULES ; do
+        set_versionCode $m $versionCode
+    done
 fi
 
 ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
