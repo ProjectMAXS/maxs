@@ -414,6 +414,12 @@ public class XMPPService {
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
 					originId);
 		}
+		if (originIssuerInfo != null) {
+			// If the message we just send had originIssueInfo, then it's usually a response to a
+			// command. We don't want to keep the user waiting for the result, so stop the current
+			// bundleAndDefer *after* the message has been sent.
+			XMPPBundleAndDefer.stopCurrentBundleAndDefer();
+		}
 	}
 
 	private void sendAsIQ(org.projectmaxs.shared.global.Message message, String originIssuerInfo,

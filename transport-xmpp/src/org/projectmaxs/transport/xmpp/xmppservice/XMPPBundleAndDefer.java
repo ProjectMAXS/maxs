@@ -98,13 +98,17 @@ public class XMPPBundleAndDefer {
 		connectivityManager.addDefaultNetworkActiveListener(new OnNetworkActiveListener() {
 			@Override
 			public void onNetworkActive() {
-				final BundleAndDefer localCurrentbundleAndDefer = currentBundleAndDefer;
-				if (localCurrentbundleAndDefer == null) {
-					return;
-				}
-				LOG.d("onNetworkActive() invoked and currentbundleAndDefer not null, calling stopCurrentBundleAndDefer()");
-				localCurrentbundleAndDefer.stopCurrentBundleAndDefer();
+				stopCurrentBundleAndDefer();
 			}
 		});
+	}
+
+	public static void stopCurrentBundleAndDefer() {
+		final BundleAndDefer localCurrentbundleAndDefer = currentBundleAndDefer;
+		if (localCurrentbundleAndDefer == null) {
+			return;
+		}
+		LOG.d("stopCurrentBundleAndDefer() invoked and currentbundleAndDefer not null, calling stopCurrentBundleAndDefer()");
+		localCurrentbundleAndDefer.stopCurrentBundleAndDefer();
 	}
 }
