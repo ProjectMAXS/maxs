@@ -21,8 +21,8 @@
 -keep class org.jivesoftware.smack.debugger.JulDebugger { *; }
 -keep class * implements org.jivesoftware.smack.initializer.SmackInitializer
 -keep class * implements org.jivesoftware.smack.provider.IQProvider
--keep class * implements org.jivesoftware.smack.provider.PacketExtensionProvider
--keep class * extends org.jivesoftware.smack.packet.Packet
+-keep class * implements org.jivesoftware.smack.provider.ExtensionElementProvider
+-keep class * extends org.jivesoftware.smack.packet.Stanza
 -keep class org.jivesoftware.smack.XMPPConnection
 -keep class org.jivesoftware.smack.util.dns.minidns.MiniDnsResolver
 -keep class org.jivesoftware.smackx.disco.ServiceDiscoveryManager
