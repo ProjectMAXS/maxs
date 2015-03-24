@@ -24,9 +24,14 @@ import org.projectmaxs.shared.global.util.Log;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.ConnectivityManager.OnNetworkActiveListener;
+import android.os.BatteryManager;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 
 /**
  * Bundle And Defer means that Smack will invoke the
@@ -64,43 +69,47 @@ public class XMPPBundleAndDefer {
 	private static BundleAndDefer currentBundleAndDefer;
 
 	@TargetApi(21)
-	public static void initialize(Context context) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			// This is all Android API 21. If we run on a lower API, then abort here.
-			return;
-		}
-
+	public static void initialize(final Context context) {
 		final ConnectivityManager connectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		BundleAndDeferCallback bundleAndDeferCallback = new BundleAndDeferCallback() {
 			@Override
 			public int getBundleAndDeferMillis(BundleAndDefer bundleAndDefer) {
 				XMPPBundleAndDefer.currentBundleAndDefer = bundleAndDefer;
+				String networkState = "unknown (needs Android >= 5.0)";
+				boolean networkActive = false;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					if (connectivityManager.isDefaultNetworkActive()) {
+						networkState = "active";
+						networkActive = true;
+					} else {
+						networkState = "incative";
+					}
+				}
+				boolean isPlugged = isPlugged(context);
 				final int deferMillis;
-				final String networkState;
-				if (connectivityManager.isDefaultNetworkActive()) {
-					networkState = "active";
+				if (isPlugged || networkActive) {
 					deferMillis = ACTIVE_STATE_DEFER_MILLIS;
 				} else {
-					networkState = "incative";
 					deferMillis = INACTIVE_STATE_DEFER_MILLIS;
 				}
-
 				if (LOG.isDebugLogEnabled()) {
 					LOG.d("Returning " + deferMillis + " in getBundleAndDeferMillis(). Network is "
-							+ networkState);
+							+ networkState + ", batteryPlugged: " + isPlugged);
 				}
 				return deferMillis;
 			}
 		};
 		XMPPTCPConnection.setDefaultBundleAndDeferCallback(bundleAndDeferCallback);
 
-		connectivityManager.addDefaultNetworkActiveListener(new OnNetworkActiveListener() {
-			@Override
-			public void onNetworkActive() {
-				stopCurrentBundleAndDefer();
-			}
-		});
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			connectivityManager.addDefaultNetworkActiveListener(new OnNetworkActiveListener() {
+				@Override
+				public void onNetworkActive() {
+					stopCurrentBundleAndDefer();
+				}
+			});
+		}
 	}
 
 	public static void stopCurrentBundleAndDefer() {
@@ -110,5 +119,30 @@ public class XMPPBundleAndDefer {
 		}
 		LOG.d("stopCurrentBundleAndDefer() invoked and currentbundleAndDefer not null, calling stopCurrentBundleAndDefer()");
 		localCurrentbundleAndDefer.stopCurrentBundleAndDefer();
+	}
+
+	private static final IntentFilter BATTERY_CHANGED_INTENT_FILTER = new IntentFilter(
+			Intent.ACTION_BATTERY_CHANGED);
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private static boolean isPlugged(Context context) {
+		// BATTERY_CHANGED_INTENT is a sticky broadcast intent
+		final Intent intent = context.registerReceiver(null, BATTERY_CHANGED_INTENT_FILTER);
+		final int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+		boolean isPlugged;
+		switch (plugged) {
+		case BatteryManager.BATTERY_PLUGGED_AC:
+		case BatteryManager.BATTERY_PLUGGED_USB:
+			isPlugged = true;
+			break;
+		default:
+			isPlugged = false;
+			break;
+		}
+		if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+			isPlugged |= plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
+		}
+
+		return isPlugged;
 	}
 }
