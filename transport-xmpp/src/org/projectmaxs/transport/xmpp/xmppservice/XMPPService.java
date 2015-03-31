@@ -258,7 +258,7 @@ public class XMPPService {
 		default:
 			break;
 		}
-		if (!(mConnection.isConnected() || mConnection.isDisconnectedButSmResumptionPossible())) {
+		if (!shouldUseXmppConnection()) {
 			LOG.w("Connection is not connected and no resumption possible, not going to send message to "
 					+ to);
 			return;
@@ -314,7 +314,7 @@ public class XMPPService {
 
 	private void sendAsMessage(org.projectmaxs.shared.global.Message message,
 			String originIssuerInfo, String originId) {
-		if (mConnection == null || !mConnection.isAuthenticated()) {
+		if (!shouldUseXmppConnection()) {
 			// TODO I think that this could for example happen when the service
 			// is not started but e.g. the SMS receiver get's a new message.
 			LOG.i("sendAsMessage: Not connected, adding message to DB. mConnection=" + mConnection);
@@ -734,6 +734,20 @@ public class XMPPService {
 			}
 			newState(State.Disconnected);
 		}
+	}
+
+	private boolean shouldUseXmppConnection() {
+		if (mConnection == null) {
+			return false;
+		}
+		if (!mConnection.isAuthenticated()) {
+			return false;
+		}
+		// If it is not connected and not resumable, return false
+		if (!mConnection.isConnected() && !mConnection.isDisconnectedButSmResumptionPossible()) {
+			return false;
+		}
+		return true;
 	}
 
 }
