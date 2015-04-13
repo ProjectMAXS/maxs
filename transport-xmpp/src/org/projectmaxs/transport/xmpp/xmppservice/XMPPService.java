@@ -103,6 +103,7 @@ public class XMPPService {
 		// Some network types, especially GPRS or EDGE is rural areas have a very slow response
 		// time. Smack's default packet reply timeout of 5 seconds is way to low for such networks,
 		// so we increase it to 2 minutes.
+		// This value must also be greater then the highest returned bundle and defer value.
 		SmackConfiguration.setDefaultPacketReplyTimeout(2 * 60 * 1000);
 
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
@@ -301,10 +302,13 @@ public class XMPPService {
 	public boolean fastPingServer() {
 		if (mConnection == null) return false;
 		PingManager pingManager = PingManager.getInstanceFor(mConnection);
+		XMPPBundleAndDefer.disableBundleAndDefer();
 		try {
 			return pingManager.pingMyServer(false, 1500);
 		} catch (NotConnectedException e) {
 			return false;
+		} finally {
+			XMPPBundleAndDefer.enableBundleAndDefer();
 		}
 	}
 
@@ -674,9 +678,11 @@ public class XMPPService {
 		connection.setPreferredResumptionTime(5 * 60); // 5 minutes
 
 		LOG.d("tryToConnect: connect");
+		XMPPBundleAndDefer.disableBundleAndDefer();
 		try {
 			connection.connect();
 		} catch (Exception e) {
+			XMPPBundleAndDefer.enableBundleAndDefer();
 			LOG.e("tryToConnect: Exception from connect()", e);
 			if (e instanceof ConnectionException) {
 				ConnectionException ce = (ConnectionException) e;
@@ -700,7 +706,11 @@ public class XMPPService {
 				LOG.e("tryToConnect: login failed. New State: Disconnected", e);
 				newState(State.Disconnected, e.getLocalizedMessage());
 				return;
+			} finally {
+				XMPPBundleAndDefer.enableBundleAndDefer();
 			}
+		} else {
+			XMPPBundleAndDefer.enableBundleAndDefer();
 		}
 		// Login Successful
 

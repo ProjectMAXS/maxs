@@ -21,6 +21,7 @@ import org.projectmaxs.transport.xmpp.R;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.xmppservice.StateChangeListener;
+import org.projectmaxs.transport.xmpp.xmppservice.XMPPBundleAndDefer;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
 import android.app.Activity;
@@ -355,12 +356,15 @@ SmackConfiguration.getVersion() + "<br>" +
 			new AsyncTask<PingManager, Void, Boolean>() {
 				@Override
 				protected Boolean doInBackground(PingManager... pingManagers) {
+					XMPPBundleAndDefer.disableBundleAndDefer();
 					try {
 						return pingManagers[0].pingMyServer();
 					} catch (SmackException e) {
 						LOG.w("pingMyServer", e);
 					} catch (RuntimeException e) {
 						LOG.e("pingMyServer: RuntimeException", e);
+					} finally {
+						XMPPBundleAndDefer.enableBundleAndDefer();
 					}
 					return false;
 				}

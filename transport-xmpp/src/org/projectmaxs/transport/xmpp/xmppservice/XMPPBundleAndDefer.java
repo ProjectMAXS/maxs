@@ -17,6 +17,8 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jivesoftware.smack.tcp.BundleAndDefer;
 import org.jivesoftware.smack.tcp.BundleAndDeferCallback;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -63,6 +65,13 @@ public class XMPPBundleAndDefer {
 	private static final Log LOG = Log.getLog();
 
 	/**
+	 * Integer value indication when not to BAD (BundleAndDefer). If its value is greater zero, then
+	 * bundle and
+	 * defer while not take place.
+	 */
+	private static final AtomicInteger sDoNotBadInt = new AtomicInteger();
+
+	/**
 	 * The current BundleAndDefer instance, which can be used to stop the current bundle and defer
 	 * process by Smack. Once it's stopped, the bundled stanzas so far will be send immediately.
 	 */
@@ -75,6 +84,9 @@ public class XMPPBundleAndDefer {
 		BundleAndDeferCallback bundleAndDeferCallback = new BundleAndDeferCallback() {
 			@Override
 			public int getBundleAndDeferMillis(BundleAndDefer bundleAndDefer) {
+				if (sDoNotBadInt.get() > 0) {
+					return 0;
+				}
 				XMPPBundleAndDefer.currentBundleAndDefer = bundleAndDefer;
 				String networkState = "unknown (needs Android >= 5.0)";
 				boolean networkActive = false;
@@ -119,6 +131,22 @@ public class XMPPBundleAndDefer {
 		}
 		LOG.d("stopCurrentBundleAndDefer() invoked and currentbundleAndDefer not null, calling stopCurrentBundleAndDefer()");
 		localCurrentbundleAndDefer.stopCurrentBundleAndDefer();
+	}
+
+	/**
+	 * Disables bundle and defer until {@link #enableBundleAndDefer()} is called.
+	 */
+	public static void disableBundleAndDefer() {
+		sDoNotBadInt.incrementAndGet();
+		stopCurrentBundleAndDefer();
+	}
+
+	/**
+	 * Re-enables bundle and defer. {@link #disableBundleAndDefer()} must be called prior calling
+	 * this.
+	 */
+	public static void enableBundleAndDefer() {
+		sDoNotBadInt.decrementAndGet();
 	}
 
 	private static final IntentFilter BATTERY_CHANGED_INTENT_FILTER = new IntentFilter(
