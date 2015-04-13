@@ -695,6 +695,8 @@ public class XMPPService {
 			return;
 		}
 
+		// TODO Remove this condition when Smack 4.2 is used, since it will no longer login if the
+		// connection was previously authenticated
 		if (!connection.isAuthenticated()) {
 			try {
 				connection.login();
