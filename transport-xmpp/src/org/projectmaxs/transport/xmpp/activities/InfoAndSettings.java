@@ -15,6 +15,7 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.util.JidUtil;
 import org.jxmpp.jid.util.JidUtil.NotABareJidStringException;
 import org.jxmpp.stringprep.XmppStringprepException;
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.transport.xmpp.R;
@@ -42,6 +43,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class InfoAndSettings extends Activity {
+	static {
+		JULHandler.setAsDefaultUncaughtExceptionHandler();
+	}
 
 	private static final Log LOG = Log.getLog();
 

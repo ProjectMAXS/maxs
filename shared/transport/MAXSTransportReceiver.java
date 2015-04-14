@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.util.Set;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
@@ -34,6 +35,10 @@ import android.content.SharedPreferences;
 import eu.geekplace.iesp.ImportExportSharedPreferences;
 
 public abstract class MAXSTransportReceiver extends BroadcastReceiver {
+	static {
+		JULHandler.setAsDefaultUncaughtExceptionHandler();
+	}
+
 	private final Log mLog;
 	private final TransportInformation mTransportInformation;
 

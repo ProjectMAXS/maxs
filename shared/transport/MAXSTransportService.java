@@ -19,6 +19,7 @@ package org.projectmaxs.shared.transport;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 
@@ -33,6 +34,10 @@ import android.os.Looper;
 import android.os.Message;
 
 public abstract class MAXSTransportService extends Service {
+	static {
+		JULHandler.setAsDefaultUncaughtExceptionHandler();
+	}
+
 	private static final Log LOG = Log.getLog();
 
 	private static final String IS_RUNNING_KEY = "isRunning";

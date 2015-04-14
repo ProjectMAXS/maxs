@@ -18,12 +18,16 @@
 package org.projectmaxs.shared.module;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.jul.JULHandler;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 public abstract class MAXSPurgeOldCommandsReceiver extends BroadcastReceiver {
+	static {
+		JULHandler.setAsDefaultUncaughtExceptionHandler();
+	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

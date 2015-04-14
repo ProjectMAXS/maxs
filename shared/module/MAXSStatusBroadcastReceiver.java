@@ -20,6 +20,7 @@ package org.projectmaxs.shared.module;
 import java.util.List;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.MainModuleConstants;
 import org.projectmaxs.shared.mainmodule.StatusInformation;
@@ -29,6 +30,9 @@ import android.content.Context;
 import android.content.Intent;
 
 public abstract class MAXSStatusBroadcastReceiver extends BroadcastReceiver {
+	static {
+		JULHandler.setAsDefaultUncaughtExceptionHandler();
+	}
 
 	private static final Log LOG = Log.getLog();
 

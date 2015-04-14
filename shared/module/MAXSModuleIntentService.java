@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
@@ -47,6 +48,10 @@ import android.os.Message;
  * 
  */
 public abstract class MAXSModuleIntentService extends Service {
+	static {
+		JULHandler.setAsDefaultUncaughtExceptionHandler();
+	}
+
 	private static final int WHAT = 42;
 
 	private final Log mLog;

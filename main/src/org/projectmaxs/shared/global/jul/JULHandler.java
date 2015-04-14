@@ -20,6 +20,7 @@ package org.projectmaxs.shared.global.jul;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Formatter;
@@ -154,6 +155,21 @@ public class JULHandler extends Handler {
 			return Log.INFO;
 		} else {
 			return Log.DEBUG;
+		}
+	}
+
+	private static final UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new UncaughtExceptionHandler() {
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex) {
+			LOGGER.log(Level.SEVERE, "Uncaught exception in " + thread, ex);
+		}
+	};
+
+	public static void setAsDefaultUncaughtExceptionHandler() {
+		UncaughtExceptionHandler currentUncaughtExceptionHandler = Thread
+				.getDefaultUncaughtExceptionHandler();
+		if (currentUncaughtExceptionHandler != UNCAUGHT_EXCEPTION_HANDLER) {
+			Thread.setDefaultUncaughtExceptionHandler(UNCAUGHT_EXCEPTION_HANDLER);
 		}
 	}
 }
