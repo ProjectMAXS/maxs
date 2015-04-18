@@ -7,9 +7,6 @@
 ################################################################################
 # Custom proguard settings
 
-# We don't use jzlib, but instead the Android API for compression
--dontnote com.jcraft.jzlib.*
-
 -dontnote android.os.SystemProperties
 
 -dontnote sun.security.pkcs11.SunPKCS11
