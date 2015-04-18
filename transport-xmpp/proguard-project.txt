@@ -1,5 +1,7 @@
-# This is a pretty standard optimization only proguard config for an
-# Android Project
+# ProGuard configuration file for MAXS Transport XMPP
+
+# Mostly Smack specific ProGuard instructions, so that ProGuard is
+# able to strip the parts of Smack that aren't used by Transport XMPP
 
 -keep class org.projectmaxs.shared.global.util.Log
 -keep class org.projectmaxs.shared.maintransport.TransportInformation
