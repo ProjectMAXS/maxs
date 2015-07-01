@@ -360,7 +360,10 @@ public class ContactUtil {
 	 * @return The contact as String
 	 */
 	public static String prettyPrint(String contactInfo, Contact contact) {
-		return contact != null ? contact.getDisplayName() + " (" + contactInfo + ")" : contactInfo;
+		if (contact == null)
+			return contactInfo;
+		String displayName = contact.getDisplayName();
+		return (displayName == null ? "unknown" : displayName) + " (" + contactInfo + ")" : contactInfo;
 	}
 
 	/**
