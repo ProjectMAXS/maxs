@@ -360,7 +360,10 @@ public class ContactUtil {
 	 * @return The contact as String
 	 */
 	public static String prettyPrint(String contactInfo, Contact contact) {
-		return contact != null ? contact.getDisplayName() + " (" + contactInfo + ")" : contactInfo;
+		if (contact == null) return contactInfo;
+		String displayName = contact.getDisplayName();
+		// Contacts can be saved without a name, i.e. just a number as "contact".
+		return (displayName == null ? "unknown" : displayName) + " (" + contactInfo + ")";
 	}
 
 	/**
