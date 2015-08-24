@@ -58,7 +58,7 @@ public class StateChangeListener {
 
 	}
 
-	public void waitingForRetry() {
+	public void waitingForRetry(String reason) {
 
 	}
 

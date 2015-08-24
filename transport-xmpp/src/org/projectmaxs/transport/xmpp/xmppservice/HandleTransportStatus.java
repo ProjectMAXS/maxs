@@ -145,8 +145,11 @@ public class HandleTransportStatus extends StateChangeListener {
 	}
 
 	@Override
-	public void waitingForRetry() {
-		setAndSendStatus("waiting for connection retry");
+	public void waitingForRetry(String optionalReason) {
+		if (!optionalReason.isEmpty()) {
+			optionalReason = ": " + optionalReason;
+		}
+		setAndSendStatus("Waiting for connection retry" + optionalReason);
 	}
 
 	protected void setAndSendStatus(String status) {

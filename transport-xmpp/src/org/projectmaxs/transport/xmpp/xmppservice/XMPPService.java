@@ -459,8 +459,8 @@ public class XMPPService {
 		}
 	}
 
-	private void scheduleReconnect() {
-		newState(State.WaitingForRetry);
+	private void scheduleReconnect(String optionalReason) {
+		newState(State.WaitingForRetry, optionalReason);
 		if (mReconnectHandler == null) mReconnectHandler = new Handler();
 		mReconnectHandler.removeCallbacks(mReconnectRunnable);
 		int reconnectDelaySeconds;
@@ -490,7 +490,7 @@ public class XMPPService {
 	 * 
 	 * @param newState
 	 * @param reason
-	 *            the reason for the new state (only used is newState is Disconnected)
+	 *            the optional reason for the new state
 	 */
 	private void newState(State newState, String reason) {
 		if (reason == null) reason = "";
@@ -506,7 +506,7 @@ public class XMPPService {
 						// schedule reconnect since we obviously didn't reach the connected state.
 						// Changing the state to Disconnected will create a transition from
 						// 'Connecting' to 'Disconnected', which why avoid implementing here
-						scheduleReconnect();
+						scheduleReconnect("Disconnected while connecting");
 						return;
 					}
 				}
@@ -534,7 +534,7 @@ public class XMPPService {
 				break;
 			case WaitingForRetry:
 				for (StateChangeListener l : mStateChangeListeners)
-					l.waitingForRetry();
+					l.waitingForRetry(reason);
 				break;
 			default:
 				break;
@@ -691,7 +691,7 @@ public class XMPPService {
 					error += " " + ha;
 				LOG.d("tryToConnect: " + error);
 			}
-			scheduleReconnect();
+			scheduleReconnect(e.getLocalizedMessage());
 			return;
 		}
 
@@ -702,7 +702,7 @@ public class XMPPService {
 				connection.login();
 			} catch (NoResponseException e) {
 				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
-				scheduleReconnect();
+				scheduleReconnect("Not response while loggin in.");
 				return;
 			} catch (Exception e) {
 				LOG.e("tryToConnect: login failed. New State: Disconnected", e);
