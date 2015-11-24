@@ -51,7 +51,7 @@ to permantent storage, to easily recover from those interruptions.
 In order to lower CPU and radio usage, MAXS follows these simple
 principles:
 
-- Send as much data at once as possbile
+- Send as much data at once as possible
 - Only send data if there is an interested receiver
 - Try to avoid sending data if the device is on battery
 
