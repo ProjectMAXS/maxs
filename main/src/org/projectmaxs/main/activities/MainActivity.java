@@ -139,7 +139,9 @@ public class MainActivity extends Activity {
 
 		if (mSettings.connectOnMainScreen() && MAXSService.isRunning()) {
 			LOG.d("connectOnMainScreen enabled and service not running, calling startService");
-			startService(new Intent(Constants.ACTION_START_SERVICE));
+			Intent intent = new Intent(this, MAXSService.class);
+			intent.setAction(Constants.ACTION_START_SERVICE);
+			startService(intent);
 		}
 
 		// Race condition between getCopyAddListener and new
