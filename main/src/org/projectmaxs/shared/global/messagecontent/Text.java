@@ -35,7 +35,7 @@ public class Text extends AbstractElement {
 	public Text(CharSequence charSequence, boolean newLine) {
 		addWithNewLines(charSequence);
 		// Only add a NewLine if it's required and if it's not already there
-		if (newLine &&(mTexts.size()==0 || mTexts.get(mTexts.size() - 1) != NewLine.getInstance()))
+		if (!mTexts.isEmpty() && newLine && mTexts.get(mTexts.size() - 1) != NewLine.getInstance())
 			mTexts.add(NewLine.getInstance());
 	}
 
