@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="DozeAskForWhitelist">MAXS Transport XMPP needs to get whitelisted from doze mode restirctions. The XMPP transport is optimized to keep the battery consumption minimal. You will not notice that it is running in background. If you nevertheless experience battery issues, then please report this as bug. Whitelist the transport?</string>
+    <string name="DozeWhitelist">Whitelist</string>
+    <string name="DozeDoNotWhitelist">Do not whitelist</string>
+    <string name="AskAgain">Ask Again</string>
+
+</resources>

@@ -41,7 +41,7 @@ IS_TRANSPORT=false
 COMPONENT=$(basename $COMPONENTDIR)
 [[ $COMPONENT == main ]] && IS_MAIN=true
 [[ $COMPONENT == module-* ]] && IS_MODULE=true
-[[ $COMPONETN == transport-* ]] && IS_TRANSPORT=true
+[[ $COMPONENT == transport-* ]] && IS_TRANSPORT=true
 
 # Phase 1: The global shared resources
 createRelativeSymlinks ${BASEDIR}/shared/res-global $COMPONENTDIR/res
@@ -53,4 +53,9 @@ createRelativeSymlinks ${BASEDIR}/shared/res-src-global $COMPONENTDIR/res-src
 # Phase3: The module shared resources
 if $IS_MODULE; then
     createRelativeSymlinks ${BASEDIR}/shared/res-module $COMPONENTDIR/res
+fi
+
+# Phase4: The transport shared resources
+if $IS_TRANSPORT; then
+    createRelativeSymlinks ${BASEDIR}/shared/res-transport $COMPONENTDIR/res
 fi

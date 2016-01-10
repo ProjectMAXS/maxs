@@ -18,6 +18,7 @@ import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SpannedUtil;
+import org.projectmaxs.shared.transport.AndroidDozeUtil;
 import org.projectmaxs.transport.xmpp.R;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
@@ -233,6 +234,10 @@ SmackConfiguration.getVersion() + "<br>" +
 		if (!mSettings.getPassword().equals("")) mPassword.setText(mSettings.getPassword());
 
 		mPingServerButtonHandler = new PingServerButtonHandler(this);
+
+		AndroidDozeUtil.requestWhitelistIfNecessary(this, mSettings.getSharedPreferences(),
+				R.string.DozeAskForWhitelist, R.string.DozeDoNotWhitelist, R.string.AskAgain,
+				R.string.DozeWhitelist);
 	}
 
 	@Override
