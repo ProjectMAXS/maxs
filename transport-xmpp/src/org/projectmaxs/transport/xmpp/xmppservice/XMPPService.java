@@ -94,8 +94,8 @@ public class XMPPService {
 	private State mState = State.Disconnected;
 
 	static {
-		ServiceDiscoveryManager.setDefaultIdentity(new DiscoverInfo.Identity("client",
-				GlobalConstants.HUMAN_READABLE_NAME, "bot"));
+		ServiceDiscoveryManager.setDefaultIdentity(
+				new DiscoverInfo.Identity("client", GlobalConstants.HUMAN_READABLE_NAME, "bot"));
 		// TODO This is not really needed, but for some reason the static initializer block of
 		// LastActivityManager is not run. This could be a problem caused by aSmack together with
 		// dalvik, as the initializer is run on Smack's test cases.
@@ -115,8 +115,8 @@ public class XMPPService {
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.xdata.XDataManager");
 		SmackConfiguration
 				.addDisabledSmackClass("org.jivesoftware.smackx.xdatalayout.XDataLayoutManager");
-		SmackConfiguration
-				.addDisabledSmackClass("org.jivesoftware.smackx.xdatavalidation.XDataValidationManager");
+		SmackConfiguration.addDisabledSmackClass(
+				"org.jivesoftware.smackx.xdatavalidation.XDataValidationManager");
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
@@ -268,7 +268,7 @@ public class XMPPService {
 		message.setTo(to);
 		message.setBody(body);
 		try {
-			mConnection.sendPacket(message);
+			mConnection.sendStanza(message);
 		} catch (NotConnectedException e) {
 			LOG.w("send", e);
 		}
@@ -449,7 +449,8 @@ public class XMPPService {
 				Constants.ACTION_SEND_AS_MESSAGE, issuerInfo, null);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND, command);
 		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
-		intent.setClassName(GlobalConstants.MAIN_PACKAGE, TransportConstants.MAIN_TRANSPORT_SERVICE);
+		intent.setClassName(GlobalConstants.MAIN_PACKAGE,
+				TransportConstants.MAIN_TRANSPORT_SERVICE);
 		ComponentName cn = mContext.startService(intent);
 		if (cn == null) {
 			LOG.e("newMessageFromMasterJID: could not start main transport service");
@@ -466,9 +467,8 @@ public class XMPPService {
 		if (mReconnectionAttemptCount <= ATTEMPTS_WITHOUT_PENALTY) {
 			reconnectDelaySeconds = MINIMAL_DELAY_SECONDS;
 		} else {
-			int delayFunctionResult = MINIMAL_DELAY_SECONDS
-					* ((int) Math
-							.pow(mReconnectionAttemptCount - ATTEMPTS_WITHOUT_PENALTY - 1, 1.2));
+			int delayFunctionResult = MINIMAL_DELAY_SECONDS * ((int) Math
+					.pow(mReconnectionAttemptCount - ATTEMPTS_WITHOUT_PENALTY - 1, 1.2));
 			// Maximum delay is 30 minutes
 			reconnectDelaySeconds = Math.max(delayFunctionResult, 60 * 30);
 		}
@@ -612,9 +612,8 @@ public class XMPPService {
 			}
 			break;
 		default:
-			throw new IllegalStateException(
-					"changeState: Unknown state change combination. mState=" + mState
-							+ ", desiredState=" + desiredState);
+			throw new IllegalStateException("changeState: Unknown state change combination. mState="
+					+ mState + ", desiredState=" + desiredState);
 		}
 	}
 
@@ -642,7 +641,8 @@ public class XMPPService {
 		boolean newConnection = false;
 
 		if (mConnection == null || mConnectionConfiguration != mSettings
-		// We need to use an Application context instance here, because some Contexts may not work.
+				// We need to use an Application context instance here, because some Contexts may
+				// not work.
 				.getConnectionConfiguration(mContext)) {
 			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
 			connection = new XMPPTCPConnection(mConnectionConfiguration);

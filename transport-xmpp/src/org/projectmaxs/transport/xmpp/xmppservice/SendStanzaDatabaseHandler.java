@@ -19,8 +19,8 @@ package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.util.List;
 
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Stanza;
@@ -52,7 +52,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 		}
 		final XMPPTCPConnection connection = (XMPPTCPConnection) newConnection;
 
-		connection.addPacketSendingListener(new PacketListener() {
+		connection.addPacketSendingListener(new StanzaListener() {
 			@Override
 			public void processPacket(Stanza stanza) throws NotConnectedException {
 				// This only works if stream management is enabled
@@ -78,7 +78,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 		}, null);
 
 		// A listener that will remove stanzas from the database
-		connection.addStanzaAcknowledgedListener(new PacketListener() {
+		connection.addStanzaAcknowledgedListener(new StanzaListener() {
 			@Override
 			public void processPacket(Stanza packet) throws NotConnectedException {
 				String id = packet.getStanzaId();
@@ -101,7 +101,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 			public void run() {
 				for (Stanza stanza : toResend) {
 					try {
-						connection.sendPacket(stanza);
+						connection.sendStanza(stanza);
 					} catch (NotConnectedException e) {
 						// Simply abort if sending the stanzas throws an exception. We could
 						// consider re-adding the stanzas that weren't send to the database, but

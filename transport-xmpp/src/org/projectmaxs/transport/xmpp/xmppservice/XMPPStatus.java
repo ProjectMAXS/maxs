@@ -54,7 +54,8 @@ public class XMPPStatus extends StateChangeListener {
 		// prevent status form being send, when there is no active connection or
 		// if the status message hasn't changed
 		if (!mXMPPRoster.isMasterJidAvailable()
-				|| (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus))) return;
+				|| (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus)))
+			return;
 		sendStatus();
 	}
 
@@ -77,7 +78,7 @@ public class XMPPStatus extends StateChangeListener {
 		presence.setStatus(mDesiredStatus);
 		presence.setPriority(24);
 		try {
-			mConnection.sendPacket(presence);
+			mConnection.sendStanza(presence);
 		} catch (NotConnectedException e) {
 			LOG.w("sendStatus", e);
 		}

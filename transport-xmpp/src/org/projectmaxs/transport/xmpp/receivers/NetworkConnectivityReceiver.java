@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.transport.MAXSTransportService;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.TransportService;
 import org.projectmaxs.transport.xmpp.util.Constants;
@@ -29,7 +30,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
+import android.os.Build;
 
 public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
@@ -44,8 +47,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (settings.isNetworkDebugLogEnabled()) {
-			for (NetworkInfo networkInfo : cm.getAllNetworkInfo())
-				log(networkInfo);
+			logNetworks(cm);
 		}
 
 		NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
@@ -54,7 +56,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			log(activeNetworkInfo);
 		}
 
-		if (!TransportService.isRunning()) {
+		if (!MAXSTransportService.isRunning()) {
 			LOG.d("Service not running, aborting");
 			return;
 		}
@@ -101,6 +103,23 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			LOG.d("Sending action: " + action);
 			context.startService(i);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private static void logNetworks(ConnectivityManager connectivityManager) {
+		NetworkInfo[] networkInfos;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+			networkInfos = connectivityManager.getAllNetworkInfo();
+		} else {
+			Network[] networks = connectivityManager.getAllNetworks();
+			networkInfos = new NetworkInfo[networks.length];
+			for (int i = 0; i < networks.length; i++) {
+				networkInfos[i] = connectivityManager.getNetworkInfo(networks[i]);
+			}
+		}
+
+		for (NetworkInfo networkInfo : networkInfos)
+			log(networkInfo);
 	}
 
 	private static void log(NetworkInfo networkInfo) {

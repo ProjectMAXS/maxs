@@ -24,6 +24,7 @@ public class StateChangeListener {
 
 	public void newConnection(XMPPConnection connection) {}
 
+	@SuppressWarnings("unused")
 	public void connected(XMPPConnection connection) throws NotConnectedException {}
 
 	/**

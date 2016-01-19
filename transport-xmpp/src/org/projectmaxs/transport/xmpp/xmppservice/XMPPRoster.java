@@ -108,7 +108,8 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 		for (BareJid jid : mSettings.getMasterJids()) {
 			Presence presence = mRoster.getPresence(jid.toString());
 			if (presence.isAvailable()) {
-				if (mSettings.isExcludedResource(XmppStringUtils.parseResource(presence.getFrom()))) {
+				if (mSettings
+						.isExcludedResource(XmppStringUtils.parseResource(presence.getFrom()))) {
 					// Skip excluded resources
 					continue;
 				}
@@ -191,7 +192,7 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	private static void sendPresenceTo(BareJid to, Presence presence, XMPPConnection connection) {
 		presence.setTo(to.asBareJid().toString());
 		try {
-			connection.sendPacket(presence);
+			connection.sendStanza(presence);
 		} catch (NotConnectedException e) {
 			LOG.w("sendPresenceTo", e);
 		}
