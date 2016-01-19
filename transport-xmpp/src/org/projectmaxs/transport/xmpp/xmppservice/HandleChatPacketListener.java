@@ -27,6 +27,7 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
+import org.projectmaxs.transport.xmpp.smack.stanza.MAXSElement;
 
 public class HandleChatPacketListener extends StateChangeListener {
 
@@ -52,6 +53,15 @@ public class HandleChatPacketListener extends StateChangeListener {
 					LOG.e("Not a valid 'from' JID string, ignoring message", e);
 					return;
 				}
+
+				if (MAXSElement.foundIn(packet)) {
+					// Ignore messages with a MAXS element. This is done to prevent endless loops of
+					// message sending between one or multiple MAXS instances.
+					LOG.w("Ignoring message with MAXS element. jid='" + from + "' message='"
+							+ message + '\'');
+					return;
+				}
+
 				if (mSettings.isMasterJID(from)) {
 					mXMPPService.newMessageFromMasterJID(message);
 				} else {

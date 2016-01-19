@@ -69,6 +69,8 @@ import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.transport.transform.TransformMessageContent;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
+import org.projectmaxs.transport.xmpp.smack.provider.MAXSElementProvider;
+import org.projectmaxs.transport.xmpp.smack.stanza.MAXSElement;
 import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
 import org.projectmaxs.transport.xmpp.util.XHTMLIMUtil;
@@ -136,6 +138,7 @@ public class XMPPService {
 				return new JulDebugger(connection, writer, reader);
 			}
 		});
+		MAXSElementProvider.setup();
 	}
 
 	private final Runnable mReconnectRunnable = new Runnable() {
@@ -336,6 +339,10 @@ public class XMPPService {
 		// already send the message to all resources. If a recipient has carbons enabled and we
 		// wouldn't add the private element, then he would receive the message multiple times.
 		CarbonExtension.Private.addTo(packet);
+
+		// Add a MAXS element. MAXS itself will ignore messages with a MAXS element in order to
+		// prevent endless loops of message sending between one or multiple MAXS instances.
+		MAXSElement.addTo(packet);
 
 		List<BareJid> toList = new LinkedList<BareJid>();
 		// No 'originIssueInfo (which is the to JID in this case) specified. The message is typical
