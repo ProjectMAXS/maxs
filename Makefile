@@ -4,7 +4,9 @@ MODULES_MAKEFILE := $(foreach mod, $(MODULES), $(mod)/Makefile)
 MIN_DEPLOY := main module-bluetooth transport-xmpp
 ALL := main $(MODULES) $(TRANSPORTS)
 TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
-JOBS := $(shell echo $$(( $$(grep -c ^processor /proc/cpuinfo) + 1 )))
+NPROC := $(shell nproc)
+JOBS := $(shell echo $$(( $(NPROC) + 1)))
+MAKE_PARALLEL_ARGS := -j$(JOBS) -l$(NPROC)
 
 .PHONY: all $(ALL) clean distclean deplyg eclipse homepage makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
 
@@ -14,7 +16,7 @@ clean:
 	TARGET=$@ $(MAKE) $(ALL)
 
 parclean:
-	TARGET=clean $(MAKE) -j$(JOBS) $(ALL)
+	TARGET=clean $(MAKE) $(MAKE_PARALLEL_ARGS) $(ALL)
 
 distclean:
 	TARGET=$@ $(MAKE) $(ALL)
@@ -26,7 +28,7 @@ homepage:
 	$(MAKE) -C homepage
 
 pardeploy:
-	TARGET=deploy $(MAKE) -j$(JOBS) $(ALL)
+	TARGET=deploy $(MAKE) $(MAKE_PRALLE_ARGS)  $(ALL)
 
 eclipse:
 	TARGET=$@ $(MAKE) $(ALL)
@@ -38,13 +40,13 @@ tabletdeploy:
 	TARGET=deploy $(MAKE) $(TABLET_DEPLOY)
 
 parallel:
-	$(MAKE) -j$(JOBS)
+	$(MAKE) $(MAKE_PARALLEL_ARGS)
 
 release:
 	TARGET=$@ $(MAKE) $(ALL)
 
 parrelease:
-	TARGET=release $(MAKE) -j$(JOBS) $(ALL)
+	TARGET=release $(MAKE) $(MAKE_PARALLEL_ARGS) $(ALL)
 
 prebuild:
 	TARGET=prebuild $(MAKE) $(ALL)
