@@ -21,6 +21,9 @@ parclean:
 distclean:
 	TARGET=$@ $(MAKE) $(ALL)
 
+pardistclean:
+	TARGET=distclean $(MAKE) $(MAKE_PARALLEL_ARGS) $(ALL)
+
 deploy:
 	TARGET=$@ $(MAKE) $(ALL)
 
