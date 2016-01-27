@@ -9,7 +9,7 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 .IGNORE : $(GIT_LOG_HEAD)
 
-.PHONY: artifacts lintFull
+.PHONY: artifacts lintClean lintFull
 
 prebuild: artifacts
 
@@ -29,3 +29,6 @@ lint.xml:
 
 artifacts:
 	$(BASE)/scripts/MavenToAndroidAnt/getMavenArtifactsNG.py -f $(BASE)/build/global_artifacts.csv -p .
+
+lintClean:
+	rm -f lint-report.html

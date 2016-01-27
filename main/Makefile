@@ -38,7 +38,7 @@ setupResourceLinks:
 clean: build.xml
 	ant clean
 
-distclean: clean
+distclean: clean lintClean
 	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f build.xml
 	rm -f $(VERSION_XML)
