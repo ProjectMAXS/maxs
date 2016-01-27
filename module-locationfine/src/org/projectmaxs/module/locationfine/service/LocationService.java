@@ -32,6 +32,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MainUtil;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
@@ -105,6 +106,10 @@ public class LocationService extends Service {
 		mAllProviders = mLocationManager.getAllProviders();
 	}
 
+	// TODO module-locationfine uses a 'dangerous' permission, which requires as of Android 6.0 (23)
+	// or higher a the user's grant on runtime (additional to the permission on install time).
+	// Implement this.
+	@SuppressLint("MissingPermission")
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) intent = new Intent(START_SERVICE);
