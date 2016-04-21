@@ -17,7 +17,6 @@
 
 package org.projectmaxs.shared.module;
 
-import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.util.Log;
 
