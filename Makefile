@@ -31,7 +31,7 @@ homepage:
 	$(MAKE) -C homepage
 
 pardeploy:
-	TARGET=deploy $(MAKE) $(MAKE_PRALLE_ARGS)  $(ALL)
+	TARGET=deploy $(MAKE) $(MAKE_PARALLEL_ARGS)  $(ALL)
 
 eclipse:
 	TARGET=$@ $(MAKE) $(ALL)
