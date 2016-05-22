@@ -118,7 +118,6 @@ public class PermCheck {
 			if (problems.isEmpty()) {
 				statusTextView.setText("OK 😃");
 			} else {
-				statusTextView.setText("Not OK! Click for more details. 😞");
 				SpannableStringBuilder sb = new SpannableStringBuilder();
 				sb.append(Html.fromHtml("<h1>" + "The following problems where found" + "</h1>"));
 				for (final PackageProblem packageProblem : problems) {
@@ -157,6 +156,7 @@ public class PermCheck {
 						alertDialog.show();
 					}
 				});
+				statusTextView.setText("Not OK! Click for more details. 😞");
 			}
 		}
 	}
