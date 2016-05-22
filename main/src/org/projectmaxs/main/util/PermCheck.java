@@ -41,6 +41,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -156,6 +157,11 @@ public class PermCheck {
 						alertDialog.show();
 					}
 				});
+
+				// Resize the text view in case there where problems detected.
+				float oldSize = statusTextView.getTextSize();
+				statusTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, oldSize * 1.7f);
+
 				statusTextView.setText("Not OK! Click for more details. 😞");
 			}
 		}
