@@ -18,7 +18,9 @@
 package org.projectmaxs.shared.global.util;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -49,6 +51,19 @@ public class SharedStringUtil {
 			sb.append(" ");
 		}
 		return sb.toString();
+	}
+
+	public static StringBuilder listCollection(Collection<? extends CharSequence> collection) {
+		StringBuilder sb = new StringBuilder();
+		Iterator<? extends CharSequence> it = collection.iterator();
+		while (it.hasNext()) {
+			CharSequence entry = it.next();
+			sb.append(entry.toString());
+			if (it.hasNext()) {
+				sb.append(", ");
+			}
+		}
+		return sb;
 	}
 
 	public static String ipIntToString(int ip) {

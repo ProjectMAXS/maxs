@@ -98,6 +98,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="org.projectmaxs.shared.global.util.PermissionUtil$RequestPermissionDialog" />
         <activity android:name=".activities.AdvancedSettings" />
         <activity android:name=".activities.Modules" />
         <activity android:name=".activities.ImportExportSettings" />
