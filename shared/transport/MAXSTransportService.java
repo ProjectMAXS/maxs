@@ -178,5 +178,5 @@ public abstract class MAXSTransportService extends Service {
 		return mServiceHandler.hasMessages(what);
 	}
 
-	public abstract void onHandleIntent(Intent intent);
+	protected abstract void onHandleIntent(Intent intent);
 }
