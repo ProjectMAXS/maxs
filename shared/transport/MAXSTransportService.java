@@ -45,7 +45,7 @@ public abstract class MAXSTransportService extends Service {
 	/**
 	 * Non persistent state boolean, used to track differences in the persistently saved state.
 	 */
-	private static boolean sIsRunning = false;
+	private static volatile boolean sIsRunning = false;
 
 	/**
 	 * SharedPreferences exclusively to persistently save the service state.
