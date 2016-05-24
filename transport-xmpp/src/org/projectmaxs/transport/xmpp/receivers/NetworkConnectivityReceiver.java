@@ -29,6 +29,7 @@ import org.projectmaxs.transport.xmpp.util.Constants;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -37,6 +38,17 @@ import android.os.Build;
 public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 	private static final Log LOG = Log.getLog();
+
+	private static final BroadcastReceiver NETWORK_CONNECTIVITY_RECEIVER = new NetworkConnectivityReceiver();
+
+	public static void register(Context context) {
+		context.registerReceiver(NETWORK_CONNECTIVITY_RECEIVER, new IntentFilter(
+				ConnectivityManager.CONNECTIVITY_ACTION));
+	}
+
+	public static void unregister(Context context) {
+		context.unregisterReceiver(NETWORK_CONNECTIVITY_RECEIVER);
+	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

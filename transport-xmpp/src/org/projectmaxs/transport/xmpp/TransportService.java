@@ -27,6 +27,7 @@ import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
 import org.projectmaxs.shared.transport.MAXSTransportService;
+import org.projectmaxs.transport.xmpp.receivers.NetworkConnectivityReceiver;
 import org.projectmaxs.transport.xmpp.util.Constants;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPEntityCapsCache;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
@@ -99,12 +100,14 @@ public class TransportService extends MAXSTransportService {
 			if (hasMessage(TransportConstants.ACTION_STOP_SERVICE.hashCode())) {
 				LOG.d("Not starting service because there is a stop service action queued");
 			} else {
+				NetworkConnectivityReceiver.register(this);
 				mXMPPService.connect();
 			}
 		} else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
 			if (hasMessage(TransportConstants.ACTION_START_SERVICE.hashCode())) {
 				LOG.d("Not stopping service because there is a start service action queued");
 			} else {
+				NetworkConnectivityReceiver.unregister(this);
 				mXMPPService.disconnect();
 				stopSelf();
 			}

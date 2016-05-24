@@ -52,11 +52,6 @@
                 <action android:name="org.projectmaxs.IMPORT_SETTINGS" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receivers.NetworkConnectivityReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
 
         <service
             android:name=".TransportService"
