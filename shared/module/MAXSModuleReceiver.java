@@ -71,10 +71,6 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 			replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
 			replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
 			replyToClassName = MainModuleConstants.MAIN_MODULE_SERVICE;
-			// The module was just installed and MAXS main send an ACTION_REGISTER intent. This is
-			// the ideal time to check if we are on Android 6.0 or higher and thus require to ask
-			// the user for certain permissions.
-			PermissionUtil.checkAndRequestIfNecessary(context);
 		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
@@ -87,6 +83,17 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 			throw new IllegalStateException("MAXSModuleReceiver: unknown action=" + action);
 		}
 		replyIntent.setClassName(GlobalConstants.MAIN_PACKAGE, replyToClassName);
+
+		// The module was just installed and MAXS main send an ACTION_REGISTER intent. This is
+		// the ideal time to check if we are on Android 6.0 or higher and thus require to ask
+		// the user for certain permissions.
+		boolean permissionsOk = PermissionUtil.checkAndRequestIfNecessary(context, replyIntent);
+		if (!permissionsOk) {
+			mLog.i("Not replying with " + replyIntent.getAction() + " to " + action
+					+ " because my permissions are not OK.");
+			return;
+		}
+
 		mLog.d("onReceive: replying with action=" + replyIntent.getAction());
 		context.startService(replyIntent);
 	}

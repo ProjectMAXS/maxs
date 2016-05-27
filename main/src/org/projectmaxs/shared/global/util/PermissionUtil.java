@@ -48,10 +48,30 @@ public class PermissionUtil {
 
 	private static final AtomicInteger NEXT_REQUEST_CODE = new AtomicInteger();
 
-	private static final Map<Integer, String[]> PENDING_REQUESTS = new ConcurrentHashMap<>();
+	private static final Map<Integer, PendingRequestData> PENDING_REQUESTS = new ConcurrentHashMap<>();
 
+	private static class PendingRequestData {
+		PendingRequestData(String[] permissionsToRequest, Intent postServiceIntent) {
+			this.permissionsToRequest = permissionsToRequest;
+			this.postServiceIntent = postServiceIntent;
+		}
+
+		public final String[] permissionsToRequest;
+		public final Intent postServiceIntent;
+	}
+
+	/**
+	 * Check if the requested permissions have been granted. Request them if not. This does nothing
+	 * if the Android version is lower than 6.0.
+	 *
+	 * @param context
+	 *            a Context.
+	 * @param postServiceIntent
+	 *            a optional service intent, fired after the user granted all permissions.
+	 * @return <code>true</code> if the permissions are ok, <code>false</code>otherwise.
+	 */
 	@TargetApi(23)
-	public static boolean checkAndRequestIfNecessary(Context context) {
+	public static boolean checkAndRequestIfNecessary(Context context, Intent postServiceIntent) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 			return true;
 		}
@@ -102,7 +122,7 @@ public class PermissionUtil {
 		String[] permissionToRequestArray = permissionsToRequest
 				.toArray(new String[permissionsToRequest.size()]);
 		int request = NEXT_REQUEST_CODE.incrementAndGet();
-		PENDING_REQUESTS.put(request, permissionToRequestArray);
+		PENDING_REQUESTS.put(request, new PendingRequestData(permissionToRequestArray, postServiceIntent));
 
 		Intent intent = new Intent(context, RequestPermissionDialog.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -131,11 +151,13 @@ public class PermissionUtil {
 					new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Iterator<Entry<Integer, String[]>> it = PENDING_REQUESTS.entrySet()
+							Iterator<Entry<Integer, PendingRequestData>> it = PENDING_REQUESTS
+									.entrySet()
 									.iterator();
 							while (it.hasNext()) {
-								Entry<Integer, String[]> entry = it.next();
-								requestPermissions(entry.getValue(), entry.getKey());
+								Entry<Integer, PendingRequestData> entry = it.next();
+								requestPermissions(entry.getValue().permissionsToRequest,
+										entry.getKey());
 							}
 						}
 					});
@@ -147,8 +169,8 @@ public class PermissionUtil {
 		public void onRequestPermissionsResult(int requestCode, String[] permissions,
 				int[] grantResults) {
 
-			String[] requestedPermissions = PENDING_REQUESTS.remove(requestCode);
-			if (requestedPermissions == null) {
+			final PendingRequestData pendingRequestData = PENDING_REQUESTS.remove(requestCode);
+			if (pendingRequestData == null) {
 				LOG.w("Could not find request for " + requestCode);
 				return;
 			}
@@ -174,7 +196,14 @@ public class PermissionUtil {
 				sb.append(SharedStringUtil.listCollection(deniedPermissions));
 				sb.append('.');
 				Toast.makeText(this, sb, Toast.LENGTH_LONG).show();
+			} else if (pendingRequestData.postServiceIntent != null) {
+				LOG.i("User granted *all* permissions. PostServiceIntent set, starting "
+						+ pendingRequestData.postServiceIntent);
+				this.startService(pendingRequestData.postServiceIntent);
 			}
+
+			// We are done here
+			finish();
 		}
 	}
 }

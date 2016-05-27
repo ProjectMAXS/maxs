@@ -25,6 +25,7 @@ import java.util.Set;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PermissionUtil;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
@@ -72,6 +73,17 @@ public abstract class MAXSTransportReceiver extends BroadcastReceiver {
 			throw new IllegalStateException("MAXSTransportReceiver: unknown action=" + action);
 		}
 		replyIntent.setClassName(TransportConstants.MAIN_PACKAGE, replyToClassName);
+
+		// The transport was just installed and MAXS main send an ACTION_REGISTER intent. This
+		// is the ideal time to check if we are on Android 6.0 or higher and thus require to ask
+		// the user for certain permissions.
+		boolean permOk = PermissionUtil.checkAndRequestIfNecessary(context, replyIntent);
+		if (!permOk) {
+			mLog.i("Not replying with " + replyIntent.getAction() + " to " + action
+					+ " because my permissions are not OK.");
+			return;
+		}
+
 		mLog.d("onReceive: replying with action=" + replyIntent.getAction());
 		context.startService(replyIntent);
 	}

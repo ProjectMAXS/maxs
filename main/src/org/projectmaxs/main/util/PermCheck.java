@@ -17,6 +17,7 @@
 
 package org.projectmaxs.main.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 import org.projectmaxs.main.R;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PermissionUtil;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -50,6 +52,23 @@ public class PermCheck {
 	private static final Log LOG = Log.getLog();
 
 	@TargetApi(16)
+	private static List<PackageProblem> checkMaxsComponent(PackageInfo packageInfo) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+			return Collections.emptyList();
+		}
+		List<PackageProblem> res = new ArrayList<>(packageInfo.requestedPermissions.length);
+		for (int i = 0; i < packageInfo.requestedPermissionsFlags.length; i++) {
+			if ((packageInfo.requestedPermissionsFlags[i]
+					& PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
+				res.add(new PackageProblem(packageInfo.packageName,
+						"MAXS Component " + packageInfo.packageName
+								+ " was not granted requested permission "
+								+ packageInfo.requestedPermissions[i]));
+			}
+		}
+		return res;
+	}
+
 	public static List<PackageProblem> performCheck(Context context) {
 		List<PackageProblem> res = new LinkedList<PackageProblem>();
 		PackageManager packageManager = context.getPackageManager();
@@ -72,18 +91,11 @@ public class PermCheck {
 					}
 				}
 			}
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-				if (packageInfo.packageName.startsWith(GlobalConstants.MODULE_PACKAGE)) {
-					for (int i = 0; i < packageInfo.requestedPermissionsFlags.length; i++) {
-						if ((packageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
-							res.add(new PackageProblem(packageInfo.packageName, "MAXS Component "
-									+ packageInfo.packageName
-									+ " was not granted requested permission "
-									+ packageInfo.requestedPermissions[i]));
-						}
-					}
-				}
+			if (!packageInfo.packageName.startsWith(GlobalConstants.PACKAGE)) {
+				continue;
 			}
+			List<PackageProblem> problems = checkMaxsComponent(packageInfo);
+			res.addAll(problems);
 		}
 
 		return res;
@@ -106,8 +118,28 @@ public class PermCheck {
 
 		@Override
 		protected List<PackageProblem> doInBackground(Context... params) {
+			final Context context = params[0];
+			boolean permissionsOk = PermissionUtil.checkAndRequestIfNecessary(context, null);
+			if (!permissionsOk) {
+				PackageInfo mainPackageInfo;
+				try {
+					mainPackageInfo = context.getPackageManager().getPackageInfo(
+							context.getPackageName(), PackageManager.GET_PERMISSIONS);
+				} catch (NameNotFoundException e) {
+					throw new AssertionError(e);
+				}
+				List<PackageProblem> mainProblems = checkMaxsComponent(mainPackageInfo);
+				if (!mainProblems.isEmpty()) {
+					// No need to perform a full check if the Main component already has issues with the
+					// permissions. Abort here and only report these, to emphasize the importance of
+					// these permissions.
+					return mainProblems;
+				}
+				// This should not happen, log a warning.
+				LOG.w("checkAndReequestIfNecessary() returned 'not OK', but checkMaxsComponent() found no issues. Fallback to performCheck()");
+			}
 			try {
-				return performCheck(params[0]);
+				return performCheck(context);
 			} catch (Exception e) {
 				LOG.w("Exception while performing check", e);
 				return Collections.emptyList();

@@ -6,6 +6,14 @@
 -keep class org.projectmaxs.shared.global.util.Log
 -keep class org.projectmaxs.shared.maintransport.TransportInformation
 
+# ProGuard rules for MAXS's RTool, which uses reflection to retrieve R
+# class members. See http://stackoverflow.com/a/13963437/194894
+-keepattributes InnerClasses
+-keep class **.R
+-keep class **.R$* {
+    <fields>;
+}
+
 ################################################################################
 # Custom proguard settings
 
