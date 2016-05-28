@@ -57,9 +57,11 @@ import org.jivesoftware.smackx.iqlast.LastActivityManager;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jxmpp.jid.BareJid;
-import org.jxmpp.jid.FullJid;
+import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.EntityFullJid;
+import org.jxmpp.jid.EntityJid;
+import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.jid.util.JidUtil;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.FileUtil;
@@ -253,7 +255,7 @@ public class XMPPService {
 		newState(State.WaitingForNetwork);
 	}
 
-	public void send(String to, String body) {
+	public void send(Jid to, String body) {
 		switch (mState) {
 		case Disconnected:
 		case Disconnecting:
@@ -272,7 +274,7 @@ public class XMPPService {
 		message.setBody(body);
 		try {
 			mConnection.sendStanza(message);
-		} catch (NotConnectedException e) {
+		} catch (InterruptedException | NotConnectedException e) {
 			LOG.w("send", e);
 		}
 	}
@@ -308,7 +310,7 @@ public class XMPPService {
 		XMPPBundleAndDefer.disableBundleAndDefer();
 		try {
 			return pingManager.pingMyServer(false, 1500);
-		} catch (NotConnectedException e) {
+		} catch (InterruptedException | NotConnectedException e) {
 			return false;
 		} finally {
 			XMPPBundleAndDefer.enableBundleAndDefer();
@@ -344,7 +346,8 @@ public class XMPPService {
 		// prevent endless loops of message sending between one or multiple MAXS instances.
 		MAXSElement.addTo(packet);
 
-		List<BareJid> toList = new LinkedList<BareJid>();
+		List<EntityJid> toList = new LinkedList<>();
+
 		// No 'originIssueInfo (which is the to JID in this case) specified. The message is typical
 		// a notification, so we are going to broadcast it to all master JIDs.
 		if (originIssuerInfo == null) {
@@ -352,17 +355,15 @@ public class XMPPService {
 			Roster roster = Roster.getInstanceFor(mConnection);
 			// Broadcast to all masterJID resources
 			for (BareJid masterJid : mSettings.getMasterJids()) {
-				Collection<Presence> presences = roster.getAvailablePresences(masterJid.toString());
+				Collection<Presence> presences = roster.getAvailablePresences(masterJid);
 				for (Presence p : presences) {
-					String fullJIDString = p.getFrom();
-					FullJid fullJID;
-					try {
-						fullJID = JidCreate.fullFrom(fullJIDString);
-					} catch (XmppStringprepException e) {
-						LOG.e("Could not convert string to full JID", e);
+					Jid jid = p.getFrom();
+					EntityFullJid fullJID = jid.asEntityFullJidIfPossible();
+					if (fullJID == null) {
+						LOG.e("Could not convert '" + jid + "' to full JID");
 						continue;
 					}
-					if (!mSettings.isExcludedResource(fullJID.getResource())) {
+					if (!mSettings.isExcludedResource(fullJID.getResourcepart())) {
 						toList.add(fullJID);
 					} else {
 						jidsWithExcludedResources.add(fullJID.asBareJid());
@@ -371,9 +372,9 @@ public class XMPPService {
 			}
 
 			// Broadcast to all offline masterJIDs
-			for (BareJid masterJid : mSettings.getMasterJids()) {
+			for (EntityBareJid masterJid : mSettings.getMasterJids()) {
 				boolean found = false;
-				for (BareJid toJid : toList) {
+				for (EntityJid toJid : toList) {
 					if (toJid.asBareJid().equals(masterJid)) {
 						found = true;
 						break;
@@ -382,7 +383,7 @@ public class XMPPService {
 				// Maybe add this master JID, if it isn't already contained in toList
 				if (!found) {
 					if (jidsWithExcludedResources.contains(masterJid)
-							&& roster.getPresences(masterJid.toString()).size() == 1) {
+							&& roster.getPresences(masterJid).size() == 1) {
 						// Do not send a message to this JID if it would get received by an excluded
 						// resource, ie. when the excluded resource is the only online presence.
 						continue;
@@ -394,9 +395,9 @@ public class XMPPService {
 		// A JID was specified as receiver. This are typical replies to a command send by the
 		// receiver. This is not a notification, do not broadcast.
 		else {
-			FullJid to;
+			EntityFullJid to;
 			try {
-				to = JidCreate.fullFrom(originIssuerInfo);
+				to = JidCreate.entityFullFrom(originIssuerInfo);
 			} catch (XmppStringprepException e) {
 				LOG.e("Could not convert originIssueInfo to full JID", e);
 				return;
@@ -405,10 +406,13 @@ public class XMPPService {
 		}
 
 		boolean atLeastOneSupportsXHTMLIM = false;
-		for (BareJid jid : toList) {
+		for (EntityJid jid : toList) {
+			if (!jid.hasResource()) {
+				continue;
+			}
+
 			try {
-				atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection,
-						jid.toString());
+				atLeastOneSupportsXHTMLIM = XHTMLManager.isServiceEnabled(mConnection, jid);
 			} catch (Exception e) {
 				atLeastOneSupportsXHTMLIM = false;
 			}
@@ -418,8 +422,7 @@ public class XMPPService {
 			XHTMLIMUtil.addXHTMLIM(packet, TransformMessageContent.toFormatedText(message));
 
 		try {
-			List<String> toListStrings = JidUtil.toStringList(toList);
-			MultipleRecipientManager.send(mConnection, packet, toListStrings, null, null);
+			MultipleRecipientManager.send(mConnection, packet, toList, null, null);
 		} catch (Exception e) {
 			LOG.e("sendAsMessage: Got Exception, adding message to DB", e);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
@@ -448,7 +451,7 @@ public class XMPPService {
 		// - https://trac-plugins.gajim.org/ticket/97
 		command = command.trim();
 
-		String issuerInfo = message.getFrom();
+		String issuerInfo = message.getFrom().toString();
 		LOG.d("newMessageFromMasterJID: command=" + command + " from=" + issuerInfo);
 
 		Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
@@ -647,11 +650,17 @@ public class XMPPService {
 		XMPPTCPConnection connection;
 		boolean newConnection = false;
 
-		if (mConnection == null || mConnectionConfiguration != mSettings
-				// We need to use an Application context instance here, because some Contexts may
-				// not work.
-				.getConnectionConfiguration(mContext)) {
-			mConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
+		// We need to use an Application context instance here, because some Contexts may not work.
+		XMPPTCPConnectionConfiguration latestConnectionConfiguration;
+		try {
+			latestConnectionConfiguration = mSettings.getConnectionConfiguration(mContext);
+		} catch (XmppStringprepException e) {
+			LOG.e("tryToConnect: getConnectionConfiguration failed. New State: Disconnected", e);
+			newState(State.Disconnected, e.getLocalizedMessage());
+			return;
+		}
+		if (mConnection == null || mConnectionConfiguration != latestConnectionConfiguration) {
+			mConnectionConfiguration = latestConnectionConfiguration;
 			connection = new XMPPTCPConnection(mConnectionConfiguration);
 
 			final Roster roster = Roster.getInstanceFor(connection);
@@ -665,6 +674,11 @@ public class XMPPService {
 				@Override
 				public void onRosterLoaded(Roster roster) {
 					LOG.d("RosterLoadedListener.onRosterLoaded() invoked, roster has been loaded");
+				}
+
+				@Override
+				public void onRosterLoadingFailed(Exception exception) {
+					LOG.w("Failed to load roster", exception);
 				}
 			});
 

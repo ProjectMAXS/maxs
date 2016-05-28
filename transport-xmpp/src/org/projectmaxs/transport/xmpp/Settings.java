@@ -32,10 +32,12 @@ import org.jivesoftware.smack.compression.XMPPInputOutputStream.FlushMethod;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.TLSUtils;
 import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.DomainBareJid;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
-import org.jxmpp.util.XmppStringUtils;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log.DebugLogSettings;
@@ -102,8 +104,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private SharedPreferences mSharedPreferences;
 	private XMPPTCPConnectionConfiguration mConnectionConfiguration;
 
-	private BareJid mJidCache;
-	private Set<BareJid> mMasterJidCache;
+	private EntityBareJid mJidCache;
+	private Set<EntityBareJid> mMasterJidCache;
 
 	private Settings(Context context) {
 		// this.mSharedPreferences =
@@ -130,10 +132,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		LAST_ACTIVE_NETWORK = context.getString(R.string.pref_app_last_active_network_key);
 		XMPP_DEBUG = context.getString(R.string.pref_app_xmpp_debug_key);
 
-		XMPP_CONNECTION_SETTINGS = new HashSet<String>(Arrays.asList(new String[] { JID, PASSWORD,
-				MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST,
-				MANUAL_SERVICE_SETTINGS_PORT, MANUAL_SERVICE_SETTINGS_SERVICE,
-				XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION, XMPP_DEBUG }));
+		XMPP_CONNECTION_SETTINGS = new HashSet<String>(Arrays.asList(
+				new String[] { JID, PASSWORD, MANUAL_SERVICE_SETTINGS, MANUAL_SERVICE_SETTINGS_HOST,
+						MANUAL_SERVICE_SETTINGS_PORT, MANUAL_SERVICE_SETTINGS_SERVICE,
+						XMPP_STREAM_COMPRESSION, XMPP_STREAM_ENCYPTION, XMPP_DEBUG }));
 
 		DEBUG_LOG = context.getString(R.string.pref_app_debug_log_key);
 
@@ -145,7 +147,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		setDnsDebug();
 	}
 
-	public BareJid getJid() {
+	public EntityBareJid getJid() {
 		if (mJidCache != null) {
 			return mJidCache;
 		}
@@ -153,16 +155,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		if (jidString.isEmpty()) {
 			return null;
 		}
-		BareJid bareJid;
+		EntityBareJid bareJid;
 		try {
-			bareJid = JidCreate.bareFrom(jidString);
+			bareJid = JidCreate.entityBareFrom(jidString);
 		} catch (XmppStringprepException e) {
 			throw new AssertionError(e);
 		}
 		return bareJid;
 	}
 
-	public void setJid(BareJid jid) {
+	public void setJid(EntityBareJid jid) {
 		if (jid.hasResource()) {
 			throw new IllegalArgumentException();
 		}
@@ -184,16 +186,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * 
 	 * @return A set containing the master JIDs.
 	 */
-	public Set<BareJid> getMasterJids() {
+	public Set<EntityBareJid> getMasterJids() {
 		if (mMasterJidCache != null) {
 			return mMasterJidCache;
 		}
 		String s = mSharedPreferences.getString(MASTER_JIDS, "");
 		Set<String> resString = SharedStringUtil.stringToSet(s);
-		Set<BareJid> res = new HashSet<BareJid>();
+		Set<EntityBareJid> res = new HashSet<>();
 		for (String jidString : resString) {
 			try {
-				BareJid bareJid = JidCreate.bareFrom(jidString);
+				EntityBareJid bareJid = JidCreate.entityBareFrom(jidString);
 				res.add(bareJid);
 			} catch (XmppStringprepException e) {
 				throw new AssertionError(e);
@@ -206,14 +208,14 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return getMasterJids().size();
 	}
 
-	public void addMasterJid(BareJid jid) {
-		Set<BareJid> masterJids = getMasterJids();
+	public void addMasterJid(EntityBareJid jid) {
+		Set<EntityBareJid> masterJids = getMasterJids();
 		masterJids.add(jid);
 		saveMasterJids(masterJids);
 	}
 
-	public boolean removeMasterJid(BareJid jid) {
-		Set<BareJid> masterJids = getMasterJids();
+	public boolean removeMasterJid(EntityBareJid jid) {
+		Set<EntityBareJid> masterJids = getMasterJids();
 		if (masterJids.remove(jid)) {
 			saveMasterJids(masterJids);
 			return true;
@@ -222,7 +224,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public boolean isMasterJID(Jid jid) {
-		BareJid bareJid = jid.asBareJidIfPossible();
+		EntityBareJid bareJid = jid.asEntityBareJidIfPossible();
 
 		if (bareJid == null) {
 			return false;
@@ -250,10 +252,11 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * <li>The resource starts with 'android', to exclude hangout/gtalk
 	 * <li>The resource matches one of the user configured excluded resources
 	 * 
-	 * @param resource
+	 * @param resourcepart
 	 * @return true if resource should be excluded from broadcasts
 	 */
-	public boolean isExcludedResource(String resource) {
+	public boolean isExcludedResource(Resourcepart resourcepart) {
+		final String resource = resourcepart.toString();
 		final String[] ifStartsWith = new String[] { "android" };
 		for (String s : ifStartsWith) {
 			if (resource.startsWith(s)) return true;
@@ -328,8 +331,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		if (getMasterJidCount() == 0) return "Master JID(s) not configured";
 		if (getManualServiceSettings()) {
 			if (getManualServiceSettingsHost().isEmpty()) return "XMPP Server Host not specified";
-			if (getManualServiceSettingsService().isEmpty())
-				return "XMPP Server service name not specified";
+			try {
+				getManualServiceSettingsService();
+			} catch (XmppStringprepException e) {
+				String causingString = e.getCausingString();
+				if (causingString.isEmpty()) {
+					return "XMPP Server service name not specified";
+				} else {
+					return "Not a valid service string: '" + causingString + "'";
+				}
+			}
 		}
 
 		return null;
@@ -347,10 +358,12 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	 * 
 	 * @param context
 	 * @return The ConnectionConfiguration.
+	 * @throws XmppStringprepException
 	 */
-	public XMPPTCPConnectionConfiguration getConnectionConfiguration(Context context) {
+	public XMPPTCPConnectionConfiguration getConnectionConfiguration(Context context)
+			throws XmppStringprepException {
 		if (mConnectionConfiguration == null) {
-			String service;
+			DomainBareJid service;
 			XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration
 					.builder();
 			if (getManualServiceSettings()) {
@@ -359,17 +372,17 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				service = getManualServiceSettingsService();
 				confBuilder.setHost(host);
 				confBuilder.setPort(port);
-				confBuilder.setServiceName(service);
+				confBuilder.setXmppDomain(service);
 			} else {
-				service = XmppStringUtils.parseDomain(mSharedPreferences.getString(JID, ""));
+				service = JidCreate.from(mSharedPreferences.getString(JID, "")).asDomainBareJid();
 			}
 			confBuilder.setUsernameAndPassword(getJid().getLocalpart(), getPassword());
-			confBuilder.setServiceName(service);
+			confBuilder.setXmppDomain(service);
 			confBuilder.setResource(GlobalConstants.MAXS);
 			confBuilder.setSocketFactory(XMPPSocketFactory.getInstance());
 
-			confBuilder.setCompressionEnabled(mSharedPreferences.getBoolean(
-					XMPP_STREAM_COMPRESSION, false));
+			confBuilder.setCompressionEnabled(
+					mSharedPreferences.getBoolean(XMPP_STREAM_COMPRESSION, false));
 
 			ConnectionConfiguration.SecurityMode securityMode;
 			final String securityModeString = mSharedPreferences.getString(XMPP_STREAM_ENCYPTION,
@@ -458,7 +471,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		}
 	}
 
-	private void saveMasterJids(Set<BareJid> newMasterJids) {
+	private void saveMasterJids(Set<EntityBareJid> newMasterJids) {
 		SharedPreferences.Editor e = mSharedPreferences.edit();
 
 		Set<String> jidStrings = new HashSet<String>();
@@ -491,8 +504,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return Integer.parseInt(mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_PORT, "5222"));
 	}
 
-	private String getManualServiceSettingsService() {
-		return mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
+	private DomainBareJid getManualServiceSettingsService() throws XmppStringprepException {
+		final String jidString = mSharedPreferences.getString(MANUAL_SERVICE_SETTINGS_SERVICE, "");
+		return JidCreate.domainBareFrom(jidString);
 	}
 
 	private void setDnsDebug() {

@@ -33,6 +33,7 @@ import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -62,7 +63,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 	private static final Intent INCOMING_FILETRANSFER_BIND_INTENT;
 
 	static {
-		INCOMING_FILETRANSFER_BIND_INTENT = new Intent(GlobalConstants.ACTION_INCOMING_FILETRANSFER);
+		INCOMING_FILETRANSFER_BIND_INTENT = new Intent(
+				GlobalConstants.ACTION_INCOMING_FILETRANSFER);
 		INCOMING_FILETRANSFER_BIND_INTENT.setClassName(GlobalConstants.FILEWRITE_MODULE_PACKAGE,
 				GlobalConstants.FILEWRITE_MODULE_IFT_SERVICE);
 	}
@@ -93,20 +95,13 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void fileTransferRequest(FileTransferRequest request) {
-		final String requestorString = request.getRequestor();
-		Jid requestor;
-		try {
-			requestor = JidCreate.from(requestorString);
-		} catch (XmppStringprepException e) {
-			LOG.e("Not a valid JID string, ignoring file transfer request", e);
-			return;
-		}
+		final Jid requestor = request.getRequestor();
 		if (!mSettings.isMasterJID(requestor)) {
 			LOG.w("File transfer from non master jid " + requestor);
 			try {
 				request.reject();
-			} catch (NotConnectedException e) {
-				LOG.w("Not connected exception", e);
+			} catch (NotConnectedException | InterruptedException e) {
+				LOG.w("reject threw exception", e);
 			}
 			return;
 		}
@@ -185,8 +180,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	@Override
 	public void connected(XMPPConnection connection) {
-		mContext.registerReceiver(mWifiBroadcastReceiver, new IntentFilter(
-				WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION));
+		mContext.registerReceiver(mWifiBroadcastReceiver,
+				new IntentFilter(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION));
 	}
 
 	@Override
@@ -222,12 +217,19 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 			@Override
 			public ParcelFileDescriptor outgoingFileTransfer(String filename, long size,
-					String description, String toJID) throws RemoteException {
+					String description, String toJIDString) throws RemoteException {
 				if (sFileTransferManager == null) {
 					LOG.e("outgoingFileTransfer: no connection");
 					return null;
 				}
 
+				final EntityFullJid toJID;
+				try {
+					toJID = JidCreate.entityFullFrom(toJIDString);
+				} catch (XmppStringprepException e) {
+					LOG.e("outgoingFileTransfer: Invalid JID", e);
+					return null;
+				}
 				PipedInputStream is = new PipedInputStream();
 				OutputStream os;
 				ParcelFileDescriptor pfd;

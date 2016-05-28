@@ -102,7 +102,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 				for (Stanza stanza : toResend) {
 					try {
 						connection.sendStanza(stanza);
-					} catch (NotConnectedException e) {
+					} catch (NotConnectedException | InterruptedException e) {
 						// Simply abort if sending the stanzas throws an exception. We could
 						// consider re-adding the stanzas that weren't send to the database, but
 						// right now, just abort.

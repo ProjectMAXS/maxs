@@ -79,7 +79,7 @@ public class XMPPStatus extends StateChangeListener {
 		presence.setPriority(24);
 		try {
 			mConnection.sendStanza(presence);
-		} catch (NotConnectedException e) {
+		} catch (InterruptedException | NotConnectedException e) {
 			LOG.w("sendStatus", e);
 		}
 		mActiveStatus = mDesiredStatus;

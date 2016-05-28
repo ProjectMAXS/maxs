@@ -89,7 +89,7 @@ public class HandleTransportStatus extends StateChangeListener {
 					LOG.e("connected", e);
 					privacyListStatus = "privacy unkown";
 				}
-			} catch (NoResponseException e) {
+			} catch (InterruptedException | NoResponseException e) {
 				LOG.e("connected", e);
 				privacyListStatus = "privacy unkown";
 			}

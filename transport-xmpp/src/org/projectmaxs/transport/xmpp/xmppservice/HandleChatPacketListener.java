@@ -23,8 +23,6 @@ import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jxmpp.jid.Jid;
-import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.smack.stanza.MAXSElement;
@@ -45,14 +43,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 			@Override
 			public void processPacket(Stanza packet) {
 				Message message = (Message) packet;
-				String fromString = message.getFrom();
-				Jid from;
-				try {
-					from = JidCreate.from(fromString);
-				} catch (XmppStringprepException e) {
-					LOG.e("Not a valid 'from' JID string, ignoring message", e);
-					return;
-				}
+				Jid from = message.getFrom();
 
 				if (MAXSElement.foundIn(packet)) {
 					// Ignore messages with a MAXS element. This is done to prevent endless loops of

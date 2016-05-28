@@ -10,10 +10,11 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.ping.PingManager;
-import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.jid.util.JidUtil;
-import org.jxmpp.jid.util.JidUtil.NotABareJidStringException;
+import org.jxmpp.jid.util.JidUtil.NotAEntityBareJidStringException;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
@@ -71,10 +72,9 @@ public class InfoAndSettings extends Activity {
 		final String appName = getResources().getString(R.string.app_name);
 		sb.append(Html.fromHtml("<h1>" + appName + "</h1>"));
 		sb.append(getResources().getString(R.string.version)).append('\n');
-		sb.append(getResources().getString(R.string.copyright))
-				.append(" (")
-				.append(SpannedUtil.createAuthorsLink("transport-xmpp",
-						getResources().getString(R.string.authors))).append(")\n");
+		sb.append(getResources().getString(R.string.copyright)).append(" (").append(SpannedUtil
+				.createAuthorsLink("transport-xmpp", getResources().getString(R.string.authors)))
+				.append(")\n");
 		sb.append('\n');
 		sb.append(appName).append(' ').append(getResources().getText(R.string.gplv3)).append('\n');
 		sb.append('\n');
@@ -111,7 +111,7 @@ SmackConfiguration.getVersion() + "<br>" +
 "&#8226; <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a><br>" +
 "&#8226; <a href=\"http://opensource.org/licenses/MIT\">MIT License</a>"
 // @formatter:on
-				));
+		));
 		final TextView textView = new TextView(this);
 		textView.setText(sb);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -127,7 +127,7 @@ SmackConfiguration.getVersion() + "<br>" +
 	}
 
 	public void registerAccount(View view) {
-		final BareJid jid = mSettings.getJid();
+		final EntityBareJid jid = mSettings.getJid();
 		final String password = mSettings.getPassword();
 		if (jid == null) {
 			Toast.makeText(this, "Please enter a valid bare JID", Toast.LENGTH_SHORT).show();
@@ -147,7 +147,7 @@ SmackConfiguration.getVersion() + "<br>" +
 				}
 
 				try {
-					final String username = jid.getLocalpart();
+					final Localpart username = jid.getLocalpart();
 					final AbstractXMPPConnection connection = new XMPPTCPConnection(
 							mSettings.getConnectionConfiguration(InfoAndSettings.this));
 					showToast("Connecting to server", Toast.LENGTH_SHORT);
@@ -198,10 +198,10 @@ SmackConfiguration.getVersion() + "<br>" +
 			@Override
 			public void lostFocusOrDone(View v) {
 				String text = mJID.getText().toString();
-				BareJid jid;
+				EntityBareJid jid;
 				try {
-					jid = JidUtil.validateBareJid(text);
-				} catch (NotABareJidStringException | XmppStringprepException e) {
+					jid = JidUtil.validateEntityBareJid(text);
+				} catch (NotAEntityBareJidStringException | XmppStringprepException e) {
 					Toast.makeText(InfoAndSettings.this,
 							"'" + text + "' is not a valid bare JID: " + e.getLocalizedMessage(),
 							Toast.LENGTH_LONG).show();
@@ -220,9 +220,9 @@ SmackConfiguration.getVersion() + "<br>" +
 
 		// initialize the master jid linear layout if there are already some
 		// configured
-		Set<BareJid> masterJids = mSettings.getMasterJids();
+		Set<EntityBareJid> masterJids = mSettings.getMasterJids();
 		if (!masterJids.isEmpty()) {
-			Iterator<BareJid> it = masterJids.iterator();
+			Iterator<EntityBareJid> it = masterJids.iterator();
 			mFirstMasterAddress.setText(it.next());
 			while (it.hasNext()) {
 				EditText et = addEmptyMasterJidEditText();
@@ -260,8 +260,8 @@ SmackConfiguration.getVersion() + "<br>" +
 	private final EditText addEmptyMasterJidEditText() {
 		EditText newEditText = new EditText(this);
 		newEditText.setHint(getString(R.string.hint_jid));
-		newEditText.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+		newEditText.setInputType(
+				InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 		new MasterAddressCallbacks(newEditText);
 		mMasterAddresses.addView(newEditText);
 		return newEditText;
@@ -275,10 +275,10 @@ SmackConfiguration.getVersion() + "<br>" +
 
 		public void lostFocusOrDone(View v) {
 			String text = mEditText.getText().toString();
-			BareJid beforeJid = null;
+			EntityBareJid beforeJid = null;
 			if (!mBeforeText.equals("")) {
 				try {
-					beforeJid = JidCreate.bareFrom(mBeforeText);
+					beforeJid = JidCreate.entityBareFrom(mBeforeText);
 				} catch (Exception e) {
 					LOG.d("Could not transform '" + mBeforeText + "' to bare JID", e);
 				}
@@ -298,10 +298,10 @@ SmackConfiguration.getVersion() + "<br>" +
 
 			// an attempt to change an empty master jid to an invalid jid. abort
 			// here and leave the original value untouched
-			BareJid newJid;
+			EntityBareJid newJid;
 			try {
-				newJid = JidUtil.validateBareJid(text);
-			} catch (NotABareJidStringException | XmppStringprepException e) {
+				newJid = JidUtil.validateEntityBareJid(text);
+			} catch (NotAEntityBareJidStringException | XmppStringprepException e) {
 				Toast.makeText(InfoAndSettings.this,
 						"This is not a valid bare JID: " + e.getLocalizedMessage(),
 						Toast.LENGTH_LONG).show();
@@ -368,7 +368,7 @@ SmackConfiguration.getVersion() + "<br>" +
 					XMPPBundleAndDefer.disableBundleAndDefer();
 					try {
 						return pingManagers[0].pingMyServer();
-					} catch (SmackException e) {
+					} catch (InterruptedException | SmackException e) {
 						LOG.w("pingMyServer", e);
 					} catch (RuntimeException e) {
 						LOG.e("pingMyServer: RuntimeException", e);

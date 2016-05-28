@@ -109,7 +109,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 			if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
 				LOG.e("connected", e);
 			}
-		} catch (NoResponseException e) {
+		} catch (InterruptedException | NoResponseException e) {
 			LOG.e("connected", e);
 		}
 		try {
@@ -121,7 +121,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 	}
 
 	private final void setPrivacyList(XMPPConnection connection) throws NoResponseException,
-			XMPPErrorException, NotConnectedException {
+			XMPPErrorException, NotConnectedException, InterruptedException {
 		List<PrivacyItem> list = new ArrayList<PrivacyItem>(PRIVACY_LIST.size() + 10);
 		list.addAll(PRIVACY_LIST);
 

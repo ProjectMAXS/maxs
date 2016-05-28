@@ -17,6 +17,9 @@
 
 package org.projectmaxs.transport.xmpp;
 
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.transport.xmpp.util.Constants;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
@@ -58,9 +61,11 @@ public class XmppIntentService extends IntentService {
 		final String action = intent.getAction();
 		switch (action) {
 		case Constants.PACKAGE + ".SEND_XMPP_MESSAGE":
-			String to = intent.getStringExtra(Constants.PACKAGE + ".TO");
-			if (to == null || to.isEmpty()) {
-				LOG.w("TO extra not set or empty");
+			Jid to;
+			try {
+				to = JidCreate.from(intent.getStringExtra(Constants.PACKAGE + ".TO"));
+			} catch (XmppStringprepException e) {
+				LOG.w("TO extra not set, empty or not a valid JID", e);
 				return;
 			}
 			String body = intent.getStringExtra(Constants.PACKAGE + ".BODY");

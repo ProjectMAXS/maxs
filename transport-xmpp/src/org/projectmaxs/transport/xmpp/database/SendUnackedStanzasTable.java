@@ -17,16 +17,13 @@
 
 package org.projectmaxs.transport.xmpp.database;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.util.PacketParserUtils;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -91,7 +88,7 @@ public class SendUnackedStanzasTable {
 			try {
 				stanza = PacketParserUtils.parseStanza(new String(stanzaBytes));
 				entries.add(stanza);
-			} catch (XmlPullParserException | IOException | SmackException e) {
+			} catch (Exception e) {
 				LOGGER.log(Level.WARNING, "could not parse stanza", e);
 			}
 		} while (c.moveToNext());
