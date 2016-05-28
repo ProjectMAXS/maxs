@@ -218,7 +218,7 @@ Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
 <<acknowledgements>>
 
 - The [[http://xmpp.org/about-xmpp/xsf/][XMPP Standards Foundation]]
-- [[http://asmack.org][aSmack]] (and [[http://www.igniterealtime.org/projects/smack/][Smack]]) Developers
+- [[http://www.igniterealtime.org/projects/smack/][Smack]] Developers
 - [[http://op-co.de/][Ge0rg]] for the [[https://github.com/ge0rg/MemorizingTrustManager][MemorizingTrustManager]]
 
 * Short URLs

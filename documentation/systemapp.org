@@ -6,26 +6,27 @@
 
 Prequisites:
 - root access
-- =adb= ready to use (ie. the Android SDK installed)
+- =adb= ready to use (i.e., the Android SDK installed)
+
 
 1. Obtain the =.apk= file of the app you want to make a system app
 2. Push the =.apk= file to the device: =adb push my-app.apk /sdcard/=
 3. Mount =/system/= read-write
 
-#+BEGIN_SRC bash
-adb shell
-su
-mount -o rw,remount /system
-#+END_SRC
+   #+BEGIN_SRC bash
+   adb shell
+   su
+   mount -o rw,remount /system
+   #+END_SRC
 
 4. Place the =.apk= file in the correct directory. This is =/system/app/= for Android 4.2 and lower, and =/system/priv-app/= for Android 4.3 and higher. The further steps will asume we are on Android 4.4 and therefore use =priv-app=
 
-#+BEGIN_SRC bash
-adb shell
-su
-cd /sdcard
-mv my-app.apk /system/priv-app
-chown 644 /system/priv-app/my-app.apk
-#+END_SRC
+    #+BEGIN_SRC bash
+    adb shell
+    su
+    cd /sdcard
+    mv my-app.apk /system/priv-app
+    chmod 644 /system/priv-app/my-app.apk
+    #+END_SRC
 
 5. Reboot the device: =adb reboot=

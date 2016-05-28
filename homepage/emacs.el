@@ -3,7 +3,7 @@
     (package-initialize t)
     (package-activate "org" 0))
 
-(require 'org-publish)  
+(require 'ox-publish)
 
 (defconst my-html-head
 "<link rel=\"stylesheet\" type=\"text/css\" href=\"/homepage/zenburn.min.css\" />
