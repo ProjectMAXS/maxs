@@ -8,6 +8,6 @@
     <string name="close">Close</string>
     <string name="unknown">Unknown</string>
 	<string name="request_permission_info">This MAXS component requires some permissions in order to work correctly. Please grant them in the following menu.</string>
-	<string name="request_permission_denied">Not allowing MAXS the permission will render the component unuseable. Denied:</string>
+	<string name="request_permission_denied">Not allowing MAXS the permission will render the component unusable. Denied:</string>
 	<string name="proceed">Proceed</string>
 </resources>
