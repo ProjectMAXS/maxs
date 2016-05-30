@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.module.contactsread"
-    android:versionCode="1463946809"
-    android:versionName="0.0.1.23" >
+    android:versionCode="2000100151"
+    android:versionName="0.1.0" >
 
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
