@@ -90,7 +90,7 @@ setMaxsVersion() {
 	else
 		declare -r setVersionName="false"
 		local versionName
-		versionName="$(xmlstarlet sel -t -v" //manifest/@android:versionName" "${manifest}")"
+		versionName="$(xmlstarlet sel -t -v "//manifest/@android:versionName" "${manifest}")"
 	fi
 
 	local versionCode
