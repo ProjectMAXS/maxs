@@ -86,15 +86,14 @@ if [[ -n $RELEASE_TAG ]]; then
     git checkout $RELEASE_TAG
 elif $REMOTE; then
     # If we perform a remote build (e.g. on Jenkins), then set the
-    # versionCode of all components to the POSIX time, so that they
+    # versionCode of all components so that they
     # can get published to the Play Store beta channel
-    versionCode=$(date +%s)
-    set_versionCode $MAINDIR $versionCode
+    setMaxsVersion $MAINDIR
     for t in $TRANSPORTS ; do
-        set_versionCode $t $versionCode
+        setMaxsVersion $t
     done
     for m in $MODULES ; do
-        set_versionCode $m $versionCode
+        setMaxsVersion $m
     done
 fi
 

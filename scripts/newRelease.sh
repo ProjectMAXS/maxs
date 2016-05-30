@@ -19,12 +19,12 @@ nextVersion=${2}
 # the components. This ensures that users that are currently on a
 # pre-release version will automaticlly receive updates if their
 # pre-release version got released.
-update_version $MAINDIR $releaseVersion
+setMaxsVersion $MAINDIR $releaseVersion
 for t in $TRANSPORTS ; do
-    update_version $t $releaseVersion
+    setMaxsVersion $t $releaseVersion
 done
 for m in $MODULES ; do
-    update_version $m $releaseVersion
+    setMaxsVersion $m $releaseVersion
 done
 
 declare -r MESSAGE="MAXS Release $releaseVersion"
@@ -32,12 +32,12 @@ declare -r MESSAGE="MAXS Release $releaseVersion"
 git commit -a -m "${MESSAGE}"
 git tag -s -u flo@geekplace.eu -m "${MESSAGE}" $releaseVersion
 
-update_version $MAINDIR $nextVersion
+setMaxsVersion $MAINDIR $nextVersion
 for t in $TRANSPORTS ; do
-    update_version $t $nextVersion
+    setMaxsVersion $t $nextVersion
 done
 for m in $MODULES ; do
-    update_version $m $nextVersion
+    setMaxsVersion $m $nextVersion
 done
 
 git commit -a -m "MAXS Pre-Release $nextVersion"
