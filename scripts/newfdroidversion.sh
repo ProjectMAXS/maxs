@@ -10,7 +10,7 @@ fi
 
 # Create version entry for the modules
 for m in "${!MOD2PKG[@]}"; do
-    versionCode=$(xml sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${m}/AndroidManifest.xml)
+    versionCode=$(xmlstarlet sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${m}/AndroidManifest.xml)
     cat <<EOF >> ${FDROIDMETA}/${MOD2PKG[${m}]}.txt
 
 Build Version:${1},${versionCode},${1},\\
@@ -22,7 +22,7 @@ exit
 done
 
 # Create version entry for main
-versionCode=$(xml sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/main/AndroidManifest.xml)
+versionCode=$(xmlstarlet sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/main/AndroidManifest.xml)
 cat <<EOF >> ${FDROIDMETA}/org.projectmaxs.main.txt
 
 Build Version:${1},${versionCode},${1},\\
@@ -31,7 +31,7 @@ prebuild=make resources
 EOF
 
 # Create version entry for transport
-versionCode=$(xml sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/main/AndroidManifest.xml)
+versionCode=$(xmlstarlet sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/main/AndroidManifest.xml)
 cat <<EOF >> ${FDROIDMETA}/org.projectmaxs.transport.xmpp.txt
 
 Build Version:${1},${versionCode},${1},\\

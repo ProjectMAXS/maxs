@@ -20,8 +20,8 @@ if [[ -z $MODULE ]]; then
 	exit 1
 fi
 
-versionCode=$(xml sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
-versionName=$(xml sel -t -v "//manifest/@android:versionName" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
+versionCode=$(xmlstarlet sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
+versionName=$(xmlstarlet sel -t -v "//manifest/@android:versionName" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
 moduleName=${MODULE#module-}
 
 cat <<EOF > ${FDROIDMETA}/${MOD2PKG[${MODULE}]}.txt

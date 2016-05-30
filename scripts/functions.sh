@@ -3,7 +3,7 @@
 get_package() {
     local manifest=${1}/AndroidManifest.xml
     local pkg
-    pkg="$(xml sel -t -v "//manifest/@package" "${manifest}")"
+    pkg="$(xmlstarlet sel -t -v "//manifest/@package" "${manifest}")"
     echo "$pkg"
 }
 
@@ -90,7 +90,7 @@ setMaxsVersion() {
 	else
 		declare -r setVersionName="false"
 		local versionName
-		versionName="$(xml sel -t -v" //manifest/@android:versionName" "${manifest}")"
+		versionName="$(xmlstarlet sel -t -v" //manifest/@android:versionName" "${manifest}")"
 	fi
 
 	local versionCode

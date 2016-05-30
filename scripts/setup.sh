@@ -38,7 +38,7 @@ if command -v xml &> /dev/null; then
     declare -A MOD2PKG
     for m in $MODULES ; do
 	module_name=$(basename $m)
-	module_package=$(xml sel -t -v "//manifest/@package" ${m}/AndroidManifest.xml)
+	module_package=$(xmlstarlet sel -t -v "//manifest/@package" ${m}/AndroidManifest.xml)
 	MOD2PKG[${module_name}]=${module_package}
     done
 fi
