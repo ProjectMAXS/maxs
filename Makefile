@@ -3,6 +3,7 @@ TRANSPORTS := $(shell find -mindepth 1 -maxdepth 1 -type d -name 'transport-*')
 MODULES_MAKEFILE := $(foreach mod, $(MODULES), $(mod)/Makefile)
 MIN_DEPLOY := main module-bluetooth transport-xmpp
 ALL := main $(MODULES) $(TRANSPORTS)
+ALL_NON_ROOT := $(filter-out ./module-phonestatemodify, $(ALL))
 TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
 NPROC := $(shell nproc)
 JOBS := $(shell echo $$(( $(NPROC) + 1)))
@@ -25,13 +26,13 @@ pardistclean:
 	TARGET=distclean $(MAKE) $(MAKE_PARALLEL_ARGS) $(ALL)
 
 deploy:
-	TARGET=$@ $(MAKE) $(ALL)
+	TARGET=$@ $(MAKE) $(ALL_NON_ROOT)
 
 homepage:
 	$(MAKE) -C homepage
 
 pardeploy:
-	TARGET=deploy $(MAKE) $(MAKE_PARALLEL_ARGS)  $(ALL)
+	TARGET=deploy $(MAKE) $(MAKE_PARALLEL_ARGS)  $(ALL_NON_ROOT)
 
 eclipse:
 	TARGET=$@ $(MAKE) $(ALL)
