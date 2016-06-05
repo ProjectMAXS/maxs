@@ -41,13 +41,19 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 	private static final BroadcastReceiver NETWORK_CONNECTIVITY_RECEIVER = new NetworkConnectivityReceiver();
 
-	public static void register(Context context) {
+	private static boolean registered;
+
+	public static synchronized void register(Context context) {
+		if (registered) return;
 		context.registerReceiver(NETWORK_CONNECTIVITY_RECEIVER, new IntentFilter(
 				ConnectivityManager.CONNECTIVITY_ACTION));
+		registered = true;
 	}
 
-	public static void unregister(Context context) {
+	public static synchronized void unregister(Context context) {
+		if (!registered) return;
 		context.unregisterReceiver(NETWORK_CONNECTIVITY_RECEIVER);
+		registered = false;
 	}
 
 	@Override
