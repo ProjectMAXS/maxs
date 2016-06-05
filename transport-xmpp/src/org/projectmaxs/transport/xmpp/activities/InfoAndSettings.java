@@ -18,6 +18,7 @@ import org.jxmpp.jid.util.JidUtil.NotAEntityBareJidStringException;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.global.util.SpannedUtil;
 import org.projectmaxs.shared.transport.AndroidDozeUtil;
 import org.projectmaxs.transport.xmpp.R;
@@ -362,12 +363,17 @@ SmackConfiguration.getVersion() + "<br>" +
 		public synchronized void onClick(View v) {
 			Toast.makeText(InfoAndSettings.this, "Sending ping to server", Toast.LENGTH_SHORT)
 					.show();
-			new AsyncTask<PingManager, Void, Boolean>() {
+			new AsyncTask<PingManager, Void, Long>() {
 				@Override
-				protected Boolean doInBackground(PingManager... pingManagers) {
+				protected Long doInBackground(PingManager... pingManagers) {
 					XMPPBundleAndDefer.disableBundleAndDefer();
 					try {
-						return pingManagers[0].pingMyServer();
+						long start = System.currentTimeMillis();
+						boolean res = pingManagers[0].pingMyServer();
+						if (res) {
+							long stop = System.currentTimeMillis();
+							return stop - start;
+						}
 					} catch (InterruptedException | SmackException e) {
 						LOG.w("pingMyServer", e);
 					} catch (RuntimeException e) {
@@ -375,14 +381,16 @@ SmackConfiguration.getVersion() + "<br>" +
 					} finally {
 						XMPPBundleAndDefer.enableBundleAndDefer();
 					}
-					return false;
+					return (long) -1;
 				}
 
 				@Override
-				protected void onPostExecute(Boolean result) {
+				protected void onPostExecute(Long result) {
 					String text;
-					if (result) {
-						text = "Pong received. Ping successful";
+					if (result > 0) {
+						text = "Pong received within "
+								+ SharedStringUtil.humanReadableMilliseconds(result)
+								+ ". Ping successful. ☺";
 					} else {
 						text = "Pong timeout. Ping failed!";
 					}
