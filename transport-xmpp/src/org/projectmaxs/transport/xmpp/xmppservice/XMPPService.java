@@ -252,7 +252,7 @@ public class XMPPService {
 	}
 
 	public void networkDisconnected() {
-		newState(State.WaitingForNetwork);
+		changeState(State.WaitingForNetwork);
 	}
 
 	public void send(Jid to, String body) {
