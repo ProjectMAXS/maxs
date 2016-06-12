@@ -18,6 +18,9 @@ if [[ -z "$COMPONENT_DIR" ]]; then
     exit 1
 fi
 
+TMPDIR=$(mktemp -d)
+trap 'rm -rf ${TMPDIR}' EXIT
+
 VERSION_NAME=$(awk -F'"' '/android:versionName/{print $(NF-1); exit}' "${COMPONENT_DIR}/AndroidManifest.xml")
 
 if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
@@ -35,9 +38,19 @@ if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
     fi
 fi
 
-cat <<EOF > ${COMPONENT_DIR}/res/values/version.xml
+declare -r TMP_VERSION_FILE="${TMPDIR}/verison.xml"
+declare -r VERSION_FILE="${COMPONENT_DIR}/res/values/version.xml"
+
+cat <<EOF > ${TMP_VERSION_FILE}
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="version">${VERSION_NAME}</string>
 </resources>
 EOF
+
+if ! cmp --silent "$TMP_VERSION_FILE" "$VERSION_FILE"; then
+    echo "Version file outdated, installing new: $VERSION_NAME"
+    mv "$TMP_VERSION_FILE" "$VERSION_FILE"
+else
+   echo "Version file up to date: $VERSION_NAME"
+fi
