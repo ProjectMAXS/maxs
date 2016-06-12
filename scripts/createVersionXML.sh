@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -14,11 +14,11 @@ while getopts c:d OPTION "$@"; do
 done
 
 if [[ -z "$COMPONENT_DIR" ]]; then
-    echo "usage: `basename $0` -c <componentDirectory> [-d]"
+    echo "usage: $(basename "$0") -c <componentDirectory> [-d]"
     exit 1
 fi
 
-VERSION_NAME=$(awk -F'"' '/android:versionName/{print $(NF-1); exit}' ${COMPONENT_DIR}/AndroidManifest.xml)
+VERSION_NAME=$(awk -F'"' '/android:versionName/{print $(NF-1); exit}' "${COMPONENT_DIR}/AndroidManifest.xml")
 
 if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
     GIT_REF=$(git describe --tags --dirty=+)
