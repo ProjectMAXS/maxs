@@ -27,6 +27,7 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PermissionUtil;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -59,12 +60,23 @@ public class PermCheck {
 		List<PackageProblem> res = new ArrayList<>(packageInfo.requestedPermissions.length);
 		for (int i = 0; i < packageInfo.requestedPermissionsFlags.length; i++) {
 			if ((packageInfo.requestedPermissionsFlags[i]
-					& PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
-				res.add(new PackageProblem(packageInfo.packageName,
-						"MAXS Component " + packageInfo.packageName
-								+ " was not granted requested permission "
-								+ packageInfo.requestedPermissions[i]));
+					& PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+				// Permission was granted, continue here.
+				continue;
 			}
+
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && packageInfo.requestedPermissions[i]
+					.equals(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
+				// The REQUEST_IGNORE_BATTERY_OPTIMIZATIONS permission was only added with Android M
+				// (Marshmallow, 6.0, API level 23), no need to report this as error if not on
+				// Android M or higher.
+				continue;
+			}
+
+			res.add(new PackageProblem(packageInfo.packageName,
+					"MAXS Component " + packageInfo.packageName
+							+ " was not granted requested permission "
+							+ packageInfo.requestedPermissions[i]));
 		}
 		return res;
 	}
