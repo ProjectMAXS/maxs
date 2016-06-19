@@ -35,6 +35,7 @@
 -keep class org.jivesoftware.smackx.disco.ServiceDiscoveryManager
 -keep class org.jivesoftware.smackx.xhtmlim.XHTMLManager
 -keep class org.jivesoftware.smackx.muc.MultiUserChat
+-keep class org.jivesoftware.smackx.muc.bookmarkautojoin.MucBookmarkAutojoinManager
 -keep class org.jivesoftware.smackx.bytestreams.ibb.InBandBytestreamManager
 -keep class org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamManager
 -keep class org.jivesoftware.smackx.filetransfer.FileTransferManager
