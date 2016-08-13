@@ -471,8 +471,8 @@ public class XMPPService {
 	}
 
 	private void scheduleReconnect(String optionalReason) {
-		newState(State.WaitingForRetry, optionalReason);
 		if (mReconnectHandler == null) mReconnectHandler = new Handler();
+		newState(State.WaitingForRetry, optionalReason);
 		mReconnectHandler.removeCallbacks(mReconnectRunnable);
 		int reconnectDelaySeconds;
 		final int MINIMAL_DELAY_SECONDS = 10;
