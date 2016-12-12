@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/functions.sh"
