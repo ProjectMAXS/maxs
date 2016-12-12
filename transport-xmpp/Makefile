@@ -64,7 +64,10 @@ $(SHARED_TRANSPORT_SOURCE): | $(SHARED_SOURCE)
 setupResourceLinks:
 	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
-eclipse: .settings .classpath .project prebuild
+
+MTM_PATH := libraryProjects/memorizingTrustManager
+
+eclipse: .settings .classpath .project prebuild $(MTM_PATH)/.project $(MTM_PATH)/.classpath
 
 .settings:
 	ln -s ../build/eclipse/settings .settings
@@ -74,3 +77,9 @@ eclipse: .settings .classpath .project prebuild
 
 .project:
 	ln -s build/eclipse/project .project
+
+$(MTM_PATH)/.project:
+	ln -rs build/eclipse/project-memorizingTrustManager $@
+
+$(MTM_PATH)/.classpath:
+	ln -rs build/eclipse/classpath-memorizingTrustManager $@
