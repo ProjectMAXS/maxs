@@ -2,4 +2,3 @@ FDROIDDATA=~/data/code/fdroiddata
 KEYSTOREDATA=~/Dropbox/development/maxs/keystore
 RELEASE_HOST=mate.geekplace.eu
 RELEASE_DIR=/var/vhosts/projectmaxs.org/releases
-ASMACK_DIR=~/data/code/asmack
