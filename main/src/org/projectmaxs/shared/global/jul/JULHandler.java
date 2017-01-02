@@ -76,10 +76,15 @@ public class JULHandler extends Handler {
 		public String format(LogRecord logRecord) {
 			String message = formatMessage(logRecord);
 			Throwable thrown = logRecord.getThrown();
-			if (thrown != null
-					&& (logRecord.getLevel().intValue() > INFO_INT || LOG_INFO_THROWABLES)) {
-				String stacktrace = Log.getStackTraceString(thrown);
-				return message + ' ' + stacktrace;
+			if (thrown != null) {
+				if (logRecord.getLevel().intValue() > INFO_INT || LOG_INFO_THROWABLES) {
+					// Log the full stacktrace.
+					String stacktrace = Log.getStackTraceString(thrown);
+					return message + ' ' + stacktrace;
+				} else {
+					// Log only the throwable's message.
+					return message + " (" + thrown + ")";
+				}
 			} else {
 				return message;
 			}
