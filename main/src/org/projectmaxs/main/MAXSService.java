@@ -107,7 +107,7 @@ public class MAXSService extends Service {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
 				startService();
 			} else {
-				LOG.w("onStartCommand: null intent with Gingerbread or lower");
+				LOG.w("onStartCommand: null intent with Gingerbread or higher");
 			}
 			// Returning not sticky here, the start service intent will take
 			// care of starting the service sticky
