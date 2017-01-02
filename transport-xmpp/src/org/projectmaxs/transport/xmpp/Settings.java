@@ -402,7 +402,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 			confBuilder.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG, false));
 			if (!mSharedPreferences.getBoolean(XMPP_STREAM_HOSTNAME_VERIFY, true)) {
-				TLSUtils.disableHostnameVerificationForTlsCertificicates(confBuilder);
+				TLSUtils.disableHostnameVerificationForTlsCertificates(confBuilder);
 			} else {
 				// Smack >= 4.1 verifies the hostname per default
 			}
