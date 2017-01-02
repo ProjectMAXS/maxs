@@ -141,7 +141,7 @@ public abstract class MAXSTransportService extends Service {
 			startOrStopIntent.setClass(this, mServiceClass);
 			startService(startOrStopIntent);
 		}
-		LOG.d("onStartCommand: intent=" + intent.getAction() + " flags=" + flags + " startId="
+		LOG.d("onStartCommand begin: intent=" + intent.getAction() + " flags=" + flags + " startId="
 				+ startId + " isRunning=" + isRunning());
 
 		boolean stickyStart = true;
@@ -161,7 +161,7 @@ public abstract class MAXSTransportService extends Service {
 			stickyStart = false;
 		}
 		performInServiceHandler(intent);
-		LOG.d("onStartCommand: stickyStart=" + stickyStart + " action=" + action);
+		LOG.d("onStartCommand result: stickyStart=" + stickyStart + " action=" + action);
 		return stickyStart ? START_STICKY : START_NOT_STICKY;
 	}
 

@@ -39,8 +39,8 @@ import android.os.Build.VERSION_CODES;
  * Bundle And Defer means that Smack will invoke the
  * {@link BundleAndDeferCallback#getBundleAndDeferMillis(BundleAndDefer)} callback once it is about
  * to send a stanza that could be deferred. If it is deferred, all following stanzas will get
- * bundled. The return value of the callback is the time the stanza, and all following, will get
- * deferred.
+ * bundled. The return value of the callback is the time in milliseconds the stanza, and all
+ * following, will get deferred.
  * <p>
  * Together with he callback, Smack hands out an reference to a {@link BundleAndDefer} instance,
  * which allows us to abort the current deferring and send all bundled stanzas right away. We do
@@ -106,7 +106,8 @@ public class XMPPBundleAndDefer {
 					deferMillis = INACTIVE_STATE_DEFER_MILLIS;
 				}
 				if (LOG.isDebugLogEnabled()) {
-					LOG.d("Returning " + deferMillis + " in getBundleAndDeferMillis(). Network is "
+					LOG.d("Returning " + deferMillis
+							+ "ms in getBundleAndDeferMillis(). Network is "
 							+ networkState + ", batteryPlugged: " + isPlugged);
 				}
 				return deferMillis;
