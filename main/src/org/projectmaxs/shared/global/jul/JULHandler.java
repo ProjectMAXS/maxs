@@ -68,12 +68,13 @@ public class JULHandler extends Handler {
 	private static final Formatter FORMATTER = new Formatter() {
 		@Override
 		public String format(LogRecord logRecord) {
+			String message = formatMessage(logRecord);
 			Throwable thrown = logRecord.getThrown();
 			if (thrown != null) {
 				String stacktrace = Log.getStackTraceString(thrown);
-				return logRecord.getMessage() + ' ' + stacktrace;
+				return message + ' ' + stacktrace;
 			} else {
-				return logRecord.getMessage();
+				return message;
 			}
 		}
 	};
