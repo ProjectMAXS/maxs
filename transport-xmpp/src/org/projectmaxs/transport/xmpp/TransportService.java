@@ -138,7 +138,7 @@ public class TransportService extends MAXSTransportService {
 			if (hasMessage(Constants.ACTION_NETWORK_TYPE_CHANGED.hashCode())) {
 				LOG.d("Not handling NETWORK_TYPE_CHANGED because another intent of the same type is in the queue");
 			} else if (mXMPPService.fastPingServer()) {
-				LOG.d("Not issuing instantDisconnect as result of NETWORK_TYPE_CHANGED, because connection already available");
+				LOG.d("Not issuing instantDisconnect as result of NETWORK_TYPE_CHANGED, because connection is (still/again) alive");
 			} else {
 				mXMPPService.instantDisconnect();
 			}
