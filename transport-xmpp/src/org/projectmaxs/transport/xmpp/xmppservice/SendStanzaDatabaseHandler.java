@@ -54,7 +54,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 
 		connection.addPacketSendingListener(new StanzaListener() {
 			@Override
-			public void processPacket(Stanza stanza) throws NotConnectedException {
+			public void processStanza(Stanza stanza) throws NotConnectedException {
 				// This only works if stream management is enabled
 				if (!connection.isSmEnabled()) {
 					return;
@@ -80,7 +80,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 		// A listener that will remove stanzas from the database
 		connection.addStanzaAcknowledgedListener(new StanzaListener() {
 			@Override
-			public void processPacket(Stanza packet) throws NotConnectedException {
+			public void processStanza(Stanza packet) throws NotConnectedException {
 				String id = packet.getStanzaId();
 				if (StringUtils.isNullOrEmpty(id)) {
 					return;

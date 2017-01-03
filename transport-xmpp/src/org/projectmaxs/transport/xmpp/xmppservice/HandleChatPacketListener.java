@@ -41,7 +41,7 @@ public class HandleChatPacketListener extends StateChangeListener {
 		mChatPacketListener = new StanzaListener() {
 
 			@Override
-			public void processPacket(Stanza packet) {
+			public void processStanza(Stanza packet) {
 				Message message = (Message) packet;
 				Jid from = message.getFrom();
 
