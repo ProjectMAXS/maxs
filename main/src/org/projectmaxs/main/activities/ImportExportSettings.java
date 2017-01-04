@@ -191,8 +191,7 @@ public class ImportExportSettings extends Activity {
 		packages.addAll(TransportRegistry.getInstance(this).getAllTransportPackages());
 
 		for (final String pkg : packages) {
-			new AsyncServiceTask<IFileReadModuleService>(new Intent(
-					GlobalConstants.ACTION_BIND_FILEREAD), this) {
+			new AsyncServiceTask<IFileReadModuleService>(intent, this) {
 
 				@Override
 				public IFileReadModuleService asInterface(IBinder iBinder) {
