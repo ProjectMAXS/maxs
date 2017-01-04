@@ -151,8 +151,10 @@ public class ImportExportSettings extends Activity {
 
 	private void tryToImport(final String directory) {
 		// Start with trying to import main's settings
-		new AsyncServiceTask<IFileReadModuleService>(new Intent(
-				GlobalConstants.ACTION_BIND_FILEREAD), this) {
+		Intent intent = new Intent(GlobalConstants.ACTION_BIND_FILEREAD);
+		intent.setClassName(GlobalConstants.FILEREAD_MODULE_PACKAGE,
+				GlobalConstants.FILEREAD_SERVICE);
+		new AsyncServiceTask<IFileReadModuleService>(intent, this) {
 
 			@Override
 			public IFileReadModuleService asInterface(IBinder iBinder) {
@@ -227,8 +229,10 @@ public class ImportExportSettings extends Activity {
 	}
 
 	public static void tryToExport(final String file, final byte[] bytes, Context context) {
-		new AsyncServiceTask<IFileWriteModuleService>(new Intent(
-				GlobalConstants.ACTION_BIND_FILEWRITE), context) {
+		Intent intent = new Intent(GlobalConstants.ACTION_BIND_FILEWRITE);
+		intent.setClassName(GlobalConstants.FILEWRITE_MODULE_PACKAGE,
+				GlobalConstants.FILEWRITE_SERVICE);
+		new AsyncServiceTask<IFileWriteModuleService>(intent, context) {
 
 			@Override
 			public IFileWriteModuleService asInterface(IBinder iBinder) {

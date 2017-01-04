@@ -35,9 +35,11 @@ public class GlobalConstants {
 	public static final String MAIN_INTENT_SERVICE = MAIN_PACKAGE + ".MAXSIntentService";
 
 	public static final String FILEWRITE_MODULE_PACKAGE = MODULE_PACKAGE + ".filewrite";
+	public static final String FILEWRITE_SERVICE = FILEWRITE_MODULE_PACKAGE + ".FileWriteService";
 	public static final String FILEWRITE_MODULE_IFT_SERVICE = FILEWRITE_MODULE_PACKAGE
 			+ ".IncomingFileTransferService";
 	public static final String FILEREAD_MODULE_PACKAGE = MODULE_PACKAGE + ".fileread";
+	public static final String FILEREAD_SERVICE = FILEREAD_MODULE_PACKAGE + ".FileReadService";
 
 	public static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
 
