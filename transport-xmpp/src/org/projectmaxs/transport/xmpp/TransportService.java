@@ -17,6 +17,7 @@
 
 package org.projectmaxs.transport.xmpp;
 
+import org.jivesoftware.smack.util.Async;
 import org.jivesoftware.smackx.ping.android.ServerPingWithAlarmManager;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
@@ -79,10 +80,22 @@ public class TransportService extends MAXSTransportService {
 	public void onDestroy() {
 		super.onDestroy();
 		LOG.d("onDestroy");
-		// Ensure that all receivers are unregistered by calling disconnect()
-		if (mXMPPService != null) {
-			mXMPPService.disconnect();
+
+		final XMPPService xmppService = mXMPPService;
+		if (xmppService != null) {
+			// Ensure that all receivers are unregistered by calling XMPPService.disconnect(). We
+			// need to perform that action async, since onDestory() is called from the main thread,
+			// disconnect() is possible causing network IO and we want to avoid a
+			// NetworkOnMainThreadException. Note that we can not use the Service's Looper, since it
+			// will be already exited, because we already called super.onDestory().
+			Async.go(new Runnable() {
+				@Override
+				public void run() {
+					xmppService.disconnect();
+				}
+			});
 		}
+
 		XMPPEntityCapsCache.onDestroy(this);
 		ServerPingWithAlarmManager.onDestroy();
 	}
