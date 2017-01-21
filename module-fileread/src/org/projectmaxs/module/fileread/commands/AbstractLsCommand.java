@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import org.projectmaxs.module.fileread.ModuleService;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.messagecontent.Element;
 
 public abstract class AbstractLsCommand extends AbstractFilereadCommand {
 
@@ -42,7 +43,6 @@ public abstract class AbstractLsCommand extends AbstractFilereadCommand {
 	final Message list(File path) {
 		Message message;
 		if (path.isDirectory()) {
-			message = new Message("Content of " + path.getAbsolutePath());
 			mSettings.setCwd(path);
 			File[] dirs = path.listFiles(new FileFilter() {
 				public boolean accept(File pathname) {
@@ -54,16 +54,25 @@ public abstract class AbstractLsCommand extends AbstractFilereadCommand {
 					return pathname.isFile();
 				}
 			});
-			if (dirs.length > 0) {
-				Arrays.sort(dirs);
-				for (File d : dirs) {
-					message.add(toElement(d));
+
+			message = new Message("Content of " + path.getAbsolutePath());
+
+			if (dirs.length == 0 && files.length == 0) {
+				Element emtpyDirectory = new Element("empty-directory", "[Directory is empty]");
+				message.add(emtpyDirectory);
+			} else {
+
+				if (dirs.length > 0) {
+					Arrays.sort(dirs);
+					for (File d : dirs) {
+						message.add(toElement(d));
+					}
 				}
-			}
-			if (files.length > 0) {
-				Arrays.sort(files);
-				for (File f : files) {
-					message.add(toElement(f));
+				if (files.length > 0) {
+					Arrays.sort(files);
+					for (File f : files) {
+						message.add(toElement(f));
+					}
 				}
 			}
 		} else if (path.isFile()) {
