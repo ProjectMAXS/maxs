@@ -125,6 +125,14 @@ public class XMPPService {
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftares.smack.legacy");
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.java7");
 
+		// @formatter:off
+		SmackConfiguration.addDisabledSmackClasses(
+				"org.jivesoftware.smack.util.dns.javax",
+				"org.jivesoftware.smack.util.dns.dnsjava",
+				"org.jivesoftware.smack.sasl.javax",
+				"org.jivesoftware.smack.legacy");
+		// @formatter:on
+
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
 			@Override
 			public String transform(String string) {
