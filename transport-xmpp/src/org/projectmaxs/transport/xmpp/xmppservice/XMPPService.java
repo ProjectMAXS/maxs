@@ -716,23 +716,17 @@ public class XMPPService {
 			return;
 		}
 
-		// TODO Remove this condition when Smack 4.2 is used, since it will no longer login if the
-		// connection was previously authenticated
-		if (!connection.isAuthenticated()) {
-			try {
-				connection.login();
-			} catch (NoResponseException e) {
-				LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
-				scheduleReconnect("Not response while loggin in.");
-				return;
-			} catch (Exception e) {
-				LOG.e("tryToConnect: login failed. New State: Disconnected", e);
-				newState(State.Disconnected, e.getLocalizedMessage());
-				return;
-			} finally {
-				XMPPBundleAndDefer.enableBundleAndDefer();
-			}
-		} else {
+		try {
+			connection.login();
+		} catch (NoResponseException e) {
+			LOG.w("tryToConnect: NoResponseException. Scheduling reconnect.");
+			scheduleReconnect("Not response while loggin in.");
+			return;
+		} catch (Exception e) {
+			LOG.e("tryToConnect: login failed. New State: Disconnected", e);
+			newState(State.Disconnected, e.getLocalizedMessage());
+			return;
+		} finally {
 			XMPPBundleAndDefer.enableBundleAndDefer();
 		}
 		// Login Successful
