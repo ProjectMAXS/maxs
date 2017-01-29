@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-NIGHTLIES_URL=http://projectmaxs.org/releases/nightlies
+NIGHTLIES_URL=http://projectmaxs.org/releases/nightlies/
 
 FILTER="module-phonestatemodify"
 DRY_RUN=false
