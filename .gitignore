@@ -2,6 +2,8 @@
 /maxs-binary/
 /config
 
+.d
+
 lint.xml
 lint-report.html
 lint-report_files/
