@@ -513,6 +513,7 @@ public class XMPPService {
 	private void newState(State newState, String reason) {
 		if (reason == null) reason = "";
 		synchronized (mStateChangeListeners) {
+			mState = newState;
 			switch (newState) {
 			case Connected:
 				for (StateChangeListener l : mStateChangeListeners) {
@@ -558,7 +559,6 @@ public class XMPPService {
 				break;
 			}
 		}
-		mState = newState;
 	}
 
 	private synchronized void changeState(State desiredState) {
