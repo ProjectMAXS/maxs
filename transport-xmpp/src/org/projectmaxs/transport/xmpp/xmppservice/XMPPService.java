@@ -510,7 +510,7 @@ public class XMPPService {
 	 * @param reason
 	 *            the optional reason for the new state
 	 */
-	private void newState(State newState, String reason) {
+	private synchronized void newState(State newState, String reason) {
 		if (reason == null) reason = "";
 		synchronized (mStateChangeListeners) {
 			mState = newState;
