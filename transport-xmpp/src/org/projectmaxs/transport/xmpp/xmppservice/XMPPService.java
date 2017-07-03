@@ -108,7 +108,7 @@ public class XMPPService {
 		// time. Smack's default packet reply timeout of 5 seconds is way to low for such networks,
 		// so we increase it to 2 minutes.
 		// This value must also be greater then the highest returned bundle and defer value.
-		SmackConfiguration.setDefaultPacketReplyTimeout(2 * 60 * 1000);
+		SmackConfiguration.setDefaultReplyTimeout(2 * 60 * 1000);
 
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
 		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.ReconnectionManager");
