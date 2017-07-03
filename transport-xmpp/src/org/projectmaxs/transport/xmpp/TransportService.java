@@ -81,6 +81,11 @@ public class TransportService extends MAXSTransportService {
 		super.onDestroy();
 		LOG.d("onDestroy");
 
+		// We already unregister the receiver in onHandleIntent(), but in order to avoid leaking the
+		// receiver, we make sure it's really unregistered by calling unregister() here, in
+		// onDestroy(), again.
+		NetworkConnectivityReceiver.unregister(this);
+
 		final XMPPService xmppService = mXMPPService;
 		if (xmppService != null) {
 			// Ensure that all receivers are unregistered by calling XMPPService.disconnect(). We
