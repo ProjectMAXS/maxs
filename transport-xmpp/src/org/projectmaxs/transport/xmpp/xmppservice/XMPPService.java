@@ -656,6 +656,7 @@ public class XMPPService {
 			return;
 		}
 
+		LOG.d("tryToConnect: Changing state to 'Connecting'");
 		newState(State.Connecting);
 
 		XMPPTCPConnection connection;
@@ -706,8 +707,10 @@ public class XMPPService {
 		// possible anyways).
 		connection.setPreferredResumptionTime(5 * 60); // 5 minutes
 
-		LOG.d("tryToConnect: connect");
+		// Disable bundle and defer so that the connection and login sequence is fast. :)
 		XMPPBundleAndDefer.disableBundleAndDefer();
+
+		LOG.d("tryToConnect: Calling connect() on XMPP connection");
 		try {
 			connection.connect();
 		} catch (Exception e) {
@@ -724,6 +727,7 @@ public class XMPPService {
 			return;
 		}
 
+		LOG.d("tryToConnect: connect() returned without exception, calling login()");
 		try {
 			connection.login();
 		} catch (NoResponseException e) {
