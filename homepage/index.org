@@ -205,8 +205,8 @@ latest news:
 ** Bitcoin
 
 #+BEGIN_HTML
-<a href="bitcoin:1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt">
-Donate with bitcoin to 1AUuXzvVUh1HMb2kVYnDWz8TgjbJMaZqDt
+<a href="bitcoin:17hnvYUhfGqnF8MQhQRsqttySn6fe9ebtp">
+Donate with bitcoin to 17hnvYUhfGqnF8MQhQRsqttySn6fe9ebtp
 </a>
 #+END_HTML
 
