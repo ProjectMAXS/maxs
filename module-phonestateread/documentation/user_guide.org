@@ -23,6 +23,6 @@ This module does not expose any commands.
 
 * Notifications
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 AndroidDevice: Jane Doe (+1 555 1111) is calling
 #+END_SRC

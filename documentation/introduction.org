@@ -88,13 +88,13 @@ and the optional arguments for the command. Usually the different
 strings are separated by a single space, but in certain situations,
 two spaces are required.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 <command> <subCommand> <args>
 #+END_SRC
 
 ** Enabling or disabling the Bluetooth adapter
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 [17:14:02] User: bluetooth disable
 [17:14:04] AndroidDevice: Disabling bluetooth adapter
 [17:14:04] AndroidDevice: Bluetooth adapter changed state from 'on' to 'turning off'
@@ -104,7 +104,7 @@ two spaces are required.
 
 ** Retrieving the clipboard contents
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 [17:19:19] User: clipboard set This is now the content of the device's clipboard
 [17:19:19] AndroidDevice: Clipboard set to: This is now the content of the device's clipboard
 [17:19:28] User: clipboard get
@@ -114,7 +114,7 @@ device's clipboard
 
 ** Receiving and sending SMS
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 [17:20:49] User: sms send Jane Doe  Have fun, see you later :)
 [17:21:02] AndroidDevice: Sending SMS to Jane Doe (+49424242):
 Have fun, see you later :)
@@ -136,7 +136,7 @@ user interacted with. It is, for example, also set when a new SMS
 arrives and makes it easy to reply to the SMS message with the =reply
 to= command/sub command.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 [20:39:48] AndroidDevice: New SMS Received
 Jane Doe (+49424242): How are you?
 [20:39:52]: AndroidDevice: Recent contact: Jane Doe (+49424242)
@@ -151,7 +151,7 @@ are short commands for some commands. For example the short command
 for =reply= is =r=. And since =to= is the default sub command for
 =reply= one could also write simply =r= in the example above.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 [20:39:48] AndroidDevice: New SMS Received
 Jane Doe (+49424242): How are you?
 [20:39:52] AndroidDevice: Recent contact: Jane Doe (+49424242)
@@ -165,7 +165,7 @@ Jane Doe (+49424242): How are you?
 MAXS displays a few status items in the status string of your IM
 system (e.g. XMPP presence status)
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 [22:08:20] My Droid is now Available (95-100% - Battery)
 #+END_SRC
 

@@ -29,7 +29,7 @@ incoming SMS if ContactsRead is installed.
 
 Lookup contact information by a given String.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: contact lookup Jane
 AndroidDevice: Jane Doe
 Home: +1 555 1231
@@ -40,7 +40,7 @@ Mobile: +1 555 2222
 
 Lookup a contact by a given number.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: contact num +1 555 1231
 AndroidDevice: Jane Doe
 Home: +1 555 1231

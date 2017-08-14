@@ -23,7 +23,7 @@ Query the default notificationpolicyaccess adapter for its status.
 
 *** =notification-filter show=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: notification-filter show
 AndroidDevice: Current Notificaton Interruption Filter is 'alarms'
 #+END_SRC

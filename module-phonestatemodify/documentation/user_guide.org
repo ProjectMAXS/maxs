@@ -27,7 +27,7 @@ You can read more about how to convert an app to an system app at projectmaxs.or
 
 *** =reject call=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: reject
 AndroidDevice: Successfully rejected phone call
 #+END_SRC

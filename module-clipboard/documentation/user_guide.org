@@ -21,28 +21,28 @@ This module requires no permissions.
 
 *** =clipboard set <content>=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: clipboard set Hello World
 AndroidDevice: Clipboard set to: Hello World
 #+END_SRC
 
 Shortcut version:
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: clipboard Hello World
 AndroidDevice: Clipboard set to: Hello World
 #+END_SRC
 
 *** =clipboard get=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: clipboard get
 AndroidDevice: Clipboard: Hello World
 #+END_SRC
 
 Shortcut version:
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: clipboard
 AndroidDevice: Clipboard: Hello World
 #+END_SRC

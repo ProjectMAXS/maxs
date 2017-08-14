@@ -23,7 +23,7 @@ This module requires no special permissions.
 
 Show some information about the system
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: sysinfo show
 AndroidDevice: System information
 API: 19

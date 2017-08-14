@@ -23,7 +23,7 @@ Query the default NFC adapter for its status.
 
 *** =nfc status=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: nfc status
 AndroidDevice: NFC Adapter is enabled
 #+END_SRC

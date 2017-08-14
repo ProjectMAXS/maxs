@@ -23,7 +23,7 @@ This module does not expose any commands.
 
 * Notifications
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 AndroidDevice: New SMS Received
 From Jane Doe (+1 555 1231) 2014-04-04 13:12:12: Where do we meet later?
 #+END_SRC

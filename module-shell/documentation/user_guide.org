@@ -24,7 +24,7 @@ superuser is installed and
 
 Execute the given command in a normal shell (i.e. as non-root).
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: shell execute ls -l
 AndroidDevice: drwxr-xr-x root root 2014-02-05 11:57 acct
 drwxrwx--x system cache 2014-02-06 12:10 cache
@@ -65,7 +65,7 @@ drwxr-xr-x root root 2014-02-04 23:06 system
 lrwxrwxrwx root root 2014-02-05 11:57 vendor -> /system/vendor
 #+END_SRC
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: sh ls -l
 AndroidDevice: drwxr-xr-x root root 2014-02-05 11:57 acct
 drwxrwx--x system cache 2014-02-06 12:10 cache

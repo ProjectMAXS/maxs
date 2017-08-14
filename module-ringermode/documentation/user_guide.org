@@ -21,14 +21,14 @@ This module requires no permissions.
 
 *** =ringermode show=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: ringermode show
 AndroidDevice: Ringer is in silent mode
 #+END_SRC
 
 *** =ringermode normal=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: ringermode set normal
 AndroidDevice: Ringer set to normal
 #+END_SRC

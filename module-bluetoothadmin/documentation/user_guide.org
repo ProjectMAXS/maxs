@@ -23,14 +23,14 @@ Enable or disable the bluetooth adapter.
 
 *** =bluetooth enable=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: bluetooth enable
 AndroidDevice: Enabling bluetooth adapter
 #+END_SRC
 
 *** =bluetooth disable=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: bluetooth disable
 AndroidDevice: Disabling bluetooth adapter
 AndroidDevice: Bluetooth adapter changed state from 'on' to 'turning off'

@@ -26,7 +26,7 @@ Default subcommand with arguments: =send=
 
 *** =sms send=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: sms send John Doe  Hi John, I got the tickets! :)
 #+END_SRC
 
@@ -38,7 +38,7 @@ Default subcommand with arguments: =to=
 
 Reply to the recent contact.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 AndroidDevice: Recent contact is Foo Bar (+234123)
 User: reply Hi Foo, let's meet at the cinema.
 #+END_SRC

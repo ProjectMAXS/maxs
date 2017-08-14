@@ -25,7 +25,7 @@ Query the current state of the WiFi subsystem.
 
 List all configured WiFi networks.
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: wifi list
 AndroidDevice: ID: 0 Name: "eduroam"
 Status: Enabled

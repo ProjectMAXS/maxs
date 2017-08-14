@@ -4,7 +4,7 @@
 #+OPTIONS:      author:nil
 #+STARTUP:      noindent
 
-If the [[*Prerequisistes][prerequisites]] are satisfied and everything is correctly
+If the prerequisites are satisfied and everything is correctly
 configured, MAXS can be obtained and build with two simple steps:
 
 1. =git clone --recursive https://bitbucket.org/projectmaxs/maxs.git=
@@ -29,9 +29,9 @@ source. MAXS's build system requires the following prerequisites:
 
 * Checking out the source
 
-#+begin_src
+#+BEGIN_EXAMPLE
 git clone --recursive https://bitbucket.org/projectmaxs/maxs.git
-#+end_src
+#+END_EXAMPLE
 
 * Importing MAXS components projects into Eclipse
 

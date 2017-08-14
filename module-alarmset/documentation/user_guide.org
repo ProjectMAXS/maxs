@@ -23,17 +23,17 @@ Set arlarms. Set and start timers.
 
 *** =timer set= (Default with arguments)
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: timer set 60
 AndroidDevice: Timer set
 #+END_SRC
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: t 60
 AndroidDevice: Timer set
 #+END_SRC
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: t 12m Pizza is ready
 AndroidDevice: Timer set
 #+END_SRC
@@ -42,7 +42,7 @@ AndroidDevice: Timer set
 
 *** =alarm set= (Default with arguments)
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: alarm set 18:00 Meet with Joe
 AndroidDevice: Alarm set
 #+END_SRC

@@ -23,7 +23,7 @@ Query the default bluetooth adapter for its status.
 
 *** =bluetooth status=
 
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 User: bluetooth status
 AndroidDevice: Bluetooth is enabled
 #+END_SRC
