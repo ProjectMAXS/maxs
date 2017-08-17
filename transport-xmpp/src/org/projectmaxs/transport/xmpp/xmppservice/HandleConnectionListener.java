@@ -44,7 +44,6 @@ public class HandleConnectionListener extends StateChangeListener {
 
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
-				mXMPPService.instantDisconnect();
 				LOG.d("connectionClosedOnError(): Issuing ACTION_START_SERVICE intent");
 				// We don't call scheduleReconnect() here, because this method is usually be called
 				// from Smack's PacketReader or PacketWriter thread, which will not have a Looper
