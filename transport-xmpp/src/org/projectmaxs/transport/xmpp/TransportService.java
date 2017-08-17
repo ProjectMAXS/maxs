@@ -161,27 +161,23 @@ public class TransportService extends MAXSTransportService {
 			mXMPPService.networkDisconnected();
 			break;
 		case Constants.ACTION_NETWORK_TYPE_CHANGED:
-			if (hasMessage(Constants.ACTION_NETWORK_TYPE_CHANGED.hashCode())) {
-				LOG.d("Not handling NETWORK_TYPE_CHANGED because another intent of the same type is in the queue");
-				break;
-			}
-			if (mXMPPService.fastPingServer()) {
-				LOG.d("Not issuing instantDisconnect as result of NETWORK_TYPE_CHANGED, because connection is (still/again) alive");
-				break;
-			}
-			mXMPPService.instantDisconnect();
-			break;
 		case Constants.ACTION_CONNECTION_CLOSED_ON_ERROR:
-			if (hasMessage(Constants.ACTION_CONNECTION_CLOSED_ON_ERROR.hashCode())) {
-				LOG.d("Not handling CONNECTION_CLOSED_ON_ERROR because another intent of the same type is in the queue");
+			if (hasMessage(action.hashCode())) {
+				LOG.d("Not handling " + action
+						+ " because another intent of the same type is in the queue");
 				break;
 			}
 			if (mXMPPService.fastPingServer()) {
-				LOG.d("Not issuing instantDisconnect and connect as result of CONNECTION_CLOSED_ON_ERROR, because connection is (still/again) alive");
+				LOG.d("Not handling " + action + " because connection is (still/again) alive");
 				break;
 			}
 			mXMPPService.instantDisconnect();
-			mXMPPService.connect();
+			if (action.equals(Constants.ACTION_CONNECTION_CLOSED_ON_ERROR)) {
+				// If the connection was closed on error, then try to reconnect now. In case
+				// NETWORK_TYPE_CHANGED was send, then we will receive a NETWORK_CONNECTED intent
+				// also, which would trigger the reconnect.
+				mXMPPService.connect();
+			}
 			break;
 		default:
 			throw new IllegalStateException("Unknown intent action: " + action);
