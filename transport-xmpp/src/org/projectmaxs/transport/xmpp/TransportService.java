@@ -114,53 +114,64 @@ public class TransportService extends MAXSTransportService {
 
 		final String action = intent.getAction();
 		LOG.d("onHandleIntent: " + action);
-		if (TransportConstants.ACTION_START_SERVICE.equals(action)) {
+		switch (action) {
+		case TransportConstants.ACTION_START_SERVICE:
 			if (hasMessage(TransportConstants.ACTION_STOP_SERVICE.hashCode())) {
 				LOG.d("Not starting service because there is a stop service action queued");
-			} else {
-				NetworkConnectivityReceiver.register(this);
-				mXMPPService.connect();
+				break;
 			}
-		} else if (TransportConstants.ACTION_STOP_SERVICE.equals(action)) {
+			NetworkConnectivityReceiver.register(this);
+			mXMPPService.connect();
+			break;
+		case TransportConstants.ACTION_STOP_SERVICE:
 			if (hasMessage(TransportConstants.ACTION_START_SERVICE.hashCode())) {
 				LOG.d("Not stopping service because there is a start service action queued");
-			} else {
-				NetworkConnectivityReceiver.unregister(this);
-				mXMPPService.disconnect();
-				stopSelf();
+				break;
 			}
-		} else if (TransportConstants.ACTION_SET_STATUS.equals(action)) {
+			NetworkConnectivityReceiver.unregister(this);
+			mXMPPService.disconnect();
+			stopSelf();
+			break;
+		case TransportConstants.ACTION_SET_STATUS:
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mXMPPService.setStatus(status);
-		} else if (TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS.equals(action)) {
+			break;
+		case TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS:
 			mXMPPService.getHandleTransportStatus().sendStatus();
-		} else if (Constants.ACTION_SEND_AS_MESSAGE.equals(action)
-				|| (Constants.ACTION_SEND_AS_IQ.equals(action))) {
+			break;
+		case Constants.ACTION_SEND_AS_MESSAGE:
+		case Constants.ACTION_SEND_AS_IQ:
 			Message message = intent.getParcelableExtra(GlobalConstants.EXTRA_MESSAGE);
 			CommandOrigin origin = intent
 					.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			mXMPPService.send(message, origin);
-		} else if (Constants.ACTION_NETWORK_CONNECTED.equals(action)) {
+			break;
+		case Constants.ACTION_NETWORK_CONNECTED:
 			if (hasMessage(Constants.ACTION_NETWORK_CONNECTED.hashCode())) {
 				LOG.d("Not handling NETWORK_CONNECTED because another intent of the same type is in the queue");
-			} else {
-				mXMPPService.connect();
+				break;
 			}
-		} else if (Constants.ACTION_NETWORK_DISCONNECTED.equals(action)) {
+			mXMPPService.connect();
+			break;
+		case Constants.ACTION_NETWORK_DISCONNECTED:
 			if (hasMessage(Constants.ACTION_NETWORK_DISCONNECTED.hashCode())) {
 				LOG.d("Not handling NETWORK_DISCONNECTED because another intent of the same type is in the queue");
-			} else {
-				mXMPPService.networkDisconnected();
+				break;
 			}
-		} else if (Constants.ACTION_NETWORK_TYPE_CHANGED.equals(action)) {
+			mXMPPService.networkDisconnected();
+			break;
+		case Constants.ACTION_NETWORK_TYPE_CHANGED:
 			if (hasMessage(Constants.ACTION_NETWORK_TYPE_CHANGED.hashCode())) {
 				LOG.d("Not handling NETWORK_TYPE_CHANGED because another intent of the same type is in the queue");
-			} else if (mXMPPService.fastPingServer()) {
-				LOG.d("Not issuing instantDisconnect as result of NETWORK_TYPE_CHANGED, because connection is (still/again) alive");
-			} else {
-				mXMPPService.instantDisconnect();
+				break;
 			}
-		} else {
+			if (mXMPPService.fastPingServer()) {
+				LOG.d("Not issuing instantDisconnect as result of NETWORK_TYPE_CHANGED, because connection is (still/again) alive");
+				break;
+			}
+			mXMPPService.instantDisconnect();
+			break;
+		default:
 			throw new IllegalStateException("Unknown intent action: " + action);
 		}
 		LOG.d("onHandleIntent: " + action + " handled");
