@@ -21,8 +21,8 @@ import org.jivesoftware.smack.AbstractConnectionListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.transport.xmpp.TransportService;
+import org.projectmaxs.transport.xmpp.util.Constants;
 
 import android.content.Intent;
 
@@ -50,7 +50,7 @@ public class HandleConnectionListener extends StateChangeListener {
 				// (and shouldn't get one) and therefore is unable to use the reconnect handler.
 				// Instead we send an START_SERVICE intent for the transport service
 				Intent intent = new Intent(mXMPPService.getContext(), TransportService.class);
-				intent.setAction(TransportConstants.ACTION_START_SERVICE);
+				intent.setAction(Constants.ACTION_CONNECTION_CLOSED_ON_ERROR);
 				mXMPPService.getContext().startService(intent);
 			}
 

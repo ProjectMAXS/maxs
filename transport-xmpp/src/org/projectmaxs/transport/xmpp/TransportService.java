@@ -171,6 +171,18 @@ public class TransportService extends MAXSTransportService {
 			}
 			mXMPPService.instantDisconnect();
 			break;
+		case Constants.ACTION_CONNECTION_CLOSED_ON_ERROR:
+			if (hasMessage(Constants.ACTION_CONNECTION_CLOSED_ON_ERROR.hashCode())) {
+				LOG.d("Not handling CONNECTION_CLOSED_ON_ERROR because another intent of the same type is in the queue");
+				break;
+			}
+			if (mXMPPService.fastPingServer()) {
+				LOG.d("Not issuing instantDisconnect and connect as result of CONNECTION_CLOSED_ON_ERROR, because connection is (still/again) alive");
+				break;
+			}
+			mXMPPService.instantDisconnect();
+			mXMPPService.connect();
+			break;
 		default:
 			throw new IllegalStateException("Unknown intent action: " + action);
 		}

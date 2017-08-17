@@ -28,5 +28,7 @@ public class Constants {
 	public static final String ACTION_NETWORK_TYPE_CHANGED = PACKAGE + ".NETWORK_TYPE_CHANGED";
 	public static final String ACTION_NETWORK_CONNECTED = PACKAGE + ".NETWORK_CONNECTED";
 	public static final String ACTION_NETWORK_DISCONNECTED = PACKAGE + ".NETWORK_DISCONNECTED";
+	public static final String ACTION_CONNECTION_CLOSED_ON_ERROR = PACKAGE
+			+ ".CONNECTION_CLOSED_ON_ERROR";
 
 }
