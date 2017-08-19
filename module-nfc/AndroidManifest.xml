@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.module.nfc"
-    android:versionCode="2000400550"
+    android:versionCode="2000400598"
     android:versionName="0.4.0" >
 
 
