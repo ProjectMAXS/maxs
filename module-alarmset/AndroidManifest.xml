@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.module.alarmset"
     android:versionCode="2000400598"
-    android:versionName="0.4.0" >
+    android:versionName="0.4.1" >
 
 
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
