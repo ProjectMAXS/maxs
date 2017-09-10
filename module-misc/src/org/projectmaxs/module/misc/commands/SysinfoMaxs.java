@@ -82,7 +82,7 @@ public class SysinfoMaxs extends SubCommand {
 			text.addNL("Other Private Dirty: " + mi.otherPrivateDirty);
 			text.addNL("Total Private Dirty: " + mi.getTotalPrivateDirty());
 			text.addNL("Total PSS: " + mi.getTotalPss());
-			text.addNL("Dalvik PSS:" + mi.dalvikPss);
+			text.addNL("Dalvik PSS: " + mi.dalvikPss);
 		}
 
 		return new Message(text);
