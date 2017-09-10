@@ -19,6 +19,7 @@ package org.projectmaxs.module.misc.commands;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.projectmaxs.module.misc.ModuleService;
 import org.projectmaxs.shared.global.GlobalConstants;
@@ -29,9 +30,11 @@ import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 import org.projectmaxs.shared.module.SubCommand;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
+import android.os.Build;
 import android.os.Debug.MemoryInfo;
 
 public class SysinfoMaxs extends SubCommand {
@@ -77,14 +80,36 @@ public class SysinfoMaxs extends SubCommand {
 			text.addNL("PID: " + rsi.pid);
 			MemoryInfo mi = meminfo[i];
 			text.addNL("MemoryInfo of PID " + pids[i]);
-			text.addNL("Native Private Dirty: " + mi.nativePrivateDirty);
-			text.addNL("Dalvik Private Dirty: " + mi.dalvikPrivateDirty);
-			text.addNL("Other Private Dirty: " + mi.otherPrivateDirty);
+
 			text.addNL("Total Private Dirty: " + mi.getTotalPrivateDirty());
+			text.addNL("Dalvik Private Dirty: " + mi.dalvikPrivateDirty);
+			text.addNL("Native Private Dirty: " + mi.nativePrivateDirty);
+			text.addNL("Other Private Dirty: " + mi.otherPrivateDirty);
+
+			text.addNL("Total Shared Dirty: " + mi.getTotalSharedDirty());
+			text.addNL("Dalvik Shared Dirty: " + mi.dalvikSharedDirty);
+			text.addNL("Native Shared Dirty: " + mi.nativeSharedDirty);
+			text.addNL("Other Shared Dirty: " + mi.otherSharedDirty);
+
 			text.addNL("Total PSS: " + mi.getTotalPss());
 			text.addNL("Dalvik PSS: " + mi.dalvikPss);
+			text.addNL("Native PSS: " + mi.nativePss);
+			text.addNL("Other PSS: " + mi.otherPss);
+
+			maybeAddApi23MemoryStats(text, mi);
 		}
 
 		return new Message(text);
+	}
+
+	@TargetApi(23)
+	private static void maybeAddApi23MemoryStats(Text text, MemoryInfo memoryInfo) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+			return;
+		}
+
+		for (Entry<String, String> entry : memoryInfo.getMemoryStats().entrySet()) {
+			text.addNL(entry.getKey() + ": " + entry.getValue());
+		}
 	}
 }
