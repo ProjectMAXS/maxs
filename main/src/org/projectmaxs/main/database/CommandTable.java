@@ -25,6 +25,7 @@ import org.projectmaxs.shared.maintransport.CommandOrigin;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
@@ -181,6 +182,10 @@ public class CommandTable {
 		String[] commandIdsStrings = SharedStringUtil.toStringArray(commandIds);
 		mDatabase.delete(TABLE_NAME, COLUMN_NAME_COMMAND_ID + " IN ( ? )",
 				new String[] { TextUtils.join(",", commandIdsStrings) });
+	}
+
+	public long getEntryCount() {
+		return DatabaseUtils.queryNumEntries(mDatabase, TABLE_NAME);
 	}
 
 	public static class Entry {

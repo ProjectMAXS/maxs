@@ -29,10 +29,16 @@ public class PurgeOldCommandsReceiver extends MAXSPurgeOldCommandsReceiver {
 
 	@Override
 	public void purgeOldCommands(int[] commandIds, Context context) {
-		LOG.d("purgeOldCommands: Received " + commandIds.length
-				+ " ID(s) that could get deleted from SMSTable");
 		SMSTable smsTable = SMSTable.getInstance(context);
+
+		LOG.d("purgeOldCommands: Received " + commandIds.length
+				+ " ID(s) that could get deleted from SMSTable. Current entry count: "
+				+ smsTable.getEntryCount());
+
 		smsTable.purgeEntries(commandIds);
+
+		LOG.d("purgeOldCommands: Purged " + commandIds.length + " entries. Current entry count: "
+				+ smsTable.getEntryCount());
 	}
 
 }

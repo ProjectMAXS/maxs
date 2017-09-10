@@ -22,6 +22,7 @@ import org.projectmaxs.shared.global.util.SharedStringUtil;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
@@ -128,6 +129,10 @@ public class SMSTable {
 		String[] commandIdsStrings = SharedStringUtil.toStringArray(commandIds);
 		mDatabase.delete(TABLE_NAME, COLUMN_NAME_CMD_ID + " IN ( ? )",
 				new String[] { TextUtils.join(",", commandIdsStrings) });
+	}
+
+	public long getEntryCount() {
+		return DatabaseUtils.queryNumEntries(mDatabase, TABLE_NAME);
 	}
 
 	private static String createIntentEntry(int intentCount) {

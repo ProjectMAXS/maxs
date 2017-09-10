@@ -46,14 +46,22 @@ public class PurgeOldCommandsService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent i) {
-		LOG.d("onHandleIntent: intent received, sending PURGE_OLD_COMMANDS intent");
 		CommandTable commandTable = CommandTable.getInstance(this);
+
+		LOG.d("onHandleIntent: Alarm intent received. Current entry count: "
+				+ commandTable.getEntryCount());
+
 		int[] oldCommandIds = commandTable.getOldEntries();
 		if (oldCommandIds == null) {
 			LOG.d("onHandleIntent: No old command ids found");
 			return;
 		}
+
 		commandTable.purgeEntries(oldCommandIds);
+
+		LOG.d("onHandleIntent: Deleted " + oldCommandIds.length
+				+ " commands from table. New entry count: " + commandTable.getEntryCount()
+				+ ". Broadcasting purge old commands intent.");
 
 		Intent intent = new Intent(GlobalConstants.ACTION_PURGE_OLD_COMMANDS);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, oldCommandIds);
