@@ -110,27 +110,26 @@ public class XMPPService {
 		// This value must also be greater then the highest returned bundle and defer value.
 		SmackConfiguration.setDefaultReplyTimeout(2 * 60 * 1000);
 
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.hoxt.HOXTManager");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.ReconnectionManager");
-		SmackConfiguration
-				.addDisabledSmackClass("org.jivesoftware.smackx.muc.MultiUserChatManager");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.json");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.gcm");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.xdata.XDataManager");
-		SmackConfiguration
-				.addDisabledSmackClass("org.jivesoftware.smackx.xdatalayout.XDataLayoutManager");
-		SmackConfiguration.addDisabledSmackClass(
-				"org.jivesoftware.smackx.xdatavalidation.XDataValidationManager");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smackx.iot");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftares.smack.legacy");
-		SmackConfiguration.addDisabledSmackClass("org.jivesoftware.smack.java7");
-
 		// @formatter:off
 		SmackConfiguration.addDisabledSmackClasses(
-				"org.jivesoftware.smack.util.dns.javax",
-				"org.jivesoftware.smack.util.dns.dnsjava",
-				"org.jivesoftware.smack.sasl.javax",
-				"org.jivesoftware.smack.legacy");
+				  "org.jivesoftware.smack.ReconnectionManager"
+				, "org.jivesoftware.smack.util.dns.javax"
+				, "org.jivesoftware.smack.util.dns.dnsjava"
+				, "org.jivesoftware.smack.sasl.javax"
+				, "org.jivesoftware.smack.legacy"
+				, "org.jivesoftware.smack.java7"
+				, "org.jivesoftware.smackx.eme"
+				, "org.jivesoftware.smackx.gcm"
+				, "org.jivesoftware.smackx.httpfileupload"
+				, "org.jivesoftware.smackx.hoxt"
+				, "org.jivesoftware.smackx.iot"
+				, "org.jivesoftware.smackx.json"
+				, "org.jivesoftware.smackx.muc"
+				, "org.jivesoftware.smackx.omemo"
+				, "org.jivesoftware.smackx.xdata"
+				, "org.jivesoftware.smackx.xdatalayout"
+				, "org.jivesoftware.smackx.xdatavalidation"
+				);
 		// @formatter:on
 
 		DNSUtil.setIdnaTransformer(new StringTransformer() {
