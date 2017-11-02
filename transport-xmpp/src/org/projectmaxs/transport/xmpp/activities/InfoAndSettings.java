@@ -32,13 +32,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -258,15 +256,6 @@ SmackConfiguration.getVersion() + "<br>" +
 
 		// Just update the text, the EnterXmppCredentials activity already saved the credentials
 		mJID.setText(mSettings.getJid());
-	}
-
-	private final EditText addEmptyMasterJidEditText() {
-		EditText newEditText = new EditText(this);
-		newEditText.setHint(getString(R.string.hint_jid));
-		newEditText.setInputType(
-				InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-		mMasterAddresses.addView(newEditText);
-		return newEditText;
 	}
 
 	class PingServerButtonHandler extends StateChangeListener implements OnClickListener {
