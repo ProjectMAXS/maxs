@@ -15,7 +15,7 @@
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.projectmaxs.shared.mainmodule;
+package org.projectmaxs.shared.global;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -23,27 +23,44 @@ import android.os.Parcelable;
 public class StatusInformation implements Parcelable {
 
 	private final String mStatusKey;
-	private final String mStatusValue;
+	private final String mHumanValue;
+	private final String mMachineValue;
 
 	public String getKey() {
 		return mStatusKey;
 	}
 
-	public String getValue() {
-		return mStatusValue;
+	public String getHumanValue() {
+		return mHumanValue;
+	}
+
+	public String getMachineValue() {
+		return mMachineValue;
 	}
 
 	public StatusInformation(String statusKey, String statusValue) {
+		this(statusKey, statusValue, statusValue);
+	}
+
+	public StatusInformation(String statusKey, String humanValue, String machineValue) {
 		if (statusKey.contains(" "))
 			throw new IllegalStateException("StatusInformation key='" + statusKey
 					+ "' must not contain whitespace");
+		if (statusKey.isEmpty()) {
+			throw new IllegalStateException("Status key must not be empty");
+		}
+		if (machineValue.isEmpty()) {
+			throw new IllegalStateException("Status machine value must not be empty");
+		}
 		this.mStatusKey = statusKey;
-		this.mStatusValue = statusValue;
+		this.mHumanValue = humanValue;
+		this.mMachineValue = machineValue;
 	}
 
 	private StatusInformation(Parcel in) {
 		mStatusKey = in.readString();
-		mStatusValue = in.readString();
+		mHumanValue = in.readString();
+		mMachineValue = in.readString();
 	}
 
 	@Override
@@ -54,7 +71,8 @@ public class StatusInformation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mStatusKey);
-		dest.writeString(mStatusValue);
+		dest.writeString(mHumanValue);
+		dest.writeString(mMachineValue);
 	}
 
 	public static final Creator<StatusInformation> CREATOR = new Creator<StatusInformation>() {

@@ -57,7 +57,6 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	private static final String PASSWORD = "PASSWORD";
 	private static final String LAST_RECIPIENT = "LAST_RECIPIENT";
 	private static final String CMD_ID = "CMD_ID";
-	private static final String STATUS = "STATUS";
 	private static final String EXCLUDED_RESOURCES = "EXCLUDED_RESOURCES";
 
 	/**
@@ -309,14 +308,6 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public boolean isNetworkDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_NETWORK, false);
-	}
-
-	public void setStatus(String status) {
-		mSharedPreferences.edit().putString(STATUS, status).commit();
-	}
-
-	public String getStatus() {
-		return mSharedPreferences.getString(STATUS, "");
 	}
 
 	/**

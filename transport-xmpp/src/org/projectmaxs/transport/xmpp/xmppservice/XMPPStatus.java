@@ -17,11 +17,18 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import java.util.List;
+
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.projectmaxs.shared.global.StatusInformation;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.transport.xmpp.Settings;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
+import org.projectmaxs.shared.transport.MAXSTransportService;
+import org.projectmaxs.transport.xmpp.util.Constants;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPRoster.MasterJidListener;
 
 import android.content.Context;
@@ -30,11 +37,10 @@ public class XMPPStatus extends StateChangeListener {
 	private static final Log LOG = Log.getLog();
 
 	private final XMPPRoster mXMPPRoster;
-	private final Settings mSettings;
 
 	private XMPPConnection mConnection;
-	private String mActiveStatus = null;
-	private String mDesiredStatus;
+	private CurrentStatus mActiveStatus = null;
+	private CurrentStatus mDesiredStatus;
 
 	protected XMPPStatus(XMPPRoster xmppRoster, Context context) {
 		mXMPPRoster = xmppRoster;
@@ -44,18 +50,19 @@ public class XMPPStatus extends StateChangeListener {
 				sendStatus();
 			}
 		});
-		mSettings = Settings.getInstance(context);
-		// set the desired status to the last known status,
-		mDesiredStatus = mSettings.getStatus();
+
+		// Request the current status from MAXS main.
+		MAXSTransportService.requestMaxsStatusUpdate(context, Constants.PACKAGE);
 	}
 
-	protected void setStatus(String status) {
+	protected void setStatus(CurrentStatus status) {
 		mDesiredStatus = status;
 		// prevent status form being send, when there is no active connection or
 		// if the status message hasn't changed
-		if (!mXMPPRoster.isMasterJidAvailable()
-				|| (mActiveStatus != null && mActiveStatus.equals(mDesiredStatus)))
+		if (!mXMPPRoster.isMasterJidAvailable() || (mActiveStatus != null
+				&& mActiveStatus.getStatusString().equals(mDesiredStatus.getStatusString()))) {
 			return;
+		}
 		sendStatus();
 	}
 
@@ -74,15 +81,58 @@ public class XMPPStatus extends StateChangeListener {
 
 	private void sendStatus() {
 		if (mConnection == null || !mConnection.isAuthenticated()) return;
+
+		final CurrentStatus currentStatus = mDesiredStatus;
+		if (currentStatus == null) {
+			return;
+		}
+
 		Presence presence = new Presence(Presence.Type.available);
-		presence.setStatus(mDesiredStatus);
-		presence.setPriority(24);
+		presence.setStatus(currentStatus.getStatusString());
+		presence.addExtension(
+				new MaxsStatusExtensionElement(currentStatus.getStatusInformationList()));
+
 		try {
 			mConnection.sendStanza(presence);
 		} catch (InterruptedException | NotConnectedException e) {
-			LOG.w("sendStatus", e);
+			LOG.w("Could not set own presence", e);
+			return;
 		}
+
 		mActiveStatus = mDesiredStatus;
-		mSettings.setStatus(mActiveStatus);
+	}
+
+	private class MaxsStatusExtensionElement implements ExtensionElement {
+
+		public static final String ELEMENT = "maxs-status";
+		public static final String NAMESPACE = "https://projectmaxs.org";
+
+		private final List<StatusInformation> statusInformationList;
+
+		private MaxsStatusExtensionElement(List<StatusInformation> statusInformationList) {
+			this.statusInformationList = statusInformationList;
+		}
+
+		@Override
+		public String getElementName() {
+			return ELEMENT;
+		}
+
+		@Override
+		public String getNamespace() {
+			return NAMESPACE;
+		}
+
+		@Override
+		public XmlStringBuilder toXML() {
+			XmlStringBuilder xml = new XmlStringBuilder(this);
+			xml.rightAngleBracket();
+			for (StatusInformation statusInformation : statusInformationList) {
+				xml.element(statusInformation.getKey(), statusInformation.getMachineValue());
+			}
+			xml.closeElement(this);
+			return xml;
+		}
+
 	}
 }

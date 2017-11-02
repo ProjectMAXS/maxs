@@ -24,6 +24,7 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
@@ -133,7 +134,7 @@ public class TransportService extends MAXSTransportService {
 			stopSelf();
 			break;
 		case TransportConstants.ACTION_SET_STATUS:
-			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
+			CurrentStatus status = intent.getParcelableExtra(GlobalConstants.EXTRA_CONTENT);
 			mXMPPService.setStatus(status);
 			break;
 		case TransportConstants.ACTION_REQUEST_TRANSPORT_STATUS:

@@ -19,10 +19,10 @@ package org.projectmaxs.main.misc;
 
 import java.util.ArrayList;
 
-import org.projectmaxs.main.MAXSModuleIntentService;
 import org.projectmaxs.main.MAXSService;
-import org.projectmaxs.shared.global.GlobalConstants;
-import org.projectmaxs.shared.mainmodule.StatusInformation;
+import org.projectmaxs.shared.global.StatusInformation;
+import org.projectmaxs.shared.global.util.Unicode;
+import org.projectmaxs.shared.mainmodule.MAXSStatusUtil;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,8 +38,15 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 	private static MAXSBatteryManager sBatteryManager;
 
-	public synchronized static void init(Context context) {
-		if (sBatteryManager == null) sBatteryManager = new MAXSBatteryManager(context);
+	public static void init(Context context) {
+		getInstance(context);
+	}
+
+	public synchronized static MAXSBatteryManager getInstance(Context context) {
+		if (sBatteryManager == null) {
+			sBatteryManager = new MAXSBatteryManager(context);
+		}
+		return sBatteryManager;
 	}
 
 	private final Context mContext;
@@ -50,8 +57,13 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		}
 	};
 
+	private volatile boolean mIsCharging;
+
 	private String mLastBatteryPct = "";
 	private int mLastPlugged = -1;
+	private int mLastHealth = -1;
+	private String mLastVoltage = "";
+	private String mLastTemperature = "";
 
 	private MAXSBatteryManager(Context context) {
 		mContext = context;
@@ -71,39 +83,59 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 
 	private void onBatteryChangedReceived(Intent intent) {
 		int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-		boolean isCharging = isCharging(status);
+		switch (status) {
+		case BatteryManager.BATTERY_STATUS_FULL:
+		case BatteryManager.BATTERY_STATUS_CHARGING:
+			mIsCharging = true;
+			break;
+		default:
+			mIsCharging = false;
+			break;
+		}
 
 		int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
 
-		// int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1);
-		// int voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
-		// int temperature =
-		// intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
+		int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1);
+		int voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
+		float temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) / 10;
 		int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 		int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-		String batteryPct = maybeFloatToRange(level / (float) scale, isCharging);
+		// batteryPctFloat is the battery charge status between 0.0f and 1.0f.
+		float batteryPctFloat = level / (float) scale;
+		String batteryPct = maybeFloatToRange(batteryPctFloat);
 
-		ArrayList<StatusInformation> infos = new ArrayList<StatusInformation>(2);
-		if (plugged != mLastPlugged)
-			infos.add(new StatusInformation("BAT_PLUGGED", getPowerSource(status, plugged)));
-		if (!batteryPct.equals(mLastBatteryPct))
-			infos.add(new StatusInformation("BAT_PCT", batteryPct + '%'));
-		// Be done here if there are now new status information to report
-		if (infos.size() == 0) return;
+		ArrayList<StatusInformation> infos = new ArrayList<>(5);
+		if (plugged != mLastPlugged) {
+			infos.add(new StatusInformation("power-source", getPowerSource(status, plugged)));
+			mLastPlugged = plugged;
+		}
+		if (!batteryPct.equals(mLastBatteryPct)) {
+			infos.add(new StatusInformation("battery-percentage", batteryPct + '%',
+					Float.toString(batteryPctFloat)));
+			mLastBatteryPct = batteryPct;
+		}
+		if (health != mLastHealth) {
+			String healthString = healthToString(health);
+			infos.add(new StatusInformation("battery-health", null, healthString));
+			mLastHealth = health;
+		}
 
-		mLastBatteryPct = batteryPct;
-		mLastPlugged = plugged;
+		String batteryVoltageString = maybeFloatToRangeUnscaled(voltage, 1);
+		if (!mLastVoltage.equals(batteryVoltageString)) {
+			infos.add(new StatusInformation("battery-voltage", null, Integer.toString(voltage)));
+			mLastVoltage = batteryVoltageString;
+		}
 
-		Intent replyIntent = new Intent(mContext, MAXSModuleIntentService.class);
-		replyIntent.setAction(GlobalConstants.ACTION_UPDATE_STATUS);
-		replyIntent.putParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT, infos);
-		mContext.startService(replyIntent);
-	}
+		String batteryTemperatureString = maybeFloatToRangeUnscaled(temperature, 2);
+		if (!mLastTemperature.equals(batteryTemperatureString)) {
+			infos.add(new StatusInformation("battery-temperature",
+					Unicode.BATTERY + ' ' + batteryTemperatureString + "°C",
+					Float.toString(temperature)));
+			mLastTemperature = batteryVoltageString;
+		}
 
-	private static boolean isCharging(int status) {
-		return status == BatteryManager.BATTERY_STATUS_CHARGING
-				|| status == BatteryManager.BATTERY_STATUS_FULL;
+		MAXSStatusUtil.maybeUpdateStatus(mContext, infos);
 	}
 
 	private static String getPowerSource(int status, int plugged) {
@@ -122,15 +154,54 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 			powerSource = BAT;
 			break;
 		default:
-			powerSource = "Unknown";
+			powerSource = "Unknown (" + plugged + ')';
 			break;
 		}
 		return powerSource;
 	}
 
-	private static String maybeFloatToRange(float f, boolean isCharging) {
+	private static String healthToString(int health) {
+		String healthString;
+		switch (health) {
+		case BatteryManager.BATTERY_HEALTH_UNKNOWN:
+			healthString = "unknown";
+			break;
+		case BatteryManager.BATTERY_HEALTH_GOOD:
+			healthString = "good";
+			break;
+		case BatteryManager.BATTERY_HEALTH_OVERHEAT:
+			healthString = "overheat";
+			break;
+		case BatteryManager.BATTERY_HEALTH_DEAD:
+			healthString = "dead";
+			break;
+		case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
+			healthString = "over voltage";
+			break;
+		case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE:
+			healthString = "unspecified failure";
+			break;
+		case BatteryManager.BATTERY_HEALTH_COLD:
+			healthString = "cold";
+			break;
+		default:
+			healthString = "unknown (" + health + ')';
+			break;
+		}
+		return healthString;
+	}
+
+	public String maybeFloatToRangeUnscaled(float f, int step) {
+		if (mIsCharging) return Float.toString(f);
+
+		int lowerBound = ((int) f / step) * step;
+		int upperBound = lowerBound + step;
+		return lowerBound + "-" + upperBound;
+	}
+
+	private String maybeFloatToRange(float f) {
 		int in = (int) (f * 100);
-		if (isCharging) return Integer.toString(in);
+		if (mIsCharging) return Integer.toString(in);
 
 		int lowerBound = (in / 5) * STEP;
 		if (lowerBound != 100) {

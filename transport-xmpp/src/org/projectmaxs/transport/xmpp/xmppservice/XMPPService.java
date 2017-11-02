@@ -67,6 +67,7 @@ import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.FileUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.transport.transform.TransformMessageContent;
 import org.projectmaxs.transport.xmpp.Settings;
@@ -257,7 +258,7 @@ public class XMPPService {
 		connect();
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(CurrentStatus status) {
 		mXMPPStatus.setStatus(status);
 	}
 

@@ -17,14 +17,16 @@
 
 package org.projectmaxs.main;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.projectmaxs.main.database.StatusTable;
+import org.projectmaxs.shared.global.StatusInformation;
 import org.projectmaxs.shared.global.util.Log;
-import org.projectmaxs.shared.mainmodule.StatusInformation;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
 
 import android.content.Context;
 
@@ -39,7 +41,7 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 		return sStatusRegistry;
 	}
 
-	private final Map<String, String> mStatusInformationMap;
+	private final Map<String, StatusInformation> mStatusInformationMap;
 
 	private final StatusTable mStatusTable;
 
@@ -52,7 +54,7 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 
 	@Override
 	public void onServiceStart(MAXSService service) {
-		String status = updateStatus();
+		CurrentStatus status = getCurrentStatus();
 		if (status == null) return;
 		service.setStatus(status);
 	}
@@ -63,42 +65,66 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 	 * transports.
 	 * 
 	 * @param infoList
-	 * @return the new status String
+	 * @return the new status
 	 */
-	public String add(List<StatusInformation> infoList) {
+	public CurrentStatus add(List<StatusInformation> infoList) {
 		boolean shouldUpdateStatus = false;
 		for (StatusInformation info : infoList) {
 			String statusKey = info.getKey();
-			String statusValue = info.getValue();
-			LOG.d("add: statusKey=" + statusKey + " statusValue=" + statusValue);
+			String humanValue = info.getHumanValue();
+			LOG.d("add: statusKey=" + statusKey + " humanValue=" + humanValue);
 
-			String savedStatusValue = mStatusInformationMap.get(statusKey);
-			if (savedStatusValue != null && savedStatusValue.equals(statusValue)) {
-				LOG.d("add: statusValue equals savedStatusValue, not updating");
-				continue;
-			} else {
-				shouldUpdateStatus = true;
+			StatusInformation savedStatusValue = mStatusInformationMap.get(statusKey);
+			if (savedStatusValue != null) {
+				String savedHumanValue = savedStatusValue.getHumanValue();
+				if (savedHumanValue != null) {
+					if (savedHumanValue.equals(info.getHumanValue())) {
+						LOG.d("add: humanValue of '" + statusKey
+								+ "' equals savedStatusValue's humaneValuue '" + savedHumanValue
+								+ "', not updating");
+						continue;
+					}
+				} else {
+					// We found a StatusInformation which has no human readable value, i.e., it's
+					// only meant to be exposed in machine readable form. Let us compare its value
+					// with the latest saved value.
+					if (savedStatusValue.getMachineValue().equals(info.getMachineValue())) {
+						LOG.d("add: machineValue of '" + statusKey
+								+ "' equals savedStatusValue's machineValuue '"
+								+ info.getMachineValue() + "', not updating");
+						continue;
+					}
+				}
 			}
 
-			mStatusInformationMap.put(statusKey, statusValue);
+			shouldUpdateStatus = true;
+			mStatusInformationMap.put(statusKey, info);
 			mStatusTable.addStatus(info);
 		}
-		return shouldUpdateStatus ? updateStatus() : null;
+		return shouldUpdateStatus ? getCurrentStatus() : null;
 	}
 
-	private String updateStatus() {
+	CurrentStatus getCurrentStatus() {
 		if (mStatusInformationMap.isEmpty()) return null;
 
-		Iterator<Entry<String, String>> it = mStatusInformationMap.entrySet().iterator();
+		List<StatusInformation> statusInformationList = new ArrayList<>(
+				mStatusInformationMap.size());
+
+		Iterator<Entry<String, StatusInformation>> it = mStatusInformationMap.entrySet().iterator();
 
 		StringBuilder sb = new StringBuilder();
-		String value = it.next().getValue();
-		sb.append(value);
 		while (it.hasNext()) {
-			sb.append(" - ");
-			value = it.next().getValue();
-			sb.append(value);
+			StatusInformation statusInformation = it.next().getValue();
+			statusInformationList.add(statusInformation);
+			String humanValue = statusInformation.getHumanValue();
+			if (humanValue == null) {
+				continue;
+			}
+			sb.append(statusInformation.getHumanValue());
+			if (it.hasNext()) {
+				sb.append(" - ");
+			}
 		}
-		return sb.toString();
+		return new CurrentStatus(sb.toString(), statusInformationList);
 	}
 }

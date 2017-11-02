@@ -19,11 +19,13 @@ package org.projectmaxs.shared.transport;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -179,4 +181,15 @@ public abstract class MAXSTransportService extends Service {
 	}
 
 	protected abstract void onHandleIntent(Intent intent);
+
+	public static void requestMaxsStatusUpdate(Context context, String transportPackage) {
+		Intent intent = new Intent(TransportConstants.ACTION_REQUEST_UPDATE_MAXS_STATUS);
+		intent.setClassName(TransportConstants.MAIN_PACKAGE,
+				TransportConstants.MAIN_TRANSPORT_SERVICE);
+		intent.putExtra(GlobalConstants.EXTRA_PACKAGE, transportPackage);
+		ComponentName componentName = context.startService(intent);
+		if (componentName == null) {
+			LOG.w("Could not find component for MAXS status update request");
+		}
+	}
 }

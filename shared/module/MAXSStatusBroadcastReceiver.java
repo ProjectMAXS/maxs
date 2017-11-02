@@ -20,10 +20,10 @@ package org.projectmaxs.shared.module;
 import java.util.List;
 
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.StatusInformation;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.MainModuleConstants;
-import org.projectmaxs.shared.mainmodule.StatusInformation;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -20,7 +20,7 @@ package org.projectmaxs.main.database;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.projectmaxs.shared.mainmodule.StatusInformation;
+import org.projectmaxs.shared.global.StatusInformation;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,15 +30,17 @@ import android.database.sqlite.SQLiteDatabase;
 public class StatusTable {
 	private static final String TABLE_NAME = "status";
 	private static final String COLUMN_NAME_KEY = "key";
-	private static final String COLUMN_NAME_STATUS = TABLE_NAME;
+	private static final String COLUMN_NAME_HUMAN_STATUS = "humanStatus";
+	private static final String COLUMN_NAME_MACHINE_STATUS = "machineStatus";
 
 	// @formatter:off
 	public static final String CREATE_TABLE =
 		"CREATE TABLE " +  TABLE_NAME +
 		" (" +
 		 COLUMN_NAME_KEY + MAXSDatabase.TEXT_TYPE + " PRIMARY KEY" + ',' +
-		 COLUMN_NAME_STATUS + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL +
-		" )";
+		 COLUMN_NAME_HUMAN_STATUS + MAXSDatabase.TEXT_TYPE + ',' +
+		 COLUMN_NAME_MACHINE_STATUS + MAXSDatabase.TEXT_TYPE + MAXSDatabase.NOT_NULL +
+		 " )";
 	// @formatter:on
 
 	public static final String DELETE_TABLE = MAXSDatabase.DROP_TABLE + TABLE_NAME;
@@ -59,27 +61,35 @@ public class StatusTable {
 	public void addStatus(StatusInformation info) {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_KEY, info.getKey());
-		values.put(COLUMN_NAME_STATUS, info.getValue());
+		values.put(COLUMN_NAME_HUMAN_STATUS, info.getHumanValue());
+		values.put(COLUMN_NAME_MACHINE_STATUS, info.getMachineValue());
 
 		long res = mDatabase.replace(TABLE_NAME, null, values);
 		if (res == -1) throw new IllegalStateException("Could not insert status info in database");
 	}
 
-	public Map<String, String> getAll() {
-		Map<String, String> res = new HashMap<String, String>();
+	public Map<String, StatusInformation> getAll() {
+		Map<String, StatusInformation> res = new HashMap<>();
 		Cursor c = mDatabase.query(TABLE_NAME, null, null, null, null, null, null);
 		if (!c.moveToFirst()) {
 			c.close();
 			return res;
 		}
 
-		do {
-			String key = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_KEY));
-			String status = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_STATUS));
-			res.put(key, status);
-		} while (c.moveToNext());
+		try {
+			do {
+				String key = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_KEY));
+				String humanStatus = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_HUMAN_STATUS));
+				String machineStatus = c
+						.getString(c.getColumnIndexOrThrow(COLUMN_NAME_MACHINE_STATUS));
+				StatusInformation statusInformation = new StatusInformation(key, humanStatus,
+						machineStatus);
+				res.put(key, statusInformation);
+			} while (c.moveToNext());
+		} finally {
+			c.close();
+		}
 
-		c.close();
 		return res;
 	}
 

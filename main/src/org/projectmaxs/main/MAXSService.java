@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.misc.ComposeHelp;
+import org.projectmaxs.main.misc.MAXSAmbientTemperatureManager;
 import org.projectmaxs.main.misc.MAXSBatteryManager;
 import org.projectmaxs.main.misc.StartStopIntentBroadcast;
 import org.projectmaxs.main.util.Constants;
@@ -33,6 +34,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.RecentContact;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 import org.projectmaxs.shared.maintransport.TransportInformation.TransportComponent;
@@ -87,6 +89,7 @@ public class MAXSService extends Service {
 
 		StartStopIntentBroadcast.init();
 		MAXSBatteryManager.init(this);
+		MAXSAmbientTemperatureManager.init(this);
 		PurgeOldCommandsService.init(this);
 		StatusRegistry.getInstanceAndInit(this);
 
@@ -118,7 +121,8 @@ public class MAXSService extends Service {
 		LOG.d("onStartCommand: action=" + action);
 
 		boolean sticky = true;
-		if (action.equals(Constants.ACTION_START_SERVICE)) {
+		switch (action) {
+		case Constants.ACTION_START_SERVICE:
 			if (sIsRunning) {
 				LOG.d("onStartCommand: service already running, nothing to do here");
 			} else {
@@ -128,7 +132,8 @@ public class MAXSService extends Service {
 				for (StartStopListener listener : sStartStopListeners)
 					listener.onServiceStart(this);
 			}
-		} else if (action.equals(Constants.ACTION_STOP_SERVICE)) {
+			break;
+		case Constants.ACTION_STOP_SERVICE:
 			sticky = false;
 			if (!sIsRunning) {
 				LOG.d("onStartCommand: service already stopped, nothing to do here");
@@ -140,7 +145,8 @@ public class MAXSService extends Service {
 				stopSelf(startId);
 				sIsRunning = false;
 			}
-		} else {
+			break;
+		default:
 			throw new IllegalStateException("MAXSService unknown action " + action);
 		}
 		return sticky ? START_STICKY : START_NOT_STICKY;
@@ -305,20 +311,23 @@ public class MAXSService extends Service {
 		}
 	}
 
-	protected void setStatus(String status) {
+	protected void setStatus(CurrentStatus status) {
 		List<TransportInformation> transportList = mTransportRegistry.getAllTransports();
 		for (TransportInformation ti : transportList) {
 			if (!ti.supportsStatus()) continue;
 			final String transportPackage = ti.getTransportPackage();
-			final String cls = transportPackage + TransportConstants.TRANSPORT_SERVICE;
-			final Intent intent = new Intent(TransportConstants.ACTION_SET_STATUS);
-			intent.setClassName(transportPackage, cls);
-			intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
-			ComponentName usedTransport = startService(intent);
-			if (usedTransport == null)
-				LOG.w("setSTatus: transport not found package=" + transportPackage + " class="
-						+ cls);
+			sendCurrentStatus(status, transportPackage);
 		}
+	}
+
+	void sendCurrentStatus(CurrentStatus status, String transportPackage) {
+		final String cls = transportPackage + TransportConstants.TRANSPORT_SERVICE;
+		final Intent intent = new Intent(TransportConstants.ACTION_SET_STATUS);
+		intent.setClassName(transportPackage, cls);
+		intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
+		ComponentName usedTransport = startService(intent);
+		if (usedTransport == null)
+			LOG.w("setStatus: transport not found package=" + transportPackage + " class=" + cls);
 	}
 
 	private void sendActionToAllTransportServices(String action) {

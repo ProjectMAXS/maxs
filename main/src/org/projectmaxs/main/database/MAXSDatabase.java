@@ -18,6 +18,7 @@
 package org.projectmaxs.main.database;
 
 import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.shared.global.util.Log;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,8 +26,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MAXSDatabase extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = Constants.MAIN_PACKAGE + ".db";
+
+	private static final Log LOG = Log.getLog();
 
 	public static final String TEXT_TYPE = " TEXT";
 	public static final String TIMESTAMP_TYPE = " TIMESTAMP";
@@ -71,13 +74,19 @@ public class MAXSDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		deleteTables(db);
-		createTables(db);
+		LOG.i("Upgrading MAXS database from version " + oldVersion + " to " + newVersion);
+		recreateDatabase(db);
 	}
 
 	@Override
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		onUpgrade(db, oldVersion, newVersion);
+		LOG.i("Downgrading MAXS database from version " + oldVersion + " to " + newVersion);
+		recreateDatabase(db);
+	}
+
+	private static void recreateDatabase(SQLiteDatabase db) {
+		deleteTables(db);
+		createTables(db);
 	}
 
 	private static void createTables(SQLiteDatabase db) {

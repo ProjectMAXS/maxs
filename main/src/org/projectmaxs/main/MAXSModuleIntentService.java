@@ -21,10 +21,11 @@ import java.util.List;
 
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
+import org.projectmaxs.shared.global.StatusInformation;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
-import org.projectmaxs.shared.mainmodule.StatusInformation;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
 
 import android.content.Intent;
 
@@ -67,7 +68,7 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 		} else if (action.equals(GlobalConstants.ACTION_UPDATE_STATUS)) {
 			List<StatusInformation> infoList = intent
 					.getParcelableArrayListExtra(GlobalConstants.EXTRA_CONTENT);
-			String status = StatusRegistry.getInstanceAndInit(this).add(infoList);
+			CurrentStatus status = StatusRegistry.getInstanceAndInit(this).add(infoList);
 			// only set the status if something has changed
 			if (status != null) maxsService.setStatus(status);
 		} else {

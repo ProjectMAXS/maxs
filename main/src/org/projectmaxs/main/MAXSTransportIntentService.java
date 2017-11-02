@@ -20,6 +20,7 @@ package org.projectmaxs.main;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
+import org.projectmaxs.shared.maintransport.CurrentStatus;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
@@ -52,20 +53,30 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
-		if (TransportConstants.ACTION_REGISTER_TRANSPORT.equals(action)) {
+		final String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);
+
+		switch (action) {
+		case TransportConstants.ACTION_REGISTER_TRANSPORT:
 			TransportInformation ti = intent
 					.getParcelableExtra(TransportConstants.EXTRA_TRANSPORT_INFORMATION);
 			mTransportRegistry.registerTransport(ti);
-		} else if (GlobalConstants.ACTION_PERFORM_COMMAND.equals(action)) {
+			break;
+		case GlobalConstants.ACTION_PERFORM_COMMAND:
 			String fullCommand = intent.getStringExtra(TransportConstants.EXTRA_COMMAND);
 			CommandOrigin origin = intent
 					.getParcelableExtra(TransportConstants.EXTRA_COMMAND_ORIGIN);
 			maxsService.performCommand(fullCommand, origin);
-		} else if (TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS.equals(action)) {
-			String transportPackage = intent.getStringExtra(GlobalConstants.EXTRA_PACKAGE);
+			break;
+		case TransportConstants.ACTION_UPDATE_TRANSPORT_STATUS:
 			String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			mTransportRegistry.updateStatus(transportPackage, status);
-		} else {
+			break;
+		case TransportConstants.ACTION_REQUEST_UPDATE_MAXS_STATUS:
+			CurrentStatus currentStatus = StatusRegistry.getInstanceAndInit(this)
+					.getCurrentStatus();
+			maxsService.sendCurrentStatus(currentStatus, transportPackage);
+			break;
+		default:
 			throw new IllegalStateException("onHandleIntent: unknown action " + action);
 		}
 	}
