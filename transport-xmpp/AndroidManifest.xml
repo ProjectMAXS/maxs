@@ -32,7 +32,9 @@
         <activity
             android:name=".activities.InfoAndSettings"
             android:exported="true"
-            android:windowSoftInputMode="stateHidden" />
+            />
+        <activity android:name=".activities.EnterMasterAddress" />
+        <activity android:name=".activities.EnterXmppCredentials" />
         <activity android:name=".activities.AdvancedSettings" />
         <activity android:name="de.duenndns.ssl.MemorizingActivity" />
         <activity android:name=".activities.ExcludedResources">

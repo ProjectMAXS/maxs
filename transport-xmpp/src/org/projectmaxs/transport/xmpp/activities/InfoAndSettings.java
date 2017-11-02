@@ -1,6 +1,5 @@
 package org.projectmaxs.transport.xmpp.activities;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -13,9 +12,8 @@ import org.jivesoftware.smackx.ping.PingManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Localpart;
-import org.jxmpp.jid.util.JidUtil;
-import org.jxmpp.jid.util.JidUtil.NotAEntityBareJidStringException;
 import org.jxmpp.stringprep.XmppStringprepException;
+import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
@@ -52,17 +50,14 @@ public class InfoAndSettings extends Activity {
 
 	private static final Log LOG = Log.getLog();
 
+	private static final int NEW_MASTER_ADDRESS_REQUEST_CODE = 1;
+	private static final int SAVE_XMPP_CREDENTIALS_REQUEST_CODE = NEW_MASTER_ADDRESS_REQUEST_CODE + 1;
+
 	private Settings mSettings;
 	private PingServerButtonHandler mPingServerButtonHandler;
 
 	private LinearLayout mMasterAddresses;
-	private EditText mFirstMasterAddress;
-	private EditText mJID;
-	private EditTextWatcher mJidEditTextWatcher;
-	private String mLastJidText;
-	private EditText mPassword;
-	private EditTextWatcher mPasswordEditTextWachter;
-	private Button mAdvancedSettings;
+	private TextView mJID;
 
 	public void openAdvancedSettings(View view) {
 		startActivity(new Intent(this, AdvancedSettings.class));
@@ -177,6 +172,14 @@ SmackConfiguration.getVersion() + "<br>" +
 		}).start();
 	}
 
+	public void onAddMasterAddressButtonClicked(View view) {
+		startActivityForResult(new Intent(this, EnterMasterAddress.class), NEW_MASTER_ADDRESS_REQUEST_CODE);
+	}
+
+	public void onEditXmppCredentialsButtonClicked(View view) {
+		startActivityForResult(new Intent(this, EnterXmppCredentials.class), SAVE_XMPP_CREDENTIALS_REQUEST_CODE);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -186,66 +189,22 @@ SmackConfiguration.getVersion() + "<br>" +
 
 		// Views
 		mMasterAddresses = (LinearLayout) findViewById(R.id.masterAddresses);
-		mFirstMasterAddress = (EditText) findViewById(R.id.firstMasterAddress);
-		mJID = (EditText) findViewById(R.id.jid);
-		mPassword = (EditText) findViewById(R.id.password);
-		mAdvancedSettings = (Button) findViewById(R.id.advancedSettings);
-
-		// Avoid the virtual keyboard by focusing a button
-		mAdvancedSettings.requestFocus();
-
-		new MasterAddressCallbacks(mFirstMasterAddress);
-		mJidEditTextWatcher = new EditTextWatcher(mJID) {
-			@Override
-			public void lostFocusOrDone(View v) {
-				String text = mJID.getText().toString();
-				EntityBareJid jid;
-				try {
-					jid = JidUtil.validateEntityBareJid(text);
-				} catch (NotAEntityBareJidStringException | XmppStringprepException e) {
-					Toast.makeText(InfoAndSettings.this,
-							"'" + text + "' is not a valid bare JID: " + e.getLocalizedMessage(),
-							Toast.LENGTH_LONG).show();
-					mJID.setText(mLastJidText);
-					return;
-				}
-				mSettings.setJid(jid);
-			}
-		};
-		mPasswordEditTextWachter = new EditTextWatcher(mPassword) {
-			@Override
-			public void lostFocusOrDone(View v) {
-				mSettings.setPassword(mPassword.getText().toString());
-			}
-		};
+		mJID = (TextView) findViewById(R.id.jid);
 
 		// initialize the master jid linear layout if there are already some
 		// configured
 		Set<EntityBareJid> masterJids = mSettings.getMasterJids();
-		if (!masterJids.isEmpty()) {
-			Iterator<EntityBareJid> it = masterJids.iterator();
-			mFirstMasterAddress.setText(it.next());
-			while (it.hasNext()) {
-				EditText et = addEmptyMasterJidEditText();
-				et.setText(it.next());
-			}
-			addEmptyMasterJidEditText();
+		for (EntityBareJid masterAddress : masterJids) {
+			MasterAddressView.createNewAndAddUnderLayout(this, mMasterAddresses, masterAddress);
 		}
+
 		if (mSettings.getJid() != null) mJID.setText(mSettings.getJid());
-		if (!mSettings.getPassword().equals("")) mPassword.setText(mSettings.getPassword());
 
 		mPingServerButtonHandler = new PingServerButtonHandler(this);
 
 		AndroidDozeUtil.requestWhitelistIfNecessary(this, mSettings.getSharedPreferences(),
 				R.string.DozeAskForWhitelist, R.string.DozeDoNotWhitelist, R.string.AskAgain,
 				R.string.DozeWhitelist);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mJidEditTextWatcher.onPause();
-		mPasswordEditTextWachter.onPause();
 	}
 
 	@Override
@@ -258,70 +217,56 @@ SmackConfiguration.getVersion() + "<br>" +
 		XMPPService.getInstance(this).removeListener(mPingServerButtonHandler);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case NEW_MASTER_ADDRESS_REQUEST_CODE:
+			handleNewMasterAddressResult(resultCode, data);
+			break;
+		case SAVE_XMPP_CREDENTIALS_REQUEST_CODE:
+			handleSaveXmppCredentialsResult(resultCode, data);
+			break;
+		default:
+			LOG.w("Unknown request code " + requestCode + " in onActivityResult, with result code "
+					+ resultCode + " and intent " + data);
+			break;
+		}
+	}
+
+	private final void handleNewMasterAddressResult(int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) {
+			LOG.d("Non ok result code " + resultCode + " for NEW_MASTER_ADDRESS_REQUEST_CODE");
+			return;
+		}
+
+		String newMasterAddressString = data.getStringExtra(GlobalConstants.EXTRA_ENTITY_BARE_JID);
+		EntityBareJid newMasterAddress;
+		try {
+			newMasterAddress = JidCreate.entityBareFrom(newMasterAddressString);
+		} catch (XmppStringprepException e) {
+			throw new AssertionError(e);
+		}
+		mSettings.addMasterJid(newMasterAddress);
+		MasterAddressView.createNewAndAddUnderLayout(this, mMasterAddresses, newMasterAddress);
+	}
+
+	private final void handleSaveXmppCredentialsResult(int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) {
+			LOG.d("Non ok result code " + resultCode + " for SAVE_XMPP_CREDENTIALS_REQUEST_CODE");
+			return;
+		}
+
+		// Just update the text, the EnterXmppCredentials activity already saved the credentials
+		mJID.setText(mSettings.getJid());
+	}
+
 	private final EditText addEmptyMasterJidEditText() {
 		EditText newEditText = new EditText(this);
 		newEditText.setHint(getString(R.string.hint_jid));
 		newEditText.setInputType(
 				InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-		new MasterAddressCallbacks(newEditText);
 		mMasterAddresses.addView(newEditText);
 		return newEditText;
-	}
-
-	private final class MasterAddressCallbacks extends EditTextWatcher {
-
-		MasterAddressCallbacks(EditText editText) {
-			super(editText);
-		}
-
-		public void lostFocusOrDone(View v) {
-			String text = mEditText.getText().toString();
-			EntityBareJid beforeJid = null;
-			if (!mBeforeText.equals("")) {
-				try {
-					beforeJid = JidCreate.entityBareFrom(mBeforeText);
-				} catch (Exception e) {
-					LOG.d("Could not transform '" + mBeforeText + "' to bare JID", e);
-				}
-			}
-			if (text.equals("") && beforeJid != null) {
-				int childCount = mMasterAddresses.getChildCount();
-				mSettings.removeMasterJid(beforeJid);
-				mMasterAddresses.removeView(mEditText);
-				if (childCount <= 2) {
-					mMasterAddresses.addView(mEditText, 2);
-					mEditText.setHint(InfoAndSettings.this.getString(R.string.hint_jid));
-				}
-				return;
-			}
-
-			if (text.equals("")) return;
-
-			// an attempt to change an empty master jid to an invalid jid. abort
-			// here and leave the original value untouched
-			EntityBareJid newJid;
-			try {
-				newJid = JidUtil.validateEntityBareJid(text);
-			} catch (NotAEntityBareJidStringException | XmppStringprepException e) {
-				Toast.makeText(InfoAndSettings.this,
-						"This is not a valid bare JID: " + e.getLocalizedMessage(),
-						Toast.LENGTH_LONG).show();
-				mEditText.setText(mBeforeText);
-				return;
-			}
-
-			// an empty master jid was change to a valid jid
-			if (beforeJid == null) {
-				mSettings.addMasterJid(newJid);
-				addEmptyMasterJidEditText();
-			}
-			// a valid master jid was changed with another valid value
-			else if (!mBeforeText.equals(text)) {
-				mSettings.removeMasterJid(beforeJid);
-				mSettings.addMasterJid(newJid);
-			}
-			return;
-		}
 	}
 
 	class PingServerButtonHandler extends StateChangeListener implements OnClickListener {

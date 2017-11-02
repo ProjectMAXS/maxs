@@ -71,6 +71,7 @@ public class GlobalConstants {
 	public static final String EXTRA_CONTENT = PACKAGE + ".CONTENT";
 	public static final String EXTRA_PACKAGE = PACKAGE + ".PACKAGE";
 	public static final String EXTRA_CONTACT = PACKAGE + ".CONTACT";
+	public static final String EXTRA_ENTITY_BARE_JID = PACKAGE + ".ENTITY_BARE_JID";
 
 	public static final String PERMISSION = PACKAGE + ".permission";
 	public static final String PERMISSION_USE_MODULE = PERMISSION + ".USE_MODULE";

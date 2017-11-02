@@ -2,7 +2,7 @@
 <resources>
 
     <string name="master_addresses">Master Addresses</string>
-    <string name="master_addresses_help">Those JIDs will receive notifcations from MAXS and are allowed to send commands. To delete an entry simply delete the text, it will get automatically removed.</string>
+    <string name="master_addresses_help">Those JIDs will receive notifcations from MAXS and are allowed to send commands.</string>
     <string name="device_account">Device Account</string>
     <string name="hint_jid">user@server.tld</string>
     <string name="excluded_resources">Excluded Resources</string>

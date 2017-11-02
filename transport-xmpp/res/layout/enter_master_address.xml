@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/newMasterAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:hint="@string/hint_jid"
+        android:inputType="textEmailAddress"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageButton
+        android:id="@+id/saveNewMasterAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newMasterAddress"
+        android:layout_alignStart="@+id/newMasterAddress"
+        android:layout_below="@+id/newMasterAddress"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="Save the new master address"
+        android:src="@android:drawable/ic_menu_save"
+        android:onClick="onSaveNewMasterAddressButtonClicked" />
+
+</RelativeLayout>

@@ -164,20 +164,17 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return bareJid;
 	}
 
-	public void setJid(EntityBareJid jid) {
-		if (jid.hasResource()) {
-			throw new IllegalArgumentException();
-		}
-		mSharedPreferences.edit().putString(JID, jid.toString()).commit();
+	public void setJidAndPassword(EntityBareJid jid, CharSequence password) {
+		mSharedPreferences
+			.edit()
+			.putString(JID, jid.toString())
+			.putString(PASSWORD, password.toString())
+			.commit();
 		mJidCache = jid;
 	}
 
 	public String getPassword() {
 		return mSharedPreferences.getString(PASSWORD, "");
-	}
-
-	public void setPassword(String password) {
-		mSharedPreferences.edit().putString(PASSWORD, password).commit();
 	}
 
 	/**
@@ -209,6 +206,9 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public void addMasterJid(EntityBareJid jid) {
+		if (jid == null) {
+			throw new IllegalArgumentException();
+		}
 		Set<EntityBareJid> masterJids = getMasterJids();
 		masterJids.add(jid);
 		saveMasterJids(masterJids);

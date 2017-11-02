@@ -6,36 +6,35 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/masterAddresses"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textMasterAddresses"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:text="@string/master_addresses"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/textMasterAddresses"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/master_addresses"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/textMasterAddressesHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/master_addresses_help" />
 
-           <TextView
-                android:id="@+id/textMasterAddressesHelp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/master_addresses_help" />
+       <LinearLayout
+           android:id="@+id/masterAddresses"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="vertical" />
 
-            <EditText
-                android:id="@+id/firstMasterAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/hint_jid"
-                android:inputType="textEmailAddress" />
-        </LinearLayout>
+       <ImageButton
+           android:id="@+id/addMasterAddress"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="right"
+           android:src="@android:drawable/ic_menu_add"
+           android:onClick="onAddMasterAddressButtonClicked" />
 
         <View
             android:layout_width="fill_parent"
@@ -49,21 +48,18 @@
             android:text="@string/device_account"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
+        <TextView
             android:id="@+id/jid"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_jid"
-            android:inputType="textEmailAddress" />
+            android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
+         <ImageButton
+                android:id="@+id/editXmppCredentials"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:src="@android:drawable/ic_menu_edit"
+                android:onClick="onEditXmppCredentialsButtonClicked" />
 
         <View
             android:layout_width="fill_parent"
