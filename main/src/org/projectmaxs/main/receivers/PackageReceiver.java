@@ -45,7 +45,7 @@ public class PackageReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void onInstalledOrReplaced(Context context, String packageName) {
+	private static void onInstalledOrReplaced(Context context, String packageName) {
 		LOG.d("onInstalledOrReplaced: packageName=" + packageName + " intent="
 				+ GlobalConstants.ACTION_REGISTER);
 		for (String receiver : Constants.COMPONENT_RECEIVERS) {
@@ -57,7 +57,7 @@ public class PackageReceiver extends BroadcastReceiver {
 		resetPermCheckTimestamp(context);
 	}
 
-	private void onRemoved(Context context, String packageName) {
+	private static void onRemoved(Context context, String packageName) {
 		LOG.d("onRemoved: packageName=" + packageName);
 		ModuleRegistry.getInstance(context).unregisterModule(packageName);
 		resetPermCheckTimestamp(context);
@@ -65,7 +65,7 @@ public class PackageReceiver extends BroadcastReceiver {
 		resetPermCheckTimestamp(context);
 	}
 
-	private void resetPermCheckTimestamp(Context context) {
+	private static void resetPermCheckTimestamp(Context context) {
 		Settings.getInstance(context).setPermCheckTimestamp(-1);
 	}
 }
