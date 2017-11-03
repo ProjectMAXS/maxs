@@ -128,7 +128,12 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 
 		ArrayList<String> parts;
 		try {
-			parts = smsManager.divideMessage(text);
+			if (text.length() < 150) {
+				parts = new ArrayList<>(1);
+				parts.add(text);
+			} else {
+				parts = smsManager.divideMessage(text);
+			}
 		} catch (SecurityException e) {
 			// Some Android devices require the READ_PHONE_STATE permission for
 			// divideMessage(String) although the API contract does not mention that this is
