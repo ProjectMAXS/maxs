@@ -150,6 +150,7 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 		} finally {
 			final IPhoneStateReadModuleService phoneStateReadModuleService = mPhonestateReadModuleService;
 			if (phoneStateReadModuleService != null) {
+				mPhonestateReadModuleService = null;
 				mService.unbindService(mPhonestateReadModuleServiceConnection);
 			}
 		}
