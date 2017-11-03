@@ -22,8 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -153,8 +156,9 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 				mRoster.createEntry(userID, userID.toString(), null);
 				grantSubscription(userID, mConnection);
 				requestSubscription(userID, mConnection);
-			} catch (Exception e) {
-				// TODO
+			} catch (NotConnectedException | InterruptedException | NotLoggedInException
+					| NoResponseException | XMPPErrorException e) {
+				LOG.w("Exception creating roster entry for " + userID, e);
 				return;
 			}
 		}
@@ -164,20 +168,24 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 		if (rosterEntry == null) return;
 
 		RosterPacket.ItemType type = rosterEntry.getType();
-		switch (type) {
-		case from:
-			requestSubscription(userID, mConnection);
-			break;
-		case to:
-			grantSubscription(userID, mConnection);
-			break;
-		case none:
-			grantSubscription(userID, mConnection);
-			requestSubscription(userID, mConnection);
-			break;
-		case both:
-		default:
-			break;
+		try {
+			switch (type) {
+			case from:
+				requestSubscription(userID, mConnection);
+				break;
+			case to:
+				grantSubscription(userID, mConnection);
+				break;
+			case none:
+				grantSubscription(userID, mConnection);
+				requestSubscription(userID, mConnection);
+				break;
+			case both:
+			default:
+				break;
+			}
+		} catch (NotConnectedException | InterruptedException e) {
+			LOG.w("Exception handling subscription for " + userID, e);
 		}
 	}
 
@@ -186,8 +194,11 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * 
 	 * @param jid
 	 * @param connection
+	 * @throws InterruptedException
+	 * @throws NotConnectedException
 	 */
-	private static void grantSubscription(BareJid jid, XMPPConnection connection) {
+	private static void grantSubscription(BareJid jid, XMPPConnection connection)
+			throws NotConnectedException, InterruptedException {
 		Presence presence = new Presence(Presence.Type.subscribed);
 		sendPresenceTo(jid, presence, connection);
 	}
@@ -197,19 +208,19 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 * 
 	 * @param jid
 	 * @param connection
+	 * @throws InterruptedException
+	 * @throws NotConnectedException
 	 */
-	private static void requestSubscription(BareJid jid, XMPPConnection connection) {
+	private static void requestSubscription(BareJid jid, XMPPConnection connection)
+			throws NotConnectedException, InterruptedException {
 		Presence presence = new Presence(Presence.Type.subscribe);
 		sendPresenceTo(jid, presence, connection);
 	}
 
-	private static void sendPresenceTo(BareJid to, Presence presence, XMPPConnection connection) {
+	private static void sendPresenceTo(BareJid to, Presence presence, XMPPConnection connection)
+			throws NotConnectedException, InterruptedException {
 		presence.setTo(to);
-		try {
-			connection.sendStanza(presence);
-		} catch (InterruptedException | NotConnectedException e) {
-			LOG.w("sendPresenceTo", e);
-		}
+		connection.sendStanza(presence);
 	}
 
 	public static class MasterJidListener {
