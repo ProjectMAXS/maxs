@@ -68,6 +68,11 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
+			if (LOG.isDebugLogEnabled()) {
+				long diff = System.currentTimeMillis()
+						- mPhonestateReadModuleServiceRequestTimestamp;
+				LOG.d("Serivce " + name + " connected after " + diff + "ms");
+			}
 			mPhonestateReadModuleService = IPhoneStateReadModuleService.Stub.asInterface(service);
 		}
 
@@ -79,6 +84,7 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 
 	};
 	private volatile IPhoneStateReadModuleService mPhonestateReadModuleService;
+	private volatile long mPhonestateReadModuleServiceRequestTimestamp;
 
 	private PackageManagerUtil mPackageManagerUtil;
 	MAXSModuleIntentService mService;
@@ -100,6 +106,8 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 			Intent intent = new Intent(ModuleConstants.ACTION_BIND_PHONESTATE_READ);
 			intent.setClassName(ModuleConstants.PHONESTATE_READ_MODULE_PACKAGE,
 					ModuleConstants.PHONSTATE_READ_SERVICE);
+
+			mPhonestateReadModuleServiceRequestTimestamp = System.currentTimeMillis();
 			service.bindService(intent, mPhonestateReadModuleServiceConnection,
 					Context.BIND_AUTO_CREATE);
 		}
