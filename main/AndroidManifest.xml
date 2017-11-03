@@ -75,6 +75,11 @@
         android:description="@string/perm_use_outgoing_filetransfer_service_desc"
         android:label="@string/perm_use_outgoing_filetransfer_service_label"
         android:permissionGroup="org.projectmaxs.permissions" />
+    <permission
+        android:name="org.projectmaxs.permission.USE_PHONESTATE_READ"
+        android:description="@string/perm_use_phonestateread_service_desc"
+        android:label="@string/perm_use_phonestateread_service_label"
+        android:permissionGroup="org.projectmaxs.permissions" />
 
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />

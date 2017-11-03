@@ -14,15 +14,11 @@
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ package org.projectmaxs.shared.module;
 
-package org.projectmaxs.module.phonestateread;
+interface IPhoneStateReadModuleService {
 
-import org.projectmaxs.shared.module.ModuleConstants;
+	List<String> divideSmsMessage(String message);
 
-public class Constants {
-	public static final String MODULE_PACKAGE = ModuleConstants.PHONESTATE_READ_MODULE_PACKAGE;
-	public static final String START_PHONESTATE_SERVICE = MODULE_PACKAGE
-			+ ".START_PHONESTATE_SERVICE";
-	public static final String STOP_PHONESTATE_SERVICE = MODULE_PACKAGE
-			+ ".STOP_PHONESTATE_SERVICE";
 }

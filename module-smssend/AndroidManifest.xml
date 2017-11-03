@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
+    <uses-permission android:name="org.projectmaxs.permission.USE_PHONESTATE_READ" />
     <uses-permission android:name="org.projectmaxs.permission.READ_CONTACTS" />
     <uses-permission android:name="org.projectmaxs.permission.WRITE_SMS" />
 

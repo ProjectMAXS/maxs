@@ -40,4 +40,6 @@
     <string name="perm_use_incoming_filetransfer_service_desc">Allow to use the MAXS components for incoming filetransfers.</string>
     <string name="perm_use_outgoing_filetransfer_service_label">Use MAXS Outgoing Filetransfer Service</string>
     <string name="perm_use_outgoing_filetransfer_service_desc">Allow to use the MAXS components for outgoing filetransfers.</string>
+    <string name="perm_use_phonestateread_service_label">Use MAXS Phonestateread Service</string>
+    <string name="perm_use_phonestateread_service_desc">Allow to use the MAXS Phonestateread to read the state of the device.</string>
 </resources>

@@ -18,6 +18,7 @@
 package org.projectmaxs.module.smssend.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.projectmaxs.module.smssend.SMSPendingIntentReceiver;
 import org.projectmaxs.module.smssend.Settings;
@@ -26,19 +27,30 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.Contact;
 import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Sms;
+import org.projectmaxs.shared.global.util.Log;
+import org.projectmaxs.shared.global.util.PackageManagerUtil;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.ContactUtil;
+import org.projectmaxs.shared.module.IPhoneStateReadModuleService;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
+import org.projectmaxs.shared.module.ModuleConstants;
 import org.projectmaxs.shared.module.SmsWriteUtil;
 import org.projectmaxs.shared.module.SubCommand;
 import org.projectmaxs.shared.module.SupraCommand;
 
 import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.telephony.SmsManager;
 
 public abstract class AbstractSmsSendCommand extends SubCommand {
+
+	protected final Log LOG = Log.getLog();
 
 	public static final String PART_NUM_EXTRA = "partNum";
 	public static final String CMD_ID_EXTRA = "cmdId";
@@ -52,6 +64,23 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 		super(supraCommand, name, isDefaultWithoutArguments, isDefaultWithArguments);
 	}
 
+	private ServiceConnection mPhonestateReadModuleServiceConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mPhonestateReadModuleService = IPhoneStateReadModuleService.Stub.asInterface(service);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mPhonestateReadModuleService = null;
+			LOG.w("Service " + name + " has unexpectedly disconnected");
+		}
+
+	};
+	private volatile IPhoneStateReadModuleService mPhonestateReadModuleService;
+
+	private PackageManagerUtil mPackageManagerUtil;
 	MAXSModuleIntentService mService;
 	Settings mSettings;
 
@@ -62,6 +91,19 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 			mService = service;
 			mSettings = Settings.getInstance(service);
 		}
+
+		if (mPackageManagerUtil == null) {
+			mPackageManagerUtil = PackageManagerUtil.getInstance(mService);
+		}
+
+		if (mPhonestateReadModuleService == null && isModulePhonestateReadInstalled()) {
+			Intent intent = new Intent(ModuleConstants.ACTION_BIND_PHONESTATE_READ);
+			intent.setClassName(ModuleConstants.PHONESTATE_READ_MODULE_PACKAGE,
+					ModuleConstants.PHONSTATE_READ_SERVICE);
+			service.bindService(intent, mPhonestateReadModuleServiceConnection,
+					Context.BIND_AUTO_CREATE);
+		}
+
 		return null;
 	}
 
@@ -83,7 +125,22 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 		// throw a NPE if those are null, so we initialize them here with an empty ArrayList.
 		ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(0);
 		ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(0);
-		ArrayList<String> parts = smsManager.divideMessage(text);
+
+		ArrayList<String> parts;
+		try {
+			parts = smsManager.divideMessage(text);
+		} catch (SecurityException e) {
+			// Some Android devices require the READ_PHONE_STATE permission for
+			// divideMessage(String) although the API contract does not mention that this is
+			// required. See also https://stackoverflow.com/a/27300529/194894
+			parts = maybeDivideMessageViaModulePhonestateRead(text);
+		} finally {
+			final IPhoneStateReadModuleService phoneStateReadModuleService = mPhonestateReadModuleService;
+			if (phoneStateReadModuleService != null) {
+				mService.unbindService(mPhonestateReadModuleServiceConnection);
+			}
+		}
+
 		int partCount = parts.size();
 		SMSTable smsTable = SMSTable.getInstance(mService);
 		boolean notifySentEnabled = mSettings.notifySentEnabled();
@@ -130,5 +187,31 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 			intents.add(pendingIntent);
 		}
 		return intents;
+	}
+
+	private boolean isModulePhonestateReadInstalled() {
+		return mPackageManagerUtil
+				.isPackageInstalled(ModuleConstants.PHONESTATE_READ_MODULE_PACKAGE);
+	}
+
+	private final ArrayList<String> maybeDivideMessageViaModulePhonestateRead(String message) {
+		if (!isModulePhonestateReadInstalled()) {
+			throw new IllegalStateException(
+					"Can not split SMS message as this devices SmsManager.divideMessage() requires the PHONE_STATE_READ permission and MAXS module-phonestateread is not installed. Consider installing module-phonestateread.");
+		}
+
+		final IPhoneStateReadModuleService phonestateReadModuleService = mPhonestateReadModuleService;
+		if (phonestateReadModuleService == null) {
+			throw new AssertionError("PhoneStateReadModule service was not yet bound");
+		}
+
+		List<String> res;
+		try {
+			res = phonestateReadModuleService.divideSmsMessage(message);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
+
+		return new ArrayList<>(res);
 	}
 }

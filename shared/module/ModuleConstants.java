@@ -29,4 +29,11 @@ public class ModuleConstants {
 	public static final String SMSWRITE_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE
 			+ ".smswrite";
 	public static final String SMSWRITE_SERVICE = SMSWRITE_MODULE_PACKAGE + ".SMSWriteService";
+
+	public static final String PHONESTATE_READ_MODULE_PACKAGE = GlobalConstants.MODULE_PACKAGE
+			+ ".phonestateread";
+	public static final String PHONSTATE_READ_SERVICE = PHONESTATE_READ_MODULE_PACKAGE
+			+ ".PhoneStateReadService";
+	public static final String ACTION_BIND_PHONESTATE_READ = GlobalConstants.PACKAGE
+			+ ".ACTION_BIND_PHONESTATE_READ";
 }
