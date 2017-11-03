@@ -28,6 +28,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
+import org.jivesoftware.smack.roster.SubscribeListener;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
@@ -58,6 +59,19 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 		mConnection = connection;
 		mRoster = Roster.getInstanceFor(connection);
 		mRoster.addRosterListener(this);
+
+		mRoster.addSubscribeListener(new SubscribeListener() {
+			@Override
+			public SubscribeAnswer processSubscribe(Jid from, Presence subscribeRequest) {
+				Set<EntityBareJid> masterJids = mSettings.getMasterJids();
+				for (EntityBareJid masterJid : masterJids) {
+					if (masterJid.equals(from)) {
+						return SubscribeAnswer.Approve;
+					}
+				}
+				return SubscribeAnswer.Deny;
+			}
+		});
 	}
 
 	@Override
