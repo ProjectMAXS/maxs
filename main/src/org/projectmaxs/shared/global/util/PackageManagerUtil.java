@@ -66,4 +66,22 @@ public class PackageManagerUtil {
 		}
 		return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
 	}
+
+	public PackageInfo getMyPackageInfo() {
+		try {
+			return mPackageManager.getPackageInfo(mPackageName, 0);
+		} catch (NameNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	public int getMyVersionCode() {
+		PackageInfo packageInfo = getMyPackageInfo();
+		return packageInfo.versionCode;
+	}
+
+	public String getMyVersionName() {
+		PackageInfo packageInfo = getMyPackageInfo();
+		return packageInfo.versionName;
+	}
 }

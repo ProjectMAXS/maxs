@@ -15,6 +15,7 @@ import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
+import org.projectmaxs.shared.global.util.ActivityUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
 import org.projectmaxs.shared.global.util.SpannedUtil;
@@ -27,13 +28,11 @@ import org.projectmaxs.transport.xmpp.xmppservice.XMPPBundleAndDefer;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -62,15 +61,9 @@ public class InfoAndSettings extends Activity {
 	}
 
 	public void showAbout(View view) {
-		final SpannableStringBuilder sb = new SpannableStringBuilder();
-		final String appName = getResources().getString(R.string.app_name);
-		sb.append(Html.fromHtml("<h1>" + appName + "</h1>"));
-		sb.append(getResources().getString(R.string.version)).append('\n');
-		sb.append(getResources().getString(R.string.copyright)).append(" (").append(SpannedUtil
-				.createAuthorsLink("transport-xmpp", getResources().getString(R.string.authors)))
-				.append(")\n");
-		sb.append('\n');
-		sb.append(appName).append(' ').append(getResources().getText(R.string.gplv3)).append('\n');
+		SpannableStringBuilder sb = SpannedUtil.createdAboutDialog(this, "transport-xmpp",
+				R.string.app_name, R.string.version, R.string.copyright, R.string.authors,
+				R.string.gplv3);
 		sb.append('\n');
 		sb.append(Html.fromHtml(
 // @formatter:off
@@ -106,18 +99,7 @@ SmackConfiguration.getVersion() + "<br>" +
 "&#8226; <a href=\"http://opensource.org/licenses/MIT\">MIT License</a>"
 // @formatter:on
 		));
-		final TextView textView = new TextView(this);
-		textView.setText(sb);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		// Sadly we can't make this text view also selectable
-		// http://stackoverflow.com/questions/14862750
-		// @formatter:off
-		final AlertDialog alertDialog = new AlertDialog.Builder(this)
-			.setPositiveButton(getResources().getString(R.string.close), null)
-			.setView(textView)
-			.create();
-		// @formatter:on
-		alertDialog.show();
+		ActivityUtil.showSimpleTextView(this, sb, R.string.close);
 	}
 
 	public void registerAccount(View view) {
