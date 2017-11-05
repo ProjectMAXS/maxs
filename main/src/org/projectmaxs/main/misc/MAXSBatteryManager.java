@@ -31,7 +31,6 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 public class MAXSBatteryManager extends MAXSService.StartStopListener {
-	private static final int STEP = 5;
 	private static final String AC = "AC";
 	private static final String USB = "USB";
 	private static final String BAT = "Battery";
@@ -57,13 +56,13 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		}
 	};
 
-	private volatile boolean mIsCharging;
+	private volatile boolean mPowerConsumptionDoesNotMatter;
 
-	private String mLastBatteryPct = "";
+	private RangedNumber<Float> mLastBattery;
 	private int mLastPlugged = -1;
 	private int mLastHealth = -1;
-	private String mLastVoltage = "";
-	private String mLastTemperature = "";
+	private RangedNumber<Integer> mLastVoltage;
+	private RangedNumber<Float> mLastTemperature;
 
 	private MAXSBatteryManager(Context context) {
 		mContext = context;
@@ -86,10 +85,10 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		switch (status) {
 		case BatteryManager.BATTERY_STATUS_FULL:
 		case BatteryManager.BATTERY_STATUS_CHARGING:
-			mIsCharging = true;
+			mPowerConsumptionDoesNotMatter = true;
 			break;
 		default:
-			mIsCharging = false;
+			mPowerConsumptionDoesNotMatter = false;
 			break;
 		}
 
@@ -101,38 +100,39 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 		int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-		// batteryPctFloat is the battery charge status between 0.0f and 1.0f.
-		float batteryPctFloat = level / (float) scale;
-		String batteryPct = maybeFloatToRange(batteryPctFloat);
-
 		ArrayList<StatusInformation> infos = new ArrayList<>(5);
+
 		if (plugged != mLastPlugged) {
 			infos.add(new StatusInformation("power-source", getPowerSource(status, plugged)));
 			mLastPlugged = plugged;
 		}
-		if (!batteryPct.equals(mLastBatteryPct)) {
-			infos.add(new StatusInformation("battery-percentage", batteryPct + '%',
+
+		// batteryPctFloat is the battery charge status between 0.0f and 1.0f.
+		float batteryPctFloat = level / (float) scale;
+		// This is the battery charge status between 0 and 100.
+		float batteryScaledFloat = batteryPctFloat * 100;
+		if (mLastBattery == null || mLastBattery.doesNotRepresentNumber(batteryScaledFloat)) {
+			mLastBattery = new RangedNumber<Float>(batteryScaledFloat, 5);
+			infos.add(new StatusInformation("battery-percentage", mLastBattery.toString() + '%',
 					Float.toString(batteryPctFloat)));
-			mLastBatteryPct = batteryPct;
 		}
+
 		if (health != mLastHealth) {
 			String healthString = healthToString(health);
 			infos.add(new StatusInformation("battery-health", null, healthString));
 			mLastHealth = health;
 		}
 
-		String batteryVoltageString = maybeFloatToRangeUnscaled(voltage, 1);
-		if (!mLastVoltage.equals(batteryVoltageString)) {
+		if (mLastVoltage == null || mLastVoltage.doesNotRepresentNumber(voltage)) {
+			mLastVoltage = new RangedNumber<Integer>(voltage, 500);
 			infos.add(new StatusInformation("battery-voltage", null, Integer.toString(voltage)));
-			mLastVoltage = batteryVoltageString;
 		}
 
-		String batteryTemperatureString = maybeFloatToRangeUnscaled(temperature, 2);
-		if (!mLastTemperature.equals(batteryTemperatureString)) {
+		if (mLastTemperature == null || mLastTemperature.doesNotRepresentNumber(temperature)) {
+			mLastTemperature = new RangedNumber<Float>(temperature, 2);
 			infos.add(new StatusInformation("battery-temperature",
-					Unicode.BATTERY + ' ' + batteryTemperatureString + "°C",
+					Unicode.BATTERY + ' ' + mLastTemperature.toString() + "°C",
 					Float.toString(temperature)));
-			mLastTemperature = batteryVoltageString;
 		}
 
 		MAXSStatusUtil.maybeUpdateStatus(mContext, infos);
@@ -191,24 +191,44 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		return healthString;
 	}
 
-	public String maybeFloatToRangeUnscaled(float f, int step) {
-		if (mIsCharging) return Float.toString(f);
-
-		int lowerBound = ((int) f / step) * step;
-		int upperBound = lowerBound + step;
-		return lowerBound + "-" + upperBound;
+	public <N extends Number> RangedNumber<N> createRangedNumber(N n, int step) {
+		return new RangedNumber<N>(n, step);
 	}
 
-	private String maybeFloatToRange(float f) {
-		int in = (int) (f * 100);
-		if (mIsCharging) return Integer.toString(in);
+	public class RangedNumber<N extends Number> {
+		private final N n;
+		private final int lowerBound;
+		private final int upperBound;
 
-		int lowerBound = (in / 5) * STEP;
-		if (lowerBound != 100) {
-			int upperBound = lowerBound + STEP;
-			return lowerBound + "-" + upperBound;
-		} else {
-			return Integer.toString(lowerBound);
+		private RangedNumber(N n, int step) {
+			this.n = n;
+
+			// i is n's integer representation.
+			int i = Math.round(n.floatValue());
+			int stepHalf = step / 2;
+
+			this.lowerBound = i - stepHalf;
+			this.upperBound = i + stepHalf;
 		}
+
+		public boolean doesNotRepresentNumber(N n) {
+			return !doesRepresentNumber(n);
+		}
+
+		public boolean doesRepresentNumber(N n) {
+			if (mPowerConsumptionDoesNotMatter) {
+				return this.n.equals(n);
+			}
+			return lowerBound >= n.floatValue() && n.floatValue() <= upperBound;
+		}
+
+		@Override
+		public String toString() {
+			if (mPowerConsumptionDoesNotMatter) {
+				return String.valueOf(n);
+			}
+			return Integer.toString(lowerBound) + '-' + Integer.toString(upperBound);
+		}
+
 	}
 }

@@ -18,6 +18,7 @@
 package org.projectmaxs.main.misc;
 
 import org.projectmaxs.main.MAXSService;
+import org.projectmaxs.main.misc.MAXSBatteryManager.RangedNumber;
 import org.projectmaxs.shared.global.StatusInformation;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.MAXSStatusUtil;
@@ -50,6 +51,8 @@ public class MAXSAmbientTemperatureManager extends MAXSService.StartStopListener
 	private final MAXSBatteryManager mMaxsBatteryManager;
 	private final SensorManager mSensorManager;
 	private final Sensor mAmbientTemperatureSensor;
+
+	private RangedNumber<Float> mAmbientTemperature;
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	private MAXSAmbientTemperatureManager(Context context) {
@@ -88,11 +91,14 @@ public class MAXSAmbientTemperatureManager extends MAXSService.StartStopListener
 	public void onSensorChanged(SensorEvent event) {
 		float ambientTemperature = event.values[0];
 
-		String ambientTemperaturePotentiallyScaled = mMaxsBatteryManager
-				.maybeFloatToRangeUnscaled(ambientTemperature, 2);
+		if (mAmbientTemperature == null || mAmbientTemperature.doesNotRepresentNumber(ambientTemperature)) {
+			mAmbientTemperature = mMaxsBatteryManager
+					.createRangedNumber(ambientTemperature, 2);
+		}
 
 		StatusInformation statusInformation = new StatusInformation("ambient-temperature",
-				ambientTemperaturePotentiallyScaled + "°C", Float.toString(ambientTemperature));
+				mAmbientTemperature + "°C",
+				Float.toString(ambientTemperature));
 		MAXSStatusUtil.maybeUpdateStatus(mContext, statusInformation);
 	}
 
