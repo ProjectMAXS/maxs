@@ -216,7 +216,9 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 
 		final IPhoneStateReadModuleService phonestateReadModuleService = mPhonestateReadModuleService;
 		if (phonestateReadModuleService == null) {
-			throw new AssertionError("PhoneStateReadModule service was not yet bound");
+			long diff = System.currentTimeMillis() - mPhonestateReadModuleServiceRequestTimestamp;
+			throw new AssertionError(
+					"PhoneStateReadModule service was not yet bound after " + diff + "ms");
 		}
 
 		List<String> res;
