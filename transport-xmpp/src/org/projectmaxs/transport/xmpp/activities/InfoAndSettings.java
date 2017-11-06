@@ -228,6 +228,8 @@ SmackConfiguration.getVersion() + "<br>" +
 		}
 		mSettings.addMasterJid(newMasterAddress);
 		MasterAddressView.createNewAndAddUnderLayout(this, mMasterAddresses, newMasterAddress);
+		XMPPService xmppService = XMPPService.getInstance(this);
+		xmppService.notifyAboutNewMasterAddress(newMasterAddress);
 	}
 
 	private final void handleSaveXmppCredentialsResult(int resultCode, Intent data) {

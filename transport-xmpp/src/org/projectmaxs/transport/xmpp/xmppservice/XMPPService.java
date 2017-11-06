@@ -31,8 +31,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException.ConnectionException;
+import org.jivesoftware.smack.SmackException.FeatureNotSupportedException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.debugger.JulDebugger;
 import org.jivesoftware.smack.debugger.SmackDebugger;
@@ -41,11 +43,14 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
+import org.jivesoftware.smack.roster.RosterUtil;
 import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.roster.rosterstore.RosterStore;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.Async;
+import org.jivesoftware.smack.util.Async.ThrowingRunnable;
 import org.jivesoftware.smack.util.DNSUtil;
 import org.jivesoftware.smack.util.StringTransformer;
 import org.jivesoftware.smack.util.dns.HostAddress;
@@ -326,6 +331,26 @@ public class XMPPService {
 		} finally {
 			XMPPBundleAndDefer.enableBundleAndDefer();
 		}
+	}
+
+	public void notifyAboutNewMasterAddress(final EntityBareJid newMasterAddress) {
+		final XMPPConnection connection = getConnection();
+		if (connection == null || !connection.isAuthenticated()) {
+			return;
+		}
+
+		final Roster roster = Roster.getInstanceFor(connection);
+
+		Async.go(new ThrowingRunnable() {
+			@Override
+			public void runOrThrow() throws NotLoggedInException, NotConnectedException,
+					FeatureNotSupportedException, InterruptedException {
+				if (roster.isSubscriptionPreApprovalSupported()) {
+					roster.preApprove(newMasterAddress);
+				}
+				RosterUtil.askForSubscriptionIfRequired(roster, newMasterAddress);
+			}
+		});
 	}
 
 	Context getContext() {
