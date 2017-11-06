@@ -18,10 +18,8 @@
 package org.projectmaxs.main;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.projectmaxs.main.database.StatusTable;
 import org.projectmaxs.shared.global.StatusInformation;
@@ -110,20 +108,20 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 		List<StatusInformation> statusInformationList = new ArrayList<>(
 				mStatusInformationMap.size());
 
-		Iterator<Entry<String, StatusInformation>> it = mStatusInformationMap.entrySet().iterator();
-
 		StringBuilder sb = new StringBuilder();
-		while (it.hasNext()) {
-			StatusInformation statusInformation = it.next().getValue();
+		boolean first = true;
+		for (StatusInformation statusInformation : mStatusInformationMap.values()) {
+			if (!first) {
+				sb.append(" - ");
+			}
+			first = false;
+
 			statusInformationList.add(statusInformation);
 			String humanValue = statusInformation.getHumanValue();
 			if (humanValue == null) {
 				continue;
 			}
-			sb.append(statusInformation.getHumanValue());
-			if (it.hasNext()) {
-				sb.append(" - ");
-			}
+			sb.append(humanValue);
 		}
 		return new CurrentStatus(sb.toString(), statusInformationList);
 	}
