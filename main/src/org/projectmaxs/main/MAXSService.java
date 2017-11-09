@@ -312,6 +312,7 @@ public class MAXSService extends Service {
 	}
 
 	protected void setStatus(CurrentStatus status) {
+		LOG.i("Setting status to '" + status.getStatusString() + '\'');
 		List<TransportInformation> transportList = mTransportRegistry.getAllTransports();
 		for (TransportInformation ti : transportList) {
 			if (!ti.supportsStatus()) continue;
