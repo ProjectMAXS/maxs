@@ -20,6 +20,7 @@ package org.projectmaxs.module.locationfine.commands;
 import org.projectmaxs.module.locationfine.ModuleService;
 import org.projectmaxs.module.locationfine.service.LocationService;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.SubCommand;
 
@@ -28,12 +29,18 @@ import android.content.Intent;
 
 public abstract class AbstractLocate extends SubCommand {
 
+	protected static final Log LOG = Log.getLog();
+
 	public AbstractLocate(String name) {
 		this(name, false);
 	}
 
 	public AbstractLocate(String name, boolean isDefaultWithoutArguments) {
 		super(ModuleService.LOCATE, name, isDefaultWithoutArguments);
+	}
+
+	static void startLocationServiceNotSticky(Context context, Command command) {
+		locationService(LocationService.START_SERVICE_NOT_STICKY, context, command);
 	}
 
 	static void startLocationService(Context context, Command command) {

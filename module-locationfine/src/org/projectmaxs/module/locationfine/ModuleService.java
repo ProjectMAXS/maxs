@@ -23,6 +23,7 @@ import java.util.Set;
 import org.projectmaxs.module.locationfine.commands.LocateOnce;
 import org.projectmaxs.module.locationfine.commands.LocateStart;
 import org.projectmaxs.module.locationfine.commands.LocateStop;
+import org.projectmaxs.module.locationfine.commands.LocationLastKnown;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
@@ -59,6 +60,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		SupraCommand.register(LocateStart.class, commands);
 		SupraCommand.register(LocateStop.class, commands);
 		SupraCommand.register(LocateOnce.class, commands);
+		SupraCommand.register(LocationLastKnown.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}

@@ -20,17 +20,17 @@ package org.projectmaxs.module.locationfine.service;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.projectmaxs.module.locationfine.LocationUtil;
 import org.projectmaxs.module.locationfine.ModuleService;
 import org.projectmaxs.module.locationfine.service.gpsenabler.GpsEnablerDisabler;
 import org.projectmaxs.module.locationfine.service.gpsenabler.PowerWidgetFlaw;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.Message;
-import org.projectmaxs.shared.global.messagecontent.Element;
-import org.projectmaxs.shared.global.messagecontent.Text;
-import org.projectmaxs.shared.global.util.DateTimeUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
+import org.projectmaxs.shared.module.ILocationFineModuleLocationService;
 import org.projectmaxs.shared.module.MainUtil;
+import org.projectmaxs.shared.module.SharedLocationUtil;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -46,6 +46,8 @@ import android.os.IBinder;
 
 public class LocationService extends Service {
 
+	public static final String START_SERVICE_NOT_STICKY = ModuleService.LOCATIONFINE_MODULE_PACKAGE
+			+ ".LOCATION_START_SERVICE_NOT_STICKY";
 	public static final String START_SERVICE = ModuleService.LOCATIONFINE_MODULE_PACKAGE
 			+ ".LOCATION_START_SERVICE";
 	public static final String STOP_SERVICE = ModuleService.LOCATIONFINE_MODULE_PACKAGE
@@ -66,14 +68,16 @@ public class LocationService extends Service {
 		GPS_ENABLER_DISABLERS.add(new PowerWidgetFlaw());
 	}
 
-	private LocationListener mLocationListener = new LocationListener() {
+	private class LocationServiceLocationListener implements LocationListener {
+
 		@Override
-		public void onLocationChanged(Location location) {
+		public final void onLocationChanged(Location location) {
 			LOG.d("onLocationChanged: locaction=" + location);
 
 			String betterLocationStatus;
 			if (isBetterLocation(location)) {
-				send(location);
+				mCurrentBestLocation = location;
+				onBetterLocation(location);
 				betterLocationStatus = "was";
 			} else {
 				betterLocationStatus = "was not";
@@ -82,15 +86,24 @@ public class LocationService extends Service {
 					+ " a better location then the current best location " + mCurrentBestLocation);
 		}
 
-		@Override
-		public void onProviderDisabled(String provider) {}
+		protected void onBetterLocation(Location location) {}
 
 		@Override
-		public void onProviderEnabled(String provider) {}
+		public final void onStatusChanged(String provider, int status, Bundle extras) {}
 
 		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {}
+		public final void onProviderEnabled(String provider) {}
 
+		@Override
+		public final void onProviderDisabled(String provider) {}
+
+	}
+
+	private LocationListener mLocationListener = new LocationServiceLocationListener() {
+		@Override
+		protected void onBetterLocation(Location location) {
+			send(location);
+		}
 	};
 
 	private LocationManager mLocationManager;
@@ -98,14 +111,35 @@ public class LocationService extends Service {
 
 	private List<String> mAllProviders;
 
-	private Command mCommand = new Command();
+	private Command mCommand;
 
 	private boolean mGpsManuallyEnabled = false;
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		return mBinder;
 	}
+
+	private final ILocationFineModuleLocationService.Stub mBinder = new ILocationFineModuleLocationService.Stub() {
+
+		@Override
+		public Location getCurrentBestLocation() {
+			List<Location> lastKnownLocations = LocationUtil
+					.getLastKnownLocationsSorted(mLocationManager);
+			if (lastKnownLocations.isEmpty()) {
+				return null;
+			}
+			return lastKnownLocations.get(0);
+		}
+
+		@Override
+		public List<Location> getCurrentBestLocations() {
+			List<Location> lastKnownLocations = LocationUtil
+					.getLastKnownLocationsSorted(mLocationManager);
+			return lastKnownLocations;
+		}
+
+	};
 
 	@Override
 	public void onCreate() {
@@ -123,11 +157,22 @@ public class LocationService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) intent = new Intent(START_SERVICE);
 
-		mCommand = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
+		Command command = intent.getParcelableExtra(GlobalConstants.EXTRA_COMMAND);
+		if (command != null) {
+			mCommand = command;
+		}
+
 		final String action = intent.getAction();
 		LOG.d("onStartCommand: action=" + action + ", flags=" + flags + ", startId=" + startId);
 
+		boolean startSticky = false;
 		switch (action) {
+		case START_SERVICE_NOT_STICKY:
+			for (String provider : mAllProviders) {
+				mLocationManager.requestSingleUpdate(provider,
+						new LocationServiceLocationListener(), null);
+			}
+			break;
 		case START_SERVICE:
 			if (!tryEnableGps()) send(new Message("GPS was disabled and we could not enable it."));
 
@@ -140,6 +185,7 @@ public class LocationService extends Service {
 					break;
 				}
 			}
+			startSticky = true;
 			break;
 		case STOP_SERVICE:
 			mLocationManager.removeUpdates(mLocationListener);
@@ -153,7 +199,7 @@ public class LocationService extends Service {
 			throw new IllegalStateException("Unknown action: " + action);
 		}
 
-		return START_STICKY;
+		return startSticky ? START_STICKY : START_NOT_STICKY;
 	}
 
 	private boolean gpsEnabled() {
@@ -192,46 +238,15 @@ public class LocationService extends Service {
 	}
 
 	private void send(Location location) {
-		mCurrentBestLocation = location;
-
-		String latitude = Double.toString(location.getLatitude());
-		String longitude = Double.toString(location.getLongitude());
-		String time = Long.toString(location.getTime());
-		String humanTime = DateTimeUtil.shortFromUtc(location.getTime());
-
-		String accuracy = location.hasAccuracy() ? Float.toString(location.getAccuracy()) : null;
-		String altitude = location.hasAltitude() ? Double.toString(location.getAltitude()) : null;
-		String speed = location.hasSpeed() ? Float.toString(location.getSpeed()) : null;
-
-		Message message = new Message();
-
-		Text text = new Text();
-		text.addBoldNL("Location (" + humanTime + ')');
-		text.addNL("Latitude: " + latitude + " Longitude: " + longitude);
-		text.addNL("https://www.openstreetmap.org/?mlat=" + latitude + "&mlon=" + longitude
-				+ "&zoom=14&layers=M");
-		if (accuracy != null) text.addNL("Accuracy: " + accuracy);
-		if (altitude != null) text.addNL("Altitude: " + altitude);
-		if (speed != null) text.addNL("Speed: " + speed);
-		message.add(text);
-
-		// Add a non human-readable element with that information
-		Element element = new Element("location");
-		element.addChildElement(new Element("latitude", latitude));
-		element.addChildElement(new Element("longitude", longitude));
-		element.addChildElement(new Element("time", time));
-		if (accuracy != null) element.addChildElement(new Element("accuracy", accuracy));
-		if (altitude != null) element.addChildElement(new Element("altitude", altitude));
-		if (speed != null) element.addChildElement(new Element("speed", speed));
-		message.add(element);
-
+		Message message = SharedLocationUtil.toMessage(location);
 		send(message);
 	}
 
 	private void send(Message message) {
-		message.setId(mCommand.getId());
+		if (mCommand != null) {
+			message.setId(mCommand.getId());
+		}
 		MainUtil.send(message, this);
-
 	}
 
 	@TargetApi(17)
@@ -252,12 +267,12 @@ public class LocationService extends Service {
 			return false;
 		}
 
-		boolean newLocationIsSignificantlyNewer = timeDelta > UPDATE_INTERVAL;
 		float accuracyDelta = newLocation.getAccuracy() - mCurrentBestLocation.getAccuracy();
 		boolean newLocationIsMoreAccurate = accuracyDelta < 0;
 		if (newLocationIsMoreAccurate) return true;
 
 		// We consider two locations to have the same accuracy if the differ only within 5 meters
+		boolean newLocationIsSignificantlyNewer = timeDelta > UPDATE_INTERVAL;
 		boolean newLocationHasSameAccurary = Math.abs(accuracyDelta) < 5;
 		boolean newLocationIsSameAsCurrent = newLocationHasSameAccurary
 				&& newLocation.getAltitude() == mCurrentBestLocation.getAltitude()
