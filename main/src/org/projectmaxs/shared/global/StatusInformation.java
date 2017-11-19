@@ -53,6 +53,9 @@ public class StatusInformation implements Parcelable {
 			throw new IllegalStateException("Status machine value must not be empty");
 		}
 		this.mStatusKey = statusKey;
+		if (humanValue != null && humanValue.isEmpty()) {
+			throw new IllegalStateException("If a human value is given, it must not be empty");
+		}
 		this.mHumanValue = humanValue;
 		this.mMachineValue = machineValue;
 	}

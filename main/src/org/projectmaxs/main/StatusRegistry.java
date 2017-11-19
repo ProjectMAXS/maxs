@@ -109,19 +109,19 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 				mStatusInformationMap.size());
 
 		StringBuilder sb = new StringBuilder();
-		boolean first = true;
+		boolean firstHumanReadable = true;
 		for (StatusInformation statusInformation : mStatusInformationMap.values()) {
-			if (!first) {
-				sb.append(" - ");
-			}
-			first = false;
-
 			statusInformationList.add(statusInformation);
 			String humanValue = statusInformation.getHumanValue();
 			if (humanValue == null) {
 				continue;
 			}
+
+			if (!firstHumanReadable) {
+				sb.append(" - ");
+			}
 			sb.append(humanValue);
+			firstHumanReadable = false;
 		}
 		return new CurrentStatus(sb.toString(), statusInformationList);
 	}
