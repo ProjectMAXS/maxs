@@ -195,7 +195,7 @@ public class LocationService extends Service {
 		Text text = new Text();
 		text.addBoldNL("Location (" + humanTime + ')');
 		text.addNL("Latitude: " + latitude + " Longitude: " + longitude);
-		text.addNL("http://www.openstreetmap.org/?mlat=" + latitude + "&mlon=" + longitude
+		text.addNL("https://www.openstreetmap.org/?mlat=" + latitude + "&mlon=" + longitude
 				+ "&zoom=14&layers=M");
 		if (accuracy != null) text.addNL("Accuracy: " + accuracy);
 		if (altitude != null) text.addNL("Altitude: " + altitude);
