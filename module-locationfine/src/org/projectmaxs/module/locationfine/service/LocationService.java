@@ -70,7 +70,16 @@ public class LocationService extends Service {
 		@Override
 		public void onLocationChanged(Location location) {
 			LOG.d("onLocationChanged: locaction=" + location);
-			if (isBetterLocation(location)) send(location);
+
+			String betterLocationStatus;
+			if (isBetterLocation(location)) {
+				send(location);
+				betterLocationStatus = "was";
+			} else {
+				betterLocationStatus = "was not";
+			}
+			LOG.d("onLocationChanged: " + location + ' ' + betterLocationStatus
+					+ " a better location then the current best location " + mCurrentBestLocation);
 		}
 
 		@Override
