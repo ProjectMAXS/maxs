@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.projectmaxs.module.misc.commands.ExceptionThrow;
+import org.projectmaxs.module.misc.commands.LocationProviders;
 import org.projectmaxs.module.misc.commands.RecentcontactShow;
 import org.projectmaxs.module.misc.commands.SensorList;
 import org.projectmaxs.module.misc.commands.SysinfoMaxs;
@@ -61,6 +62,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		SupraCommand.register(RecentcontactShow.class, commands);
 		SupraCommand.register(ExceptionThrow.class, commands);
 		SupraCommand.register(SensorList.class, commands);
+		SupraCommand.register(LocationProviders.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
