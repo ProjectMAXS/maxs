@@ -118,7 +118,8 @@ public class LocationService extends Service {
 		final String action = intent.getAction();
 		LOG.d("onStartCommand: action=" + action + ", flags=" + flags + ", startId=" + startId);
 
-		if (START_SERVICE.equals(action)) {
+		switch (action) {
+		case START_SERVICE:
 			if (!tryEnableGps()) send(new Message("GPS was disabled and we could not enable it."));
 
 			for (String provider : mAllProviders)
@@ -130,16 +131,19 @@ public class LocationService extends Service {
 					break;
 				}
 			}
-		} else if (STOP_SERVICE.equals(action)) {
+			break;
+		case STOP_SERVICE:
 			mLocationManager.removeUpdates(mLocationListener);
 			if (mGpsManuallyEnabled) {
 				// Only reset to false if disabling GPS was successful
 				if (tryDisableGps()) mGpsManuallyEnabled = false;
 			}
 			stopSelfResult(startId);
-		} else {
+			break;
+		default:
 			throw new IllegalStateException("Unknown action: " + action);
 		}
+
 		return START_STICKY;
 	}
 
