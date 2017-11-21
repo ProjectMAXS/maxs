@@ -98,6 +98,8 @@ public class CommandHelp extends AbstractElement {
 
 		OTHER_STRING,
 
+		PERCENTAGE,
+
 		NONE,
 	}
 

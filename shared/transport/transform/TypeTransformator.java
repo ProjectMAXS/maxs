@@ -36,6 +36,7 @@ public class TypeTransformator {
 	private static String sContactInfo = "contact info";
 	private static String sContactNickname = "contact nickname";
 	private static String sContactName = "contact name";
+	private static String sPercentageName = "percentage [0, 100]";
 
 	public static String fromNumberType(ContactNumber.NumberType type) {
 		switch (type) {
@@ -95,6 +96,9 @@ public class TypeTransformator {
 				break;
 			case CONTACT_NAME:
 				sb.append(sContactName);
+				break;
+			case PERCENTAGE:
+				sb.append(sPercentageName);
 				break;
 			case OTHER_STRING:
 				sb.append(commandHelp.mArgString);
