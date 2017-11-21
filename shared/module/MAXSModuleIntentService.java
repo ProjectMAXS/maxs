@@ -44,7 +44,7 @@ import android.os.Message;
  * MAXSModuleIntentService is meant for modules to handle their PERFORM_COMMAND
  * intents.
  * 
- * @author Florian Schmaus flo@freakempire.de
+ * @author Florian Schmaus flo@geekplace.eu
  * 
  */
 public abstract class MAXSModuleIntentService extends Service {
