@@ -27,6 +27,13 @@ import org.projectmaxs.module.notificationpolicyaccess.commands.NotificationInte
 import org.projectmaxs.module.notificationpolicyaccess.commands.NotificationInterruptionFilterShow;
 import org.projectmaxs.module.notificationpolicyaccess.commands.NotificationPolicyRequest;
 import org.projectmaxs.module.notificationpolicyaccess.commands.NotificationPolicyShow;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetAlarm;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetDtmf;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetMusic;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetNotification;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetRing;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetSystem;
+import org.projectmaxs.module.notificationpolicyaccess.commands.VolumeSetVoiceCall;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
@@ -67,6 +74,14 @@ public class ModuleService extends MAXSModuleIntentService {
 
 		SupraCommand.register(NotificationPolicyRequest.class, commands);
 		SupraCommand.register(NotificationPolicyShow.class, commands);
+
+		SupraCommand.register(VolumeSetAlarm.class, commands);
+		SupraCommand.register(VolumeSetDtmf.class, commands);
+		SupraCommand.register(VolumeSetMusic.class, commands);
+		SupraCommand.register(VolumeSetNotification.class, commands);
+		SupraCommand.register(VolumeSetRing.class, commands);
+		SupraCommand.register(VolumeSetSystem.class, commands);
+		SupraCommand.register(VolumeSetVoiceCall.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
