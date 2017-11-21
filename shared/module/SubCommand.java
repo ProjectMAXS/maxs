@@ -19,6 +19,7 @@ package org.projectmaxs.shared.module;
 
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.CommandHelp;
+import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.mainmodule.Command;
 
 import android.content.Context;
@@ -98,6 +99,8 @@ public abstract class SubCommand {
 	}
 
 	protected void setHelp(CommandHelp.ArgType type, String help) {
+		throwIaeIfArgTypeIsNone(type);
+
 		mArgType = type;
 		mHelp = help;
 	}
@@ -108,12 +111,21 @@ public abstract class SubCommand {
 	}
 
 	protected void setHelp(CommandHelp.ArgType type, int helpResId) {
+		throwIaeIfArgTypeIsNone(type);
+
 		mArgType = type;
 		mHelpResId = helpResId;
 	}
 
 	protected void setRequiresArgument() {
 		mRequiresArgument = true;
+	}
+
+	private static void throwIaeIfArgTypeIsNone(CommandHelp.ArgType type) {
+		if (type == ArgType.NONE) {
+			throw new IllegalArgumentException(
+					"Must not use ArgType.NONE, use setHelp(String, String) or setHelp(String, int) instead.");
+		}
 	}
 
 	public abstract Message execute(String arguments, Command command,
