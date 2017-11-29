@@ -99,7 +99,7 @@ public abstract class SubCommand {
 	}
 
 	protected void setHelp(CommandHelp.ArgType type, String help) {
-		throwIaeIfArgTypeIsNone(type);
+		throwIaeIfArgTypeIsOtherString(type);
 
 		mArgType = type;
 		mHelp = help;
@@ -111,7 +111,7 @@ public abstract class SubCommand {
 	}
 
 	protected void setHelp(CommandHelp.ArgType type, int helpResId) {
-		throwIaeIfArgTypeIsNone(type);
+		throwIaeIfArgTypeIsOtherString(type);
 
 		mArgType = type;
 		mHelpResId = helpResId;
@@ -121,10 +121,10 @@ public abstract class SubCommand {
 		mRequiresArgument = true;
 	}
 
-	private static void throwIaeIfArgTypeIsNone(CommandHelp.ArgType type) {
-		if (type == ArgType.NONE) {
+	private static void throwIaeIfArgTypeIsOtherString(CommandHelp.ArgType type) {
+		if (type == ArgType.OTHER_STRING) {
 			throw new IllegalArgumentException(
-					"Must not use ArgType.NONE, use setHelp(String, String) or setHelp(String, int) instead.");
+					"Must not use ArgType.OTHER_STRING, use setHelp(String, String) or setHelp(String, int) instead.");
 		}
 	}
 
