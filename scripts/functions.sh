@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# From https://stackoverflow.com/a/2990533/194894
+echoerr() { printf "%s\n" "$*" >&2; }
 
 get_package() {
     local manifest=${1}/AndroidManifest.xml
@@ -29,6 +32,7 @@ generateMaxsVersionCode() {
 
 	declare -r versionName="${1}"
 	if [[ -z "${versionName}" ]]; then
+		echoerr "No version name provided, aborting."
 		exit 1
 	fi
 
