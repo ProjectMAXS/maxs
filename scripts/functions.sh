@@ -8,34 +8,59 @@ get_package() {
 }
 
 generateMaxsVersionCode() {
-	set -x
+	set -e
+	local isRelease="false"
+
+	while getopts :dr: OPT; do
+		case $OPT in
+			d|+d)
+				set -x
+				;;
+			r|+r)
+				isRelease="$OPTARG"
+				;;
+			*)
+				echo "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <versionName>."
+				exit 2
+		esac
+	done
+	shift $(( OPTIND - 1 ))
+	OPTIND=1
+
 	declare -r versionName="${1}"
+	if [[ -z "${versionName}" ]]; then
+		exit 1
+	fi
 
 	# Android's versionCode maximum value is INT32T_MAX: 2147483647
 	# Which we split as follows:
 	# 2 14 74 83657
 	# |  |  |   |
-	# |  |  |   - Days since 1.1.2016.
+	# |  |  |   - 2 x Days since 1.1.2016.
 	# |  |  ----- Minor Version (max: 74 iff major==14, 99 otherwhise)
 	# |  -------- Major Version (max: 14)
 	# ----------- Constant value '2'
 
-	# "Days since" allows for ~ 228 years (= 83657/366) if Major
-	# Version ever reaches 14. Otherwhise ~ 273 years (=
-	# 99999/366). This split means that versionName must exists
+	# "Days since" allows for ~ 114 years (= 83657/(2*366)) if Major
+	# Version ever reaches 14. Otherwhise ~ 136 years (=
+	# 99999/(2*366)). This split means that versionName must exists
 	# exaclty of a Major version and a Minor version. And Major
 	# version MUST NOT be greater than 14.
 
 	# Ideally I would have split as follows:
 	# 21 47 4 83657
 	# |  |  |   |
-	# |  |  |   - Days since 1.1.2016. Allows for ~ 273 years (= 99999/366)
+	# |  |  |   - Days since 1.1.2016. Allows for ~ 136 years (= 99999/(2*366))
 	# |  |  ----- Patch Version
 	# |  -------- Minor Version
 	# ----------- Major Version
 
 	# But since MAXS did use the epoch seconds as version code, which
 	# are ~140000000, this split was not possible
+
+	# Note that we double the days per year to allow for release
+	# version codes, which have the same calculation but add one to
+	# the days since.
 
 	declare -i currentYear
 	currentYear="$(date +%Y)"
@@ -69,7 +94,17 @@ generateMaxsVersionCode() {
 	fi
 
 	declare -ir yearsSince2016=$((currentYear - 2016))
-	declare -ir dayCount=$(((yearsSince2016 * 366) + currentDay))
+
+	declare -i dayCount=$(((yearsSince2016 * (2 * 366)) + (2 * currentDay)))
+
+	case $isRelease in
+		snapshot)
+			((dayCount+=2))
+			;;
+		true)
+			((dayCount++))
+			;;
+	esac
 
 	declare -i versionCode=2000000000
 	versionCode=$((versionCode + (majorVersion * 10000000)))
@@ -82,6 +117,24 @@ generateMaxsVersionCode() {
 # Set the MAXS version code and optionally the version name (if given
 # as second argument)
 setMaxsVersion() {
+	local isRelease="false"
+
+	while getopts :dr: OPT; do
+		case $OPT in
+			d|+d)
+				set -x
+				;;
+			r|+r)
+				isRelease="$OPTARG"
+				;;
+			*)
+				echo "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <componentDirectory> [<versionName>]."
+				exit 2
+		esac
+	done
+	shift $(( OPTIND - 1 ))
+	OPTIND=1
+
 	declare -r componentDirectory="$1"
 	declare -r manifest="${componentDirectory}/AndroidManifest.xml"
 	if [[ $# -gt 1 ]]; then
@@ -94,7 +147,7 @@ setMaxsVersion() {
 	fi
 
 	local versionCode
-	versionCode=$(generateMaxsVersionCode "$versionName")
+	versionCode=$(generateMaxsVersionCode -r "$isRelease" "$versionName")
 
     # Sadly, this also modifies the layout of the
     # AndroidManifest. Would be cool to use xmlstarlet for XML
@@ -107,4 +160,34 @@ setMaxsVersion() {
 	if $setVersionName; then
 		sed -i "s/android:versionName=\"[^\"]*\"/android:versionName=\"${versionName}\"/" "${manifest}"
 	fi
+}
+
+setMaxsVersions() {
+	local isRelease="false"
+
+	while getopts :dr: OPT; do
+		case $OPT in
+			d|+d)
+				set -x
+				;;
+			r|+r)
+				isRelease="$OPTARG"
+				;;
+			*)
+				echo "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <versionName>."
+				exit 2
+		esac
+	done
+	shift $(( OPTIND - 1 ))
+	OPTIND=1
+
+	local -r maxsVersion="$1"
+
+	setMaxsVersion -r "$isRelease" "$MAINDIR" "$maxsVersion"
+	for t in $TRANSPORTS ; do
+		setMaxsVersion  -r "$isRelease" "$t" "$maxsVersion"
+	done
+	for m in $MODULES ; do
+		setMaxsVersion -r "$isRelease" "$m" "$maxsVersion"
+	done
 }

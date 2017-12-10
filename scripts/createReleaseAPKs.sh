@@ -88,13 +88,7 @@ elif $REMOTE; then
     # If we perform a remote build (e.g. on Jenkins), then set the
     # versionCode of all components so that they
     # can get published to the Play Store beta channel
-    setMaxsVersion $MAINDIR
-    for t in $TRANSPORTS ; do
-        setMaxsVersion $t
-    done
-    for m in $MODULES ; do
-        setMaxsVersion $m
-    done
+	setMaxsVersions
 fi
 
 ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease

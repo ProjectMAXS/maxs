@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Source the config files
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
@@ -19,26 +19,16 @@ nextVersion=${2}
 # the components. This ensures that users that are currently on a
 # pre-release version will automaticlly receive updates if their
 # pre-release version got released.
-setMaxsVersion $MAINDIR $releaseVersion
-for t in $TRANSPORTS ; do
-    setMaxsVersion $t $releaseVersion
-done
-for m in $MODULES ; do
-    setMaxsVersion $m $releaseVersion
-done
+setMaxsVersions -r true "$releaseVersion"
 
 declare -r MESSAGE="MAXS Release $releaseVersion"
 
 git commit -a -m "${MESSAGE}"
 git tag -s -u flo@geekplace.eu -m "${MESSAGE}" $releaseVersion
 
-setMaxsVersion $MAINDIR $nextVersion
-for t in $TRANSPORTS ; do
-    setMaxsVersion $t $nextVersion
-done
-for m in $MODULES ; do
-    setMaxsVersion $m $nextVersion
-done
+# Now, after the tag was created, set the next version.
+
+setMaxsVersions -r snapshot "$nextVersion"
 
 git commit -a -m "MAXS Pre-Release $nextVersion"
 
