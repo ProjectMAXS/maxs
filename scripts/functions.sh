@@ -23,7 +23,7 @@ generateMaxsVersionCode() {
 				isRelease="$OPTARG"
 				;;
 			*)
-				echo "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <versionName>."
+				echoerr "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <versionName>."
 				exit 2
 		esac
 	done
@@ -80,20 +80,20 @@ generateMaxsVersionCode() {
 
 	declare -r numberRegex='^[0-9]+$'
 	if ! [[ $majorVersion =~ $numberRegex ]]; then
-		echo "Major version is not a number"
+		echoerr "Major version is not a number"
 		exit 1
 	fi
 	if ! [[ $minorVersion =~ $numberRegex ]]; then
-		echo "Minor version is not a number"
+		echoerr "Minor version is not a number"
 		exit 1
 	fi
 
 	if [[ $majorVersion -gt 14 ]]; then
-		echo "Major version MUST NOT be greater than 14"
+		echoerr "Major version MUST NOT be greater than 14"
 		exit 1;
 	fi
 	if [[ $majorVersion == 14 && $minorVersion -gt 74 ]]; then
-		echo "Minor version MUST NOT be greater han 74 if Major version is 14"
+		echoerr "Minor version MUST NOT be greater han 74 if Major version is 14"
 		exit 1;
 	fi
 
@@ -132,7 +132,7 @@ setMaxsVersion() {
 				isRelease="$OPTARG"
 				;;
 			*)
-				echo "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <componentDirectory> [<versionName>]."
+				echoerr "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <componentDirectory> [<versionName>]."
 				exit 2
 		esac
 	done
@@ -178,7 +178,7 @@ setMaxsVersions() {
 				isRelease="$OPTARG"
 				;;
 			*)
-				echo "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <versionName>."
+				echoerr "usage: ${0##*/} [+-d] [+-r <true|false>] [--] <versionName>."
 				exit 2
 		esac
 	done
