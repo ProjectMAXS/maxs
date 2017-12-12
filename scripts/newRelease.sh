@@ -1,19 +1,39 @@
 #!/usr/bin/env bash
+set -e
 
 # Source the config files
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/functions.sh"
 
-if [[ $# -ne 2 ]]; then
-    echo "usage: `basename $0` <releaseVersion> <nextVersion>"
-    exit 1
+showUsage() {
+	echoerr "usage: ${0##*/} [+-d] <releaseVersion> <nextVersion>"
+}
+
+while getopts :d OPT; do
+	case $OPT in
+		d|+d)
+			set -x
+			;;
+		*)
+			showUsage
+			exit 1
+	esac
+done
+shift $(( OPTIND - 1 ))
+OPTIND=1
+
+readonly releaseVersion=${1}
+readonly nextVersion=${2}
+
+if [[ -z $releaseVersion ]]; then
+	showUsage
+	exit 2
 fi
 
-set -x
-set -e
-
-releaseVersion=${1}
-nextVersion=${2}
+if [[ -z $nextVersion ]]; then
+	showUsage
+	exit 3
+fi
 
 # update_version set's the version *and* increases the versionCode of
 # the components. This ensures that users that are currently on a
