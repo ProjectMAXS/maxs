@@ -148,7 +148,7 @@ setMaxsVersion() {
 	else
 		declare -r setVersionName="false"
 		local versionName
-		versionName="$(xmlstarlet sel -t -v "//manifest/@android:versionName" "${manifest}")"
+		versionName="$(xmllint --xpath 'string(//manifest/@*[namespace-uri()="http://schemas.android.com/apk/res/android" and local-name()="versionCode"]' "${manifest}")"
 	fi
 
 	local versionCode
