@@ -141,7 +141,8 @@ setMaxsVersion() {
 
 	declare -r componentDirectory="$1"
 	declare -r manifest="${componentDirectory}/AndroidManifest.xml"
-	if [[ $# -gt 1 ]]; then
+
+	if [[ -n "$2" ]]; then
 		declare -r setVersionName="true"
 		local versionName="$2"
 	else
