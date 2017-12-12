@@ -71,7 +71,9 @@ generateMaxsVersionCode() {
 	declare -i currentDay
 	currentDay="$(date +%j)"
 
-	# TODO implement caching functionality here
+	# TODO: Implement caching functionality here, as we will likley
+	# encounter the same versionName multiple times (for each maxs
+	# component).
 
 	IFS='.' read -ra versionComponents <<< "$versionName"
 
