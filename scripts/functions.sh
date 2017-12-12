@@ -75,7 +75,9 @@ generateMaxsVersionCode() {
 	# encounter the same versionName multiple times (for each maxs
 	# component).
 
-	IFS='.' read -ra versionComponents <<< "$versionName"
+	# Read versioniName into the versionComponents array, but first
+	# strep possibly -(SNAPSHOT|…) suffixes from versionName.
+	IFS='.' read -ra versionComponents <<< "${versionName%-*}"
 
 	declare -ir majorVersion=${versionComponents[0]}
 	declare -ir minorVersion=${versionComponents[1]}
