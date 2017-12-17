@@ -26,6 +26,8 @@ cd "`dirname "${SCRIPTDIR}"`" > /dev/null
 SCRIPTDIR="`pwd`";
 popd  > /dev/null
 
+. "${SCRIPTDIR}/functions.sh"
+
 BASEDIR="$(cd ${SCRIPTDIR}/.. && pwd)"
 HOMEPAGE="${BASEDIR}/homepage"
 DOCDIR="${BASEDIR}/documentation"
@@ -34,14 +36,18 @@ TRANSPORTS="$(find $BASEDIR -mindepth 1 -maxdepth 1 -type d -name 'transport-*')
 MODULES="$(find $BASEDIR -mindepth 1 -maxdepth 2 -path '*module-*' -name AndroidManifest.xml -printf '%h\n')"
 COMPONENTS="${MAINDIR} ${TRANSPORTS} ${MODULES}"
 
-if command -v xml &> /dev/null; then
+set +e
+if ! command -v xmllint &> /dev/null; then
     declare -A MOD2PKG
     for m in $MODULES ; do
 	module_name=$(basename $m)
 	module_package=$(xmlstarlet sel -t -v "//manifest/@package" ${m}/AndroidManifest.xml)
 	MOD2PKG[${module_name}]=${module_package}
     done
+else
+	echoerr "WARNING: xmllint not found! Some things may not work"
 fi
+set -e
 
 if [[ -f ${BASEDIR}/config ]]; then
     # config is there, source it

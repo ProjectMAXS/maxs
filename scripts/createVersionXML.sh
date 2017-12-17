@@ -2,6 +2,9 @@
 
 set -e
 
+# Source the config files
+. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
+
 while getopts c:d OPTION "$@"; do
     case $OPTION in
 		c)
@@ -21,7 +24,7 @@ fi
 TMPDIR=$(mktemp -d)
 trap 'rm -rf ${TMPDIR}' EXIT
 
-VERSION_NAME=$(awk -F'"' '/android:versionName/{print $(NF-1); exit}' "${COMPONENT_DIR}/AndroidManifest.xml")
+VERSION_NAME=$(getVersionNameFromManifest "${COMPONENT_DIR}/AndroidManifest.xml")
 
 if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
     GIT_REF=$(git describe --tags --dirty=+)

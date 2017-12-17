@@ -2,6 +2,7 @@
 
 set -e
 
+# Source the config files
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
 
 while getopts dm: OPTION "$@"; do
@@ -20,8 +21,8 @@ if [[ -z $MODULE ]]; then
 	exit 1
 fi
 
-versionCode=$(xmlstarlet sel -t -v "//manifest/@android:versionCode" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
-versionName=$(xmlstarlet sel -t -v "//manifest/@android:versionName" ${BASEDIR}/${MODULE}/AndroidManifest.xml)
+versionCode=$(getVersionCodeFromManifest ${BASEDIR}/${MODULE}/AndroidManifest.xml)
+versionName=$(getVersionNameFromManifest ${BASEDIR}/${MODULE}/AndroidManifest.xml)
 moduleName=${MODULE#module-}
 
 cat <<EOF > ${FDROIDMETA}/${MOD2PKG[${MODULE}]}.txt

@@ -3,7 +3,6 @@ set -e
 
 # Source the config files
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/setup.sh"
-. "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/functions.sh"
 
 showUsage() {
 	echoerr "usage: ${0##*/} [+-d] <releaseVersion> <nextVersion>"

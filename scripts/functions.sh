@@ -3,11 +3,20 @@
 # From https://stackoverflow.com/a/2990533/194894
 echoerr() { printf "%s\n" "$*" >&2; }
 
-get_package() {
-    local manifest=${1}/AndroidManifest.xml
-    local pkg
-    pkg="$(xmlstarlet sel -t -v "//manifest/@package" "${manifest}")"
-    echo "$pkg"
+getPackageFromManifest() {
+	xmllint --xpath 'string(//manifest/@package)' "$1"
+}
+
+getPackageOfComponent() {
+	getPackageFromManifest "${1}/AndroidManifest.xml"
+}
+
+getVersionNameFromManifest() {
+	xmllint --xpath 'string(//manifest/@*[namespace-uri()="http://schemas.android.com/apk/res/android" and local-name()="versionName"])' "$1"
+}
+
+getVersionCodeFromManifest() {
+	xmllint --xpath 'string(//manifest/@*[namespace-uri()="http://schemas.android.com/apk/res/android" and local-name()="versionCode"])' "$1"
 }
 
 generateMaxsVersionCode() {
@@ -152,15 +161,14 @@ setMaxsVersion() {
 	else
 		declare -r setVersionName="false"
 		local versionName
-		versionName="$(xmllint --xpath 'string(//manifest/@*[namespace-uri()="http://schemas.android.com/apk/res/android" and local-name()="versionName"])' "${manifest}")"
+		versionName="$(getVersionNameFromManifest "${manifest}")"
 	fi
 
 	local versionCode
 	versionCode=$(generateMaxsVersionCode -r "$isRelease" "$versionName")
 
     # Sadly, this also modifies the layout of the
-    # AndroidManifest. Would be cool to use xmlstarlet for XML
-    # modifications
+    # AndroidManifest.
 #    xml ed -P -S -u "//manifest/@android:versionCode" -v $newVersionCode $manifest
 #    xml ed -P -S -u "//manifest/@android:versionName" -v $newVersionName $manifest
 
