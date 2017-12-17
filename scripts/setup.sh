@@ -37,7 +37,8 @@ MODULES="$(find $BASEDIR -mindepth 1 -maxdepth 2 -path '*module-*' -name Android
 COMPONENTS="${MAINDIR} ${TRANSPORTS} ${MODULES}"
 
 set +e
-if ! command -v xmllint &> /dev/null; then
+if command -v xmllint &> /dev/null; then
+	set -e
     declare -A MOD2PKG
     for m in $MODULES ; do
 	module_name=$(basename $m)
@@ -45,9 +46,9 @@ if ! command -v xmllint &> /dev/null; then
 	MOD2PKG[${module_name}]=${module_package}
     done
 else
+	set -e
 	echoerr "WARNING: xmllint not found! Some things may not work"
 fi
-set -e
 
 if [[ -f ${BASEDIR}/config ]]; then
     # config is there, source it
