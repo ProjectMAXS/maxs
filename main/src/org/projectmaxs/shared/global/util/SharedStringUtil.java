@@ -89,7 +89,7 @@ public class SharedStringUtil {
 		if (string.length() < maxSize) {
 			res = string;
 		} else {
-			res = string.substring(0, maxSize) + "...";
+			res = string.substring(0, maxSize) + "…";
 		}
 		return res;
 	}
