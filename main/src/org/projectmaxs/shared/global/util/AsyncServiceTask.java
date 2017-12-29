@@ -72,6 +72,7 @@ public abstract class AsyncServiceTask<I extends IInterface> {
 
 	private class PerformTaskThread extends Thread {
 
+		@Override
 		public void run() {
 			I iinterface = asInterface(mService);
 			try {
