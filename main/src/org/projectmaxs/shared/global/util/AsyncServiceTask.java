@@ -60,11 +60,11 @@ public abstract class AsyncServiceTask<I extends IInterface> {
 		mContext = context;
 	}
 
-	public abstract I asInterface(IBinder iBinder);
+	protected abstract I asInterface(IBinder iBinder);
 
-	public abstract void performTask(I iinterface) throws Exception;
+	protected abstract void performTask(I iinterface) throws Exception;
 
-	public void onException(Exception e) {}
+	protected void onException(Exception e) {}
 
 	public final boolean go() {
 		return mContext.bindService(mBindIntent, mConnection, Context.BIND_AUTO_CREATE);
