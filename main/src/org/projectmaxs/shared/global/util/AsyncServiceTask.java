@@ -79,11 +79,13 @@ public abstract class AsyncServiceTask<I extends IInterface> {
 				performTask(iinterface);
 			} catch (Exception e) {
 				onException(e);
-			}
-			try {
-				mContext.unbindService(mConnection);
-			} catch (Exception e) {
-				LOG.w("unbindService", e);
+			} finally {
+				try {
+					mContext.unbindService(mConnection);
+				} catch (IllegalArgumentException e) {
+					LOG.w("Illegal argument exception while unbinding service. This usually means that the service was not bound while calling unbindService()",
+							e);
+				}
 			}
 		}
 
