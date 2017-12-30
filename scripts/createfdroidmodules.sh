@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -49,6 +49,7 @@ Build:${versionName},${versionCode}
     commit=${versionName}
     subdir=${MODULE}
     submodules=yes
+    sudo=apt-get install -y python-gnupg libxml2-utils
     init=cd .. && \\
         make ${MODULE}/Makefile
     prebuild=make prebuild && \
