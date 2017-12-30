@@ -41,6 +41,7 @@ public abstract class AsyncServiceTask<I extends IInterface> {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			// nothing to do here
+			LOG.w("Service " + name + " was unexpectedly disconnected");
 		}
 
 	};
