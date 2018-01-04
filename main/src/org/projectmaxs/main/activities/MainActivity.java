@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
 			public void onServiceStart(final MAXSService service) {
 				serviceRunning();
 			}
-
+			@Override
 			public void onServiceStop(final MAXSService service) {
 				serviceNotRunning();
 			}
