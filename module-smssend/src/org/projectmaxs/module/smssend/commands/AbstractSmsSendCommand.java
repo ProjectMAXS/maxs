@@ -29,7 +29,11 @@ import org.projectmaxs.shared.global.messagecontent.Element;
 import org.projectmaxs.shared.global.messagecontent.Sms;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
+import org.projectmaxs.shared.global.util.ServiceTask.IBinderAsInterface;
+import org.projectmaxs.shared.global.util.ServiceTask.TimeoutException;
 import org.projectmaxs.shared.global.util.SharedStringUtil;
+import org.projectmaxs.shared.global.util.SyncServiceTask;
+import org.projectmaxs.shared.global.util.SyncServiceTask.PerformSyncTask;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.ContactUtil;
 import org.projectmaxs.shared.module.IPhoneStateReadModuleService;
@@ -40,10 +44,7 @@ import org.projectmaxs.shared.module.SubCommand;
 import org.projectmaxs.shared.module.SupraCommand;
 
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.telephony.SmsManager;
@@ -64,27 +65,8 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 		super(supraCommand, name, isDefaultWithoutArguments, isDefaultWithArguments);
 	}
 
-	private ServiceConnection mPhonestateReadModuleServiceConnection = new ServiceConnection() {
+	private SyncServiceTask<IPhoneStateReadModuleService> mPhoneStateReadModuleServiceTask;
 
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			if (LOG.isDebugLogEnabled()) {
-				long diff = System.currentTimeMillis()
-						- mPhonestateReadModuleServiceRequestTimestamp;
-				LOG.d("Serivce " + name + " connected after " + diff + "ms");
-			}
-			mPhonestateReadModuleService = IPhoneStateReadModuleService.Stub.asInterface(service);
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mPhonestateReadModuleService = null;
-			LOG.w("Service " + name + " has unexpectedly disconnected");
-		}
-
-	};
-	private volatile IPhoneStateReadModuleService mPhonestateReadModuleService;
-	private volatile long mPhonestateReadModuleServiceRequestTimestamp;
 
 	private PackageManagerUtil mPackageManagerUtil;
 	MAXSModuleIntentService mService;
@@ -102,14 +84,18 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 			mPackageManagerUtil = PackageManagerUtil.getInstance(mService);
 		}
 
-		if (mPhonestateReadModuleService == null && isModulePhonestateReadInstalled()) {
+		if (mPhoneStateReadModuleServiceTask == null && isModulePhonestateReadInstalled()) {
 			Intent intent = new Intent(ModuleConstants.ACTION_BIND_PHONESTATE_READ);
 			intent.setClassName(ModuleConstants.PHONESTATE_READ_MODULE_PACKAGE,
 					ModuleConstants.PHONSTATE_READ_SERVICE);
 
-			mPhonestateReadModuleServiceRequestTimestamp = System.currentTimeMillis();
-			service.bindService(intent, mPhonestateReadModuleServiceConnection,
-					Context.BIND_AUTO_CREATE);
+			mPhoneStateReadModuleServiceTask = SyncServiceTask.builder(service, intent,
+					new IBinderAsInterface<IPhoneStateReadModuleService>() {
+						@Override
+						public IPhoneStateReadModuleService asInterface(IBinder iBinder) {
+							return IPhoneStateReadModuleService.Stub.asInterface(iBinder);
+						}
+					}).build();
 		}
 
 		return null;
@@ -125,8 +111,12 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 	 * @param contact
 	 *            - optional
 	 * @return
+	 * @throws InterruptedException
+	 * @throws TimeoutException
+	 * @throws RemoteException
 	 */
-	final Message sendSms(String receiver, String text, int cmdId, Contact contact) {
+	final Message sendSms(String receiver, String text, int cmdId, Contact contact)
+			throws RemoteException, TimeoutException, InterruptedException {
 		SmsManager smsManager = SmsManager.getDefault();
 		// Note that sentIntents and deliveryIntents could be null based on the API contract
 		// of sendMultipartTextMessage(), which clearly states "if not null". Sadly some devices
@@ -147,12 +137,6 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 			// divideMessage(String) although the API contract does not mention that this is
 			// required. See also https://stackoverflow.com/a/27300529/194894
 			parts = maybeDivideMessageViaModulePhonestateRead(text);
-		} finally {
-			final IPhoneStateReadModuleService phoneStateReadModuleService = mPhonestateReadModuleService;
-			if (phoneStateReadModuleService != null) {
-				mPhonestateReadModuleService = null;
-				mService.unbindService(mPhonestateReadModuleServiceConnection);
-			}
 		}
 
 		int partCount = parts.size();
@@ -208,25 +192,22 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 				.isPackageInstalled(ModuleConstants.PHONESTATE_READ_MODULE_PACKAGE);
 	}
 
-	private final ArrayList<String> maybeDivideMessageViaModulePhonestateRead(String message) {
+	private final ArrayList<String> maybeDivideMessageViaModulePhonestateRead(
+			final String message)
+			throws RemoteException, TimeoutException, InterruptedException {
 		if (!isModulePhonestateReadInstalled()) {
 			throw new IllegalStateException(
 					"Can not split SMS message as this devices SmsManager.divideMessage() requires the PHONE_STATE_READ permission and MAXS module-phonestateread is not installed. Consider installing module-phonestateread.");
 		}
 
-		final IPhoneStateReadModuleService phonestateReadModuleService = mPhonestateReadModuleService;
-		if (phonestateReadModuleService == null) {
-			long diff = System.currentTimeMillis() - mPhonestateReadModuleServiceRequestTimestamp;
-			throw new AssertionError(
-					"PhoneStateReadModule service was not yet bound after " + diff + "ms");
-		}
-
-		List<String> res;
-		try {
-			res = phonestateReadModuleService.divideSmsMessage(message);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
+		List<String> res = mPhoneStateReadModuleServiceTask.performSyncTask(
+				new PerformSyncTask<IPhoneStateReadModuleService, RuntimeException, List<String>>() {
+					@Override
+					public List<String> performTask(IPhoneStateReadModuleService service)
+							throws RemoteException {
+						return service.divideSmsMessage(message);
+					}
+				});
 
 		return new ArrayList<>(res);
 	}

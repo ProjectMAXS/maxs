@@ -13,82 +13,129 @@
 
     You should have received a copy of the GNU General Public License
     along with MAXS.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+*/
 package org.projectmaxs.shared.global.util;
 
-import android.content.ComponentName;
+import java.util.concurrent.Executor;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.os.IInterface;
+import android.os.RemoteException;
 
-public abstract class AsyncServiceTask<I extends IInterface> {
-	private static final Log LOG = Log.getLog();
+public class AsyncServiceTask<I extends IInterface, E extends Exception> extends ServiceTask<I> {
 
-	public final Context mContext;
+	private final PerformAsyncTask<I, E> performAsyncTask;
+	private final ExceptionHandler<E> exceptionHandler;
+	private final Executor executor;
+	private final Class<E> exceptionClass;
 
-	final Intent mBindIntent;
-	final private ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			mService = service;
-			new PerformTaskThread().start();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// nothing to do here
-			LOG.w("Service " + name + " was unexpectedly disconnected");
-		}
-
-	};
-
-	private IBinder mService;
-
-	/**
-	 * If required, use the application context to avoid
-	 * "ServiceConnection leaked" errors
-	 * 
-	 * @param bindIntent
-	 * @param context
-	 *            the context used to bind the service.
-	 */
-	public AsyncServiceTask(Intent bindIntent, Context context) {
-		mBindIntent = bindIntent;
-		mContext = context;
+	private AsyncServiceTask(AsyncServiceTaskBuilder<I, E> builder) {
+		super(builder);
+		this.performAsyncTask = builder.performAsyncTask;
+		this.exceptionClass = builder.exceptionClass;
+		this.exceptionHandler = builder.exceptionHandler;
+		this.executor = builder.executor;
 	}
 
-	protected abstract I asInterface(IBinder iBinder);
-
-	protected abstract void performTask(I iinterface) throws Exception;
-
-	protected void onException(Exception e) {}
-
-	public final boolean go() {
-		return mContext.bindService(mBindIntent, mConnection, Context.BIND_AUTO_CREATE);
+	public static <I extends IInterface, E extends Exception> AsyncServiceTaskBuilder<I, E> builder(
+			Context context,
+			Intent bindIntent,
+			IBinderAsInterface<I> iBinderAsInterface,
+			PerformAsyncTask<I, E> performAsyncTask,
+			Class<E> exceptionClass) {
+		return new AsyncServiceTaskBuilder<I, E>(context, bindIntent, iBinderAsInterface,
+				performAsyncTask, exceptionClass);
 	}
 
-	private class PerformTaskThread extends Thread {
+	public interface PerformAsyncTask<I, E extends Exception> {
+		void performTask(I service) throws RemoteException, E;
+	}
 
-		@Override
-		public void run() {
-			I iinterface = asInterface(mService);
-			try {
-				performTask(iinterface);
-			} catch (Exception e) {
-				onException(e);
-			} finally {
+	public interface ExceptionHandler<E extends Exception> {
+		void onException(Exception exception, E optionalSpecificException,
+				RemoteException optionalRemoteException);
+	}
+
+	public void go() {
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
 				try {
-					mContext.unbindService(mConnection);
-				} catch (IllegalArgumentException e) {
-					LOG.w("Illegal argument exception while unbinding service. This usually means that the service was not bound while calling unbindService()",
-							e);
+					I serviceInterface = prepareTaskAndPossiblyWaitForService();
+					performAsyncTask.performTask(serviceInterface);
+				} catch (RemoteException exception) {
+					if (exceptionHandler != null) {
+						exceptionHandler.onException(exception, null, exception);
+						return;
+					}
+					throw new RuntimeException(exception);
+				} catch (Exception exception) {
+					if (exceptionHandler != null && exceptionClass.isInstance(exception)) {
+						@SuppressWarnings("unchecked")
+						E e = (E) exception;
+						exceptionHandler.onException(exception, e, null);
+						return;
+					}
+					throw new RuntimeException(exception);
+				} finally {
+					onTaskFinished();
 				}
 			}
+		};
+
+		if (executor != null) {
+			executor.execute(runnable);
+		} else {
+			Thread thread = new Thread(runnable);
+			thread.setDaemon(true);
+			thread.start();
+		}
+	}
+
+	public static class AsyncServiceTaskBuilder<I extends IInterface, E extends Exception>
+			extends ServiceTask.Builder<I, AsyncServiceTaskBuilder<I, E>, AsyncServiceTask<I, E>> {
+
+		private final PerformAsyncTask<I, E> performAsyncTask;
+		private final Class<E> exceptionClass;
+
+		private ExceptionHandler<E> exceptionHandler = null;
+		private Executor executor = null;
+
+		private AsyncServiceTaskBuilder(Context context, Intent bindIntent,
+				IBinderAsInterface<I> iBinderAsInterface, PerformAsyncTask<I, E> performAsyncTask,
+				Class<E> exceptionClass) {
+			super(context, bindIntent, iBinderAsInterface);
+			// TODO: Use Objects.requireNonNull once MAXS min API is 19 or higher.
+			if (performAsyncTask == null) {
+				throw new IllegalArgumentException();
+			}
+			if (exceptionClass == null) {
+				throw new IllegalArgumentException();
+			}
+			this.performAsyncTask = performAsyncTask;
+			this.exceptionClass = exceptionClass;
 		}
 
-	}
+		@Override
+		public AsyncServiceTask<I, E> build() {
+			return new AsyncServiceTask<I, E>(this);
+		}
+
+		public AsyncServiceTaskBuilder<I, E> withExceptionHandler(
+				ExceptionHandler<E> exceptionHandler) {
+			this.exceptionHandler = exceptionHandler;
+			return getThis();
+		}
+
+		public AsyncServiceTaskBuilder<I, E> withExecutor(Executor executor) {
+			this.executor = executor;
+			return getThis();
+		}
+
+		@Override
+		protected AsyncServiceTaskBuilder<I, E> getThis() {
+			return this;
+		}
+	};
 }

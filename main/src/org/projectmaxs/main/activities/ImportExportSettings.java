@@ -21,9 +21,14 @@ import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.projectmaxs.main.ModuleRegistry;
 import org.projectmaxs.main.R;
@@ -154,76 +159,94 @@ public class ImportExportSettings extends Activity {
 		Intent intent = new Intent(GlobalConstants.ACTION_BIND_FILEREAD);
 		intent.setClassName(GlobalConstants.FILEREAD_MODULE_PACKAGE,
 				GlobalConstants.FILEREAD_SERVICE);
-		new AsyncServiceTask<IFileReadModuleService>(intent, this) {
+		AsyncServiceTask.builder(this, intent,
+				new AsyncServiceTask.IBinderAsInterface<IFileReadModuleService>() {
+					@Override
+					public IFileReadModuleService asInterface(IBinder iBinder) {
+						return IFileReadModuleService.Stub.asInterface(iBinder);
+					}
+				},
+				new AsyncServiceTask.PerformAsyncTask<IFileReadModuleService, Exception>() {
+					@Override
+					public void performTask(IFileReadModuleService iinterface)
+							throws Exception {
+						final String importFile = directory + '/' + GlobalConstants.MAIN_PACKAGE + ".xml";
+						if (!iinterface.isFile(importFile)) {
+							appendStatus(GlobalConstants.MAIN_PACKAGE + ": Error. Not a file: "
+									+ importFile);
+							return;
+						}
 
-			@Override
-			public IFileReadModuleService asInterface(IBinder iBinder) {
-				return IFileReadModuleService.Stub.asInterface(iBinder);
-			}
-
-			@Override
-			public void performTask(IFileReadModuleService iinterface) throws Exception {
-				final String importFile = directory + '/' + GlobalConstants.MAIN_PACKAGE + ".xml";
-				if (!iinterface.isFile(importFile)) {
-					appendStatus(GlobalConstants.MAIN_PACKAGE + ": Error. Not a file: "
-							+ importFile);
-					return;
-				}
-
-				final byte[] bytes = iinterface.readFileBytes(importFile);
-				final String fileContents = new String(bytes, "UTF-8");
-				ImportExportSharedPreferences.importFromReader(
-						Settings.getInstance(ImportExportSettings.this).getSharedPreferences(),
-						new StringReader(fileContents));
-				appendStatus(GlobalConstants.MAIN_PACKAGE + ": Imported");
-			}
-
-			@Override
-			public void onException(Exception e) {
-				LOG.e("performTask", e);
-				appendStatus(GlobalConstants.MAIN_PACKAGE + ": " + e.getLocalizedMessage());
-			}
-
-		}.go();
+						final byte[] bytes = iinterface.readFileBytes(importFile);
+						final String fileContents = new String(bytes, "UTF-8");
+						ImportExportSharedPreferences.importFromReader(
+								Settings.getInstance(ImportExportSettings.this).getSharedPreferences(),
+								new StringReader(fileContents));
+						appendStatus(GlobalConstants.MAIN_PACKAGE + ": Imported");
+					}
+				},
+				Exception.class)
+		.withExceptionHandler(new AsyncServiceTask.ExceptionHandler<Exception>() {
+					@Override
+					public void onException(Exception e, Exception specificExcepiton,
+							RemoteException optionalRemoteException) {
+						LOG.e("performTask", e);
+						appendStatus(GlobalConstants.MAIN_PACKAGE + ": " + e.getLocalizedMessage());
+					}
+		})
+		.build()
+		.go();
 
 		List<String> packages = new LinkedList<String>();
 		packages.addAll(ModuleRegistry.getInstance(this).getAllModulePackages());
 		packages.addAll(TransportRegistry.getInstance(this).getAllTransportPackages());
 
+		// TODO: Does this executor stop if it goes out of scope and no more threads are
+		// running/pending?
+		Executor singleThreadExecutor = new ThreadPoolExecutor(0, 1, 100L, TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<Runnable>());
+
 		for (final String pkg : packages) {
-			new AsyncServiceTask<IFileReadModuleService>(intent, this) {
+			AsyncServiceTask.builder(this, intent,
+					new AsyncServiceTask.IBinderAsInterface<IFileReadModuleService>() {
+						@Override
+						public IFileReadModuleService asInterface(IBinder iBinder) {
+							return IFileReadModuleService.Stub.asInterface(iBinder);
+						}
+					},
+					new AsyncServiceTask.PerformAsyncTask<IFileReadModuleService, UnsupportedEncodingException>() {
+						@Override
+						public void performTask(IFileReadModuleService iinterface)
+								throws RemoteException, UnsupportedEncodingException {
+							final String importFile = directory + '/' + pkg + ".xml";
+							if (!iinterface.isFile(importFile)) {
+								appendStatus(pkg + ": Error. Not a file: " + importFile);
+								return;
+							}
 
-				@Override
-				public IFileReadModuleService asInterface(IBinder iBinder) {
-					return IFileReadModuleService.Stub.asInterface(iBinder);
-				}
+							final byte[] bytes = iinterface.readFileBytes(importFile);
+							final String fileContents = new String(bytes, "UTF-8");
 
-				@Override
-				public void performTask(IFileReadModuleService iinterface) throws Exception {
-					final String importFile = directory + '/' + pkg + ".xml";
-					if (!iinterface.isFile(importFile)) {
-						appendStatus(pkg + ": Error. Not a file: " + importFile);
-						return;
-					}
-
-					final byte[] bytes = iinterface.readFileBytes(importFile);
-					final String fileContents = new String(bytes, "UTF-8");
-
-					final Intent intent = new Intent(GlobalConstants.ACTION_IMPORT_SETTINGS);
-					intent.putExtra(GlobalConstants.EXTRA_CONTENT, fileContents);
-					for (String receiver : Constants.COMPONENT_RECEIVERS) {
-						intent.setClassName(pkg, pkg + '.' + receiver);
-						sendBroadcast(intent);
-					}
-				}
-
-				@Override
-				public void onException(Exception e) {
-					LOG.e("performTask", e);
-					appendStatus(pkg + ": " + e.getLocalizedMessage());
-				}
-
-			}.go();
+							final Intent intent = new Intent(GlobalConstants.ACTION_IMPORT_SETTINGS);
+							intent.putExtra(GlobalConstants.EXTRA_CONTENT, fileContents);
+							for (String receiver : Constants.COMPONENT_RECEIVERS) {
+								intent.setClassName(pkg, pkg + '.' + receiver);
+								sendBroadcast(intent);
+							}
+						}
+					},
+					UnsupportedEncodingException.class)
+					.withExceptionHandler(new AsyncServiceTask.ExceptionHandler<UnsupportedEncodingException>() {
+						@Override
+						public void onException(Exception e,
+								UnsupportedEncodingException specificExcepiton,
+								RemoteException optionalRemoteException) {
+							LOG.e("performTask", e);
+							appendStatus(pkg + ": " + e.getLocalizedMessage());
+				}})
+			.withExecutor(singleThreadExecutor)
+			.build()
+			.go();
 		}
 	}
 
@@ -231,30 +254,34 @@ public class ImportExportSettings extends Activity {
 		Intent intent = new Intent(GlobalConstants.ACTION_BIND_FILEWRITE);
 		intent.setClassName(GlobalConstants.FILEWRITE_MODULE_PACKAGE,
 				GlobalConstants.FILEWRITE_SERVICE);
-		new AsyncServiceTask<IFileWriteModuleService>(intent, context) {
-
-			@Override
-			public IFileWriteModuleService asInterface(IBinder iBinder) {
-				return IFileWriteModuleService.Stub.asInterface(iBinder);
-			}
-
-			@Override
-			public void performTask(IFileWriteModuleService iinterface) {
-				String error = null;
-				try {
-					error = iinterface.writeFileBytes(file, bytes);
-				} catch (RemoteException e) {
-					error = e.getMessage();
-				}
-				String status;
-				if (error == null) {
-					status = "exported settings to " + file;
-				} else {
-					status = "could not export settings to " + file + " error: " + error;
-				}
-				appendStatus(status);
-			}
-
-		}.go();
+		AsyncServiceTask.builder(context, intent,
+				new AsyncServiceTask.IBinderAsInterface<IFileWriteModuleService>() {
+					@Override
+					public IFileWriteModuleService asInterface(IBinder iBinder) {
+						return IFileWriteModuleService.Stub.asInterface(iBinder);
+					}
+				},
+				new AsyncServiceTask.PerformAsyncTask<IFileWriteModuleService, RuntimeException>() {
+					@Override
+					public void performTask(IFileWriteModuleService iinterface)
+							throws RuntimeException {
+						String error = null;
+						try {
+							error = iinterface.writeFileBytes(file, bytes);
+						} catch (RemoteException e) {
+							error = e.getMessage();
+						}
+						String status;
+						if (error == null) {
+							status = "exported settings to " + file;
+						} else {
+							status = "could not export settings to " + file + " error: " + error;
+						}
+						appendStatus(status);
+					}
+				},
+				RuntimeException.class)
+		.build()
+		.go();
 	}
 }

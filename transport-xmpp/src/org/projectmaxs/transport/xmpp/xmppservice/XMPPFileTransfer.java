@@ -118,55 +118,51 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		}
 		final InputStream is = isTmp;
 
-		new AsyncServiceTask<IMAXSIncomingFileTransferService>(INCOMING_FILETRANSFER_BIND_INTENT,
-				mContext) {
-
-			@Override
-			public IMAXSIncomingFileTransferService asInterface(IBinder iBinder) {
-				return IMAXSIncomingFileTransferService.Stub.asInterface(iBinder);
-			}
-
-			@Override
-			public void performTask(IMAXSIncomingFileTransferService iinterface) {
-				try {
-					ParcelFileDescriptor pfd = iinterface.incomingFileTransfer(filename, size,
-							description);
-					if (pfd == null) {
-						LOG.e("fileTranferRequest: PFD from incomingFileTransfer is null");
-						is.close();
-						return;
+		AsyncServiceTask.builder(mContext ,INCOMING_FILETRANSFER_BIND_INTENT,
+				new AsyncServiceTask.IBinderAsInterface<IMAXSIncomingFileTransferService>() {
+					@Override
+					public IMAXSIncomingFileTransferService asInterface(IBinder iBinder) {
+						return IMAXSIncomingFileTransferService.Stub.asInterface(iBinder);
 					}
-					OutputStream os = new ParcelFileDescriptor.AutoCloseOutputStream(pfd);
+				},
+				new AsyncServiceTask.PerformAsyncTask<IMAXSIncomingFileTransferService, IOException>() {
 
-					int len;
-					byte[] buf = new byte[1024];
-
-					try {
-						while ((len = is.read(buf)) > 0) {
-							os.write(buf, 0, len);
-						}
-					} catch (IOException e) {
-						LOG.e("fleTransferRequest", e);
-					} finally {
-						try {
+					@Override
+					public void performTask(IMAXSIncomingFileTransferService iinterface)
+							throws RemoteException, IOException {
+						ParcelFileDescriptor pfd = iinterface.incomingFileTransfer(filename, size,
+								description);
+						if (pfd == null) {
+							LOG.e("fileTranferRequest: PFD from incomingFileTransfer is null");
 							is.close();
-						} catch (IOException e1) {
-							LOG.e("fleTransferRequest", e1);
+							return;
 						}
+						OutputStream os = new ParcelFileDescriptor.AutoCloseOutputStream(pfd);
+
+						int len;
+						byte[] buf = new byte[1024];
+
 						try {
-							os.close();
-						} catch (IOException e1) {
-							LOG.e("fleTransferRequest", e1);
+							while ((len = is.read(buf)) > 0) {
+								os.write(buf, 0, len);
+							}
+						} finally {
+							try {
+								is.close();
+							} catch (IOException e1) {
+								LOG.e("fleTransferRequest", e1);
+							}
+							try {
+								os.close();
+							} catch (IOException e1) {
+								LOG.e("fleTransferRequest", e1);
+							}
 						}
 					}
-				} catch (RemoteException e) {
-					LOG.e("fileTransferRequest", e);
-				} catch (IOException e) {
-					LOG.e("fileTransferRequest", e);
-				}
-			}
-
-		}.go();
+				},
+				IOException.class)
+				.build()
+				.go();
 	}
 
 	@Override
