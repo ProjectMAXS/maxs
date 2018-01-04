@@ -67,19 +67,23 @@ public abstract class MAXSModuleReceiver extends BroadcastReceiver {
 
 		String replyToClassName;
 		Intent replyIntent = null;
-		if (GlobalConstants.ACTION_REGISTER.equals(action)) {
+		switch (action) {
+		case GlobalConstants.ACTION_REGISTER:
 			replyIntent = new Intent(GlobalConstants.ACTION_REGISTER_MODULE);
 			replyIntent.putExtra(GlobalConstants.EXTRA_MODULE_INFORMATION, mModuleInformation);
 			replyToClassName = MainModuleConstants.MAIN_MODULE_SERVICE;
-		} else if (GlobalConstants.ACTION_EXPORT_SETTINGS.equals(action)) {
+			break;
+		case GlobalConstants.ACTION_EXPORT_SETTINGS:
 			String directory = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			replyIntent = exportSettings(context, directory);
 			replyToClassName = GlobalConstants.MAIN_INTENT_SERVICE;
-		} else if (GlobalConstants.ACTION_IMPORT_SETTINGS.equals(action)) {
+			break;
+		case GlobalConstants.ACTION_IMPORT_SETTINGS:
 			String settings = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			replyIntent = importSettings(context, settings);
 			replyToClassName = GlobalConstants.MAIN_INTENT_SERVICE;
-		} else {
+			break;
+		default:
 			throw new IllegalStateException("MAXSModuleReceiver: unknown action=" + action);
 		}
 		replyIntent.setClassName(GlobalConstants.MAIN_PACKAGE, replyToClassName);

@@ -36,17 +36,20 @@ public class MAXSIntentService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		String action = intent.getAction();
 		LOG.d("handleIntent() Action: " + action);
-		if (action.equals(GlobalConstants.ACTION_EXPORT_TO_FILE)) {
+		switch (action) {
+		case GlobalConstants.ACTION_EXPORT_TO_FILE:
 			final String file = intent.getStringExtra(GlobalConstants.EXTRA_FILE);
 			final String content = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			// use the application context here, otherwise we will get leaked
 			// serviceConnection errors.
 			ImportExportSettings.tryToExport(file, content.getBytes(), getApplicationContext());
-		} else if (action.equals(GlobalConstants.ACTION_IMPORT_EXPORT_STATUS)) {
+			break;
+		case GlobalConstants.ACTION_IMPORT_EXPORT_STATUS:
 			final String status = intent.getStringExtra(GlobalConstants.EXTRA_CONTENT);
 			if (status == null) return;
 			ImportExportSettings.appendStatus(status);
-		} else {
+			break;
+		default:
 			throw new IllegalStateException("unknown intent action: " + intent.getAction());
 		}
 	}
