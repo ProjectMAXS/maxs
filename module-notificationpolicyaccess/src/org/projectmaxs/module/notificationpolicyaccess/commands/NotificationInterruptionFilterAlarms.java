@@ -24,7 +24,7 @@ public class NotificationInterruptionFilterAlarms
 
 	public NotificationInterruptionFilterAlarms() {
 		super("alarms");
-		setHelp(ArgType.OTHER_STRING,
+		setHelp(ArgType.NONE,
 				"Set the notifification interruption filter to 'alarms', which suppresses all notifications except of alarms");
 	}
 

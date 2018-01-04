@@ -24,7 +24,7 @@ public class NotificationInterruptionFilterNone
 
 	public NotificationInterruptionFilterNone() {
 		super("none");
-		setHelp(ArgType.OTHER_STRING,
+		setHelp(ArgType.NONE,
 				"Set the notifification interruption filter to 'none', which means that all notifications are suppressed and vibrations are muted");
 	}
 

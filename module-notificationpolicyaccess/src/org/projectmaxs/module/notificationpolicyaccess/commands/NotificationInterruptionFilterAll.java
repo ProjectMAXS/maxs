@@ -24,7 +24,7 @@ public class NotificationInterruptionFilterAll
 
 	public NotificationInterruptionFilterAll() {
 		super("all");
-		setHelp(ArgType.OTHER_STRING,
+		setHelp(ArgType.NONE,
 				"Set the notifification interruption filter to 'all', which means that no notifications are suppressed");
 	}
 
