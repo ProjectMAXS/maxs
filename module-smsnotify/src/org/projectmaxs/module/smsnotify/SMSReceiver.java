@@ -39,7 +39,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	@Override
 	public Message onReceiveReturnMessage(Context context, Intent intent) {
 		LOG.d("onReceiveReturnMessage()");
-		Map<String, String> msg = RetrieveMessages(intent);
+		Map<String, String> msg = extractMessagesFrom(intent);
 		if (msg == null) {
 			LOG.w("Could not retrieve short messages");
 			return null;
@@ -71,7 +71,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	 * @return a map from originating addresses to the corresponding short
 	 *         messages
 	 */
-	private static Map<String, String> RetrieveMessages(Intent intent) {
+	private static Map<String, String> extractMessagesFrom(Intent intent) {
 		Bundle bundle = intent.getExtras();
 
 		if (bundle == null) {
