@@ -30,6 +30,7 @@ import org.projectmaxs.shared.module.RecentContactUtil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
@@ -39,7 +40,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	@Override
 	public Message onReceiveReturnMessage(Context context, Intent intent) {
 		LOG.d("onReceiveReturnMessage()");
-		Map<String, String> msg = extractMessagesFrom(intent);
+		Map<String, StringBuilder> msg = extractMessagesFrom(intent);
 		if (msg == null) {
 			LOG.w("Could not retrieve short messages");
 			return null;
@@ -49,7 +50,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 		Contact contact = null;
 		Message message = new Message("New SMS Received");
 		for (String sender : msg.keySet()) {
-			String smsBody = msg.get(sender);
+			StringBuilder smsBody = msg.get(sender);
 			LOG.d("Received sms from " + sender + ": " + smsBody);
 
 			contact = ContactUtil.getInstance(context).contactByNumber(sender);
@@ -57,7 +58,7 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 
 			String contactString = ContactUtil.prettyPrint(sender, contact);
 
-			message.add(new Sms(contactString, smsBody, Sms.Type.INBOX));
+			message.add(new Sms(contactString, smsBody.toString(), Sms.Type.INBOX));
 		}
 		RecentContactUtil.setRecentContact(lastSender, contact, context);
 		return message;
@@ -71,7 +72,8 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	 * @return a map from originating addresses to the corresponding short
 	 *         messages
 	 */
-	private static Map<String, String> extractMessagesFrom(Intent intent) {
+	@SuppressWarnings("deprecation")
+	private static Map<String, StringBuilder> extractMessagesFrom(Intent intent) {
 		Bundle bundle = intent.getExtras();
 
 		if (bundle == null) {
@@ -84,30 +86,43 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 			return null;
 		}
 
-		Object[] pdus = (Object[]) bundle.get("pdus");
+		final Object[] pdus = (Object[]) bundle.get("pdus");
+		final String format = intent.getStringExtra("format");
 
-		int nbrOfpdus = pdus.length;
-		Map<String, String> msg = new HashMap<String, String>(nbrOfpdus);
-		SmsMessage[] msgs = new SmsMessage[nbrOfpdus];
+		LOG.d("Received PDUs from intent=" + intent + " with format=" + format);
 
+		final Map<String, StringBuilder> msg = new HashMap<>(pdus.length);
 		// There can be multiple SMS from multiple senders, there can be
 		// a maximum of nbrOfpdus different senders
 		// However, send long SMS of same sender in one message
-		for (int i = 0; i < nbrOfpdus; i++) {
-			msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-			String originatinAddress = msgs[i].getOriginatingAddress();
+		for (int i = 0; i < pdus.length; i++) {
+			final byte[] pdu = (byte[]) pdus[i];
+
+			SmsMessage smsMessage;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				smsMessage = SmsMessage.createFromPdu(pdu, format);
+			} else {
+				smsMessage = SmsMessage.createFromPdu(pdu);
+			}
+
+			if (smsMessage == null) {
+				LOG.e("Where unable to create SMS message from PDU #" + i + " intent=" + intent);
+				continue;
+			}
+
+			final String originatingAddress = smsMessage.getOriginatingAddress();
+			final String messageBody = smsMessage.getMessageBody();
 
 			// Check if index with number exists
-			if (!msg.containsKey(originatinAddress)) {
+			if (!msg.containsKey(originatingAddress)) {
 				// Index with number doesn't exist
 				// Save string into associative array with sender number
 				// as index
-				msg.put(msgs[i].getOriginatingAddress(), msgs[i].getMessageBody());
+				msg.put(originatingAddress, new StringBuilder(messageBody));
 			} else {
 				// Number has been there, add content
-				String previousparts = msg.get(originatinAddress);
-				String msgString = previousparts + msgs[i].getMessageBody();
-				msg.put(originatinAddress, msgString);
+				StringBuilder previousParts = msg.get(originatingAddress);
+				previousParts.append(messageBody);
 			}
 		}
 
