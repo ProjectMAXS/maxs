@@ -72,8 +72,6 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	 *         messages
 	 */
 	private static Map<String, String> RetrieveMessages(Intent intent) {
-		Map<String, String> msg = null;
-		SmsMessage[] msgs = null;
 		Bundle bundle = intent.getExtras();
 
 		if (bundle == null || !bundle.containsKey("pdus")) return null;
@@ -81,8 +79,8 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 		Object[] pdus = (Object[]) bundle.get("pdus");
 
 		int nbrOfpdus = pdus.length;
-		msg = new HashMap<String, String>(nbrOfpdus);
-		msgs = new SmsMessage[nbrOfpdus];
+		Map<String, String> msg = new HashMap<String, String>(nbrOfpdus);
+		SmsMessage[] msgs = new SmsMessage[nbrOfpdus];
 
 		// There can be multiple SMS from multiple senders, there can be
 		// a maximum of nbrOfpdus different senders
