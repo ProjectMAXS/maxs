@@ -251,12 +251,16 @@ public class MAXSService extends Service {
 				sRecentContact = new RecentContact(recentContactInfo, contact);
 				Settings.getInstance(MAXSService.this).setRecentContact(sRecentContact);
 
-				Element recentContactElement = new Element("recent_contact", recentContactInfo);
-				recentContactElement.addChildElement(contact);
 				Message message = new Message("Recent contact: "
 						+ (contact != null ? contact.getDisplayName() + " (" + recentContactInfo
 								+ ")" : recentContactInfo));
-				message.add(recentContactElement);
+
+				if (contact != null) {
+					Element recentContactElement = new Element("recent_contact", recentContactInfo);
+					recentContactElement.addChildElement(contact);
+					message.add(recentContactElement);
+				}
+
 				send(message);
 			}
 		};
