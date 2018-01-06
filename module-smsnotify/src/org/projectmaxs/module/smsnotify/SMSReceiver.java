@@ -74,7 +74,15 @@ public class SMSReceiver extends MAXSBroadcastReceiver {
 	private static Map<String, String> RetrieveMessages(Intent intent) {
 		Bundle bundle = intent.getExtras();
 
-		if (bundle == null || !bundle.containsKey("pdus")) return null;
+		if (bundle == null) {
+			LOG.w("Received intent without bundle. intent=" + intent);
+			return null;
+		}
+
+		if (!bundle.containsKey("pdus")) {
+			LOG.w("Received intent without PDUs. intent=" + intent);
+			return null;
+		}
 
 		Object[] pdus = (Object[]) bundle.get("pdus");
 
