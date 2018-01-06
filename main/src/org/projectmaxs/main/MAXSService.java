@@ -240,7 +240,7 @@ public class MAXSService extends Service {
 			LOG.d("setRecentContact: Current contact info equals new contact info. Nothing to do.");
 			return;
 		}
-		LOG.d("setRecentContact: contact=" + contact);
+		LOG.d("setRecentContact: recentContactInfo=" + recentContactInfo + " contact=" + contact);
 		if (mRecentContactRunnable != null) {
 			mHandler.removeCallbacks(mRecentContactRunnable);
 			mRecentContactRunnable = null;
