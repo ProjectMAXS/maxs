@@ -71,6 +71,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return new File(cwd);
 	}
 
+	@Override
 	public boolean isDebugLogEnabled() {
 		return mSharedPreferences.getBoolean(DEBUG_LOG, false);
 	}

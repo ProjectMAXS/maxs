@@ -45,11 +45,13 @@ public abstract class AbstractLsCommand extends AbstractFilereadCommand {
 		if (path.isDirectory()) {
 			mSettings.setCwd(path);
 			File[] dirs = path.listFiles(new FileFilter() {
+				@Override
 				public boolean accept(File pathname) {
 					return pathname.isDirectory();
 				}
 			});
 			File[] files = path.listFiles(new FileFilter() {
+				@Override
 				public boolean accept(File pathname) {
 					return pathname.isFile();
 				}
