@@ -95,6 +95,7 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 		return mHelp;
 	}
 
+	@Override
 	public String toString() {
 		return "Package: " + mModulePackage;
 	}
@@ -218,10 +219,12 @@ public class ModuleInformation implements Parcelable, Comparable<ModuleInformati
 
 		};
 
+		@Override
 		public int hashCode() {
 			return mCommand.hashCode();
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			if (o == null || getClass() != o.getClass()) return false;
 			if (this == o) return true;
