@@ -28,6 +28,7 @@ import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.aidl.IMAXSOutgoingFileTransferService;
 import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.global.util.AsyncServiceTask;
+import org.projectmaxs.shared.global.util.AsyncServiceTask.ExceptionHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.mainmodule.MAXSContentProviderContract;
@@ -40,6 +41,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 
 public class SendPath extends AbstractFilereadCommand {
 
@@ -75,42 +77,52 @@ public class SendPath extends AbstractFilereadCommand {
 
 		Intent bindIntent = new Intent(pkg + ".OUTGOING_FILETRANSFER_SERVICE");
 		bindIntent.setClassName(pkg, outgoingFiletransferService);
-		AsyncServiceTask<IMAXSOutgoingFileTransferService> ast = new AsyncServiceTask<IMAXSOutgoingFileTransferService>(
-				bindIntent, service) {
-			@Override
-			public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
-				return IMAXSOutgoingFileTransferService.Stub.asInterface(iBinder);
-			}
+		AsyncServiceTask<IMAXSOutgoingFileTransferService, IOException> ast = AsyncServiceTask
+				.builder(service, bindIntent,
+						new AsyncServiceTask.IBinderAsInterface<IMAXSOutgoingFileTransferService>() {
+							@Override
+							public IMAXSOutgoingFileTransferService asInterface(IBinder iBinder) {
+								return IMAXSOutgoingFileTransferService.Stub.asInterface(iBinder);
+							}
+						},
+						new AsyncServiceTask.PerformAsyncTask<IMAXSOutgoingFileTransferService, IOException>() {
+							@Override
+							public void performTask(IMAXSOutgoingFileTransferService iinterface)
+									throws RemoteException, IOException {
+								InputStream is = null;
+								OutputStream os = null;
+							try {
+								ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(toSend.getName(),
+										toSend.length(), toSend.getAbsolutePath(), receiver);
 
-			@Override
-			public void performTask(IMAXSOutgoingFileTransferService iinterface) {
-				InputStream is = null;
-				OutputStream os = null;
-				try {
-					ParcelFileDescriptor pfd = iinterface.outgoingFileTransfer(toSend.getName(),
-							toSend.length(), toSend.getAbsolutePath(), receiver);
+								int len;
+								byte[] buf = new byte[1024];
 
-					int len;
-					byte[] buf = new byte[1024];
-
-					is = new FileInputStream(toSend);
-					os = new ParcelFileDescriptor.AutoCloseOutputStream(pfd);
-					while ((len = is.read(buf)) > 0) {
-						os.write(buf, 0, len);
+								is = new FileInputStream(toSend);
+								os = new ParcelFileDescriptor.AutoCloseOutputStream(pfd);
+								while ((len = is.read(buf)) > 0) {
+									os.write(buf, 0, len);
+								}
+							} finally {
+								try {
+									if (is != null) is.close();
+									if (os != null) os.close();
+								} catch (IOException e) {
+									LOG.w("IOException while closing streams", e);
+								}
+								service.removePendingAction(this);
+							}
+						}
+				}, IOException.class)
+				.withExceptionHandler(new ExceptionHandler<IOException>() {
+					@Override
+					public void onException(Exception e, IOException optionalSpecificException,
+							RemoteException optionalRemoteException) {
+						service.send(new Message("Exception while sending file" + e.getMessage()));
+						LOG.e("handleSend: performTask exception", e);
 					}
+				}).build();
 
-				} catch (Exception e) {
-					service.send(new Message("Exception while sending file" + e.getMessage()));
-					LOG.e("handleSend: performTask exception", e);
-				} finally {
-					try {
-						if (is != null) is.close();
-						if (os != null) os.close();
-					} catch (IOException e) {}
-				}
-				service.removePendingAction(this);
-			}
-		};
 		service.addPendingAction(ast);
 		ast.go();
 
