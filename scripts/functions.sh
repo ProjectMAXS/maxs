@@ -78,7 +78,10 @@ generateMaxsVersionCode() {
 	declare -i currentYear
 	currentYear="$(date +%Y)"
 	declare -i currentDay
-	currentDay="$(date +%j)"
+	# Get the day of the year but remove the leading zeros that '%j'
+	# produces, e.g. 031, so that the number is correctly treated as
+	# decimal.
+	currentDay="$(date +%j |  sed 's/^0*//')"
 
 	# TODO: Implement caching functionality here, as we will likley
 	# encounter the same versionName multiple times (for each maxs
