@@ -1,4 +1,4 @@
-smackVersion=4.2.2
+smackVersion=4.2.3
 jxmppVersion=0.6.0
 minidnsVersion=0.2.4
 org.igniterealtime.smack,smack-android,$smackVersion,1357B01865B2503C18453D208CAC2A9678548E35
