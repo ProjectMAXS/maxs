@@ -22,7 +22,7 @@ public class VolumeSetMusic extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "music";
 
 	public VolumeSetMusic() {
-		super(STREAM_NAME, true);
+		super(STREAM_NAME);
 	}
 
 }

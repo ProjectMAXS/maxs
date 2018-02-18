@@ -22,7 +22,7 @@ public class VolumeSetNotification extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "notification";
 
 	public VolumeSetNotification() {
-		super(STREAM_NAME, true);
+		super(STREAM_NAME);
 	}
 
 }

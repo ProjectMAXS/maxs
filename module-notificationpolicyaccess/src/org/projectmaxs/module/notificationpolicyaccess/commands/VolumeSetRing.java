@@ -22,6 +22,7 @@ public class VolumeSetRing extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "ring";
 
 	public VolumeSetRing() {
+		// Make "volume-set ring" the default command.
 		super(STREAM_NAME, true);
 	}
 

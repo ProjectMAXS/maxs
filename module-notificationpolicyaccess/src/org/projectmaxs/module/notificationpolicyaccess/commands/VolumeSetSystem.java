@@ -22,7 +22,7 @@ public class VolumeSetSystem extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "system";
 
 	public VolumeSetSystem() {
-		super(STREAM_NAME, true);
+		super(STREAM_NAME);
 	}
 
 }

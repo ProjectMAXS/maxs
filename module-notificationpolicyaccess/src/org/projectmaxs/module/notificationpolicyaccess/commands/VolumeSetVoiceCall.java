@@ -22,7 +22,7 @@ public class VolumeSetVoiceCall extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "voicecall";
 
 	public VolumeSetVoiceCall() {
-		super(STREAM_NAME, true);
+		super(STREAM_NAME);
 	}
 
 }

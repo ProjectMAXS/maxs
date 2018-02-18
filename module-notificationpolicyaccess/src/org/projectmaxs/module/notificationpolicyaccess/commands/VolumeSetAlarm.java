@@ -22,7 +22,7 @@ public class VolumeSetAlarm extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "alarm";
 
 	public VolumeSetAlarm() {
-		super(STREAM_NAME, true);
+		super(STREAM_NAME);
 	}
 
 }

@@ -40,6 +40,21 @@ public abstract class AbstractVolumeSetCommand extends SubCommand {
 	protected final String mVolumeStreamName;
 	protected final int mStream;
 
+	/**
+	 * Create a new non-default volume-set command.
+	 *
+	 * @param volumeStreamName the name of the command
+	 */
+	public AbstractVolumeSetCommand(String volumeStreamName) {
+		this(volumeStreamName, false);
+	}
+
+	/**
+	 * Create a new volume-set command. The default command can only be set exactly once.
+	 *
+	 * @param volumeStreamName the name of the command
+	 * @param isDefaultWithArguments if this is the default command
+	 */
 	public AbstractVolumeSetCommand(String volumeStreamName, boolean isDefaultWithArguments) {
 		super(VOLUME_SET, volumeStreamName, false, isDefaultWithArguments);
 		mVolumeStreamName = volumeStreamName;

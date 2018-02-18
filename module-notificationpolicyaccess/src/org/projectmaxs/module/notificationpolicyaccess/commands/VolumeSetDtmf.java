@@ -22,7 +22,7 @@ public class VolumeSetDtmf extends AbstractVolumeSetCommand {
 	public static final String STREAM_NAME = "dtmf";
 
 	public VolumeSetDtmf() {
-		super(STREAM_NAME, true);
+		super(STREAM_NAME);
 	}
 
 }
