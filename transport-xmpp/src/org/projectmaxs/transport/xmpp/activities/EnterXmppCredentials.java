@@ -55,6 +55,7 @@ public class EnterXmppCredentials extends Activity {
 		EntityBareJid currentMaxsAddress = mSettings.getJid();
 		if (currentMaxsAddress != null) {
 			mMaxsXmppAddress.setText(currentMaxsAddress);
+			mLatestValidEntityBareJid = currentMaxsAddress;
 		}
 		String currentPassword = mSettings.getPassword();
 		if (!currentPassword.isEmpty()) {
