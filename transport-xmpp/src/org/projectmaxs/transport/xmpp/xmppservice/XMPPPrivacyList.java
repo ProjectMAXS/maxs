@@ -37,7 +37,7 @@ import org.projectmaxs.transport.xmpp.Settings;
 
 public class XMPPPrivacyList extends StateChangeListener {
 
-	public static final String PRIVACY_LIST_NAME = GlobalConstants.NAME;
+	public static final String PRIVACY_LIST_NAME = GlobalConstants.NAME + "-v2";
 
 	private static final Log LOG = Log.getLog();
 
@@ -47,18 +47,26 @@ public class XMPPPrivacyList extends StateChangeListener {
 		// Allow messages, iq and presence out, for JIDs that have a subscription to our presence
 		// The idea is that we don't care about the presence of such IDs and therefore disallow, by
 		// not filtering them, presence in stanzas, to reduce bandwidth
+		// Hence first disallow incoming presence from entities which are subscribed to your
+		// presence.
+		// Note that XEP-0016 is not really clear if presence-in also means subscription requests
+		// and thinks like 'subscribed', but it doesn't look that way: "<presence-in/> -- blocks
+		// incoming presence notifications", which reads like only 'available' and 'unavailable' are
+		// blocked.
+		PrivacyItem subscribedToDeny = new PrivacyItem(Type.subscription,
+				PrivacyItem.SUBSCRIPTION_TO, false, PRIVACY_LIST.size() + 1);
+		subscribedToDeny.setFilterPresenceIn(true);
+		PRIVACY_LIST.add(subscribedToDeny);
+		// Then allow everything that is left.
 		PrivacyItem subscribedToAllow = new PrivacyItem(Type.subscription,
-				PrivacyItem.SUBSCRIPTION_TO, true, 1);
-		subscribedToAllow.setFilterMessage(true);
-		subscribedToAllow.setFilterIQ(true);
-		subscribedToAllow.setFilterPresenceOut(true);
+				PrivacyItem.SUBSCRIPTION_TO, true, PRIVACY_LIST.size() + 1);
 		PRIVACY_LIST.add(subscribedToAllow);
 
 		// Stanzas from JIDs that have subscription state both are allowed. We use their presence in
 		// stanza information to determine if there is a JID online that needs information in some
 		// cases
 		PrivacyItem subscribedBothAllow = new PrivacyItem(Type.subscription,
-				PrivacyItem.SUBSCRIPTION_BOTH, true, 2);
+				PrivacyItem.SUBSCRIPTION_BOTH, true, PRIVACY_LIST.size() + 1);
 		PRIVACY_LIST.add(subscribedBothAllow);
 
 		// Fall-through case, because there is no type attribute, disallow
