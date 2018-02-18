@@ -4,20 +4,20 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
+    <ImageButton
+        android:id="@+id/deleteMasterAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_delete" />
+
     <TextView
         android:id="@+id/masterAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:text="user@example.org"
+        android:layout_toRightOf="@+id/deleteMasterAddress"
+        android:layout_toEndOf="@+id/deleteMasterAddress"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <ImageButton
-        android:id="@+id/deleteMasterAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/masterAddress"
-        android:layout_toEndOf="@+id/masterAddress"
-        android:src="@android:drawable/ic_menu_delete" />
 
 </RelativeLayout>
