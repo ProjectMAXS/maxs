@@ -126,7 +126,9 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 
 		ArrayList<String> parts;
 		try {
-			if (text.length() < 150) {
+			if (text.length() <= 70) {
+				// If the text is shorter than 70 chars, then it has less then 70 code points, which
+				// is the maximum of a single UCS-2 encoded GSM 03.38 SMS message.
 				parts = new ArrayList<>(1);
 				parts.add(text);
 			} else {
