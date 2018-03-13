@@ -75,7 +75,7 @@ public class InfoAndSettings extends Activity {
 SmackConfiguration.getVersion() + "<br>" +
 "<a href=\"http://www.igniterealtime.org/projects/smack\">http://www.igniterealtime.org/projects/smack</a><br>" +
 "<br>" +
-"Copyright © 2011-2017 Florian Schmaus<br>" +
+"Copyright © 2011-2018 Florian Schmaus<br>" +
 "Copyright © 2013-2014 Georg Lukas<br>" +
 "Copyright © 2014 Lars Noschinski<br>" +
 "Copyright © 2014 Vyacheslav Blinov<br>" +
