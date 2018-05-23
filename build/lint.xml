@@ -6,6 +6,10 @@
 	<issue id="TypographyDashes" severity="ignore" />
 	<issue id="HardcodedText" severity="ignore" />
 
+	<!-- Ignore because Bouncycastle's bcprov in transport-xmpp
+	     references javax.naming and the like -->
+	<issue id="InvalidPackage" severity="ignore" />
+
 	<issue id="UnusedResources">
 		<ignore path="res/values/sharedglobalstrings.xml" />
 		<ignite path="res/values/sharedmodulestrings.xml" />

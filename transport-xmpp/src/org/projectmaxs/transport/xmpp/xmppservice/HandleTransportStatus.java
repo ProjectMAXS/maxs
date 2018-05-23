@@ -21,7 +21,7 @@ import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smack.packet.StanzaError;
 import org.jivesoftware.smack.sm.packet.StreamManagement;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
@@ -83,7 +83,7 @@ public class HandleTransportStatus extends StateChangeListener {
 					privacyListStatus = "privacy not supported";
 				}
 			} catch (XMPPErrorException e) {
-				if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
+				if (StanzaError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
 					privacyListStatus = privacyInactive;
 				} else {
 					LOG.e("connected", e);

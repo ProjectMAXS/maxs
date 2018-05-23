@@ -25,7 +25,7 @@ import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smack.packet.StanzaError;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
@@ -114,7 +114,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 			if (PRIVACY_LIST_NAME.equals(defaultList)) return;
 		} catch (XMPPErrorException e) {
 			// Log if not item-not-found(404)
-			if (XMPPError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
+			if (StanzaError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
 				LOG.e("connected", e);
 			}
 		} catch (InterruptedException | NoResponseException e) {
@@ -135,7 +135,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 
 		// Whitelist all JIDs of the own service, e.g. conference.service.com, proxy.service.com
 		for (Item i : ServiceDiscoveryManager.getInstanceFor(connection)
-				.discoverItems(connection.getServiceName()).getItems()) {
+				.discoverItems(connection.getXMPPServiceDomain()).getItems()) {
 			PrivacyItem allow = new PrivacyItem(Type.jid, i.getEntityID(), true, list.size() + 1);
 			list.add(allow);
 		}
@@ -144,7 +144,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 		// originating from themselves. For example http://issues.igniterealtime.org/browse/OF-724
 		// Because there are such services in the wild and XEP-0016 is not clear on that topic, we
 		// explicitly have to add a JID rule that allows stanzas from the service
-		PrivacyItem allowService = new PrivacyItem(Type.jid, connection.getServiceName(), true,
+		PrivacyItem allowService = new PrivacyItem(Type.jid, connection.getXMPPServiceDomain(), true,
 				list.size() + 1);
 		list.add(allowService);
 

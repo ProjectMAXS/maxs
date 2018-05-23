@@ -68,7 +68,7 @@ public class SendUnackedStanzasTable {
 	public void addStanza(Stanza stanza) {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_STANZA_ID, stanza.getStanzaId());
-		values.put(COLUMN_NAME_STANZA_XML, stanza.toXML().toString());
+		values.put(COLUMN_NAME_STANZA_XML, stanza.toXML(null).toString());
 
 		long res = mDatabase.insert(TABLE_NAME, null, values);
 		if (res == -1) throw new IllegalStateException("Could not insert command in database");

@@ -391,7 +391,10 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 			confBuilder.setSendPresence(false);
 
-			confBuilder.setDebuggerEnabled(mSharedPreferences.getBoolean(XMPP_DEBUG, false));
+			boolean xmppDebug = mSharedPreferences.getBoolean(XMPP_DEBUG, false);
+			if (xmppDebug) {
+				confBuilder.enableDefaultDebugger();
+			}
 			if (!mSharedPreferences.getBoolean(XMPP_STREAM_HOSTNAME_VERIFY, true)) {
 				TLSUtils.disableHostnameVerificationForTlsCertificates(confBuilder);
 			} else {

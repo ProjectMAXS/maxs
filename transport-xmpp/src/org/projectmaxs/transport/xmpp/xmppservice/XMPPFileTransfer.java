@@ -32,6 +32,7 @@ import org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
@@ -111,7 +112,8 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 		final long size = request.getFileSize();
 		InputStream isTmp;
 		try {
-			isTmp = request.accept().recieveFile();
+			IncomingFileTransfer incomingFileTransfer = request.accept();
+			isTmp = incomingFileTransfer.receiveFile();
 		} catch (Exception e2) {
 			LOG.e("fileTransferRequest", e2);
 			return;

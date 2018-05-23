@@ -17,6 +17,10 @@
 ################################################################################
 # Custom proguard settings
 
+-dontwarn javax.naming.directory.*
+-dontwarn javax.naming.NamingEnumeration
+-dontwarn javax.naming.NamingException
+
 -dontnote android.os.SystemProperties
 
 -dontnote sun.security.pkcs11.SunPKCS11

@@ -124,7 +124,7 @@ public class XMPPStatus extends StateChangeListener {
 		}
 
 		@Override
-		public XmlStringBuilder toXML() {
+		public XmlStringBuilder toXML(String enclosingNamespace) {
 			XmlStringBuilder xml = new XmlStringBuilder(this);
 			xml.rightAngleBracket();
 			for (StatusInformation statusInformation : statusInformationList) {

@@ -53,22 +53,6 @@ public class HandleConnectionListener extends StateChangeListener {
 				intent.setAction(Constants.ACTION_CONNECTION_CLOSED_ON_ERROR);
 				mXMPPService.getContext().startService(intent);
 			}
-
-			@Override
-			public void reconnectingIn(int arg0) {
-				throw new IllegalStateException("Reconnection Manager is running");
-			}
-
-			@Override
-			public void reconnectionFailed(Exception arg0) {
-				throw new IllegalStateException("Reconnection Manager is running");
-			}
-
-			@Override
-			public void reconnectionSuccessful() {
-				throw new IllegalStateException("Reconnection Manager is running");
-			}
-
 		};
 		connection.addConnectionListener(mConnectionListener);
 	}

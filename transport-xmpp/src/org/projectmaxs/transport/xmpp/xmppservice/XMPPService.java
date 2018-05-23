@@ -18,8 +18,6 @@
 package org.projectmaxs.transport.xmpp.xmppservice;
 
 import java.io.File;
-import java.io.Reader;
-import java.io.Writer;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Collection;
@@ -52,7 +50,6 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.Async;
 import org.jivesoftware.smack.util.Async.ThrowingRunnable;
 import org.jivesoftware.smack.util.DNSUtil;
-import org.jivesoftware.smack.util.StringTransformer;
 import org.jivesoftware.smack.util.dns.HostAddress;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
@@ -138,22 +135,10 @@ public class XMPPService {
 				);
 		// @formatter:on
 
-		DNSUtil.setIdnaTransformer(new StringTransformer() {
+		SmackConfiguration.setDefaultSmackDebuggerFactory(new SmackDebuggerFactory() {
 			@Override
-			public String transform(String string) {
-				return java.net.IDN.toASCII(string);
-			}
-		});
-		SASLMechanism.setSaslPrepTransformer(new StringTransformer() {
-			@Override
-			public String transform(String string) {
-				return Normalizer.normalize(string, Form.NFKC);
-			}
-		});
-		SmackConfiguration.setDebuggerFactory(new SmackDebuggerFactory() {
-			@Override
-			public SmackDebugger create(XMPPConnection connection, Writer writer, Reader reader) {
-				return new JulDebugger(connection, writer, reader);
+			public SmackDebugger create(XMPPConnection connection) throws IllegalArgumentException {
+				return new JulDebugger(connection);
 			}
 		});
 		MAXSElementProvider.setup();
