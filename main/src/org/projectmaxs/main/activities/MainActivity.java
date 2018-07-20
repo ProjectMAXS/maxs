@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
 									"In order to use MAXS you need to have at least one transport installed. "
 											+ "We recommend the XMPP transport, which you can install now if you want."
 											+ "Note: If you are sure that you have already installed a MAXS transport,"
-											+ "try re-installig this transport again.",
+											+ "try reinstalling this transport again.",
 									TransportConstants.TRANSPORT_XMPP, MainActivity.this);
 					return;
 				}
