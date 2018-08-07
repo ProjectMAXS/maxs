@@ -8,7 +8,7 @@ endif
 
 BUILD_TARGET ?= debug
 
-.PHONY: all asmack clean deploy distclean eclipse prebuild release resources setupResourceLinks $(DEBUG_APK)
+.PHONY: all clean deploy distclean eclipse prebuild release resources setupResourceLinks $(DEBUG_APK)
 
 all: main eclipse
 
