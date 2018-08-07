@@ -1,6 +1,10 @@
 /.gradle/
 /build/
 /build.gradle
+/keystore.properties
+/.idea/
+/*.iml
+/settings.gradle
 
 .classpath
 .project

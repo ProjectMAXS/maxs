@@ -12,7 +12,7 @@ configured, MAXS can be obtained and build with two simple steps:
 
 * Introduction
 
-MAXS is developed under Linux and sometimes with Eclipse as IDE. This
+MAXS is developed under Linux and Android Studio. This
 guide hence focuses on this setup. But it should be also possible to
 develop on other platforms, given the prerequisistes are satisfied.
 
@@ -33,13 +33,13 @@ source. MAXS's build system requires the following prerequisites:
 git clone --recursive https://bitbucket.org/projectmaxs/maxs.git
 #+END_EXAMPLE
 
-* Importing MAXS components projects into Eclipse
+* Importing MAXS components projects into Android Studio
 
-Call =make eclipse= from the project's root directory to setup the
-Eclipse configuration. You can then import the components from Eclipse
-with /File/ → /Import/ → /Android/ → /Existing Android Code Into
-Workspace/, select the root directory of maxs and all component
-projects should appear in the /Projects:/ list.
+Issue the following command in the project's root directory:
 
-#+caption: Eclipse Import Projects
-[[./images/eclipse_import_projects.png]]
+#+BEGIN_EXAMPLE
+make android-studio MAXS_BUILD_SYSTEM=gradle
+#+END_EXAMPLE
+
+This will populate the directories with the required files. You can
+then import the components of MAXS into Android Studio.

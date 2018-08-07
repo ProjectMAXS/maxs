@@ -9,9 +9,13 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 .IGNORE : $(GIT_LOG_HEAD)
 
-.PHONY: artifacts lintClean lintFull
+.PHONY: artifacts android-studio lintClean lintFull
 
+android-studio: prebuild
+
+ifneq ($(MAXS_BUILD_SYSTEM),gradle)
 prebuild: artifacts
+endif
 
 res/values/version.xml: $(GIT_LOG_HEAD) AndroidManifest.xml
 	$(BASE)/scripts/createVersionXML.sh -c .

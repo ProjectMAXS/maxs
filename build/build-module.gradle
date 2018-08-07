@@ -1,0 +1,86 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		google()
+	}
+
+	dependencies {
+		classpath 'com.android.tools.build:gradle:3.1.4'
+	}
+}
+
+def keystoreProperties = new Properties()
+
+def userKeystorePropertiesFile = new File(System.getProperty("user.home"), ".config/maxs/keystore.properties")
+if (userKeystorePropertiesFile.exists()) {
+	keystoreProperties.load(new FileInputStream(userKeystorePropertiesFile))
+}
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+if (keystorePropertiesFile.exists()) {
+	keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+def keystorePropertiesFileString = System.getProperty("keystorePropertiesFile")
+if (keystorePropertiesFileString != null) {
+	keystoreProperties.load(new FileInputStream(file(keystorePropertiesFileString)))
+}
+
+apply plugin: 'com.android.application'
+
+repositories {
+  mavenCentral()
+  google()
+  jcenter()
+}
+
+android {
+	compileSdkVersion 24
+	buildToolsVersion '28.0.1'
+
+	sourceSets {
+		main {
+			manifest.srcFile 'AndroidManifest.xml'
+			java.srcDirs = ['src']
+			aidl.srcDirs = ['src']
+			res.srcDirs = ['res']
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
+	signingConfigs {
+		if (keystoreProperties.getProperty('keyPassword') != null) {
+			release {
+				keyAlias keystoreProperties['keyAlias']
+				keyPassword keystoreProperties['keyPassword']
+				storeFile file(keystoreProperties['storeFile'])
+				storePassword keystoreProperties['storePassword']
+			}
+		}
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			signingConfig signingConfigs.release
+		}
+		debug {
+			minifyEnabled false
+		}
+	}
+
+}
+
+dependencies {
+	implementation 'eu.geekplace.iesp:iesp-aar:0.0.1'
+}
+
+task makePrebuild(type:Exec) {
+	commandLine 'make', 'prebuild', 'MAXS_BUILD_SYSTEM=gradle'
+}
+
+assemble.dependsOn makePrebuild

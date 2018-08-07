@@ -7,9 +7,9 @@ ALL_NON_ROOT := $(filter-out ./module-phonestatemodify, $(ALL))
 TABLET_DEPLOY := $(filter-out ./module-sms% ./module-phone%, $(ALL))
 NPROC := $(shell nproc)
 JOBS := $(shell echo $$(( $(NPROC) + 1)))
-MAKE_PARALLEL_ARGS := -j$(JOBS) -l$(NPROC)
+MAKE_PARALLEL_ARGS := -j$(JOBS) -l$(NPROC) TERM=dumb
 
-.PHONY: all $(ALL) clean distclean deplyg eclipse homepage makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
+.PHONY: all android-studio $(ALL) clean distclean deplyg eclipse homepage makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
 
 all: $(ALL)
 
@@ -35,6 +35,9 @@ pardeploy:
 	TARGET=deploy $(MAKE) $(MAKE_PARALLEL_ARGS)  $(ALL_NON_ROOT)
 
 eclipse:
+	TARGET=$@ $(MAKE) $(ALL)
+
+android-studio:
 	TARGET=$@ $(MAKE) $(ALL)
 
 mindeploy:

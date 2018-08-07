@@ -1,6 +1,6 @@
-smackVersion=4.3.0-beta2
-jxmppVersion=0.6.2
-minidnsVersion=0.3.0
+smackVersion=4.3.0
+jxmppVersion=0.6.3
+minidnsVersion=0.3.2
 bouncycastleVersion=1.57
 org.igniterealtime.smack,smack-android,$smackVersion,1357B01865B2503C18453D208CAC2A9678548E35
 org.igniterealtime.smack,smack-android-extensions,$smackVersion,1357B01865B2503C18453D208CAC2A9678548E35
