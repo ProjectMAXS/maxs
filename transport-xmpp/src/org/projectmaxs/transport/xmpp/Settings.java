@@ -168,7 +168,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 			.edit()
 			.putString(JID, jid.toString())
 			.putString(PASSWORD, password.toString())
-			.commit();
+			.apply();
 		mJidCache = jid;
 	}
 
@@ -281,7 +281,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public void setLastRecipient(String lastRecipient) {
-		mSharedPreferences.edit().putString(LAST_RECIPIENT, lastRecipient).commit();
+		mSharedPreferences.edit().putString(LAST_RECIPIENT, lastRecipient).apply();
 	}
 
 	public String getLastRecipient() {
@@ -290,7 +290,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public int getNextCommandId() {
 		int id = mSharedPreferences.getInt(CMD_ID, 0);
-		mSharedPreferences.edit().putInt(CMD_ID, id + 1).commit();
+		mSharedPreferences.edit().putInt(CMD_ID, id + 1).apply();
 		return id;
 	}
 
@@ -299,7 +299,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 	}
 
 	public void setLastActiveNetwork(String network) {
-		mSharedPreferences.edit().putString(LAST_ACTIVE_NETWORK, network).commit();
+		mSharedPreferences.edit().putString(LAST_ACTIVE_NETWORK, network).apply();
 	}
 
 	public String getLastActiveNetwork() {
@@ -474,7 +474,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		}
 		String masterJids = SharedStringUtil.setToString(jidStrings);
 		e.putString(MASTER_JIDS, masterJids);
-		e.commit();
+		e.apply();
 		mMasterJidCache = newMasterJids;
 	}
 
@@ -483,7 +483,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 		String excludedResources = SharedStringUtil.setToString(newExcludedResources);
 		e.putString(EXCLUDED_RESOURCES, excludedResources);
-		e.commit();
+		e.apply();
 	}
 
 	private boolean getManualServiceSettings() {

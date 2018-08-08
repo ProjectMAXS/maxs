@@ -27,6 +27,7 @@ import org.projectmaxs.transport.xmpp.xmppservice.StateChangeListener;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPBundleAndDefer;
 import org.projectmaxs.transport.xmpp.xmppservice.XMPPService;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -248,6 +249,7 @@ SmackConfiguration.getVersion() + "<br>" +
 
 		private volatile PingManager mPingManager;
 
+		@SuppressLint("StaticFieldLeak")
 		public PingServerButtonHandler(Activity activity) {
 			mPingServerButton = (Button) activity.findViewById(R.id.pingServer);
 			mPingServerButton.setOnClickListener(this);
@@ -277,6 +279,7 @@ SmackConfiguration.getVersion() + "<br>" +
 		 * This onClick() method can only be called when we are connected, because otherwise the
 		 * button will be disabled. Therefore there is no need to check mPingManager for null.
 		 */
+		@SuppressLint("StaticFieldLeak")
 		@Override
 		public synchronized void onClick(View v) {
 			Toast.makeText(InfoAndSettings.this, "Sending ping to server", Toast.LENGTH_SHORT)

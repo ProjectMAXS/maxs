@@ -90,7 +90,7 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 	protected XMPPFileTransfer(Context context) {
 		mSettings = Settings.getInstance(context);
 		mContext = context;
-		mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		mWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		mProxy = Socks5Proxy.getSocks5Proxy();
 	}
 

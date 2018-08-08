@@ -44,27 +44,12 @@ public class FilereadUtil {
 
 	private static final Log LOG = Log.getLog();
 
-	private static FilereadUtil sFilereadUtil;
-
-	public static synchronized FilereadUtil getInstance(Context context) {
-		if (sFilereadUtil == null) sFilereadUtil = new FilereadUtil(context);
-		return sFilereadUtil;
+	public static boolean filereadModuleInstalled(Context context) {
+		return PackageManagerUtil.getInstance(context).isPackageInstalled(FILEREAD_MODULE_PACKAGE);
 	}
 
-	private final Context mContext;
-	private final ContentResolver mContentResolver;
-
-	private FilereadUtil(Context context) {
-		mContext = context;
-		mContentResolver = context.getContentResolver();
-	}
-
-	public boolean filereadModuleInstalled() {
-		return PackageManagerUtil.getInstance(mContext).isPackageInstalled(FILEREAD_MODULE_PACKAGE);
-	}
-
-	public final void setCwd(File cwd) {
-		if (!filereadModuleInstalled()) {
+	public static void setCwd(Context context, File cwd) {
+		if (!filereadModuleInstalled(context)) {
 			LOG.d("setCwd: fileread module not installed");
 			return;
 		}
@@ -73,20 +58,24 @@ public class FilereadUtil {
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, cwd.getAbsolutePath());
 		intent.setClassName(GlobalConstants.FILEREAD_MODULE_PACKAGE,
 				GlobalConstants.FILEREAD_MODULE_PACKAGE + ".SetCWDService");
-		mContext.startService(intent);
+		context.startService(intent);
 	}
 
-	public final File getCwd() {
-		if (!filereadModuleInstalled())
+	public static File getCwd(Context context) {
+		if (!filereadModuleInstalled(context))
 			return new File(GlobalConstants.MAXS_EXTERNAL_STORAGE.getAbsolutePath());
 
-		Cursor c = mContentResolver.query(FILEREAD_MODULE_AUTHORITY, null, null, null, null);
+		Cursor c = context.getContentResolver().query(FILEREAD_MODULE_AUTHORITY, null, null, null, null);
 		if (c == null) {
 			LOG.e("getCwd: returned cursor is null");
 			return null;
 		}
-		String cwd = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_CWD));
-		c.close();
+		String cwd;
+		try {
+			cwd = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_CWD));
+		} finally {
+			c.close();
+		}
 
 		return new File(cwd);
 	}

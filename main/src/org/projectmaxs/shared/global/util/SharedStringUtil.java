@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ public class SharedStringUtil {
 
 	public static String ipIntToString(int ip) {
 		// @formatter:off
-		return String.format("%d.%d.%d.%d",
+		return String.format(Locale.US, "%d.%d.%d.%d",
 				(ip & 0xff),
 				(ip >> 8 & 0xff),
 				(ip >> 16 & 0xff),
@@ -106,7 +107,7 @@ public class SharedStringUtil {
 		if (bytes < 1024) return bytes + " B";
 		int exp = (int) (Math.log(bytes) / Math.log(1024));
 		String pre = "KMGTPE".charAt(exp - 1) + "iB";
-		return String.format("%.1f %s", bytes / Math.pow(1024, exp), pre);
+		return String.format(Locale.US, "%.1f %s", bytes / Math.pow(1024, exp), pre);
 	}
 
 	public static final String humanReadableMilliseconds(long milliseconds) {

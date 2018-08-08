@@ -71,6 +71,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.CommandOrigin;
 import org.projectmaxs.shared.maintransport.CurrentStatus;
 import org.projectmaxs.shared.maintransport.TransportConstants;
+import org.projectmaxs.shared.transport.PrngFixes;
 import org.projectmaxs.shared.transport.transform.TransformMessageContent;
 import org.projectmaxs.transport.xmpp.Settings;
 import org.projectmaxs.transport.xmpp.database.MessagesTable;
@@ -80,6 +81,7 @@ import org.projectmaxs.transport.xmpp.util.ConnectivityManagerUtil;
 import org.projectmaxs.transport.xmpp.util.Constants;
 import org.projectmaxs.transport.xmpp.util.XHTMLIMUtil;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -88,6 +90,7 @@ import android.os.Handler;
 public class XMPPService {
 	private static final Log LOG = Log.getLog();
 
+	@SuppressLint("StaticFieldLeak")
 	private static XMPPService sXMPPService;
 
 	private final Set<StateChangeListener> mStateChangeListeners = new CopyOnWriteArraySet<StateChangeListener>();
@@ -101,6 +104,9 @@ public class XMPPService {
 	private State mState = State.Disconnected;
 
 	static {
+		// Remove PrngFixes.apply() once MAXS is Android API 19 (4.4, Kitkat) or higher.
+		PrngFixes.apply();
+
 		ServiceDiscoveryManager.setDefaultIdentity(
 				new DiscoverInfo.Identity("client", GlobalConstants.HUMAN_READABLE_NAME, "bot"));
 		// TODO This is not really needed, but for some reason the static initializer block of
@@ -176,6 +182,7 @@ public class XMPPService {
 	 * @return The XMPPService instance.
 	 */
 	public static synchronized XMPPService getInstance(Context context) {
+		// TODO: We shoud probably use the application context here: context.getApplicationContext().
 		if (sXMPPService == null) sXMPPService = new XMPPService(context);
 		return sXMPPService;
 	}

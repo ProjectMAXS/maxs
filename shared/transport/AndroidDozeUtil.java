@@ -17,6 +17,7 @@
 
 package org.projectmaxs.shared.transport;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -88,21 +89,21 @@ public class AndroidDozeUtil {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								sharedPreferences.edit()
-										.putInt(WHITELIST_DECISSION_KEY, DO_WHITELIST).commit();
+										.putInt(WHITELIST_DECISSION_KEY, DO_WHITELIST).apply();
 								requestWhitelist(context, myPackage);
 							}
 						}).setNeutralButton(resAskAgain, new OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								sharedPreferences.edit().putInt(WHITELIST_DECISSION_KEY, ASK_AGAIN)
-										.commit();
+										.apply();
 							}
 						}).setNegativeButton(resDozeDoNotWhitelist, new OnClickListener() {
 							@TargetApi(23)
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								sharedPreferences.edit()
-										.putInt(WHITELIST_DECISSION_KEY, DO_NOT_WHITELIST).commit();
+										.putInt(WHITELIST_DECISSION_KEY, DO_NOT_WHITELIST).apply();
 							}
 
 						}).show();
@@ -119,6 +120,7 @@ public class AndroidDozeUtil {
 		return sharedPreferences.edit().putInt(WHITELIST_DECISSION_KEY, ASK_AGAIN).commit();
 	}
 
+	@SuppressLint("BatteryLife")
 	@TargetApi(23)
 	private static void requestWhitelist(Context context, String myPackage) {
 		Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);

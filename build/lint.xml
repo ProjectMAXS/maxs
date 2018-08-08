@@ -5,6 +5,7 @@
 	<issue id="ExportedPreferenceActivity" severity="ignore" />
 	<issue id="TypographyDashes" severity="ignore" />
 	<issue id="HardcodedText" severity="ignore" />
+	<issue id="OldTargetApi" severity="ignore" />
 
 	<!-- Ignore because Bouncycastle's bcprov in transport-xmpp
 	     references javax.naming and the like -->

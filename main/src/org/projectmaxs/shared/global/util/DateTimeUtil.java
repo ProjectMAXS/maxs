@@ -22,12 +22,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateTimeUtil {
 
-	private static final DateFormat HOURS_MINUTES_SECONDS = new SimpleDateFormat("HH:mm:ss");
-	private static final DateFormat DATE_FORMAT_FULL = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final DateFormat HOURS_MINUTES_SECONDS = new SimpleDateFormat("HH:mm:ss", Locale.US);
+	private static final DateFormat DATE_FORMAT_FULL = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
 	/**
 	 * Convert to "HH:mm:ss"
