@@ -2,6 +2,8 @@
 /build/
 /build.gradle
 /keystore.properties
+/.idea/
+/*.iml
 
 .classpath
 .project
