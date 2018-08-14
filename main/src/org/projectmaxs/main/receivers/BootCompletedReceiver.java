@@ -20,6 +20,7 @@ package org.projectmaxs.main.receivers;
 import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.main.Settings;
 import org.projectmaxs.main.util.Constants;
+import org.projectmaxs.shared.global.util.Log;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,8 +28,16 @@ import android.content.Intent;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
 
+	private static final Log LOG = Log.getLog();
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		String action = intent.getAction();
+		if (action == null || !action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+			LOG.w("Received invalid, possibly spoofed, intent: " + intent);
+			return;
+		}
+
 		if (Settings.getInstance(context).connectOnBootCompleted()) {
 			Intent startServiceIntent = new Intent(Constants.ACTION_START_SERVICE);
 			startServiceIntent.setClass(context, MAXSService.class);

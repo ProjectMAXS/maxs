@@ -67,12 +67,12 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 
 	public int getNextCommandId() {
 		int id = mSharedPreferences.getInt(CMD_ID, 0);
-		mSharedPreferences.edit().putInt(CMD_ID, id + 1).commit();
+		mSharedPreferences.edit().putInt(CMD_ID, id + 1).apply();
 		return id;
 	}
 
 	public void setServiceState(boolean active) {
-		mSharedPreferences.edit().putBoolean(SERVICE_ACTIVE, active).commit();
+		mSharedPreferences.edit().putBoolean(SERVICE_ACTIVE, active).apply();
 	}
 
 	public boolean getServiceState() {
@@ -101,7 +101,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		}
 		mSharedPreferences.edit().putString(RECENT_CONTACT_INFO, recentContactInfo)
 				.putString(RECENT_CONTACT_DISPLAY_NAME, displayName)
-				.putString(RECENT_CONTACT_LOOKUP_KEY, lookupKey).commit();
+				.putString(RECENT_CONTACT_LOOKUP_KEY, lookupKey).apply();
 	}
 
 	public RecentContact getRecentContact() {

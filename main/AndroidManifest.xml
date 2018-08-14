@@ -41,7 +41,7 @@
         android:permissionGroup="org.projectmaxs.permissions" />
     <permission
         android:name="org.projectmaxs.permission.USE_TRANSPORT"
-        android:description="@string/perm_use_main_as_transport_desc"
+        android:description="@string/perm_use_transport_desc"
         android:label="@string/perm_use_transport_label"
         android:permissionGroup="org.projectmaxs.permissions" />
     <permission

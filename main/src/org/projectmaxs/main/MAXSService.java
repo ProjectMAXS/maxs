@@ -19,6 +19,7 @@ package org.projectmaxs.main;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.projectmaxs.main.database.CommandTable;
 import org.projectmaxs.main.misc.ComposeHelp;
@@ -107,11 +108,7 @@ public class MAXSService extends Service {
 		if (intent == null) {
 			// The service has been killed by Android and we try to restart
 			// the connection. This null intent behavior is only for SDK < 9
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-				startService();
-			} else {
-				LOG.w("onStartCommand: null intent with Gingerbread or higher");
-			}
+			LOG.w("onStartCommand: null intent with Gingerbread or higher");
 			// Returning not sticky here, the start service intent will take
 			// care of starting the service sticky
 			return START_NOT_STICKY;
@@ -177,9 +174,9 @@ public class MAXSService extends Service {
 		int id = Settings.getInstance(this).getNextCommandId();
 		String[] splitedFullCommand = fullCommand.split(" ", 3);
 
-		String command = splitedFullCommand[0].toLowerCase();
+		String command = splitedFullCommand[0].toLowerCase(Locale.US);
 		String subCmd = null;
-		if (splitedFullCommand.length > 1) subCmd = splitedFullCommand[1].toLowerCase();
+		if (splitedFullCommand.length > 1) subCmd = splitedFullCommand[1].toLowerCase(Locale.US);
 		String args = null;
 		if (splitedFullCommand.length > 2) args = splitedFullCommand[2];
 
