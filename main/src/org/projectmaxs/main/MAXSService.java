@@ -44,7 +44,6 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 

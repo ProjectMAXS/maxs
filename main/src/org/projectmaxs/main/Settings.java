@@ -121,8 +121,8 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		return mSharedPreferences.getLong(PERM_CHECK_TIMESTAMP_KEY, -1);
 	}
 
-	public boolean setPermCheckTimestamp(long value) {
-		return mSharedPreferences.edit().putLong(PERM_CHECK_TIMESTAMP_KEY, value).commit();
+	public void setPermCheckTimestamp(long value) {
+		mSharedPreferences.edit().putLong(PERM_CHECK_TIMESTAMP_KEY, value).apply();
 	}
 
 	public SharedPreferences getSharedPreferences() {

@@ -22,7 +22,6 @@ import java.io.File;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PackageManagerUtil;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;

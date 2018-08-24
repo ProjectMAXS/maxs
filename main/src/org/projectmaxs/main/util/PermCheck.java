@@ -28,6 +28,7 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.PermissionUtil;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -81,7 +82,7 @@ public class PermCheck {
 		return res;
 	}
 
-	public static List<PackageProblem> performCheck(Context context) {
+	private static List<PackageProblem> performCheck(Context context) {
 		List<PackageProblem> res = new LinkedList<PackageProblem>();
 		PackageManager packageManager = context.getPackageManager();
 		for (PackageInfo packageInfoIter : packageManager.getInstalledPackages(0)) {
@@ -113,6 +114,8 @@ public class PermCheck {
 		return res;
 	}
 
+	// TODO: Retrieve strings from resources, then remove SetTextI18n.
+	@SuppressLint("SetTextI18n,StaticFieldLeak")
 	public static class PermCheckAsyncTask extends AsyncTask<Context, Void, List<PackageProblem>> {
 
 		private final TextView statusTextView;
