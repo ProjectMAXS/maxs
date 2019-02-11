@@ -69,9 +69,7 @@ android {
 
 	buildTypes {
 		release {
-			minifyEnabled true
-			proguardFiles getDefaultProguardFile('proguard-android.txt'),
-				'proguard-project.txt'
+			minifyEnabled false
 			if (signingKeystoreAvailable) {
 				signingConfig signingConfigs.release
 			}
@@ -80,30 +78,14 @@ android {
 			minifyEnabled false
 		}
 	}
-
-}
-
-ext {
-	smackVersion = '4.3.0'
-	minidnsVersion = '0.3.2'
-	iespVersion = '0.0.1'
 }
 
 dependencies {
-	implementation "eu.geekplace.iesp:iesp-aar:$iespVersion"
-	implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
-	implementation "org.igniterealtime.smack:smack-experimental:$smackVersion"
-	implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
-	implementation "org.minidns:minidns-dnssec:$minidnsVersion"
-	implementation project(':memorizingTrustManager')
-}
-
-configurations {
-	all*.exclude group: 'xpp3', module: 'xpp3'
+	implementation 'eu.geekplace.iesp:iesp-aar:0.0.1'
 }
 
 task makePrebuild(type:Exec) {
 	commandLine 'make', 'prebuild', 'MAXS_BUILD_SYSTEM=gradle'
 }
 
-preBuild.dependsOn makePrebuild
+assemble.dependsOn makePrebuild

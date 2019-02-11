@@ -7,7 +7,7 @@ set -e
 PUBLISH=false
 REMOTE=false
 
-MAXS_BUILD_SYSTEM="ant"
+MAXS_BUILD_SYSTEM="gradle"
 
 while getopts b:dhprt: OPTION "$@"; do
     case $OPTION in

@@ -13,7 +13,7 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 android-studio: prebuild
 
-ifneq ($(MAXS_BUILD_SYSTEM),gradle)
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 prebuild: artifacts
 endif
 

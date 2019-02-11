@@ -14,7 +14,7 @@ SHARED_MODULE_SOURCE := $(SHARED_SOURCE)/module
 SHARED_MAINMODULE_SOURCE := $(SHARED_SOURCE)/mainmodule
 MODULE_NAME := $(shell basename `pwd`)
 
-ifneq ($(MAXS_BUILD_SYSTEM),gradle)
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 DEBUG_APK := bin/maxs-$(MODULE_NAME)-debug.apk
 else
 DEBUG_APK := build/outputs/apk/debug/$(MODULE_NAME)-debug.apk
@@ -24,13 +24,17 @@ BUILD_TARGET ?= debug
 
 .PHONY: all clean deploy distclean eclipse prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
-all: module eclipse
+all: module
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
+.PHONY: eclipse
+all: eclipse
+endif
 
 include $(BASE)/build/common.mk
 
 # Android lint needs to be run *after* the project has been build
 module: prebuild
-ifneq ($(MAXS_BUILD_SYSTEM),gradle)
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 	ant $(ANT_ARGS) $(BUILD_TARGET)
 	$(MAKE) lint-report.html
 else
@@ -47,14 +51,14 @@ deploy: $(DEBUG_APK)
 $(DEBUG_APK):
 	$(MAKE) module BUILD_TARGET=debug
 
-ifneq ($(MAXS_BUILD_SYSTEM),gradle)
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 clean: build.xml
 else
 clean: build.gradle
 endif
 
 clean:
-ifneq ($(MAXS_BUILD_SYSTEM),gradle)
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 	ant clean
 else
 	gradle clean
@@ -67,16 +71,15 @@ distclean: clean lintClean
 
 prebuild: resources shared $(VERSION_XML)
 
-ifneq ($(MAXS_BUILD_SYSTEM),gradle)
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 prebuild: build.xml
-else
-prebuild: build.gradle
-endif
-
 build.xml:
 	android update project -p . -n maxs-$(MODULE_NAME) -s
 #	tools/android may fail but not set its exit status
 	test -f build.xml
+else
+prebuild: build.gradle
+endif
 
 build.gradle:
 	ln -rs $(BASE)/build/build-module.gradle $@
@@ -101,6 +104,7 @@ $(SHARED_MODULE_SOURCE): | $(SHARED_SOURCE)
 setupResourceLinks:
 	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
+ifeq ($(MAXS_BUILD_SYSTEM),ant)
 eclipse: .settings .classpath .project prebuild
 
 .settings:
@@ -111,3 +115,4 @@ eclipse: .settings .classpath .project prebuild
 
 .project:
 	ln -s build/eclipse/project .project
+endif

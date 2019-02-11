@@ -34,6 +34,10 @@ repositories {
   jcenter()
 }
 
+ext {
+	signingKeystoreAvailable = keystoreProperties.getProperty('keyPassword') != null
+}
+
 android {
 	compileSdkVersion 24
 	buildToolsVersion '28.0.1'
@@ -53,7 +57,7 @@ android {
 	}
 
 	signingConfigs {
-		if (keystoreProperties.getProperty('keyPassword') != null) {
+		if (signingKeystoreAvailable) {
 			release {
 				keyAlias keystoreProperties['keyAlias']
 				keyPassword keystoreProperties['keyPassword']
@@ -66,7 +70,9 @@ android {
 	buildTypes {
 		release {
 			minifyEnabled false
-			signingConfig signingConfigs.release
+			if (signingKeystoreAvailable) {
+				signingConfig signingConfigs.release
+			}
 		}
 		debug {
 			minifyEnabled false
