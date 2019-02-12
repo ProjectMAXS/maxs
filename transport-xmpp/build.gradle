@@ -32,6 +32,9 @@ repositories {
   mavenCentral()
   google()
   jcenter()
+  maven() {
+	  url "https://igniterealtime.org/repo/"
+  }
 }
 
 ext {
@@ -84,16 +87,27 @@ android {
 }
 
 ext {
-	smackVersion = '4.3.0'
+	smackVersion = '4.3.2-20190212.085543-12 4.3.2-20190212.085545-12 4.3.2-20190212.085548-11'
 	minidnsVersion = '0.3.2'
 	iespVersion = '0.0.1'
+	smackVersionComponents = smackVersion.split()
+	if (smackVersionComponents.length == 1) {
+		smackAndroidExtensionsVersion = smackVersion
+		smackExperimentalVersion = smackVersion
+		smackTcpVersion = smackVersion
+	} else {
+		println("Smack unique snapshot versioning detected")
+		smackAndroidExtensionsVersion = smackVersionComponents[0]
+		smackExperimentalVersion = smackVersionComponents[1]
+		smackTcpVersion = smackVersionComponents[2]
+	}
 }
 
 dependencies {
 	implementation "eu.geekplace.iesp:iesp-aar:$iespVersion"
-	implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
-	implementation "org.igniterealtime.smack:smack-experimental:$smackVersion"
-	implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
+	implementation "org.igniterealtime.smack:smack-android-extensions:$smackAndroidExtensionsVersion"
+	implementation "org.igniterealtime.smack:smack-experimental:$smackExperimentalVersion"
+	implementation "org.igniterealtime.smack:smack-tcp:$smackTcpVersion"
 	implementation "org.minidns:minidns-dnssec:$minidnsVersion"
 	implementation project(':memorizingTrustManager')
 }
