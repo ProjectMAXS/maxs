@@ -45,6 +45,11 @@ android {
 	compileSdkVersion 24
 	buildToolsVersion '28.0.3'
 
+	defaultConfig {
+		minSdkVersion 10
+		targetSdkVersion 23
+	}
+
 	sourceSets {
 		main {
 			manifest.srcFile 'AndroidManifest.xml'
