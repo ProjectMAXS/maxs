@@ -41,7 +41,7 @@ public abstract class AbstractWifi extends SubCommand {
 	public Message execute(String arguments, Command command, MAXSModuleIntentService service)
 			throws Throwable {
 		if (mWifiManager == null)
-			mWifiManager = (WifiManager) service.getSystemService(Context.WIFI_SERVICE);
+			mWifiManager = (WifiManager) service.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
 		return null;
 
