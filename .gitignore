@@ -3,6 +3,11 @@
 /config
 /.idea/
 
+# Ignore the gradle wrapper
+gradle/
+gradlew
+gradlew.bat
+
 .d
 
 lint.xml
