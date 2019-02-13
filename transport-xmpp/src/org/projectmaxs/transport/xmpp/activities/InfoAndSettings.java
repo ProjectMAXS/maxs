@@ -94,7 +94,7 @@ SmackConfiguration.getVersion() + "<br>" +
 "MIT License<br>" +
 "<h2>MiniDNS</h2>" +
 MiniDnsConfiguration.getVersion() + "<br>" +
-"<a href=\"https://github.com/rtreffer/minidns\">https://github.com/rtreffer/minidns<a/><br>" +
+"<a href=\"https://github.com/minidns/minidns\">https://github.com/minidns/minidns<a/><br>" +
 "<br>" +
 "Apache License, Version 2.0<br>" +
 "<h1>License Links</h1>" +
