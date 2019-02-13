@@ -26,6 +26,19 @@ if (keystorePropertiesFileString != null) {
 	keystoreProperties.load(new FileInputStream(file(keystorePropertiesFileString)))
 }
 
+// Defaults for the modules.
+ext {
+	maxsModuleMinSdkVersion = 10
+	maxsModuleTargetSdkVersion = 23
+	maxsModuleCompileSdkVersion = 24
+}
+
+// Which may be overriden by a module individial module-settings.gradle file.
+def moduleSettingsFile = rootProject.file("module-settings.gradle")
+if (moduleSettingsFile.exists()) {
+	apply from: moduleSettingsFile
+}
+
 apply plugin: 'com.android.application'
 
 repositories {
@@ -39,8 +52,13 @@ ext {
 }
 
 android {
-	compileSdkVersion 24
+	compileSdkVersion maxsModuleCompileSdkVersion
 	buildToolsVersion '28.0.3'
+
+	defaultConfig {
+		minSdkVersion maxsModuleMinSdkVersion
+		targetSdkVersion maxsModuleTargetSdkVersion
+	}
 
 	sourceSets {
 		main {

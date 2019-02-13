@@ -12,10 +12,6 @@
     <uses-permission android:name="org.projectmaxs.permission.READ_CONTACTS" />
     <uses-permission android:name="org.projectmaxs.permission.WRITE_SMS" />
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="23" />
-
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />

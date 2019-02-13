@@ -9,10 +9,6 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="23" />
-
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
