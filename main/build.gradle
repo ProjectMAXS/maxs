@@ -41,6 +41,11 @@ ext {
 android {
 	compileSdkVersion 24
 
+	defaultConfig {
+		minSdkVersion 10
+		targetSdkVersion 23
+	}
+
 	sourceSets {
 		main {
 			manifest.srcFile 'AndroidManifest.xml'
