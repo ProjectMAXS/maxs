@@ -7,4 +7,5 @@ Once the transition to Gradle is complete, remove the traces of
 - MAXS_BUILD_SYSTEM
 - Artifacts and MavenToAndroidAnt
 - The Ant build.xml and similar .xml files
+- custom-rules.xml
 - This file
