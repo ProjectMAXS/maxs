@@ -11,7 +11,7 @@ gradlew.bat
 .d
 
 lint.xml
-lint-report.html
+lint-results.html
 lint-report_files/
 lint-report-full.html
 lint-report-full_files/

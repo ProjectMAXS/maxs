@@ -6,6 +6,7 @@
 	<issue id="TypographyDashes" severity="ignore" />
 	<issue id="HardcodedText" severity="ignore" />
 	<issue id="OldTargetApi" severity="ignore" />
+	<issue id="ExpiredTargetSdkVersion" severity="ignore" />
 
 	<!-- Ignore because Bouncycastle's bcprov in transport-xmpp
 	     references javax.naming and the like -->

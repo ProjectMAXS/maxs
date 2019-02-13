@@ -9,7 +9,7 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 .IGNORE : $(GIT_LOG_HEAD)
 
-.PHONY: artifacts android-studio lintClean lintFull
+.PHONY: artifacts android-studio lintClean
 
 android-studio: prebuild
 
@@ -22,11 +22,9 @@ res/values/version.xml: $(GIT_LOG_HEAD) AndroidManifest.xml
 
 LINT_BINARY := $(ANDROID_HOME)/tools/lint
 
-lint-report.html: lint.xml $(wildcard src/**/*) $(wildcard res/**/*)
-	 $(LINT_BINARY) --nowarn --exitcode --quiet --html lint-report.html --disable LintError $(CURDIR)
-
-lintFull: lint.xml
-	$(LINT_BINARY) --exitcode --html lint-report-full.html --disable LintError $(CURDIR)
+lint-results.html: lint.xml $(wildcard src/**/*) $(wildcard res/**/*)
+	gradle lint
+	cp --reflink=auto build/reports/$@ $@
 
 lint.xml:
 	ln -rs $(BASE)/build/lint.xml
@@ -35,4 +33,4 @@ artifacts:
 	$(BASE)/scripts/MavenToAndroidAnt/getMavenArtifactsNG.py -f $(BASE)/build/global_artifacts.csv -p .
 
 lintClean:
-	rm -f lint-report.html
+	rm -f lint-results.html
