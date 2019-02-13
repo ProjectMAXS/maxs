@@ -13,6 +13,7 @@ import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.stringprep.XmppStringprepException;
+import org.minidns.MiniDnsConfiguration;
 import org.projectmaxs.shared.global.GlobalConstants;
 import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.ActivityUtil;
@@ -92,6 +93,7 @@ SmackConfiguration.getVersion() + "<br>" +
 "Copyright © 2010-2104 Georg Lukas<br>" +
 "MIT License<br>" +
 "<h2>MiniDNS</h2>" +
+MiniDnsConfiguration.getVersion() + "<br>" +
 "<a href=\"https://github.com/rtreffer/minidns\">https://github.com/rtreffer/minidns<a/><br>" +
 "<br>" +
 "Apache License, Version 2.0<br>" +
