@@ -17,6 +17,7 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
+import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -26,6 +27,7 @@ import org.jivesoftware.smack.sm.packet.StreamManagement;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.privacy.PrivacyListManager;
 import org.projectmaxs.shared.global.GlobalConstants;
+import org.projectmaxs.shared.global.util.DateTimeUtil;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 import org.projectmaxs.transport.xmpp.Settings;
@@ -33,6 +35,8 @@ import org.projectmaxs.transport.xmpp.util.Constants;
 
 import android.content.Context;
 import android.content.Intent;
+
+import java.util.Date;
 
 public class HandleTransportStatus extends StateChangeListener {
 
@@ -114,10 +118,33 @@ public class HandleTransportStatus extends StateChangeListener {
 			}
 		} else {
 			streamManagementStatus += "not supported by connnection";
+
 		}
 
-		setAndSendStatus("connected (" + encryptionStatus + ", " + compressionStatus + ", "
-				+ privacyListStatus + ", " + streamManagementStatus + ")");
+		String authenticatedConnectionInitiallyEstablishedTimestampString = null;
+		if (connection instanceof AbstractXMPPConnection) {
+			AbstractXMPPConnection abstractXmppConnection = (AbstractXMPPConnection) connection;
+			long authenticatedConnectionInitiallyEstablishedTimestamp = abstractXmppConnection.getAuthenticatedConnectionInitiallyEstablishedTimestamp();
+			Date authenticatedConnectionInitiallyEstablishedTimestampDate = new Date(authenticatedConnectionInitiallyEstablishedTimestamp);
+			authenticatedConnectionInitiallyEstablishedTimestampString = DateTimeUtil.toFullDate(authenticatedConnectionInitiallyEstablishedTimestampDate);
+		}
+
+		final String separator = ", ";
+		StringBuilder sb = new StringBuilder(256);
+		sb.append("connected (")
+				.append(encryptionStatus)
+				.append(separator)
+				.append(compressionStatus)
+				.append(separator)
+				.append(privacyListStatus)
+				.append(separator)
+				.append(streamManagementStatus);
+		if (authenticatedConnectionInitiallyEstablishedTimestampString != null) {
+			sb.append(separator).append("since: ").append(authenticatedConnectionInitiallyEstablishedTimestampString);
+		}
+		sb.append(')');
+
+		setAndSendStatus(sb.toString());
 	}
 
 	@Override
