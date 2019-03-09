@@ -32,6 +32,7 @@ repositories {
   mavenCentral()
   google()
   jcenter()
+  mavenLocal()
   maven() {
 	  url "https://igniterealtime.org/repo/"
   }
