@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.projectmaxs.module.misc.commands.ExceptionThrow;
 import org.projectmaxs.module.misc.commands.LocationProviders;
+import org.projectmaxs.module.misc.commands.Ping;
 import org.projectmaxs.module.misc.commands.RecentcontactShow;
 import org.projectmaxs.module.misc.commands.SensorList;
 import org.projectmaxs.module.misc.commands.SysinfoMaxs;
@@ -51,6 +52,7 @@ public class ModuleService extends MAXSModuleIntentService {
 	public static final SupraCommand EXCEPTION = new SupraCommand("exception");
 	public static final SupraCommand RECENT_CONTACT = new SupraCommand("recentcontact", "recent");
 	public static final SupraCommand SENSOR = new SupraCommand("sensor");
+	public static final SupraCommand PING = new SupraCommand("ping");
 
 	public static final SupraCommand[] sCOMMANDS;
 
@@ -63,6 +65,7 @@ public class ModuleService extends MAXSModuleIntentService {
 		SupraCommand.register(ExceptionThrow.class, commands);
 		SupraCommand.register(SensorList.class, commands);
 		SupraCommand.register(LocationProviders.class, commands);
+		SupraCommand.register(Ping.class, commands);
 
 		sCOMMANDS = commands.toArray(new SupraCommand[commands.size()]);
 	}
