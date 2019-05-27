@@ -92,7 +92,7 @@ android {
 }
 
 ext {
-	smackVersion = '4.3.3'
+	smackVersion = '4.3.4'
 	minidnsVersion = '0.3.2'
 	iespVersion = '0.0.1'
 	smackVersionComponents = smackVersion.split()
