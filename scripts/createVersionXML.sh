@@ -41,7 +41,7 @@ if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
     fi
 fi
 
-declare -r TMP_VERSION_FILE="${TMPDIR}/verison.xml"
+declare -r TMP_VERSION_FILE="${TMPDIR}/version.xml"
 declare -r VERSION_FILE="${COMPONENT_DIR}/res/values/version.xml"
 
 cat <<EOF > ${TMP_VERSION_FILE}
