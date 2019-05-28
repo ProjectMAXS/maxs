@@ -47,7 +47,7 @@ fi
 # First clean the source module
 pushd .
 cd $SRC_MODULE
-git clean -x -f -d 
+git clean -x -f -d
 popd
 
 cp -r -P $SRC_MODULE $DEST_MODULE
