@@ -6,10 +6,11 @@ set -e
 
 PUBLISH=false
 REMOTE=false
+RELEASE_TARGET="parrelease"
 
 MAXS_BUILD_SYSTEM="gradle"
 
-while getopts b:dhprt: OPTION "$@"; do
+while getopts b:dhprst: OPTION "$@"; do
     case $OPTION in
 	b)
 		MAXS_BUILD_SYSTEM="${OPTARG}"
@@ -23,6 +24,7 @@ usage: `basename $0` [-d] [-p] [-r] [-t <tag>]
 	-d: debug output
 	-p: publish
 	-r: get keystore data from remote location
+	-s: sequential build instead of parallel
 	-t <tag>: prepare release of version <tag>
 EOF
 	    exit
@@ -33,6 +35,9 @@ EOF
 	r)
 	    REMOTE=true
 	    ;;
+	s)
+		RELEASE_TARGET="release"
+		;;
 	t)
 	    RELEASE_TAG="${OPTARG}"
 	    ;;
@@ -120,10 +125,10 @@ fi
 
 case $MAXS_BUILD_SYSTEM in
 	ant)
-ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make parrelease
+ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make ${RELEASE_TARGET}
 		;;
 	gradle)
-make parrelease \
+make ${RELEASE_TARGET} \
 	 GRADLE_EXTRA_ARGS="-PkeystorePropertiesFile=\"${TMPDIR}/gradle.properties\"" \
 	 MAXS_BUILD_SYSTEM=gradle
 		;;
