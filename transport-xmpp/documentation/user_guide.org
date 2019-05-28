@@ -45,7 +45,7 @@ extras are
 | org.projectmaxs.transport.xmpp.BODY  | String | The body of the message                                        |
 
 You can test the XMPP Intent with =adb=:
-#+BEGIN_SRC bash
+#+BEGIN_SRC
 adb shell am startservice \
   -a org.projectmaxs.transport.xmpp.SEND_XMPP_MESSAGE \
   -e org.projectmaxs.transport.xmpp.TOKEN foo \

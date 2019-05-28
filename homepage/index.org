@@ -112,7 +112,7 @@ MAXS Nightlies, signed with the release key, can be found at [[http://projectmax
 
 If you want to update MAXS to the latest nightlies you can use the =installNightlies.sh= script.
 
-#+BEGIN_SRC bash
+#+BEGIN_SRC
 curl https://bitbucket.org/projectmaxs/maxs/raw/master/scripts/installNightlies.sh |bash
 #+END_SRC
 

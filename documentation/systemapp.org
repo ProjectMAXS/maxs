@@ -13,7 +13,7 @@ Prequisites:
 2. Push the =.apk= file to the device: =adb push my-app.apk /sdcard/=
 3. Mount =/system/= read-write
 
-   #+BEGIN_SRC bash
+   #+BEGIN_SRC
    adb shell
    su
    mount -o rw,remount /system
@@ -21,7 +21,7 @@ Prequisites:
 
 4. Place the =.apk= file in the correct directory. This is =/system/app/= for Android 4.2 and lower, and =/system/priv-app/= for Android 4.3 and higher. The further steps will asume we are on Android 4.4 and therefore use =priv-app=
 
-    #+BEGIN_SRC bash
+    #+BEGIN_SRC
     adb shell
     su
     cd /sdcard
