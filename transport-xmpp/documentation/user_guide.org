@@ -41,7 +41,7 @@ extras are
 | Extra                                | Type   | Description                                                    |
 |--------------------------------------+--------+----------------------------------------------------------------|
 | org.projectmaxs.transport.xmpp.TOKEN | String | The shared token as set in the settings of MAXS Transport XMPP |
-| org.projectmaxs.transport.xmpp.TO    | String | The JID of the message should be sent to                       |
+| org.projectmaxs.transport.xmpp.TO    | String | The JID the message should be sent to                          |
 | org.projectmaxs.transport.xmpp.BODY  | String | The body of the message                                        |
 
 You can test the XMPP Intent with =adb=:
