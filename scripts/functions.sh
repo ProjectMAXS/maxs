@@ -161,6 +161,9 @@ setMaxsVersion() {
 	if [[ -n "$2" ]]; then
 		declare -r setVersionName="true"
 		local versionName="$2"
+		if [[ "${isRelease}" == "snapshot" ]]; then
+			versionName+="-SNAPSHOT"
+		fi
 	else
 		declare -r setVersionName="false"
 		local versionName
