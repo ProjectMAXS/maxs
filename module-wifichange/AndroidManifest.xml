@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.module.wifichange"
-    android:versionCode="2000501598"
-    android:versionName="0.5.7-SNAPSHOT" >
+    android:versionCode="2000502493"
+    android:versionName="0.5.7" >
 
 
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
