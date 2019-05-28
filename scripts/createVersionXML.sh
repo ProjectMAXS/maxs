@@ -30,10 +30,10 @@ if command -v git &> /dev/null && [[ -d ${COMPONENT_DIR}/../.git ]]; then
     GIT_REF=$(git describe --tags --dirty=+)
     set +e
     GIT_SYMBOLIC_REF=$(git symbolic-ref --short HEAD)
-    set -e
     if [[ $? -eq 0 ]]; then
         GIT_REF+="-${GIT_SYMBOLIC_REF}"
     fi
+    set -e
     # Only add the result of git describe if it's not the same string a $VERSION_NAME
     if [[ "$VERSION_NAME" != "$GIT_REF" ]]; then
 		DATE=$(date +%F)
