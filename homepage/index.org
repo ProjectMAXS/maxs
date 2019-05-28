@@ -205,14 +205,10 @@ latest news:
 ** Bitcoin
 
 #+BEGIN_HTML
-<a href="bitcoin:17hnvYUhfGqnF8MQhQRsqttySn6fe9ebtp">
-Donate with bitcoin to 17hnvYUhfGqnF8MQhQRsqttySn6fe9ebtp
+<a href="bitcoin:bc1qu482c0tngkcvx3q7mrm8zmuldrh2f2lrh26ym0">
+Donate with bitcoin to bc1qu482c0tngkcvx3q7mrm8zmuldrh2f2lrh26ym0
 </a>
 #+END_HTML
-
-** Flattr
-
-[[https://flattr.com/thing/2148361][Flattr Project MAXS]]
 
 * Acknowledgements
 <<acknowledgements>>

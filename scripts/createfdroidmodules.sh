@@ -32,8 +32,7 @@ Web Site:http://projectmaxs.org
 Source Code:http://projectmaxs.org/source
 Issue Tracker:http://projectmaxs.org/issues
 Donate:http://projectmaxs.org/donate
-FlattrID:2148361
-Bitcoin:17hnvYUhfGqnF8MQhQRsqttySn6fe9ebtp
+Bitcoin:bc1qu482c0tngkcvx3q7mrm8zmuldrh2f2lrh26ym0
 
 Auto Name:MAXS Module ${moduleName}
 Summary:A Module for MAXS

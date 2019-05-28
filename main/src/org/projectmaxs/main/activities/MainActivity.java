@@ -317,7 +317,7 @@ public class MainActivity extends Activity {
 
 	public void donate(View view) {
 		final Intent BTC_INTENT = new Intent(Intent.ACTION_VIEW,
-				Uri.parse("bitcoin:17hnvYUhfGqnF8MQhQRsqttySn6fe9ebtp"));
+				Uri.parse("bitcoin:bc1qu482c0tngkcvx3q7mrm8zmuldrh2f2lrh26ym0"));
 		final Intent DONATE_INTENT = new Intent(Intent.ACTION_VIEW,
 				Uri.parse("http://projectmaxs.org/homepage/index.html#Donate"));
 
