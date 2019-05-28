@@ -69,7 +69,7 @@ distclean: clean lintClean
 	rm -f build.xml
 	rm -f $(VERSION_XML)
 
-prebuild: resources shared $(VERSION_XML)
+prebuild: lint.xml resources shared $(VERSION_XML)
 
 ifeq ($(MAXS_BUILD_SYSTEM),ant)
 prebuild: build.xml

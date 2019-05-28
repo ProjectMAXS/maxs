@@ -28,7 +28,7 @@ else
 	gradle $(GRADLE_EXTRA_ARGS) assemble$(shell BUILD_TARGET=$(BUILD_TARGET); echo $${BUILD_TARGET^})
 endif
 
-prebuild: resources $(VERSION_XML)
+prebuild: lint.xml resources $(VERSION_XML)
 
 ifeq ($(MAXS_BUILD_SYSTEM),ant)
 prebuild: build.xml
