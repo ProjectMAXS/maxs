@@ -94,7 +94,7 @@ android {
 ext {
 	smackVersion = '4.3.4'
 	minidnsVersion = '0.3.2'
-	iespVersion = '0.0.1'
+	iespVersion = '0.0.2'
 	smackVersionComponents = smackVersion.split()
 	if (smackVersionComponents.length == 1) {
 		smackAndroidExtensionsVersion = smackVersion
