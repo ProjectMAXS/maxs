@@ -9,7 +9,7 @@ NPROC := $(shell nproc)
 JOBS := $(shell echo $$(( $(NPROC) + 1)))
 MAKE_PARALLEL_ARGS := -j$(JOBS) -l$(NPROC) TERM=dumb
 
-.PHONY: all android-studio $(ALL) clean distclean deplyg eclipse homepage makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
+.PHONY: all android-studio $(ALL) clean distclean deploy eclipse homepage makefiles mindeploy parallel parclean pardeploy parrelease prebuild release tabletdeploy
 
 all: $(ALL)
 
