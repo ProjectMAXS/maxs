@@ -9,13 +9,9 @@ GIT_LOG_HEAD := $(GIT_DIR)/.git/logs/HEAD
 
 .IGNORE : $(GIT_LOG_HEAD)
 
-.PHONY: artifacts android-studio lintClean
+.PHONY: android-studio lintClean
 
 android-studio: prebuild
-
-ifeq ($(MAXS_BUILD_SYSTEM),ant)
-prebuild: artifacts
-endif
 
 res/values/version.xml: $(GIT_LOG_HEAD) AndroidManifest.xml
 	$(BASE)/scripts/createVersionXML.sh -c .
@@ -28,9 +24,6 @@ lint-results.html: lint.xml $(wildcard src/**/*) $(wildcard res/**/*)
 
 lint.xml:
 	ln -rs $(BASE)/build/lint.xml
-
-artifacts:
-	$(BASE)/scripts/MavenToAndroidAnt/getMavenArtifactsNG.py -f $(BASE)/build/global_artifacts.csv -p .
 
 lintClean:
 	rm -f lint-results.html

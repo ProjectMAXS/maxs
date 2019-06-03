@@ -38,7 +38,7 @@ git clone --recursive https://bitbucket.org/projectmaxs/maxs.git
 Issue the following command in the project's root directory:
 
 #+BEGIN_EXAMPLE
-make android-studio MAXS_BUILD_SYSTEM=gradle
+make android-studio
 #+END_EXAMPLE
 
 This will populate the directories with the required files. You can

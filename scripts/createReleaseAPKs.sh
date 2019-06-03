@@ -8,13 +8,8 @@ PUBLISH=false
 REMOTE=false
 RELEASE_TARGET="parrelease"
 
-MAXS_BUILD_SYSTEM="gradle"
-
-while getopts b:dhprst: OPTION "$@"; do
+while getopts dhprst: OPTION "$@"; do
     case $OPTION in
-	b)
-		MAXS_BUILD_SYSTEM="${OPTARG}"
-		;;
 	d)
 	    set -x
 	    ;;
@@ -43,17 +38,6 @@ EOF
 	    ;;
     esac
 done
-
-case $MAXS_BUILD_SYSTEM in
-	ant)
-	;;
-	gradle)
-	;;
-	*)
-		echo "Unknown MAXS build system: ${MAXS_BUILD_SYSTEM}"
-		exit 1
-		;;
-esac
 
 TMPDIR=$(mktemp -d)
 trap "rm -rf ${TMPDIR}" EXIT
@@ -93,24 +77,12 @@ else
     wget -q -O $KEYSTOREFILE $KEYSTOREURL 2>&1 || exit 1
 fi
 
-case $MAXS_BUILD_SYSTEM in
-	ant)
-cat <<EOF > ${TMPDIR}/ant.properties
-key.store=${KEYSTOREFILE}
-key.alias=maxs
-key.store.password=${KEYSTOREPASSWORD}
-key.alias.password=${KEYSTOREPASSWORD}
-EOF
-		;;
-	gradle)
 cat <<EOF > ${TMPDIR}/gradle.properties
 storeFile=${KEYSTOREFILE}
 keyAlias=maxs
 keyPassword=${KEYSTOREPASSWORD}
 storePassword=${KEYSTOREPASSWORD}
 EOF
-		;;
-esac
 
 cd ${BASEDIR}
 
@@ -123,16 +95,8 @@ elif $REMOTE; then
 	setMaxsVersions
 fi
 
-case $MAXS_BUILD_SYSTEM in
-	ant)
-ANT_ARGS="-propertyfile ${TMPDIR}/ant.properties" make ${RELEASE_TARGET}
-		;;
-	gradle)
 make ${RELEASE_TARGET} \
 	 GRADLE_EXTRA_ARGS="-PkeystorePropertiesFile=\"${TMPDIR}/gradle.properties\"" \
-	 MAXS_BUILD_SYSTEM=gradle
-		;;
-esac
 
 BUILT_DATE=$(date +"%Y-%m-%d_-_%H:%M_%Z")
 # It doesn't matter that $RELEASE_TAG may be empty in case we havn't
@@ -147,14 +111,7 @@ fi
 [[ -d releases/${TARGET_DIR} ]] || mkdir -p releases/${TARGET_DIR}
 
 for c in $COMPONENTS; do
-	case $MAXS_BUILD_SYSTEM in
-	ant)
-    cp ${c}/bin/*-release.apk releases/${TARGET_DIR}
-		;;
-	gradle)
 	cp "${c}/build/outputs/apk/release/"*-release.apk "releases/${TARGET_DIR}"
-		;;
-	esac
 done
 
 if [[ -n $RELEASE_TAG ]]; then

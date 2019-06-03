@@ -103,7 +103,7 @@ dependencies {
 }
 
 task makePrebuild(type:Exec) {
-	commandLine 'make', 'prebuild', 'MAXS_BUILD_SYSTEM=gradle'
+	commandLine 'make', 'prebuild'
 }
 
 preBuild.dependsOn makePrebuild
