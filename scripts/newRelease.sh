@@ -49,7 +49,7 @@ git tag -s -u flo@geekplace.eu -m "${MESSAGE}" $releaseVersion
 
 setMaxsVersions -r snapshot "$nextVersion"
 
-git commit -a -m "MAXS Pre-Release $nextVersion"
+git commit -a -m "MAXS ${nextVersion}-SNAPSHOT"
 
 
 
