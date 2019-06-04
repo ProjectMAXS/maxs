@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.module.nfc"
-    android:versionCode="2000502507"
-    android:versionName="0.5.8" >
+    android:versionCode="2000502508"
+    android:versionName="0.5.9-SNAPSHOT" >
 
 
     <uses-permission android:name="android.permission.NFC" />
