@@ -25,6 +25,7 @@ import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.mainmodule.Command;
 import org.projectmaxs.shared.module.MAXSModuleIntentService;
 
+import android.annotation.SuppressLint;
 import android.net.wifi.WifiConfiguration;
 
 public class WifiList extends AbstractWifi {
@@ -34,6 +35,8 @@ public class WifiList extends AbstractWifi {
 		setHelp(ArgType.NONE, "List all configured Wifi networks");
 	}
 
+	// Newer Android APIs require the ACCESS_FINE_LOCATION permission for WifiManager.getConfiguredNetworks.
+	@SuppressLint("MissingPermission")
 	public Message execute(String arguments, Command command, MAXSModuleIntentService service)
 			throws Throwable {
 		super.execute(arguments, command, service);
