@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.jivesoftware.smack.SmackConfiguration;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.ConnectionException;
 import org.jivesoftware.smack.SmackException.FeatureNotSupportedException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
@@ -50,7 +51,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.Async;
 import org.jivesoftware.smack.util.Async.ThrowingRunnable;
 import org.jivesoftware.smack.util.DNSUtil;
-import org.jivesoftware.smack.util.dns.HostAddress;
+import org.jivesoftware.smack.util.rce.RemoteConnectionException;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -733,11 +734,11 @@ public class XMPPService {
 		} catch (Exception e) {
 			XMPPBundleAndDefer.enableBundleAndDefer();
 			LOG.e("tryToConnect: Exception from connect()", e);
-			if (e instanceof ConnectionException) {
-				ConnectionException ce = (ConnectionException) e;
+			if (e instanceof SmackException.EndpointConnectionException) {
+				SmackException.EndpointConnectionException ce = (SmackException.EndpointConnectionException) e;
 				String error = "The following host's failed to connect to:";
-				for (HostAddress ha : ce.getFailedAddresses())
-					error += " " + ha;
+				for (RemoteConnectionException<?> rce : ce.getConnectionExceptions())
+					error += " " + rce;
 				LOG.d("tryToConnect: " + error);
 			}
 			scheduleReconnect(e.getLocalizedMessage());

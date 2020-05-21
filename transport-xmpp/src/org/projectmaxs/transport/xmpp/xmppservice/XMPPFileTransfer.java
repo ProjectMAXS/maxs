@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -189,14 +191,20 @@ public class XMPPFileTransfer extends StateChangeListener implements FileTransfe
 
 	private void onWifiConnected() {
 		WifiInfo info = mWifiManager.getConnectionInfo();
-		List<String> addresses = new ArrayList<String>();
+		List<InetAddress> addresses = new ArrayList<>();
 
 		if (info != null) {
 			// There is an active Wifi connection
 			String ip = SharedStringUtil.ipIntToString(info.getIpAddress());
 			// Sometimes "0.0.0.0" gets returned
-			if (!ip.equals("0.0.0.0")) addresses.add(ip);
-
+			if (!ip.equals("0.0.0.0")) {
+				try {
+					InetAddress inetAddress = InetAddress.getByName(ip);
+					addresses.add(inetAddress);
+				} catch (UnknownHostException e) {
+					LOG.e("Could not convert " + ip + " to InetAddress", e);
+				}
+			}
 		}
 		// set an ip in case there is a Wifi Connection
 		// otherwise addresses will be empty and local S5B proxy

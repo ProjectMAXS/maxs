@@ -144,6 +144,7 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
 		setDnsDebug();
+		setSyncFlush();
 	}
 
 	public EntityBareJid getJid() {

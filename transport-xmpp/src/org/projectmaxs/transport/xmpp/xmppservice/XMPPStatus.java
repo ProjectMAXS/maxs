@@ -23,6 +23,7 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.projectmaxs.shared.global.StatusInformation;
 import org.projectmaxs.shared.global.util.Log;
@@ -124,7 +125,7 @@ public class XMPPStatus extends StateChangeListener {
 		}
 
 		@Override
-		public XmlStringBuilder toXML(String enclosingNamespace) {
+		public XmlStringBuilder toXML(XmlEnvironment xmlEnvironment) {
 			XmlStringBuilder xml = new XmlStringBuilder(this);
 			xml.rightAngleBracket();
 			for (StatusInformation statusInformation : statusInformationList) {

@@ -114,7 +114,7 @@ public class XMPPPrivacyList extends StateChangeListener {
 			if (PRIVACY_LIST_NAME.equals(defaultList)) return;
 		} catch (XMPPErrorException e) {
 			// Log if not item-not-found(404)
-			if (StanzaError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
+			if (StanzaError.Condition.item_not_found.equals(e.getStanzaError().getCondition())) {
 				LOG.e("connected", e);
 			}
 		} catch (InterruptedException | NoResponseException e) {

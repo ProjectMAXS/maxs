@@ -74,7 +74,7 @@ public class XMPPEntityCapsCache implements EntityCapsPersistentCache {
 
 	@Override
 	public void addDiscoverInfoByNodePersistent(String node, DiscoverInfo info) {
-		mXMPPEntityCapsTable.addDiscoverInfo(node, info.toXML(null));
+		mXMPPEntityCapsTable.addDiscoverInfo(node, info.toXML());
 	}
 
 	@Override

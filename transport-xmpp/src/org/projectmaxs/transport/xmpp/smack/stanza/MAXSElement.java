@@ -19,6 +19,7 @@ package org.projectmaxs.transport.xmpp.smack.stanza;
 
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.packet.XmlEnvironment;
 
 /**
  * A MAXS extension element, used to indicate messages send by MAXS. Those are either responses to a
@@ -51,7 +52,7 @@ public class MAXSElement implements ExtensionElement {
 	}
 
 	@Override
-	public String toXML(String enclosingNamespace) {
+	public String toXML(XmlEnvironment xmlEnvironment) {
 		return '<' + ELEMENT + " xmlns='" + NAMESPACE + "'/>";
 	}
 

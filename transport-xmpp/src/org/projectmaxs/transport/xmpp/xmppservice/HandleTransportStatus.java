@@ -87,7 +87,7 @@ public class HandleTransportStatus extends StateChangeListener {
 					privacyListStatus = "privacy not supported";
 				}
 			} catch (XMPPErrorException e) {
-				if (StanzaError.Condition.item_not_found.equals(e.getXMPPError().getCondition())) {
+				if (StanzaError.Condition.item_not_found.equals(e.getStanzaError().getCondition())) {
 					privacyListStatus = privacyInactive;
 				} else {
 					LOG.e("connected", e);

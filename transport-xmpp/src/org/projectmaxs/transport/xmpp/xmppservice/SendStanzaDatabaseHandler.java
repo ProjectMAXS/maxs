@@ -52,7 +52,7 @@ public class SendStanzaDatabaseHandler extends StateChangeListener {
 		}
 		final XMPPTCPConnection connection = (XMPPTCPConnection) newConnection;
 
-		connection.addPacketSendingListener(new StanzaListener() {
+		connection.addStanzaSendingListener(new StanzaListener() {
 			@Override
 			public void processStanza(Stanza stanza) throws NotConnectedException {
 				// This only works if stream management is enabled

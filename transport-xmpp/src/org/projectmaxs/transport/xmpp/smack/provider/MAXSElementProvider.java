@@ -17,14 +17,11 @@
 
 package org.projectmaxs.transport.xmpp.smack.provider;
 
-import java.io.IOException;
-
-import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.xml.XmlPullParser;
 import org.projectmaxs.transport.xmpp.smack.stanza.MAXSElement;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 public class MAXSElementProvider extends ExtensionElementProvider<MAXSElement> {
 
@@ -33,8 +30,7 @@ public class MAXSElementProvider extends ExtensionElementProvider<MAXSElement> {
 	private MAXSElementProvider() {}
 
 	@Override
-	public MAXSElement parse(XmlPullParser parser, int initialDepth)
-			throws XmlPullParserException, IOException, SmackException {
+	public MAXSElement parse(XmlPullParser parser, int initialDepth, XmlEnvironment xmlEnvironment) {
 		return MAXSElement.INSTANCE;
 	}
 
