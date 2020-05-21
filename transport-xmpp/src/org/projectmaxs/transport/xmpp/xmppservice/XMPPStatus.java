@@ -23,6 +23,7 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.PresenceBuilder;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.projectmaxs.shared.global.StatusInformation;
@@ -81,18 +82,22 @@ public class XMPPStatus extends StateChangeListener {
 	public void disconnected(XMPPConnection connection) {}
 
 	private void sendStatus() {
-		if (mConnection == null || !mConnection.isAuthenticated()) return;
+		XMPPConnection connection = mConnection;
+		if (connection == null || !connection.isAuthenticated()) return;
+
+		PresenceBuilder presenceBuilder = connection.getStanzaFactory().buildPresenceStanza();
 
 		final CurrentStatus currentStatus = mDesiredStatus;
-		if (currentStatus == null) {
-			return;
+		if (currentStatus != null) {
+			presenceBuilder.setStatus(currentStatus.getStatusString());
+			presenceBuilder.addExtension(
+					new MaxsStatusExtensionElement(currentStatus.getStatusInformationList())
+			);
+		} else {
+			LOG.d("mDesiredStatus was null while calling sendStatus");
 		}
 
-		Presence presence = new Presence(Presence.Type.available);
-		presence.setStatus(currentStatus.getStatusString());
-		presence.addExtension(
-				new MaxsStatusExtensionElement(currentStatus.getStatusInformationList()));
-
+		Presence presence = presenceBuilder.build();
 		try {
 			mConnection.sendStanza(presence);
 		} catch (InterruptedException | NotConnectedException e) {
@@ -100,7 +105,7 @@ public class XMPPStatus extends StateChangeListener {
 			return;
 		}
 
-		mActiveStatus = mDesiredStatus;
+		mActiveStatus = currentStatus;
 	}
 
 	private class MaxsStatusExtensionElement implements ExtensionElement {
