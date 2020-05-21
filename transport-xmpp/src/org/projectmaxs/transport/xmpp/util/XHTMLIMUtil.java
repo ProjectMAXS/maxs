@@ -20,13 +20,15 @@ package org.projectmaxs.transport.xmpp.util;
 import java.util.List;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLText;
+import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
 import org.projectmaxs.shared.global.messagecontent.FormatedText;
 
 public class XHTMLIMUtil {
 
-	public static final Message addXHTMLIM(Message message, List<FormatedText> formatedText) {
+	public static final void addXHTMLIM(MessageBuilder message, List<FormatedText> formatedText) {
 		XHTMLText xhtmlText = new XHTMLText(null, null);
 		for (FormatedText ft : formatedText) {
 			if (FormatedText.isNewLine(ft)) {
@@ -46,7 +48,9 @@ public class XHTMLIMUtil {
 			if (bold) xhtmlText.appendCloseStrongTag();
 		}
 		xhtmlText.appendCloseBodyTag();
-		XHTMLManager.addBody(message, xhtmlText);
-		return message;
+
+		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+		xhtmlExtension.addBody(xhtmlText.toXML());
+		message.addExtension(xhtmlExtension);
 	}
 }

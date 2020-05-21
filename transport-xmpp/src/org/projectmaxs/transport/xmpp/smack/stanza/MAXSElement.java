@@ -19,6 +19,7 @@ package org.projectmaxs.transport.xmpp.smack.stanza;
 
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.packet.StanzaBuilder;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 
 /**
@@ -64,7 +65,7 @@ public class MAXSElement implements ExtensionElement {
 		return stanza.hasExtension(ELEMENT, NAMESPACE);
 	}
 
-	public static void addTo(Stanza stanza) {
+	public static void addTo(StanzaBuilder stanza) {
 		stanza.addExtension(INSTANCE);
 	}
 }

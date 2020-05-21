@@ -39,6 +39,7 @@ import org.jivesoftware.smack.debugger.JulDebugger;
 import org.jivesoftware.smack.debugger.SmackDebugger;
 import org.jivesoftware.smack.debugger.SmackDebuggerFactory;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
@@ -51,6 +52,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.Async;
 import org.jivesoftware.smack.util.Async.ThrowingRunnable;
 import org.jivesoftware.smack.util.DNSUtil;
+import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.rce.RemoteConnectionException;
 import org.jivesoftware.smackx.address.MultipleRecipientManager;
 import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
@@ -361,19 +363,21 @@ public class XMPPService {
 			return;
 		}
 
-		Message packet = new Message();
-		packet.setType(Message.Type.chat);
-		packet.setBody(TransformMessageContent.toString(message));
-		packet.setThread(originId);
+		MessageBuilder messageBuilder = mConnection.getStanzaFactory().buildMessageStanza();
+		messageBuilder.ofType(Message.Type.chat);
+		messageBuilder.setBody(TransformMessageContent.toString(message));
+		if (StringUtils.isNotEmpty(originId)) {
+			messageBuilder.setThread(originId);
+		}
 
 		// Add a private carbon extension so that this message wont get carbon copied. MAXS does
 		// already send the message to all resources. If a recipient has carbons enabled and we
 		// wouldn't add the private element, then he would receive the message multiple times.
-		CarbonExtension.Private.addTo(packet);
+		messageBuilder.addExtension(CarbonExtension.Private.INSTANCE);
 
 		// Add a MAXS element. MAXS itself will ignore messages with a MAXS element in order to
 		// prevent endless loops of message sending between one or multiple MAXS instances.
-		MAXSElement.addTo(packet);
+		MAXSElement.addTo(messageBuilder);
 
 		List<EntityJid> toList = new LinkedList<>();
 
@@ -448,10 +452,11 @@ public class XMPPService {
 			if (atLeastOneSupportsXHTMLIM) break;
 		}
 		if (atLeastOneSupportsXHTMLIM)
-			XHTMLIMUtil.addXHTMLIM(packet, TransformMessageContent.toFormatedText(message));
+			XHTMLIMUtil.addXHTMLIM(messageBuilder, TransformMessageContent.toFormatedText(message));
 
+		Message xmppMessage = messageBuilder.build();
 		try {
-			MultipleRecipientManager.send(mConnection, packet, toList, null, null);
+			MultipleRecipientManager.send(mConnection, xmppMessage, toList, null, null);
 		} catch (Exception e) {
 			LOG.e("sendAsMessage: Got Exception, adding message to DB", e);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
