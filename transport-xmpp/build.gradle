@@ -35,7 +35,7 @@ repositories {
   jcenter()
   mavenLocal()
   maven() {
-	  url "https://igniterealtime.org/repo/"
+	url 'https://www.igniterealtime.org/archiva/repository/maven/'
   }
 }
 
@@ -94,28 +94,44 @@ android {
 
 ext {
 	smackVersion = '4.4.0-alpha3'
-	minidnsVersion = '0.3.2'
+	minidnsVersion = '0.4.0-alpha5'
 	iespVersion = '0.0.2'
-	smackVersionComponents = smackVersion.split()
-	if (smackVersionComponents.length == 1) {
-		smackAndroidExtensionsVersion = smackVersion
-		smackExperimentalVersion = smackVersion
-		smackTcpVersion = smackVersion
-	} else {
-		println("Smack unique snapshot versioning detected")
-		smackAndroidExtensionsVersion = smackVersionComponents[0]
-		smackExperimentalVersion = smackVersionComponents[1]
-		smackTcpVersion = smackVersionComponents[2]
-	}
+	uniqueSmackSnapshot = smackVersion.split('-').length >= 2
 }
 
 dependencies {
 	implementation "eu.geekplace.iesp:iesp-aar:$iespVersion"
-	implementation "org.igniterealtime.smack:smack-android-extensions:$smackAndroidExtensionsVersion"
-	implementation "org.igniterealtime.smack:smack-experimental:$smackExperimentalVersion"
-	implementation "org.igniterealtime.smack:smack-tcp:$smackTcpVersion"
+	implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
+	implementation "org.igniterealtime.smack:smack-experimental:$smackVersion"
+	implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
 	implementation "org.minidns:minidns-dnssec:$minidnsVersion"
 	implementation project(':memorizingTrustManager')
+
+	if (uniqueSmackSnapshot) {
+		// Gradle unique snapshot artifacts will delcare dependencies
+		// to artifcats of subprojects the same build using non-unique
+		// snapshot versions. This means that we will get the unique
+		// snapshot of .e.g smack-tcp, but the artifact of smack-core
+		// will be any matching non-unique snapshot.
+		// Hence we use some gradle magic as workaround to strictly
+		// pin the version to the unique snapshot.
+		// See
+		// - https://discuss.gradle.org/t/unique-snapshot-dependencies-for-projects-own-subproject-in-pom-not-declared/35692?u=flow
+		// - https://discuss.gradle.org/t/how-to-force-a-dependency-version-while-also-substituting-a-transitive-dependency/26759/4?u=flow
+		components.all {
+			allVariants {
+				withDependencies { deps ->
+					deps.each { dep ->
+						if (dep.group == 'org.igniterealtime.smack') {
+							dep.version {
+								strictly smackVersion
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 configurations {
