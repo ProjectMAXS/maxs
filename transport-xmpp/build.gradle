@@ -93,7 +93,7 @@ android {
 }
 
 ext {
-	smackVersion = '4.4.0-alpha3'
+	smackVersion = '4.4.0-alpha4-20200612.144300-7'
 	minidnsVersion = '0.4.0-alpha5'
 	iespVersion = '0.0.2'
 	uniqueSmackSnapshot = smackVersion.split('-').length >= 2
