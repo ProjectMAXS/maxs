@@ -69,8 +69,7 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 		boolean shouldUpdateStatus = false;
 		for (StatusInformation info : infoList) {
 			String statusKey = info.getKey();
-			String humanValue = info.getHumanValue();
-			LOG.d("add: statusKey=" + statusKey + " humanValue=" + humanValue);
+			LOG.d("add: " + info);
 
 			StatusInformation savedStatusValue = mStatusInformationMap.get(statusKey);
 			if (savedStatusValue != null) {
