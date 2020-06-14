@@ -17,7 +17,6 @@
 
 package org.projectmaxs.transport.xmpp.xmppservice;
 
-import org.jivesoftware.smack.AbstractConnectionListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.projectmaxs.shared.global.util.Log;
@@ -40,8 +39,7 @@ public class HandleConnectionListener extends StateChangeListener {
 
 	@Override
 	public void connected(XMPPConnection connection) {
-		mConnectionListener = new AbstractConnectionListener() {
-
+		mConnectionListener = new ConnectionListener() {
 			@Override
 			public void connectionClosedOnError(Exception arg0) {
 				LOG.d("connectionClosedOnError(): Issuing ACTION_START_SERVICE intent");
