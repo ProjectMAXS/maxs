@@ -65,19 +65,15 @@ public class JULHandler extends Handler {
 
 	private static final Set<String> NO_LOG_PKGS = new HashSet<String>();
 
-	/**
-	 * Whether or the stacktraces of throwables attached to INFO or FINE* log levels should also be
-	 * logged. Usually these create a log of noise and so, logging them is not really desirable.
-	 */
-	private static boolean LOG_INFO_THROWABLES = false;
-
 	private static final Formatter FORMATTER = new Formatter() {
 		@Override
 		public String format(LogRecord logRecord) {
 			String message = formatMessage(logRecord);
 			Throwable thrown = logRecord.getThrown();
 			if (thrown != null) {
-				if (logRecord.getLevel().intValue() > INFO_INT || LOG_INFO_THROWABLES) {
+				final DebugLogSettings debugLogSettings = sDebugLogSettings;
+				// Log the stacktrace of throwables if the log level is above Info or if debug log is enabled.
+				if (logRecord.getLevel().intValue() > INFO_INT || (debugLogSettings != null && debugLogSettings.isDebugLogEnabled())) {
 					// Log the full stacktrace.
 					String stacktrace = Log.getStackTraceString(thrown);
 					return message + ' ' + stacktrace;
