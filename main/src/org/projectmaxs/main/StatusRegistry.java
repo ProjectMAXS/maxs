@@ -94,6 +94,7 @@ public class StatusRegistry extends MAXSService.StartStopListener {
 					}
 				}
 			}
+			LOG.d("Saved status value " + savedStatusValue + " does not match current value " + info);
 
 			shouldUpdateStatus = true;
 			mStatusInformationMap.put(statusKey, info);

@@ -67,6 +67,11 @@ public class StatusInformation implements Parcelable {
 	}
 
 	@Override
+	public String toString() {
+		return "StatusInformation(key: " + mStatusKey + ", human: " + mHumanValue + ", machine: " + mMachineValue + ")";
+	}
+
+	@Override
 	public int describeContents() {
 		return 0;
 	}
