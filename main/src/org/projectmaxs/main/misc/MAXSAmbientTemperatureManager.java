@@ -90,15 +90,15 @@ public class MAXSAmbientTemperatureManager extends MAXSService.StartStopListener
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		float ambientTemperature = event.values[0];
-
-		if (mAmbientTemperature == null || mAmbientTemperature.doesNotRepresentNumber(ambientTemperature)) {
-			mAmbientTemperature = mMaxsBatteryManager
-					.createRangedNumber(ambientTemperature, 2);
+		if (mAmbientTemperature != null && mAmbientTemperature.doesNotRepresentNumber(ambientTemperature)) {
+			return;
 		}
 
+		mAmbientTemperature = mMaxsBatteryManager
+					.createRangedNumber(ambientTemperature, 2);
 		StatusInformation statusInformation = new StatusInformation("ambient-temperature",
-				mAmbientTemperature + "°C",
-				Float.toString(ambientTemperature));
+				mAmbientTemperature.toDynamicString() + "°C",
+				mAmbientTemperature.getConcreteValue());
 		MAXSStatusUtil.maybeUpdateStatus(mContext, statusInformation);
 	}
 

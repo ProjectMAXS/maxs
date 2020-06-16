@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.projectmaxs.main.MAXSService;
 import org.projectmaxs.shared.global.StatusInformation;
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.Unicode;
 import org.projectmaxs.shared.mainmodule.MAXSStatusUtil;
 
@@ -31,6 +32,8 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 public class MAXSBatteryManager extends MAXSService.StartStopListener {
+	private static final Log LOG = Log.getLog();
+
 	private static final String AC = "AC";
 	private static final String USB = "USB";
 	private static final String BAT = "Battery";
@@ -113,8 +116,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		float batteryScaledFloat = batteryPctFloat * 100;
 		if (mLastBattery == null || mLastBattery.doesNotRepresentNumber(batteryScaledFloat)) {
 			mLastBattery = new RangedNumber<Float>(batteryScaledFloat, 5);
-			infos.add(new StatusInformation("battery-percentage", mLastBattery.toString() + '%',
-					Float.toString(batteryPctFloat)));
+			infos.add(new StatusInformation("battery-percentage", mLastBattery.toDynamicString() + '%',
+					mLastBattery.getConcreteValue()));
 		}
 
 		if (health != mLastHealth) {
@@ -124,15 +127,16 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 		}
 
 		if (mLastVoltage == null || mLastVoltage.doesNotRepresentNumber(voltage)) {
+			LOG.d("Last battery voltage " + mLastVoltage + " does not represent current voltage " + voltage);
 			mLastVoltage = new RangedNumber<Integer>(voltage, 500);
-			infos.add(new StatusInformation("battery-voltage", null, Integer.toString(voltage)));
+			infos.add(new StatusInformation("battery-voltage", null, mLastVoltage.getConcreteValue()));
 		}
 
 		if (mLastTemperature == null || mLastTemperature.doesNotRepresentNumber(temperature)) {
 			mLastTemperature = new RangedNumber<Float>(temperature, 2);
 			infos.add(new StatusInformation("battery-temperature",
-					Unicode.BATTERY + ' ' + mLastTemperature.toString() + "°C",
-					Float.toString(temperature)));
+					Unicode.BATTERY + ' ' + mLastTemperature.toDynamicString() + "°C",
+					mLastTemperature.getConcreteValue()));
 		}
 
 		MAXSStatusUtil.maybeUpdateStatus(mContext, infos);
@@ -222,8 +226,27 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 			return lowerBound >= n.floatValue() && n.floatValue() <= upperBound;
 		}
 
+		public String getConcreteValue() {
+			return n.toString();
+		}
+
 		@Override
 		public String toString() {
+			final boolean powerConsumptionDoesNotMatter = mPowerConsumptionDoesNotMatter;
+			StringBuilder sb = new StringBuilder();
+			sb.append('[').append(lowerBound).append(' ');
+			if (powerConsumptionDoesNotMatter) {
+				sb.append('(');
+			}
+			sb.append(n);
+			if (powerConsumptionDoesNotMatter) {
+				sb.append(')');
+			}
+			sb.append(' ').append(upperBound).append(']');
+			return sb.toString();
+		}
+
+		public String toDynamicString() {
 			if (mPowerConsumptionDoesNotMatter) {
 				return String.valueOf(n);
 			}
