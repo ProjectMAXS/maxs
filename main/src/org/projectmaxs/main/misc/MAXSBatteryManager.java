@@ -130,6 +130,8 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 			LOG.d("Last battery voltage " + mLastVoltage + " does not represent current voltage " + voltage);
 			mLastVoltage = new RangedNumber<Integer>(voltage, 500);
 			infos.add(new StatusInformation("battery-voltage", null, mLastVoltage.getConcreteValue()));
+		} else {
+			LOG.d("Last battery voltage " + mLastVoltage + " *does* represent current voltage " + voltage);
 		}
 
 		if (mLastTemperature == null || mLastTemperature.doesNotRepresentNumber(temperature)) {
