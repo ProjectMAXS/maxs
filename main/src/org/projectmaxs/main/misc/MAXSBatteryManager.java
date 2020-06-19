@@ -226,7 +226,7 @@ public class MAXSBatteryManager extends MAXSService.StartStopListener {
 				return this.n.equals(n);
 			}
 			int nAsInt = n.intValue();
-			return lowerBound >= nAsInt && nAsInt <= upperBound;
+			return lowerBound <= nAsInt && nAsInt <= upperBound;
 		}
 
 		public String getConcreteValue() {
