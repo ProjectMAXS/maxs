@@ -136,11 +136,15 @@ public class XMPPService {
 				, "org.jivesoftware.smackx.hoxt"
 				, "org.jivesoftware.smackx.iot"
 				, "org.jivesoftware.smackx.json"
+				, "org.jivesoftware.smackx.mediaelement.MediaElementManager"
+				, "org.jivesoftware.smackx.message_fastening.MessageFasteningManager"
 				, "org.jivesoftware.smackx.muc"
 				, "org.jivesoftware.smackx.omemo"
+				, "org.jivesoftware.smackx.sid.StableUniqueStanzaIdManager"
 				, "org.jivesoftware.smackx.xdata"
 				, "org.jivesoftware.smackx.xdatalayout"
 				, "org.jivesoftware.smackx.xdatavalidation"
+				, "org.jivesoftware.smackx.xmlelement.DataFormsXmlElementManager"
 				);
 		// @formatter:on
 
