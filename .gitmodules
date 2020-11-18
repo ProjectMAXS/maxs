@@ -4,6 +4,3 @@
 [submodule "module-shell/libraryProjects/root-commands"]
 	path = module-shell/libraryProjects/root-commands
 	url = https://github.com/Flowdalic/root-commands.git
-[submodule "scripts/MavenToAndroidAnt"]
-	path = scripts/MavenToAndroidAnt
-	url = https://github.com/Flowdalic/MavenToAndroidAnt.git
