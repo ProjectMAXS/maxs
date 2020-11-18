@@ -1,5 +1,8 @@
 # ProGuard configuration file for MAXS Transport XMPP
 
+#-printconfiguration /var/tmp/proguard-config.txt
+#-printusage /var/tmp/proguard-usage.txt
+
 -dontobfuscate
 
 # Mostly Smack specific ProGuard instructions, so that ProGuard is
