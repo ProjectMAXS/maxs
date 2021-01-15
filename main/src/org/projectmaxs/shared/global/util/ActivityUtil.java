@@ -26,6 +26,7 @@ public class ActivityUtil {
 
 	public static void showSimpleTextView(Activity activity, CharSequence cs, int closeButtonText) {
 		final TextView textView = new TextView(activity);
+		textView.setPadding(45, 45, 45,45);
 		textView.setText(cs);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
 		// Sadly we can't make this text view also selectable
