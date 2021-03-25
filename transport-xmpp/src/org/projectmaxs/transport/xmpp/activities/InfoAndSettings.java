@@ -1,5 +1,9 @@
 package org.projectmaxs.transport.xmpp.activities;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Set;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -7,6 +11,7 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.util.FileUtils;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.jxmpp.jid.EntityBareJid;
@@ -63,6 +68,20 @@ public class InfoAndSettings extends Activity {
 	}
 
 	public void showAbout(View view) {
+		String smackNotice;
+		try {
+			StringBuilder sb = new StringBuilder();
+			try (InputStream is = FileUtils.getStreamForClasspathFile("org.jivesoftware.smack/NOTICE", null)) {
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+				for (String line; (line = bufferedReader.readLine()) != null;) {
+					sb.append(line).append("<br>");
+				}
+			}
+			smackNotice = sb.toString();
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+
 		SpannableStringBuilder sb = SpannedUtil.createdAboutDialog(this, "transport-xmpp",
 				R.string.app_name, R.string.version, R.string.copyright, R.string.authors,
 				R.string.gplv3);
@@ -77,16 +96,9 @@ public class InfoAndSettings extends Activity {
 SmackConfiguration.getVersion() + "<br>" +
 "<a href=\"http://www.igniterealtime.org/projects/smack\">http://www.igniterealtime.org/projects/smack</a><br>" +
 "<br>" +
-"Copyright © 2011-2019 Florian Schmaus<br>" +
-"Copyright © 2013-2014 Georg Lukas<br>" +
-"Copyright © 2014 Lars Noschinski<br>" +
-"Copyright © 2014 Vyacheslav Blinov<br>" +
-"Copyright © 2014 Andriy Tsykholyas<br>" +
-"Copyright © 2009-2013 Robin Collier<br>" +
-"Copyright © 2009 Jonas Ådahl<br>" +
-"Copyright © 2003-2010 Jive Software<br>" +
-"Copyright © 2001-2004 Apache Software Foundation<br>" +
 "Apache License, Version 2.0<br>" +
+"<br>" +
+smackNotice +
 "<h2>MemorizingTrustManager</h2>" +
 "<a href=\"https://github.com/ge0rg/MemorizingTrustManager\">https://github.com/ge0rg/MemorizingTrustManager</a><br>" +
 "<br>" +

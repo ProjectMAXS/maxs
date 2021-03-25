@@ -29,7 +29,7 @@ if (keystorePropertiesFileString != null) {
 
 // Defaults for the modules.
 ext {
-	maxsModuleMinSdkVersion = 10
+	maxsModuleMinSdkVersion = 19
 	maxsModuleTargetSdkVersion = 23
 	maxsModuleCompileSdkVersion = 24
 }
