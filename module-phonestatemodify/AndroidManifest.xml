@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.projectmaxs.module.phonestatemodify"
-    android:versionCode="2000503576"
-    android:versionName="0.5.13-SNAPSHOT"
+    android:versionCode="2000503857"
+    android:versionName="0.5.13"
     xmlns:tools="http://schemas.android.com/tools">
 
 
