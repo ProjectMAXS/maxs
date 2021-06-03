@@ -36,6 +36,7 @@ import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.debugger.JulDebugger;
 import org.jivesoftware.smack.debugger.SmackDebugger;
 import org.jivesoftware.smack.debugger.SmackDebuggerFactory;
@@ -462,7 +463,7 @@ public class XMPPService {
 		Message xmppMessage = messageBuilder.build();
 		try {
 			MultipleRecipientManager.send(mConnection, xmppMessage, toList, Collections.emptyList(), Collections.emptyList());
-		} catch (Exception e) {
+		} catch (XMPPException.XMPPErrorException | NoResponseException | FeatureNotSupportedException | NotConnectedException | InterruptedException e) {
 			LOG.e("sendAsMessage: Got Exception, adding message to DB", e);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
 					originId);
