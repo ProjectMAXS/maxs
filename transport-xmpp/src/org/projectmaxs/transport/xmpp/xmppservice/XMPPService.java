@@ -21,6 +21,7 @@ import java.io.File;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -460,7 +461,7 @@ public class XMPPService {
 
 		Message xmppMessage = messageBuilder.build();
 		try {
-			MultipleRecipientManager.send(mConnection, xmppMessage, toList, null, null);
+			MultipleRecipientManager.send(mConnection, xmppMessage, toList, Collections.emptyList(), Collections.emptyList());
 		} catch (Exception e) {
 			LOG.e("sendAsMessage: Got Exception, adding message to DB", e);
 			mMessagesTable.addMessage(message, Constants.ACTION_SEND_AS_MESSAGE, originIssuerInfo,
