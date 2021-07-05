@@ -176,7 +176,7 @@ If you want to report an issue, have a look at [[file:report_issue.org][Report a
 
 ** IRC
 
-Feel free to join  [[irc://chat.freenode.net/maxs][~#maxs~]] @ freenode. Questions and suggestions are
+Feel free to join  [[ircs://irc.libera.chat/maxs][~#maxs~]] @ freenode. Questions and suggestions are
 welcome, but remeber that this is IRC and it may take a while (~hours,
 days) to get an answer.
 
