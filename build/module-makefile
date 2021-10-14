@@ -18,7 +18,7 @@ DEBUG_APK := build/outputs/apk/debug/$(MODULE_NAME)-debug.apk
 
 BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy distclean prebuild release resources setupResourceLinks shared $(DEBUG_APK)
+.PHONY: all clean distclean prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
 all: module
 
@@ -32,9 +32,6 @@ module: prebuild
 
 release:
 	BUILD_TARGET=release make module
-
-deploy: $(DEBUG_APK)
-	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 $(DEBUG_APK):
 	$(MAKE) module BUILD_TARGET=debug

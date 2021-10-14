@@ -30,6 +30,10 @@ lint.xml:
 lintClean:
 	rm -f lint-results.html
 
+PHONY: deploy
+deploy: $(DEBUG_APK)
+	adb $(ADB_ARGS) install -r $(DEBUG_APK)
+
 # Symlink the gradle wrapper from all modules and transports to the
 # one from MAXS' main component.
 .PHONY: gradlew-symlinks

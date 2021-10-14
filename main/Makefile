@@ -4,7 +4,7 @@ DEBUG_APK := build/outputs/apk/debug/main-debug.apk
 
 BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy distclean prebuild release resources setupResourceLinks $(DEBUG_APK)
+.PHONY: all clean distclean prebuild release resources setupResourceLinks $(DEBUG_APK)
 
 all: main
 ifeq ($(MAXS_BUILD_SYSTEM),ant)
@@ -34,9 +34,6 @@ resources: setupResourceLinks
 
 release:
 	make main BUILD_TARGET=release
-
-deploy: $(DEBUG_APK)
-	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 $(DEBUG_APK):
 	$(MAKE) main BUILD_TARGET=debug

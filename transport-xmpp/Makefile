@@ -11,7 +11,7 @@ DEBUG_APK := build/outputs/apk/debug/$(TRANSPORT_NAME)-debug.apk
 
 BUILD_TARGET ?= debug
 
-.PHONY: all clean deploy distclean prebuild release resources setupResourceLinks shared $(DEBUG_APK)
+.PHONY: all clean distclean prebuild release resources setupResourceLinks shared $(DEBUG_APK)
 
 all: transport
 
@@ -25,9 +25,6 @@ transport: prebuild
 
 release:
 	BUILD_TARGET=release $(MAKE) transport
-
-deploy: $(DEBUG_APK)
-	adb $(ADB_ARGS) install -r $(DEBUG_APK)
 
 $(DEBUG_APK):
 	$(MAKE) transport BUILD_TARGET=debug
