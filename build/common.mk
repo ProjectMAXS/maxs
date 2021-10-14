@@ -32,7 +32,7 @@ lintClean:
 
 PHONY: deploy
 deploy: $(DEBUG_APK)
-	adb $(ADB_ARGS) install -r $(DEBUG_APK)
+	adb $(ADB_ARGS) install -g -r $(DEBUG_APK)
 
 # Symlink the gradle wrapper from all modules and transports to the
 # one from MAXS' main component.
