@@ -175,29 +175,11 @@ If you want to report an issue, have a look at [[file:report_issue.org][Report a
 <<contact>>
 
 ** IRC
+#+OPTIONS: broken-links:t
 
-Feel free to join  [[ircs://irc.libera.chat/maxs][~#maxs~]] @ freenode. Questions and suggestions are
+Feel free to join  [[ircs://irc.libera.chat/maxs][~#maxs~]] @ [[https://web.libera.chat/][libera.chat]]. Questions and suggestions are
 welcome, but remeber that this is IRC and it may take a while (~hours,
 days) to get an answer.
-
-** Forum
-
-If you don't want to idle around in IRC, please don't hesitate to use
-[[http://forums.projectmaxs.org][forums.projectmaxs.org]] to ask for support or discuss development of
-MAXS. It's also the right place where bug reports or feature requests
-should get posted.
-
-** Microblog / News Feeds
-
-MAXS has a [[http://www.gnu.org/software/social/][GNU Social]] microblog account that can be found at
-[[https://social.geekplace.eu/maxs]]. This microblog also allows you to
-subscripte to feeds in various formats to keep you informed about the
-latest news:
-
-- [[https://social.geekplace.eu/api/statuses/user_timeline/3.atom][Atom]]
-- [[https://social.geekplace.eu/api/statuses/user_timeline/3.as][Activity Streams]]
-- [[https://social.geekplace.eu/maxs/rss][RSS 1.0]]
-- [[https://social.geekplace.eu/api/statuses/user_timeline/3.rss][RSS 2.0]]
 
 * Donate
 <<Donate>>
