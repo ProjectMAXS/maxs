@@ -52,13 +52,13 @@ enter the device account information in B. You have two options here:
 1. You already created an account for MAXS, then simply enter the JID
    and password in B
 2. You don't have already created an account for MAXS. Then either
-   create one or [[*Register%20a%20XMPP%20account%20with%20MAXS][register an account]] at one of the many free of charge
+   create one or [[* Register an XMPP account with MAXS][register an account]] at one of the many free of charge
    and open XMPP servers worldwide.
 
 #+CAPTION: MAXS Transport XMPP Configuration
 [[./images/maxs-transport-xmpp_annotated.png]]
 
-** Register a XMPP account with MAXS
+** Register an XMPP account with MAXS
 
 In order to register an account from MAXS you need to choose an XMPP
 service and server first. Here is a small incomplete list of XMPP
