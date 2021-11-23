@@ -48,7 +48,7 @@ distclean: clean lintClean
 	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f $(VERSION_XML)
 
-prebuild: lint.xml resources shared $(VERSION_XML) build.gradle
+prebuild: lint.xml resources shared $(VERSION_XML) build.gradle .gitignore
 
 build.gradle:
 	ln -rs $(BASE)/build/build-module.gradle $@
@@ -72,3 +72,6 @@ $(SHARED_MODULE_SOURCE): | $(SHARED_SOURCE)
 
 setupResourceLinks:
 	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
+
+.gitignore: $(SHARED)/module-gitignore
+	cp $< $@
