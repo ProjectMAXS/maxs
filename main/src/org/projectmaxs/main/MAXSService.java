@@ -226,7 +226,16 @@ public class MAXSService extends Service {
 			Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
 			intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
 			intent.setClassName(modulePackage, modulePackage + ".ModuleService");
-			startService(intent);
+			ComponentName componentName = startService(intent);
+			if (componentName == null) {
+				// This can happen e.g. due Androids background restriction, if the module was not granted the according permissions. Then we see
+				// 11-22 15:20:25.925 W/ActivityManager( 1838): Background start not allowed: service Intent { act=org.projectmaxs.PERFORM_COMMAND
+				// cmp=org.projectmaxs.module.contactsread/.ModuleService (has extras)} to org.projectmaxs.module.contactsread /.ModuleService from
+				// pid = 1971 uid = 10460 pkg = org.projectmaxs.main startFg ? = false
+				// in the log.
+				Message errorMessage = new Message("No service was started for " + fullCommand + ". Intent: " + intent);
+				send(errorMessage);
+			}
 		}
 	}
 
