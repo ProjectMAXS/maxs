@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
     package="org.projectmaxs.main"
-    android:versionCode="2000504565"
-    android:versionName="0.5.15" >
+    android:versionCode="2000504566"
+    android:versionName="0.5.16-SNAPSHOT" >
 
     <uses-feature
         android:name="android.hardware.touchscreen"
