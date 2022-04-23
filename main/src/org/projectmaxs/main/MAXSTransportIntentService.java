@@ -33,7 +33,7 @@ public class MAXSTransportIntentService extends MAXSIntentServiceWithMAXSService
 	private TransportRegistry mTransportRegistry;
 
 	public MAXSTransportIntentService() {
-		super(LOG);
+		super("MAXS (Transport Intent Service)", LOG);
 	}
 
 	@Override

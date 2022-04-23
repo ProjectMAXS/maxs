@@ -36,7 +36,7 @@ public class MAXSModuleIntentService extends MAXSIntentServiceWithMAXSService {
 	private ModuleRegistry mModuleRegistry;
 
 	public MAXSModuleIntentService() {
-		super(LOG);
+		super("MAXS (Module Intent Service)", LOG);
 	}
 
 	@Override

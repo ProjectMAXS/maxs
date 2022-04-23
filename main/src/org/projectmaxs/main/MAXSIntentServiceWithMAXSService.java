@@ -24,21 +24,25 @@ import java.util.Queue;
 import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.util.Log;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 
 public abstract class MAXSIntentServiceWithMAXSService extends Service {
 	private final Queue<Intent> mQueue = new LinkedList<Intent>();
+	private final String mName;
 	private final Log mLog;
 
 	private MAXSService mMAXSService;
 
-	public MAXSIntentServiceWithMAXSService(Log log) {
+	public MAXSIntentServiceWithMAXSService(String name, Log log) {
 		super();
+		mName = name;
 		mLog = log;
 	}
 
@@ -60,6 +64,15 @@ public abstract class MAXSIntentServiceWithMAXSService extends Service {
 		if (mMAXSService == null) {
 			mLog.d("onStartCommand: mMAXSService is null, adding to queue");
 			mQueue.add(intent);
+
+			if (Build.VERSION.SDK_INT >= 26) {
+				Notification notification = new Notification.Builder(this)
+						.setContentText(mName)
+						.build();
+				int notificationId = 1;
+				startForeground(notificationId, notification);
+			}
+
 			// start sticky because there are now intents in the queue to handle
 			return START_STICKY;
 		} else {
