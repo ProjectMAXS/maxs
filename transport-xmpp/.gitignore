@@ -16,3 +16,8 @@ gen/
 libs-sources/
 libs/
 res-src/
+
+# Ignore the gradle wrapper
+/gradle
+/gradlew
+/gradlew.bat
