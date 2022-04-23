@@ -1,4 +1,4 @@
 FDROIDDATA=~/data/code/fdroiddata
-KEYSTOREDATA=~/Dropbox/development/maxs/keystore
+KEYSTOREDATA=~/Nextcloud/development/maxs/keystore
 RELEASE_HOST=mate.geekplace.eu
 RELEASE_DIR=/var/vhosts/projectmaxs.org/releases
