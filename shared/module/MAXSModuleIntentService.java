@@ -135,7 +135,7 @@ public abstract class MAXSModuleIntentService extends Service {
 		Message msg = mServiceHandler.obtainMessage();
 		msg.arg1 = startId;
 		msg.obj = intent;
-		msg.what = 42;
+		msg.what = WHAT;
 		mServiceHandler.sendMessage(msg);
 		return START_NOT_STICKY;
 	}
