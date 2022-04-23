@@ -226,6 +226,8 @@ public class MAXSService extends Service {
 			Intent intent = new Intent(GlobalConstants.ACTION_PERFORM_COMMAND);
 			intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
 			intent.setClassName(modulePackage, modulePackage + ".ModuleService");
+
+			// TODO: Once MAXS' minimum SDK version is 26 or higher, we want to call startForegroundService() here.
 			ComponentName componentName = startService(intent);
 			if (componentName == null) {
 				// This can happen e.g. due Androids background restriction, if the module was not granted the according permissions. Then we see
