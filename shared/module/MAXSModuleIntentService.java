@@ -30,6 +30,7 @@ import org.projectmaxs.shared.global.messagecontent.Text;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -132,6 +133,14 @@ public abstract class MAXSModuleIntentService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (Build.VERSION.SDK_INT >= 26) {
+			Notification notification = new Notification.Builder(this)
+					.setContentText(mName)
+					.build();
+			int notificationId = 1;
+			startForeground(notificationId, notification);
+		}
+
 		Message msg = mServiceHandler.obtainMessage();
 		msg.arg1 = startId;
 		msg.obj = intent;
