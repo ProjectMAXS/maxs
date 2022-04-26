@@ -26,7 +26,7 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
       '(
 	("documentation"
 	 :base-directory "../documentation"
-	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
+	 :publishing-directory "/ssh:zulu.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
 	 :publishing-function org-html-publish-to-html
 	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:/homepage/org-info.js"
 	 :auto-sitemap t
@@ -38,19 +38,19 @@ g.defer=true; g.async=true; g.src=u+\"piwik.js\"; s.parentNode.insertBefore(g,s)
 	("documentation-static"
 	 :base-directory "../documentation"
 	 :base-extension "png"
-	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
+	 :publishing-directory "/ssh:zulu.geekplace.eu:/var/vhosts/projectmaxs.org/documentation"
 	 :publishing-function org-publish-attachment
 	 :recursive t
 	 )
 	("maxs-static"
 	 :base-directory "."
 	 :base-extension "css\\|js\\|png"
-	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/homepage"
+	 :publishing-directory "/ssh:zulu.geekplace.eu:/var/vhosts/projectmaxs.org/homepage"
 	 :publishing-function org-publish-attachment
 	 )
 	("maxs"
 	 :base-directory "."
-	 :publishing-directory "/ssh:mate.geekplace.eu:/var/vhosts/projectmaxs.org/homepage"
+	 :publishing-directory "/ssh:zulu.geekplace.eu:/var/vhosts/projectmaxs.org/homepage"
 	 :publishing-function org-html-publish-to-html
 	 :infojs-opt "view:showall toc:nil ltoc:nil mouse:underline buttons:t path:/homepage/org-info.js"
 	 )
