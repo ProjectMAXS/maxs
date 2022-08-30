@@ -20,6 +20,7 @@ package org.projectmaxs.main.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.ParcelableUtil;
 import org.projectmaxs.shared.mainmodule.ModuleInformation;
 
@@ -29,6 +30,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class ModuleRegistryTable {
+
+	private static final Log LOG = Log.getLog(ModuleRegistryTable.class);
 
 	private static final String TABLE_NAME = "moduleRegistry";
 	private static final String COLUMN_NAME_MODULE_PACKAGE = "package";
@@ -89,8 +92,14 @@ public class ModuleRegistryTable {
 			byte[] moduleInformationMarshalled = c.getBlob(c
 					.getColumnIndex(COLUMN_NAME_MODULE_INFORMATION));
 			ModuleInformation moduleInformation = ParcelableUtil.unmarshall(
-					moduleInformationMarshalled, ModuleInformation.CREATOR);
-			res.add(moduleInformation);
+					moduleInformationMarshalled, ModuleInformation.CREATOR, true);
+			if (moduleInformation == null) {
+				String packageName = c.getString(c.getColumnIndex(COLUMN_NAME_MODULE_PACKAGE));
+				LOG.i("Deleting module information from database of " + packageName + " because the data could not be restored");
+				deleteModuleInformation(packageName);
+			} else {
+				res.add(moduleInformation);
+			}
 		} while (c.moveToNext());
 
 		c.close();

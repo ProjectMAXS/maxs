@@ -17,10 +17,13 @@
 
 package org.projectmaxs.shared.global.util;
 
+import android.os.BadParcelableException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ParcelableUtil {
+
+	private static final Log LOG = Log.getLog(ParcelableUtil.class);
 
 	public static byte[] marshall(Parcelable parceable) {
 		Parcel parcel = Parcel.obtain();
@@ -40,9 +43,22 @@ public class ParcelableUtil {
 	}
 
 	public static <T> T unmarshall(byte[] bytes, Parcelable.Creator<T> creator) {
+		return unmarshall(bytes, creator, false);
+	}
+	public static <T> T unmarshall(byte[] bytes, Parcelable.Creator<T> creator, boolean ignoreExceptions) {
 		Parcel parcel = unmarshall(bytes);
-		T result = creator.createFromParcel(parcel);
-		parcel.recycle();
+		T result = null;
+		try {
+			result = creator.createFromParcel(parcel);
+		} catch (BadParcelableException badParcelableException) {
+			if (ignoreExceptions) {
+				LOG.d("createFromParcel() threw " + badParcelableException, badParcelableException);
+			} else {
+				throw badParcelableException;
+			}
+		} finally {
+			parcel.recycle();
+		}
 		return result;
 	}
 }

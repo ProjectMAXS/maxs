@@ -20,6 +20,7 @@ package org.projectmaxs.main.database;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.global.util.ParcelableUtil;
 import org.projectmaxs.shared.maintransport.TransportInformation;
 
@@ -29,6 +30,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class TransportRegistryTable {
+
+	private static final Log LOG = Log.getLog(TransportRegistryTable.class);
 
 	private static final String TABLE_NAME = "transportRegistry";
 	private static final String COLUMN_NAME_TRANSPORT_PACKAGE = "package";
@@ -90,8 +93,14 @@ public class TransportRegistryTable {
 			byte[] transportInformationMarshalled = c.getBlob(c
 					.getColumnIndex(COLUMN_NAME_TRANSPORT_INFORMATION));
 			TransportInformation transportInformation = ParcelableUtil.unmarshall(
-					transportInformationMarshalled, TransportInformation.CREATOR);
-			res.add(transportInformation);
+					transportInformationMarshalled, TransportInformation.CREATOR, true);
+			if (transportInformation == null) {
+				String packageName = c.getString(c.getColumnIndex(COLUMN_NAME_TRANSPORT_PACKAGE));
+				LOG.i("Deleting transport information from database of " + packageName + " because the data could not be restored");
+				deleteTransportInformation(packageName);
+			} else {
+				res.add(transportInformation);
+			}
 		} while (c.moveToNext());
 
 		c.close();

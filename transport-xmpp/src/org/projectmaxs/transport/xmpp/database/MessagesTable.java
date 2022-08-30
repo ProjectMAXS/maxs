@@ -89,12 +89,14 @@ public class MessagesTable {
 
 		do {
 			byte[] messageBytes = c.getBlob(c.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE));
-			Message message = ParcelableUtil.unmarshall(messageBytes, Message.CREATOR);
-			String intentAction = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INTENT_ACTION));
-			String issuerId = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_ID));
-			String issuerInfo = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_INFO));
-			entries.add(new Entry(message, new CommandOrigin(Constants.PACKAGE, intentAction,
-					issuerInfo, issuerId)));
+			Message message = ParcelableUtil.unmarshall(messageBytes, Message.CREATOR, true);
+			if (message != null) {
+				String intentAction = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_INTENT_ACTION));
+				String issuerId = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_ID));
+				String issuerInfo = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME_ISSUER_INFO));
+				entries.add(new Entry(message, new CommandOrigin(Constants.PACKAGE, intentAction,
+						issuerInfo, issuerId)));
+			}
 		} while (c.moveToNext());
 
 		// Delete all rows with the given origin after we have read out the
