@@ -402,15 +402,16 @@ public class Settings implements OnSharedPreferenceChangeListener, DebugLogSetti
 				// Smack >= 4.1 verifies the hostname per default
 			}
 
+			SSLContext sc;
 			try {
-				SSLContext sc = SSLContext.getInstance("TLS");
+				sc = SSLContext.getInstance("TLS");
 				sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
-				confBuilder.setCustomSSLContext(sc);
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException(e);
 			} catch (KeyManagementException e) {
 				throw new IllegalStateException(e);
 			}
+			confBuilder.setSslContextFactory(() -> { return sc; });
 
 			mConnectionConfiguration = confBuilder.build();
 		}

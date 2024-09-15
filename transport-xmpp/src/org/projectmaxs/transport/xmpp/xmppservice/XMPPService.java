@@ -282,9 +282,11 @@ public class XMPPService {
 					+ to);
 			return;
 		}
-		Message message = new Message();
-		message.setTo(to);
-		message.setBody(body);
+
+		Message message = mConnection.getStanzaFactory().buildMessageStanza()
+				.to(to)
+				.setBody(body)
+				.build();
 		try {
 			mConnection.sendStanza(message);
 		} catch (InterruptedException | NotConnectedException e) {

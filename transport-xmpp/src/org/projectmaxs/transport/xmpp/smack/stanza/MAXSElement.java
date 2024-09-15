@@ -22,6 +22,8 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.packet.StanzaBuilder;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 
+import javax.xml.namespace.QName;
+
 /**
  * A MAXS extension element, used to indicate messages send by MAXS. Those are either responses to a
  * MAXS command or broadcasts send by MAXS. The element is useful to identity messages send by MAXS
@@ -39,6 +41,8 @@ public class MAXSElement implements ExtensionElement {
 
 	public static final String ELEMENT = "maxs";
 	public static final String NAMESPACE = "https://projectmaxs.org";
+
+	public static final QName QNAME = new QName(NAMESPACE, ELEMENT);
 
 	private MAXSElement() {}
 
@@ -58,11 +62,11 @@ public class MAXSElement implements ExtensionElement {
 	}
 
 	public static MAXSElement from(Stanza stanza) {
-		return stanza.getExtension(ELEMENT, NAMESPACE);
+		return stanza.getExtension(MAXSElement.class);
 	}
 
 	public static boolean foundIn(Stanza stanza) {
-		return stanza.hasExtension(ELEMENT, NAMESPACE);
+		return stanza.hasExtension(QNAME);
 	}
 
 	public static void addTo(StanzaBuilder stanza) {

@@ -31,6 +31,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
+import org.jivesoftware.smack.roster.RosterUtil;
 import org.jivesoftware.smack.roster.SubscribeListener;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jxmpp.jid.BareJid;
@@ -153,9 +154,8 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	private void friendJid(BareJid userID) {
 		if (!mRoster.contains(userID)) {
 			try {
-				mRoster.createEntry(userID, userID.toString(), null);
+				mRoster.createItemAndRequestSubscription(userID, userID.toString(), null);
 				grantSubscription(userID, mConnection);
-				requestSubscription(userID, mConnection);
 			} catch (NotConnectedException | InterruptedException | NotLoggedInException
 					| NoResponseException | XMPPErrorException e) {
 				LOG.w("Exception creating roster entry for " + userID, e);
@@ -171,20 +171,20 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 		try {
 			switch (type) {
 			case from:
-				requestSubscription(userID, mConnection);
+				RosterUtil.askForSubscriptionIfRequired(mRoster, userID);
 				break;
 			case to:
 				grantSubscription(userID, mConnection);
 				break;
 			case none:
 				grantSubscription(userID, mConnection);
-				requestSubscription(userID, mConnection);
+				RosterUtil.askForSubscriptionIfRequired(mRoster, userID);
 				break;
 			case both:
 			default:
 				break;
 			}
-		} catch (NotConnectedException | InterruptedException e) {
+		} catch (NotLoggedInException | NotConnectedException | InterruptedException e) {
 			LOG.w("Exception handling subscription for " + userID, e);
 		}
 	}
@@ -199,27 +199,10 @@ public class XMPPRoster extends StateChangeListener implements RosterListener {
 	 */
 	private static void grantSubscription(BareJid jid, XMPPConnection connection)
 			throws NotConnectedException, InterruptedException {
-		Presence presence = new Presence(Presence.Type.subscribed);
-		sendPresenceTo(jid, presence, connection);
-	}
-
-	/**
-	 * request the subscription from a given JID
-	 * 
-	 * @param jid
-	 * @param connection
-	 * @throws InterruptedException
-	 * @throws NotConnectedException
-	 */
-	private static void requestSubscription(BareJid jid, XMPPConnection connection)
-			throws NotConnectedException, InterruptedException {
-		Presence presence = new Presence(Presence.Type.subscribe);
-		sendPresenceTo(jid, presence, connection);
-	}
-
-	private static void sendPresenceTo(BareJid to, Presence presence, XMPPConnection connection)
-			throws NotConnectedException, InterruptedException {
-		presence.setTo(to);
+		Presence presence = connection.getStanzaFactory().buildPresenceStanza()
+				.ofType(Presence.Type.subscribed)
+				.to(jid)
+				.build();
 		connection.sendStanza(presence);
 	}
 
