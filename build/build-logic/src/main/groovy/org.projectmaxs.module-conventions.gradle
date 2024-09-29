@@ -1,12 +1,5 @@
-buildscript {
-	repositories {
-		mavenCentral()
-		google()
-	}
-
-	dependencies {
-		classpath 'com.android.tools.build:gradle:7.1.3'
-	}
+plugins {
+	id 'com.android.application'
 }
 
 def keystoreProperties = new Properties()
@@ -26,20 +19,11 @@ if (keystorePropertiesFileString != null) {
 	keystoreProperties.load(new FileInputStream(file(keystorePropertiesFileString)))
 }
 
-// Defaults for the modules.
-ext {
-	maxsModuleMinSdkVersion = 19
-	maxsModuleTargetSdkVersion = 23
-	maxsModuleCompileSdkVersion = 24
-}
-
 // Which may be overriden by a module individial module-settings.gradle file.
 def moduleSettingsFile = rootProject.file("module-settings.gradle")
 if (moduleSettingsFile.exists()) {
 	apply from: moduleSettingsFile
 }
-
-apply plugin: 'com.android.application'
 
 repositories {
   mavenCentral()
@@ -52,11 +36,11 @@ ext {
 }
 
 android {
-	compileSdkVersion maxsModuleCompileSdkVersion
+	compileSdkVersion 24
 
 	defaultConfig {
-		minSdkVersion maxsModuleMinSdkVersion
-		targetSdkVersion maxsModuleTargetSdkVersion
+		minSdkVersion 19
+		targetSdkVersion 23
 	}
 
 	sourceSets {
@@ -71,6 +55,10 @@ android {
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_8
 		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
+	buildFeatures {
+		aidl = true
 	}
 
 	signingConfigs {

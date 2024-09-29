@@ -36,8 +36,6 @@ release:
 $(DEBUG_APK):
 	$(MAKE) module BUILD_TARGET=debug
 
-clean: build.gradle
-
 clean:
 	$(GRADLE) clean
 
@@ -45,10 +43,7 @@ distclean: clean lintClean
 	[ ! -f res-src/Makefile ] || cd res-src && $(MAKE) clean
 	rm -f $(VERSION_XML)
 
-prebuild: lint.xml resources shared $(VERSION_XML) build.gradle .gitignore
-
-build.gradle:
-	ln -rs $(BASE)/build/build-module.gradle $@
+prebuild: lint.xml resources shared $(VERSION_XML) .gitignore
 
 resources: shared setupResourceLinks
 	cd res-src && $(MAKE)

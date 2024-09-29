@@ -5,7 +5,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:7.1.3'
+		classpath 'com.android.tools.build:gradle:8.6.1'
 	}
 }
 
@@ -50,6 +50,8 @@ android {
 		targetSdkVersion 23
 	}
 
+	namespace "org.projectmaxs.transport.xmpp"
+
 	sourceSets {
 		main {
 			manifest.srcFile 'AndroidManifest.xml'
@@ -62,6 +64,10 @@ android {
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_8
 		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
+	buildFeatures {
+		aidl = true
 	}
 
 	signingConfigs {
@@ -92,7 +98,7 @@ android {
 }
 
 ext {
-	smackVersion = '4.5.0-beta2'
+	smackVersion = '4.5.0-beta3'
 	minidnsVersion = '1.1.0-alpha3'
 	iespVersion = '0.0.2'
 	uniqueSmackSnapshot = smackVersion.split('-').length >= 2

@@ -29,7 +29,7 @@ release:
 $(DEBUG_APK):
 	$(MAKE) transport BUILD_TARGET=debug
 
-clean: build.gradle
+clean:
 	$(GRADLE) clean
 
 distclean: clean lintClean

@@ -1,0 +1,7 @@
+plugins {
+	id 'org.projectmaxs.module-conventions'
+}
+
+android {
+	namespace 'org.projectmaxs.module.clipboard'
+}

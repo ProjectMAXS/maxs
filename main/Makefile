@@ -41,12 +41,6 @@ $(DEBUG_APK):
 setupResourceLinks:
 	$(BASE)/scripts/setupResourceLinks.sh -c $(CURDIR)
 
-ifeq ($(MAXS_BUILD_SYSTEM),ant)
-clean: build.xml
-else
-clean: build.gradle
-endif
-
 clean:
 	$(GRADLE) clean
 

@@ -22,7 +22,7 @@ LINT_BINARY := $(ANDROID_HOME)/tools/lint
 
 lint-results.html: lint.xml $(wildcard src/**/*) $(wildcard res/**/*)
 	$(GRADLE) lint
-	cp --reflink=auto build/reports/$@ $@
+	cp --reflink=auto build/reports/lint-results-debug.html $@
 
 lint.xml:
 	ln -rs $(BASE)/build/lint.xml

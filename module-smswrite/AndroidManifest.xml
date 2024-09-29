@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.projectmaxs.module.smswrite"
     android:versionCode="2000504878"
     android:versionName="0.5.19-SNAPSHOT" >
 
@@ -10,6 +9,9 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
