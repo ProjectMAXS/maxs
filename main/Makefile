@@ -7,10 +7,6 @@ BUILD_TARGET ?= debug
 .PHONY: all clean distclean prebuild release resources setupResourceLinks $(DEBUG_APK)
 
 all: main
-ifeq ($(MAXS_BUILD_SYSTEM),ant)
-.PHONY: eclipse
-all: eclipse
-endif
 
 include $(BASE)/build/common.mk
 
@@ -20,14 +16,6 @@ main: prebuild
 	$(GRADLE) $(GRADLE_EXTRA_ARGS) assemble$(shell BUILD_TARGET=$(BUILD_TARGET); echo $${BUILD_TARGET^})
 
 prebuild: lint.xml resources $(VERSION_XML)
-
-ifeq ($(MAXS_BUILD_SYSTEM),ant)
-prebuild: build.xml
-build.xml:
-	android update project -p . -n maxs-main -s
-#	tools/android may fail but not set its exit status
-	test -f build.xml
-endif
 
 resources: setupResourceLinks
 	cd res-src && $(MAKE)
