@@ -38,7 +38,7 @@ public class PurgeOldCommandsService extends IntentService {
 	public static void init(Context context) {
 		Intent intent = new Intent(context, PurgeOldCommandsService.class);
 		PendingIntent operation = PendingIntent.getService(context, 0, intent,
-				PendingIntent.FLAG_CANCEL_CURRENT);
+				PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 0, AlarmManager.INTERVAL_DAY,
 				operation);

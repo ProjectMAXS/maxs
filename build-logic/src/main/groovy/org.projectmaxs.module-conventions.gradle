@@ -1,7 +1,3 @@
 plugins {
 	id 'org.projectmaxs.common-conventions'
 }
-
-android {
-	namespace "org.projectmaxs.main"
-}

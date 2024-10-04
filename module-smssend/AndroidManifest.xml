@@ -10,6 +10,8 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_PHONESTATE_READ" />
     <uses-permission android:name="org.projectmaxs.permission.READ_CONTACTS" />
     <uses-permission android:name="org.projectmaxs.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -33,7 +35,9 @@
         <receiver
             android:name=".ModuleReceiver"
             android:label="@string/app_module_receiver_label"
-            android:permission="org.projectmaxs.permission.USE_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER" />
                 <action android:name="org.projectmaxs.EXPORT_SETTINGS" />
@@ -42,7 +46,9 @@
         </receiver>
         <receiver
             android:name=".PurgeOldCommandsReceiver"
-            android:permission="org.projectmaxs.permission.USE_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.PURGE_OLD_COMMANDS" />
             </intent-filter>
@@ -58,7 +64,13 @@
 
         <service
             android:name=".ModuleService"
-            android:permission="org.projectmaxs.permission.USE_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            >
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MAXS Module Service" />
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND" />
             </intent-filter>

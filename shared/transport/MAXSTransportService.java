@@ -24,11 +24,16 @@ import org.projectmaxs.shared.global.jul.JULHandler;
 import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.maintransport.TransportConstants;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.NotificationChannel;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -39,6 +44,8 @@ public abstract class MAXSTransportService extends Service {
 	static {
 		JULHandler.setAsDefaultUncaughtExceptionHandler();
 	}
+
+	private static final String NOTIFICATION_CHANNEL_ID = "maxs-transport";
 
 	private static final Log LOG = Log.getLog();
 
@@ -84,6 +91,19 @@ public abstract class MAXSTransportService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		if (Build.VERSION.SDK_INT >= 26) {
+			String name = "MAXS";
+			String description = "MAXS Transport Service";
+			int importance = NotificationManager.IMPORTANCE_MIN;
+
+			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+			channel.setDescription(description);
+
+			NotificationManager notificationManager = getSystemService(NotificationManager.class);
+			notificationManager.createNotificationChannel(channel);
+		}
+
 		final String threadName = "MAXSTransportService[" + mName + "]";
 		HandlerThread thread = new HandlerThread(threadName);
 		thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
@@ -141,7 +161,21 @@ public abstract class MAXSTransportService extends Service {
 					+ isRunning() + ". Start service with action: " + action);
 			Intent startOrStopIntent = new Intent(action);
 			startOrStopIntent.setClass(this, mServiceClass);
-			startService(startOrStopIntent);
+
+			if (Build.VERSION.SDK_INT >= 26) {
+				Notification notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+								.setContentText(mName)
+								.build();
+				int notificationId = 1;
+
+				if (Build.VERSION.SDK_INT >= 34) {
+					startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+				} else {
+					startForeground(notificationId, notification);
+				}
+			} else {
+				startService(startOrStopIntent);
+			}
 		}
 		LOG.d("onStartCommand begin: intent=" + intent.getAction() + " flags=" + flags + " startId="
 				+ startId + " isRunning=" + isRunning());
@@ -163,6 +197,14 @@ public abstract class MAXSTransportService extends Service {
 			stickyStart = false;
 		}
 		performInServiceHandler(intent);
+
+		if (Build.VERSION.SDK_INT >= 31) {
+			// Starting apps targeting API level 31 or higher are
+			// not allowed to start a sticky foreground service
+			// from background.
+			stickyStart = false;
+		}
+
 		LOG.d("onStartCommand result: stickyStart=" + stickyStart + " action=" + action);
 		return stickyStart ? START_STICKY : START_NOT_STICKY;
 	}

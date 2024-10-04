@@ -183,7 +183,7 @@ public abstract class AbstractSmsSendCommand extends SubCommand {
 			intent.putExtra(PART_NUM_EXTRA, i);
 			intent.putExtra(CMD_ID_EXTRA, cmdId);
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(mService,
-					requestCodeStart + i, intent, PendingIntent.FLAG_ONE_SHOT);
+					requestCodeStart + i, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 			intents.add(pendingIntent);
 		}
 		return intents;

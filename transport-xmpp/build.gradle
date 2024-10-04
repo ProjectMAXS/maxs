@@ -1,85 +1,16 @@
-buildscript {
-	repositories {
-		mavenCentral()
-		google()
-	}
-
-	dependencies {
-		classpath 'com.android.tools.build:gradle:8.6.1'
-	}
+plugins {
+	id 'org.projectmaxs.common-conventions'
 }
-
-def keystoreProperties = new Properties()
-
-def userKeystorePropertiesFile = new File(System.getProperty("user.home"), ".config/maxs/keystore.properties")
-if (userKeystorePropertiesFile.exists()) {
-	keystoreProperties.load(new FileInputStream(userKeystorePropertiesFile))
-}
-
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-if (keystorePropertiesFile.exists()) {
-	keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-
-def keystorePropertiesFileString = System.getProperty("keystorePropertiesFile")
-if (keystorePropertiesFileString != null) {
-	keystoreProperties.load(new FileInputStream(file(keystorePropertiesFileString)))
-}
-
-apply plugin: 'com.android.application'
 
 repositories {
-  mavenCentral()
-  google()
-  jcenter()
   mavenLocal()
   maven() {
 	url 'https://www.igniterealtime.org/archiva/repository/maven/'
   }
 }
 
-ext {
-	signingKeystoreAvailable = keystoreProperties.getProperty('keyPassword') != null
-}
-
 android {
-	compileSdkVersion 24
-
-	defaultConfig {
-		minSdkVersion 19
-		targetSdkVersion 23
-	}
-
 	namespace "org.projectmaxs.transport.xmpp"
-
-	sourceSets {
-		main {
-			manifest.srcFile 'AndroidManifest.xml'
-			java.srcDirs = ['src']
-			aidl.srcDirs = ['src']
-			res.srcDirs = ['res']
-		}
-	}
-
-	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_1_8
-		targetCompatibility JavaVersion.VERSION_1_8
-	}
-
-	buildFeatures {
-		aidl = true
-	}
-
-	signingConfigs {
-		if (signingKeystoreAvailable) {
-			release {
-				keyAlias keystoreProperties['keyAlias']
-				keyPassword keystoreProperties['keyPassword']
-				storeFile file(keystoreProperties['storeFile'])
-				storePassword keystoreProperties['storePassword']
-			}
-		}
-	}
 
 	buildTypes {
 		release {
@@ -98,19 +29,17 @@ android {
 }
 
 ext {
-	smackVersion = '4.5.0-beta3'
+	smackVersion = '4.5.0-beta5'
 	minidnsVersion = '1.1.0-alpha3'
-	iespVersion = '0.0.2'
 	uniqueSmackSnapshot = smackVersion.split('-').length >= 2
 }
 
 dependencies {
-	implementation "eu.geekplace.iesp:iesp-aar:$iespVersion"
 	implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
 	implementation "org.igniterealtime.smack:smack-experimental:$smackVersion"
 	implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
 	implementation "org.minidns:minidns-dnssec:$minidnsVersion"
-	implementation project(':memorizingTrustManager')
+	implementation project(':transport-xmpp:memorizingTrustManager')
 
 	if (uniqueSmackSnapshot) {
 		// Gradle unique snapshot artifacts will delcare dependencies
@@ -141,10 +70,5 @@ dependencies {
 
 configurations {
 	all*.exclude group: 'xpp3', module: 'xpp3'
+	all*.exclude group: 'org.codelibs', module: 'xpp3'
 }
-
-task makePrebuild(type:Exec) {
-	commandLine 'make', 'prebuild'
-}
-
-preBuild.dependsOn makePrebuild

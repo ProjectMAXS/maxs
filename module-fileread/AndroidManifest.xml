@@ -8,6 +8,8 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN_AS_MODULE" />
     <uses-permission android:name="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -28,7 +30,9 @@
         <receiver
             android:name=".ModuleReceiver"
             android:label="@string/app_module_receiver_label"
-            android:permission="org.projectmaxs.permission.USE_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER" />
                 <action android:name="org.projectmaxs.EXPORT_SETTINGS" />
@@ -38,21 +42,31 @@
 
         <service
             android:name=".ModuleService"
-            android:permission="org.projectmaxs.permission.USE_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            >
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MAXS Module Service"/>
             <intent-filter>
                 <action android:name="org.projectmaxs.PERFORM_COMMAND" />
             </intent-filter>
         </service>
         <service
             android:name=".FileReadService"
-            android:permission="org.projectmaxs.permission.USE_FILEREAD" >
+            android:permission="org.projectmaxs.permission.USE_FILEREAD"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.ACTION_BIND_FILEREAD" />
             </intent-filter>
         </service>
         <service
             android:name=".SetCWDService"
-            android:permission="org.projectmaxs.permission.USE_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MODULE"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.module.fileread.ACTION_SET_CWD" />
             </intent-filter>

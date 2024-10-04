@@ -64,6 +64,8 @@ public class AlarmSet extends SubCommand {
 		intent.putExtra(AlarmClock.EXTRA_MESSAGE, alarmDescription);
 		intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		// TODO: This does not work on with API level 29 (Android 10)
 		service.startActivity(intent);
 
 		return new Message("Alarm set");

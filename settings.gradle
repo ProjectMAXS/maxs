@@ -1,0 +1,36 @@
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		google()
+	}
+    includeBuild('build-logic')
+}
+
+include 'main',
+	'module-alarmset',
+	'module-bluetooth',
+	'module-bluetoothadmin',
+	'module-clipboard',
+	'module-contactsread',
+	'module-fileread',
+	'module-filewrite',
+	'module-locationfine',
+	'module-misc',
+	'module-nfc',
+	'module-notification',
+	'module-notificationpolicyaccess',
+	'module-phonestatemodify',
+	'module-phonestateread',
+	'module-ringermode',
+	'module-shell',
+	'module-smsnotify',
+	'module-smsread',
+	'module-smssend',
+	'module-smswrite',
+	'module-wifiaccess',
+	'module-wifichange',
+	'transport-xmpp',
+	'transport-xmpp:memorizingTrustManager'
+
+
+project(':transport-xmpp:memorizingTrustManager').projectDir = file('transport-xmpp/libraryProjects/memorizingTrustManager')

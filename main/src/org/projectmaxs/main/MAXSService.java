@@ -44,6 +44,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 
@@ -145,6 +146,12 @@ public class MAXSService extends Service {
 		default:
 			throw new IllegalStateException("MAXSService unknown action " + action);
 		}
+		if (Build.VERSION.SDK_INT >= 31) {
+			// Starting apps targeting API level 31 or higher are
+			// not allowed to start a sticky foreground service
+			// from background.
+			sticky = false;
+		}
 		return sticky ? START_STICKY : START_NOT_STICKY;
 	}
 
@@ -227,8 +234,7 @@ public class MAXSService extends Service {
 			intent.putExtra(GlobalConstants.EXTRA_COMMAND, new Command(command, subCmd, args, id));
 			intent.setClassName(modulePackage, modulePackage + ".ModuleService");
 
-			// TODO: Once MAXS' minimum SDK version is 26 or higher, we want to call startForegroundService() here.
-			ComponentName componentName = startService(intent);
+			ComponentName componentName = startServiceCompat(intent);
 			if (componentName == null) {
 				// This can happen e.g. due Androids background restriction, if the module was not granted the according permissions. Then we see
 				// 11-22 15:20:25.925 W/ActivityManager( 1838): Background start not allowed: service Intent { act=org.projectmaxs.PERFORM_COMMAND
@@ -283,7 +289,7 @@ public class MAXSService extends Service {
 
 		CommandOrigin origin = null;
 		if (id != Message.NO_ID) {
-			CommandTable.Entry entry = mCommandTable.geEntry(id);
+			CommandTable.Entry entry = mCommandTable.getEntry(id);
 			origin = entry.mOrigin;
 		}
 
@@ -293,7 +299,7 @@ public class MAXSService extends Service {
 			Intent intent = origin.getIntentFor();
 			intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 			intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
-			ComponentName usedTransport = startService(intent);
+			ComponentName usedTransport = startServiceCompat(intent);
 			if (usedTransport == null) {
 				LOG.w("send: transport not found transportPackage=" + origin.getPackage()
 						+ " serviceClass=" + origin.getServiceClass());
@@ -310,7 +316,7 @@ public class MAXSService extends Service {
 							+ TransportConstants.TRANSPORT_SERVICE);
 					intent.putExtra(GlobalConstants.EXTRA_MESSAGE, message);
 					// no originIssuerInfo or originId info available here
-					ComponentName usedTransport = startService(intent);
+					ComponentName usedTransport = startServiceCompat(intent);
 					if (usedTransport == null) {
 						LOG.w("send: transport not found transportPackage=" + transportPackage
 								+ " serviceClass=" + transportPackage
@@ -337,7 +343,7 @@ public class MAXSService extends Service {
 		final Intent intent = new Intent(TransportConstants.ACTION_SET_STATUS);
 		intent.setClassName(transportPackage, cls);
 		intent.putExtra(GlobalConstants.EXTRA_CONTENT, status);
-		ComponentName usedTransport = startService(intent);
+		ComponentName usedTransport = startServiceCompat(intent);
 		if (usedTransport == null)
 			LOG.w("setStatus: transport not found package=" + transportPackage + " class=" + cls);
 	}
@@ -349,7 +355,7 @@ public class MAXSService extends Service {
 			String transportPackage = ti.getTransportPackage();
 			intent.setClassName(transportPackage, transportPackage
 					+ TransportConstants.TRANSPORT_SERVICE);
-			ComponentName cn = startService(intent);
+			ComponentName cn = startServiceCompat(intent);
 			if (cn == null) {
 				LOG.e("sendActionToAllTransportServices: No service found for " + transportPackage);
 			}
@@ -359,7 +365,14 @@ public class MAXSService extends Service {
 	private void startService() {
 		Intent intent = new Intent(this, MAXSService.class);
 		intent.setAction(Constants.ACTION_START_SERVICE);
-		startService(intent);
+		startServiceCompat(intent);
+	}
+
+	private ComponentName startServiceCompat(Intent intent) {
+		if (Build.VERSION.SDK_INT >= 26) {
+			return startForegroundService(intent);
+		}
+		return startService(intent);
 	}
 
 	public static abstract class StartStopListener {

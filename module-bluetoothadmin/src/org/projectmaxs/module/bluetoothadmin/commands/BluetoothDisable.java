@@ -17,6 +17,8 @@
 
 package org.projectmaxs.module.bluetoothadmin.commands;
 
+import android.bluetooth.BluetoothAdapter;
+
 import org.projectmaxs.shared.global.Message;
 import org.projectmaxs.shared.global.messagecontent.CommandHelp.ArgType;
 import org.projectmaxs.shared.mainmodule.Command;
@@ -35,7 +37,15 @@ public class BluetoothDisable extends AbstractBluetoothCommand {
 		Message message = checkDefaultAdapter();
 		if (message != null) return message;
 
-		boolean res = getDefaultAdapter().disable();
+		BluetoothAdapter bluetoothAdapter = getDefaultAdapter();
+
+		boolean res;
+		try {
+			res = bluetoothAdapter.disable();
+		} catch (SecurityException e) {
+			return new Message("Failed to disable bluetooth adapter: " + e);
+		}
+
 		if (res) {
 			message = new Message("Disabling bluetooth adapter");
 			registerBluetoothReceiver(command.getId(), service);

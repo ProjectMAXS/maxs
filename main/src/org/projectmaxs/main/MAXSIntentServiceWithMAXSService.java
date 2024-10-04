@@ -25,15 +25,20 @@ import org.projectmaxs.main.MAXSService.LocalBinder;
 import org.projectmaxs.shared.global.util.Log;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.NotificationChannel;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.IBinder;
 
 public abstract class MAXSIntentServiceWithMAXSService extends Service {
+	private static final String NOTIFICATION_CHANNEL_ID = "maxs";
+
 	private final Queue<Intent> mQueue = new LinkedList<Intent>();
 	private final String mName;
 	private final Log mLog;
@@ -50,6 +55,18 @@ public abstract class MAXSIntentServiceWithMAXSService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		bindService(new Intent(this, MAXSService.class), mConnection, Context.BIND_AUTO_CREATE);
+
+		if (Build.VERSION.SDK_INT >= 26) {
+			String name = "MAXS";
+			String description = "MAXS Intent Service";
+			int importance = NotificationManager.IMPORTANCE_MIN;
+
+			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+			channel.setDescription(description);
+
+			NotificationManager notificationManager = getSystemService(NotificationManager.class);
+			notificationManager.createNotificationChannel(channel);
+		}
 	}
 
 	@Override
@@ -66,15 +83,27 @@ public abstract class MAXSIntentServiceWithMAXSService extends Service {
 			mQueue.add(intent);
 
 			if (Build.VERSION.SDK_INT >= 26) {
-				Notification notification = new Notification.Builder(this)
-						.setContentText(mName)
-						.build();
+				Notification notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+								.setContentText(mName)
+								.build();
 				int notificationId = 1;
-				startForeground(notificationId, notification);
+
+				if (Build.VERSION.SDK_INT >= 34) {
+					startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+				} else {
+					startForeground(notificationId, notification);
+				}
 			}
 
-			// start sticky because there are now intents in the queue to handle
-			return START_STICKY;
+			// start stikcy because there are now intents in the queue to handle
+			int res = START_STICKY;
+			if (Build.VERSION.SDK_INT >= 31) {
+				// Starting apps targeting API level 31 or higher are
+				// not allowed to start a sticky foreground service
+				// from background.
+				res = START_NOT_STICKY;
+			}
+			return res;
 		} else {
 			onHandleIntent(mMAXSService, intent);
 			stopSelf(startId);

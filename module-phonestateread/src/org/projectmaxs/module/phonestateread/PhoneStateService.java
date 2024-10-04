@@ -28,6 +28,7 @@ import org.projectmaxs.shared.module.MainUtil;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -51,7 +52,15 @@ public class PhoneStateService extends Service {
 		if (intent == null) {
 			LOG.d("onStartCommand: null intent, starting service");
 			startService();
-			return START_STICKY;
+
+			int res = START_STICKY;
+			if (Build.VERSION.SDK_INT >= 31) {
+				// Starting apps targeting API level 31 or higher are
+				// not allowed to start a sticky foreground service
+				// from background.
+				res = START_NOT_STICKY;
+			}
+			return res;
 		}
 		final String action = intent.getAction();
 		LOG.d("onStartCommand: " + action);
@@ -63,6 +72,12 @@ public class PhoneStateService extends Service {
 			stickyStart = false;
 		} else {
 			throw new IllegalArgumentException();
+		}
+		if (Build.VERSION.SDK_INT >= 31) {
+			// Starting apps targeting API level 31 or higher are
+			// not allowed to start a sticky foreground service
+			// from background.
+			stickyStart = false;
 		}
 		return stickyStart ? START_STICKY : START_NOT_STICKY;
 	}

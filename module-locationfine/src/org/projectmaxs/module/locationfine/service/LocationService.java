@@ -199,6 +199,12 @@ public class LocationService extends Service {
 			throw new IllegalStateException("Unknown action: " + action);
 		}
 
+		if (Build.VERSION.SDK_INT >= 31) {
+			// Starting apps targeting API level 31 or higher are
+			// not allowed to start a sticky foreground service
+			// from background.
+			startSticky = false;
+		}
 		return startSticky ? START_STICKY : START_NOT_STICKY;
 	}
 

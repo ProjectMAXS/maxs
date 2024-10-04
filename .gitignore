@@ -2,6 +2,7 @@
 /maxs-binary/
 /config
 /.idea/
+/.gradle/
 
 .d
 
@@ -12,3 +13,5 @@ lint-report-full.html
 lint-report-full_files/
 
 libs-sources/
+
+local.properties

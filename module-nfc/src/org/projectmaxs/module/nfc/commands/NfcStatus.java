@@ -50,10 +50,6 @@ public class NfcStatus extends SubCommand {
 		List<AbstractElement> elements = new LinkedList<AbstractElement>();
 		elements.add(BooleanElement.enabled("NFC Adapter is %1$s", "nfc_adapter_enabled",
 				adapter.isEnabled(), service));
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			elements.add(BooleanElement.enabled("NFC NDEF Push (Android Beem) is %1$s",
-					"nfc_ndef_push_enabled", adapter.isNdefPushEnabled(), service));
-		}
 		return new Message(elements);
 	}
 }

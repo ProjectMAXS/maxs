@@ -84,6 +84,14 @@
     <uses-permission android:name="org.projectmaxs.permission.USE_FILEWRITE" />
     <uses-permission android:name="org.projectmaxs.permission.USE_FILEREAD" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <queries>
+        <intent>
+            <action android:name="org.projectmaxs.REGISTER" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -93,7 +101,9 @@
         android:logo="@drawable/ic_maxs" >
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -107,7 +117,11 @@
 
         <service
             android:name=".MAXSService"
-            android:exported="false" >
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            >
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+      android:value="MAXS Central Service"/>
             <intent-filter>
                 <action android:name="org.projectmaxs.main.START_SERVICE" />
                 <action android:name="org.projectmaxs.main.STOP_SERVICE" />
@@ -116,7 +130,9 @@
         </service>
         <service
             android:name=".MAXSIntentService"
-            android:permission="org.projectmaxs.permission.USE_MAIN" >
+            android:permission="org.projectmaxs.permission.USE_MAIN"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.main.EXPORT_TO_FILE" />
                 <action android:name="org.projectmaxs.main.IMPORT_EXPORT_STATUS" />
@@ -124,7 +140,12 @@
         </service>
         <service
             android:name=".MAXSModuleIntentService"
-            android:permission="org.projectmaxs.permission.USE_MAIN_AS_MODULE" >
+            android:permission="org.projectmaxs.permission.USE_MAIN_AS_MODULE"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            >
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+      android:value="MAXS Central Service"/>
             <intent-filter>
                 <action android:name="org.projectmaxs.main.REGISTER_MODULE" />
                 <action android:name="org.projectmaxs.main.SET_RECENT_CONTACT" />
@@ -134,7 +155,12 @@
         </service>
         <service
             android:name=".MAXSTransportIntentService"
-            android:permission="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT" >
+            android:permission="org.projectmaxs.permission.USE_MAIN_AS_TRANSPORT"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            >
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+      android:value="MAXS Central Service"/>
             <intent-filter>
                 <action android:name="org.projectmaxs.main.REGISTER_TRANSPORT" />
                 <action android:name="org.projectmaxs.main.PERFORM_COMMAND" />
@@ -152,7 +178,7 @@
             android:permission="org.projectmaxs.permission.USE_MAIN_AS_MODULE" >
         </provider>
 
-        <receiver android:name=".receivers.PackageReceiver" >
+        <receiver android:name=".receivers.PackageReceiver" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
@@ -161,7 +187,7 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receivers.BootCompletedReceiver" >
+        <receiver android:name=".receivers.BootCompletedReceiver" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

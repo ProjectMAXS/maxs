@@ -1,3 +1,0 @@
-// See https://docs.gradle.org/4.8/dsl/org.gradle.api.initialization.Settings.html#org.gradle.api.initialization.Settings:include(java.lang.String[])
-include 'memorizingTrustManager'
-project(':memorizingTrustManager').projectDir = file('libraryProjects/memorizingTrustManager')

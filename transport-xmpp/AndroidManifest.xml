@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -34,7 +36,7 @@
         <activity android:name=".activities.EnterXmppCredentials" />
         <activity android:name=".activities.AdvancedSettings" />
         <activity android:name="de.duenndns.ssl.MemorizingActivity" />
-        <activity android:name=".activities.ExcludedResources">
+        <activity android:name=".activities.ExcludedResources" android:exported="true" >
             <intent-filter>
                 <action android:name=".activities.ExcludedResources" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -44,7 +46,9 @@
         <receiver
             android:name=".TransportReceiver"
             android:label="Transport Receiver"
-            android:permission="org.projectmaxs.permission.USE_TRANSPORT" >
+            android:permission="org.projectmaxs.permission.USE_TRANSPORT"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="org.projectmaxs.REGISTER" />
                 <action android:name="org.projectmaxs.EXPORT_SETTINGS" />
@@ -54,7 +58,13 @@
 
         <service
             android:name=".TransportService"
-            android:permission="org.projectmaxs.permission.USE_TRANSPORT" >
+            android:permission="org.projectmaxs.permission.USE_TRANSPORT"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            >
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MAXS Transport Service" />
             <intent-filter>
 
                 <!-- This is the only filter needed, all other intents are sent with setClassName() -->
@@ -63,14 +73,26 @@
         </service>
         <service
             android:name=".xmppservice.XMPPFileTransfer$MAXSOutgoingFileTransferService"
-            android:permission="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE" >
+            android:permission="org.projectmaxs.permission.USE_OUTGOING_FILETRANSFER_SERVICE"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            >
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MAXS Transport Service" />
             <intent-filter>
                 <action android:name="org.projectmaxs.transport.xmpp.OUTGOING_FILETRANSFER_SERVICE" />
             </intent-filter>
         </service>
         <service
             android:name=".XmppIntentService"
-            tools:ignore="ExportedService" >
+            android:exported="true"
+            tools:ignore="ExportedService"
+            android:foregroundServiceType="specialUse"
+            >
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MAXS Transport Service" />
             <intent-filter>
                 <action android:name="org.projectmaxs.transport.xmpp.SEND_XMPP_MESSAGE" />
             </intent-filter>

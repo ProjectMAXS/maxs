@@ -4,4 +4,8 @@ plugins {
 
 android {
 	namespace 'org.projectmaxs.module.notificationpolicyaccess'
+
+	defaultConfig {
+		minSdkVersion 23
+	}
 }

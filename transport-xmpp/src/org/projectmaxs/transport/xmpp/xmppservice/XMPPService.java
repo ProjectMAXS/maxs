@@ -89,6 +89,7 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 
 public class XMPPService {
@@ -499,7 +500,13 @@ public class XMPPService {
 		intent.putExtra(TransportConstants.EXTRA_COMMAND_ORIGIN, origin);
 		intent.setClassName(GlobalConstants.MAIN_PACKAGE,
 				TransportConstants.MAIN_TRANSPORT_SERVICE);
-		ComponentName cn = mContext.startService(intent);
+
+		ComponentName cn;
+		if (Build.VERSION.SDK_INT >= 26) {
+			cn = mContext.startForegroundService(intent);
+		} else {
+			cn = mContext.startService(intent);
+		}
 		if (cn == null) {
 			LOG.e("newMessageFromMasterJID: could not start main transport service");
 		}

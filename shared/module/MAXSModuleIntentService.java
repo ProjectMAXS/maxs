@@ -31,9 +31,12 @@ import org.projectmaxs.shared.global.util.Log;
 import org.projectmaxs.shared.mainmodule.Command;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -54,6 +57,7 @@ public abstract class MAXSModuleIntentService extends Service {
 	}
 
 	private static final int WHAT = 42;
+	private static final String NOTIFICATION_CHANNEL_ID = "maxs-module";
 
 	private final Log mLog;
 	private final String mName;
@@ -119,6 +123,18 @@ public abstract class MAXSModuleIntentService extends Service {
 		} else {
 			mVersion = "Unknown";
 		}
+
+		if (Build.VERSION.SDK_INT >= 26) {
+			String name = "MAXS (Module)";
+			String description = "MAXS Module Intent Service";
+			int importance = NotificationManager.IMPORTANCE_MIN;
+
+			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+			channel.setDescription(description);
+
+			NotificationManager notificationManager = getSystemService(NotificationManager.class);
+			notificationManager.createNotificationChannel(channel);
+		}
 	}
 
 	@Override
@@ -134,11 +150,16 @@ public abstract class MAXSModuleIntentService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (Build.VERSION.SDK_INT >= 26) {
-			Notification notification = new Notification.Builder(this)
+			Notification notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
 					.setContentText(mName)
 					.build();
 			int notificationId = 1;
-			startForeground(notificationId, notification);
+
+			if (Build.VERSION.SDK_INT >= 34) {
+				startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+			} else {
+				startForeground(notificationId, notification);
+			}
 		}
 
 		Message msg = mServiceHandler.obtainMessage();

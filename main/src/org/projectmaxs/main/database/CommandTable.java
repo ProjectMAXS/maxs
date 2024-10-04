@@ -75,6 +75,11 @@ public class CommandTable {
 	}
 
 	public void addCommand(int id, String command, String subCmd, String args, CommandOrigin origin) {
+		Entry entry = getEntry(id);
+		if (entry != null) {
+			purgeEntries(new int[] { id });
+		}
+
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_COMMAND_ID, id);
@@ -108,7 +113,7 @@ public class CommandTable {
 		return new CommandOrigin(pkg, action, originIssuerInfo, originId);
 	}
 
-	public Entry geEntry(int id) {
+	public Entry getEntry(int id) {
 		if (id < 0) return null;
 		// @formatter:off
 		final String[] projection = { 

@@ -63,7 +63,7 @@ public class MAXSContentProvider extends ContentProvider {
 			break;
 		case OUTGOING_FILETRANSFER:
 			int cmdId = Integer.valueOf(uri.getPathSegments().get(1));
-			Entry entry = CommandTable.getInstance(getContext()).geEntry(cmdId);
+			Entry entry = CommandTable.getInstance(getContext()).getEntry(cmdId);
 			String pkg = entry.mOrigin.getPackage();
 			String service = TransportRegistry.getInstance(getContext())
 					.getFiletransferService(pkg);
