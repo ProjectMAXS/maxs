@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="2000504878"
-    android:versionName="0.5.19-SNAPSHOT" >
+    android:versionCode="2000506627"
+    android:versionName="0.5.19" >
 
 
     <uses-permission android:name="org.projectmaxs.permission.USE_MAIN" />
